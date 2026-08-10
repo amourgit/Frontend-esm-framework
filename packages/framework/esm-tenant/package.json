@@ -1,0 +1,44 @@
+{
+  "name": "@egen/esm-tenant",
+  "version": "1.0.0",
+  "license": "MPL-2.0",
+  "description": "Tenant capture system for EGEN SPA — resolves the active tenant from the URL (subdomain/path/query/JWT) and exposes it globally (store + window). No local tenant registry, no frontend validation — see src/types.ts.",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": {
+      "default": "./package.json"
+    }
+  },
+  "scripts": {
+    "build": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist\" \"tsc --project tsconfig.build.json\"",
+    "build:development": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist\" \"tsc --project tsconfig.build.json\"",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "cross-env TZ=UTC vitest watch --passWithNoTests",
+    "coverage": "cross-env TZ=UTC vitest run --coverage --passWithNoTests",
+    "typescript": "tsc --project tsconfig.build.json",
+    "lint": "eslint src --ext ts,tsx"
+  },
+  "dependencies": {
+    "@egen/esm-state": "workspace:*"
+  },
+  "peerDependencies": {
+    "@egen/esm-state": "9.x",
+    "react": "^18.0.0",
+    "rxjs": "^6.5.3"
+  },
+  "devDependencies": {
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.21",
+    "@vitest/coverage-v8": "^4.1.2",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "rimraf": "^6.1.3",
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.2"
+  }
+}

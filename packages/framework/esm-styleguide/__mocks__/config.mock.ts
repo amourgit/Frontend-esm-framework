@@ -1,0 +1,22 @@
+import { type ConfigSchema } from '@egen/esm-config';
+
+export const mockConfig: ConfigSchema = {
+  provider: {
+    type: 'basic',
+    loginUrl: '',
+  },
+  chooseLocation: {
+    enabled: true,
+    numberToShow: 3,
+    useLoginLocationTag: true,
+    locationsPerRequest: 50,
+  },
+  logo: {
+    src: null,
+    alt: 'Logo',
+  },
+  links: {
+    loginSuccess: '${egenSpaBase}/home',
+  },
+  showPasswordOnSeparateScreen: true,
+};

@@ -1,0 +1,123 @@
+// ============================================================================
+//  EGEN — Design Tokens "Panel" (SCSS)
+// ============================================================================
+//
+//  AUCUNE VALEUR EN DUR ICI. Ce fichier ne contient ni `:root { ... }`, ni
+//  bloc `[data-theme='...']` avec des valeurs codées en dur. Le moteur
+//  dynamique (@egen/esm-theme) est l'UNIQUE source de vérité : il charge le
+//  JSON de thème actif (par défaut `theme.default.json`, ou tout JSON
+//  fourni/surchargé par une app — cf. `applyAppThemeOverride()`), l'aplatit
+//  et injecte lui-même les variables CSS dans le DOM (`:root`,
+//  `[data-theme="light"]`, `[data-theme="dark"]`, et les scopes
+//  `[data-egen-app="..."]` pour les surcharges par app).
+//
+//  Ce fichier ne fait que CONSOMMER ces variables via `var(--xxx)`, sans
+//  jamais en redéfinir la valeur. Si une app veut connaître la liste des
+//  variables disponibles ou en ajouter de nouvelles, la référence est :
+//    - le schéma TypeScript : packages/framework/esm-theme/src/types.ts
+//    - le thème par défaut  : packages/framework/esm-theme/src/themes/theme.default.json
+//  Toute personnalisation passe par une surcharge JSON (cf. README de
+//  @egen/esm-theme), jamais par une modification de ce fichier SCSS.
+//
+//  Le nom "panel" est volontairement générique : il désigne toute surface de
+//  composant (carte, modale, menu, info-bulle, champ de saisie...) — le
+//  STYLE (glassmorphism, plat, material...) est entièrement déterminé par
+//  les VALEURS posées dans le JSON de thème actif (ex: `backdropFilter:
+//  "none"` pour un thème plat), jamais par le nom de la variable ni par ce
+//  fichier SCSS.
+//
+//  RÉSOLUTION CLAIR/SOMBRE :
+//  Les noms de variables ne contiennent jamais "light"/"dark" — c'est
+//  l'attribut `data-theme` posé sur `<html>` par le moteur (cf.
+//  `engine.setMode()`) qui sélectionne le bon jeu de valeurs déjà injecté.
+//  Les mixins ci-dessous n'ont donc plus besoin de paramètre de mode.
+//
+//  ANTI-FOUC :
+//  Comme aucune valeur de fallback n'est plus dupliquée en SCSS, l'absence
+//  temporaire des variables avant l'exécution du moteur JS peut provoquer un
+//  flash de contenu non stylé. Ce risque doit être traité au niveau du
+//  shell (ex: script bloquant minimal dans le <head> qui pose un
+//  `data-theme` et masque le `<body>` jusqu'à l'injection du thème), pas en
+//  réintroduisant des valeurs statiques ici.
+//
+//  UTILISATION dans un composant SCSS :
+//    @use '@egen/esm-styleguide/src/panel' as panel;
+//
+//    .ma-card {
+//      @include panel.panel-surface('card');
+//    }
+//    .mon-modal {
+//      @include panel.panel-surface('modal');
+//      border-radius: var(--border-radius-2xl);
+//    }
+//
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// MIXINS SCSS — réutilisables dans tous les composants
+//
+// Plus de paramètre $variant ('dark'/'light') : la résolution de mode se
+// fait automatiquement via l'attribut `data-theme` posé sur <html>, donc un
+// composant n'a jamais besoin de savoir/choisir le mode actif.
+// ----------------------------------------------------------------------------
+
+/// Applique le style de panneau générique d'une taille libre (xs→xl).
+@mixin panel-size($size: 'md') {
+  background: var(--panel-#{$size}-background);
+  backdrop-filter: var(--panel-#{$size}-backdrop-filter);
+  -webkit-backdrop-filter: var(--panel-#{$size}-backdrop-filter);
+  border: var(--panel-#{$size}-border);
+  box-shadow: var(--panel-#{$size}-box-shadow);
+  transition: var(--transitions-glass);
+}
+
+/// Applique le style de panneau d'un composant de base nommé
+/// ('sidebar' | 'header' | 'modal' | 'card' | 'dropdown' | 'toast' |
+///  'tooltip' | 'popover' | 'input' | 'overlay').
+/// $component doit correspondre à une clé déclarée sous `panel.*` dans le
+/// JSON de thème actif (cf. PanelTokenSet dans types.ts). Si une app a
+/// besoin d'un nouveau composant de base, elle l'ajoute dans son JSON de
+/// thème (ou sa surcharge) — pas ici.
+@mixin panel-surface($component) {
+  background: var(--panel-#{$component}-background);
+  backdrop-filter: var(--panel-#{$component}-backdrop-filter);
+  -webkit-backdrop-filter: var(--panel-#{$component}-backdrop-filter);
+  border: var(--panel-#{$component}-border);
+  box-shadow: var(--panel-#{$component}-box-shadow);
+  transition: var(--transitions-glass);
+}
+
+/// Variante "panel-surface" pour la sidebar (bordure latérale + transition dédiée)
+@mixin panel-sidebar {
+  background: var(--panel-sidebar-background);
+  backdrop-filter: var(--panel-sidebar-backdrop-filter);
+  -webkit-backdrop-filter: var(--panel-sidebar-backdrop-filter);
+  border-right: var(--panel-sidebar-border);
+  box-shadow: var(--panel-sidebar-box-shadow);
+  transition: var(--transitions-sidebar);
+}
+
+/// Variante "panel-surface" pour le header (sticky + bordure basse)
+@mixin panel-header {
+  background: var(--panel-header-background);
+  backdrop-filter: var(--panel-header-backdrop-filter);
+  -webkit-backdrop-filter: var(--panel-header-backdrop-filter);
+  border-bottom: var(--panel-header-border);
+  box-shadow: var(--panel-header-box-shadow);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+  transition: var(--transitions-glass);
+}
+
+/// Effet de mise en avant (glow) sur un bouton ou élément interactif
+@mixin emphasis-glow {
+  box-shadow: var(--shadows-glow);
+}
+
+/// Overlay de fond générique (pour modals, drawers, etc.)
+@mixin panel-overlay {
+  background: var(--panel-overlay-background);
+  backdrop-filter: var(--panel-overlay-backdrop-filter);
+  -webkit-backdrop-filter: var(--panel-overlay-backdrop-filter);
+}

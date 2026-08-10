@@ -1,0 +1,32 @@
+name: Publish Next (canary)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [develop]
+
+jobs:
+  publish-next:
+    name: Publish @next
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build
+        run: yarn build
+
+      - name: Publish canary packages
+        run: yarn ci:publish-next
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

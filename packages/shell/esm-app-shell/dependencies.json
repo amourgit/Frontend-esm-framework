@@ -1,0 +1,18 @@
+[
+  "@carbon/react",
+  "i18next",
+  "dayjs",
+  "react",
+  "react-dom",
+  "react-router-dom",
+  "react-i18next",
+  "@egen/esm-framework/src/internal",
+  "@egen/esm-api",
+  "@egen/esm-config",
+  "@egen/esm-react-utils",
+  "@egen/esm-state",
+  "@egen/esm-tenant",
+  "rxjs",
+  "single-spa",
+  "swr"
+]

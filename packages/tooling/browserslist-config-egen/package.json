@@ -1,0 +1,16 @@
+{
+  "name": "browserslist-config-egen",
+  "version": "1.0.0",
+  "description": "Browserslist configuration for the EGEN Educational Platform",
+  "main": "src/index.js",
+  "license": "MPL-2.0",
+  "keywords": [
+    "browserslist",
+    "egen",
+    "educational-platform"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amourgit/Frontend-esm-core.git"
+  }
+}

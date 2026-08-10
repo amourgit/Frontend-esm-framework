@@ -1,0 +1,111 @@
+@use '@carbon/layout';
+
+// =============================================================================
+//  Variables historiques du styleguide — MIGRÉES vers le thème dynamique EGEN
+//
+//  Ces ~25 variables SCSS étaient des couleurs Carbon v10 (thème clair OpenMRS)
+//  figées en hexadécimal, consommées par ~15 fichiers du styleguide
+//  (pagination, datepicker, cards, left-nav, entity-banner, workspaces,
+//  canvas, breadcrumbs, overrides...) ET par des apps entières
+//  (esm-implementer-tools-app). Modifier colors.* dans theme.default.json
+//  n'avait donc aucun effet sur tout ce qui en dépendait.
+//
+//  Chaque variable pointe maintenant vers son équivalent `--colors-*`
+//  injecté dynamiquement par @egen/esm-theme ; l'ancienne valeur Carbon
+//  n'est conservée QUE comme fallback CSS natif `var(x, fallback)`, actif
+//  uniquement le temps que le moteur de thème hydrate ses variables au
+//  chargement (mêmes garanties que --brand-01/02/03 ci-dessous).
+//  AUCUN fichier consommateur n'a besoin d'être modifié : ils continuent à
+//  utiliser $ui-01, $text-02, etc. normalement, mais la valeur qu'ils
+//  reçoivent désormais suit le JSON de thème en temps réel.
+// =============================================================================
+$ui-01: var(--colors-surface-muted, #f4f4f4);
+$ui-02: var(--colors-surface-card, #ffffff);
+$ui-03: var(--colors-border-default, #e0e0e0);
+$ui-04: var(--colors-surface-muted-foreground, #8d8d8d);
+$ui-05: var(--colors-surface-foreground, #161616);
+$text-02: var(--colors-surface-muted-foreground, #525252);
+$text-03: var(--colors-surface-muted-foreground, #a8a8a8);
+$ui-background: var(--colors-surface-background, #ffffff);
+$color-gray-30: var(--colors-neutral-300, #c6c6c6);
+$color-gray-70: var(--colors-neutral-600, #525252);
+$color-gray-100: var(--colors-neutral-900, #161616);
+$color-blue-60-2: var(--colors-primary-600, #0f62fe);
+$color-blue-10: var(--colors-primary-50, #edf5ff);
+$color-yellow-50: var(--colors-warning-200, #feecae);
+$carbon--red-50: var(--colors-error-400, #fa4d56);
+$inverse-link: var(--colors-primary-300, #78a9ff);
+$support-02: var(--colors-success-500, #24a148);
+$inverse-support-03: var(--colors-warning-400, #f1c21b);
+$warning-background: var(--colors-warning-50, #fff8e1);
+$egen-background-grey: var(--colors-surface-muted, #f4f4f4);
+$danger: var(--colors-error-500, #da1e28);
+$interactive-01: var(--colors-primary-600, #0f62fe);
+$field-01: var(--colors-surface-muted, #f4f4f4);
+$grey-2: var(--colors-border-default, #e0e0e0);
+$labeldropdown: var(--colors-neutral-300, #c6c6c6);
+
+$brand-primary-10: var(--colors-primary-50, #d9fbfb);
+$brand-primary-20: var(--colors-primary-100, #9ef0f0);
+$brand-primary-30: var(--colors-primary-200, #3ddbd9);
+$brand-primary-40: var(--colors-primary-300, #08bdba);
+$brand-primary-50: var(--colors-primary-400, #009d9a);
+
+/* 60,70 and 80 are already declared as brand-01, 02 and 03 respectively */
+
+$brand-primary-90: var(--colors-primary-800, #022b30);
+$brand-primary-100: var(--colors-primary-900, #081a1c);
+
+@mixin brand-01($property) {
+  #{$property}: #005d5d;
+  #{$property}: var(--brand-01);
+}
+
+@mixin brand-02($property) {
+  #{$property}: #004144;
+  #{$property}: var(--brand-02);
+}
+
+@mixin brand-03($property) {
+  #{$property}: #007d79;
+  #{$property}: var(--brand-03);
+}
+
+// =============================================================================
+//  --brand-01/02/03 — RECÂBLÉS SUR LE THÈME EGEN (esm-theme)
+//
+//  Historiquement ces 3 variables étaient des couleurs OpenMRS figées
+//  (teal #005d5d/#004144/#007d79), totalement indépendantes du JSON de
+//  thème. Une vingtaine de composants (nav latérale, workspaces, boutons
+//  d'action, focus rings...) les consomment encore via `@include brand-0X`
+//  ou `var(--brand-0X)` directement — donc TOUTE modification de
+//  colors.primary.* dans theme.default.json était silencieusement ignorée
+//  par ces composants, quel que soit le thème chargé.
+//
+//  Correction : `--brand-01/02/03` pointent maintenant vers l'échelle
+//  `--colors-primary-*` injectée dynamiquement par @egen/esm-theme, avec
+//  l'ancienne valeur OpenMRS conservée UNIQUEMENT comme fallback CSS natif
+//  (`var(--x, fallback)`) — actif seulement tant que le moteur de thème n'a
+//  pas encore injecté ses variables (fenêtre de quelques ms au chargement).
+//  Dès que --colors-primary-* existe dans le DOM, tous les composants
+//  legacy `brand-0X` suivent automatiquement le thème JSON, sans qu'aucun
+//  de ces ~20 fichiers n'ait besoin d'être modifié individuellement.
+// =============================================================================
+:root {
+  --brand-01: var(--colors-primary-600, #005d5d);
+  --brand-02: var(--colors-primary-700, #004144);
+  --brand-03: var(--colors-primary-500, #007d79);
+  --bottom-nav-height: #{layout.$spacing-10};
+  --workspace-header-height: #{layout.$spacing-09};
+  --tablet-workspace-window-height: calc(100vh - var(--egen-navbar-height) - var(--bottom-nav-height));
+  --desktop-workspace-window-height: calc(100vh - var(--egen-navbar-height) - var(--workspace-header-height));
+}
+
+$breakpoint-phone-min: 0px;
+$breakpoint-phone-max: 600px;
+$breakpoint-tablet-min: 601px;
+$breakpoint-tablet-max: 1023px;
+$breakpoint-small-desktop-min: 1024px;
+$breakpoint-small-desktop-max: 1439px;
+$breakpoint-large-desktop-min: 1440px;
+$breakpoint-large-desktop-max: 99999999px;

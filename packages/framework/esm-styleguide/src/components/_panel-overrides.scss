@@ -1,0 +1,150 @@
+// ============================================================================
+//  EGEN — Surcharges Carbon Design System (composants cds--)
+// ============================================================================
+//
+//  Applique les tokens du thème dynamique actif aux composants Carbon
+//  (cds--) et aux composants EGEN natifs. Chargé APRÈS les styles Carbon,
+//  donc surcharge proprement par cascade.
+//
+//  AUCUNE VALEUR EN DUR : tout passe par var(--xxx) ou par les mixins de
+//  `panel.scss`. La résolution clair/sombre est automatique (attribut
+//  `data-theme`) — il n'y a donc plus de duplication `[data-theme='light']`
+//  / `.egen-theme-light` ici : une seule règle suffit pour les deux modes.
+//
+// ============================================================================
+
+@use '../panel' as panel;
+
+// ── Header (topNav) ──────────────────────────────────────────────────────────
+.cds--header {
+  @include panel.panel-header;
+}
+
+.cds--header__name {
+  color: var(--colors-surface-foreground);
+}
+
+.cds--header__action:hover,
+.cds--header__action--active {
+  background: var(--colors-surface-translucent-hover) !important;
+  backdrop-filter: var(--panel-xs-backdrop-filter);
+}
+
+// ── Side Nav (leftNav) ───────────────────────────────────────────────────────
+.cds--side-nav {
+  @include panel.panel-sidebar;
+}
+
+.cds--side-nav__item--active .cds--side-nav__link,
+.cds--side-nav__link:hover {
+  background: var(--colors-surface-translucent-hover) !important;
+  backdrop-filter: var(--panel-xs-backdrop-filter);
+  border-radius: var(--border-radius-md);
+}
+
+// ── Modals ───────────────────────────────────────────────────────────────────
+.cds--modal-container {
+  @include panel.panel-surface('modal');
+  border-radius: var(--border-radius-2xl);
+}
+
+.cds--modal-header,
+.cds--modal-content {
+  background: transparent;
+}
+
+.cds--overlay {
+  @include panel.panel-overlay;
+}
+
+// ── Dropdowns / Selects ──────────────────────────────────────────────────────
+.cds--dropdown,
+.cds--multi-select,
+.cds--combo-box,
+.cds--overflow-menu-options {
+  @include panel.panel-surface('dropdown');
+  border-radius: var(--border-radius-xl);
+}
+
+.cds--dropdown-item:hover,
+.cds--overflow-menu-options__option:hover {
+  background: var(--colors-surface-translucent-hover) !important;
+}
+
+// ── Toasts / Notifications ───────────────────────────────────────────────────
+.cds--toast-notification,
+.cds--inline-notification {
+  @include panel.panel-surface('toast');
+  border-radius: var(--border-radius-xl);
+}
+
+// ── Cards / Tiles ────────────────────────────────────────────────────────────
+.cds--tile,
+.cds--tile--clickable,
+.cds--structured-list {
+  @include panel.panel-surface('card');
+  border-radius: var(--border-radius-xl);
+}
+
+// ── Inputs ───────────────────────────────────────────────────────────────────
+.cds--text-input,
+.cds--text-area,
+.cds--select-input,
+.cds--number-input {
+  @include panel.panel-surface('input');
+  border-radius: var(--border-radius-md);
+  color: var(--colors-surface-foreground) !important;
+
+  &:focus,
+  &:focus-within {
+    border-color: var(--colors-border-focus) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--colors-primary-500) 20%, transparent) !important;
+    background: var(--colors-surface-translucent-hover) !important;
+  }
+}
+
+// ── Boutons ──────────────────────────────────────────────────────────────────
+.cds--btn--primary {
+  background: var(--colors-primary-600) !important;
+  box-shadow: var(--shadows-primary);
+  border-radius: var(--border-radius-md);
+  transition: var(--transitions-default);
+
+  &:hover {
+    background: var(--colors-primary-700) !important;
+    @include panel.emphasis-glow;
+  }
+}
+
+.cds--btn--ghost,
+.cds--btn--tertiary {
+  background: transparent;
+  border-color: var(--colors-border-default);
+  border-radius: var(--border-radius-md);
+  color: var(--colors-surface-foreground);
+  backdrop-filter: var(--panel-xs-backdrop-filter);
+  transition: var(--transitions-glass);
+
+  &:hover {
+    background: var(--colors-surface-translucent) !important;
+  }
+}
+
+// ── Conteneurs spécifiques EGEN ───────────────────────────────────────────────
+#egen-top-nav-app-container {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+}
+
+#egen-left-nav-container .cds--side-nav {
+  height: calc(100vh - var(--layout-header-height));
+  top: var(--layout-header-height);
+  position: sticky;
+}
+
+// Panneau workspace
+#egen-workspaces-container {
+  backdrop-filter: var(--panel-lg-backdrop-filter);
+  border-left: var(--colors-border-default) solid 1px;
+}

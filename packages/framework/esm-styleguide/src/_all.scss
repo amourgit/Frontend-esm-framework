@@ -1,0 +1,29 @@
+@forward '@carbon/styles' hide $field-01;
+
+@forward './vars';
+
+// Pont dynamique Carbon <-> EGEN : définit --cds-* à partir des tokens EGEN
+// (fix racine des fonds transparents/gris dans les composants Carbon natifs :
+// Modal, Button, Dropdown, DataTable, Tile, ContentSwitcher...)
+@forward './carbon-bridge';
+
+// EGEN Panel design tokens + mixins (consomme le moteur de thème dynamique @egen/esm-theme)
+@forward './panel';
+@forward './glass';
+
+@forward './components/general';
+@forward './components/canvas';
+@forward './components/breadcrumbs';
+@forward './components/main-content';
+@forward './components/panel-overrides';
+@forward './logo/logo';
+@forward './spinner/spinner';
+@forward './notifications/notifications';
+@forward './notifications/actionable-notifications';
+@forward './toasts/toasts';
+@forward './snackbars/snackbars';
+@forward './modals/modals';
+
+@forward './overrides';
+
+@import '@carbon/charts/styles.css';

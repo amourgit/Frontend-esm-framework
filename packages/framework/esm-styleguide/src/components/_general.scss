@@ -1,0 +1,121 @@
+@use '@carbon/layout';
+@use '../vars' as *;
+
+html {
+  scroll-behavior: smooth;
+}
+
+// =============================================================================
+//  LAYOUT PUBLIC — Routes sans navigation primaire (landing, login, suspended)
+//
+//  Quand html[data-public-route="true"] est positionné par une app publique
+//  (esm-home-app, esm-login-app, etc.), on supprime la hauteur réservée au
+//  topNav et on étend le conteneur d'apps en plein écran.
+//
+//  Ce mécanisme est symétrique à data-theme : les apps publiques le posent
+//  à leur montage et le retirent à leur démontage.
+// =============================================================================
+
+html[data-public-route='true'] {
+  #egen-top-nav-app-container {
+    height: 0 !important;
+    overflow: hidden;
+  }
+
+  #egen-apps-container {
+    min-height: 100vh;
+  }
+
+  #egen-left-nav-container,
+  #egen-workspaces-container,
+  #egen-footer-app-container {
+    display: none;
+  }
+}
+
+.egen-app-error {
+  padding: layout.$spacing-11;
+  width: 100%;
+  height: 100%;
+  // Fallback statique conservé : cette page peut s'afficher précisément
+  // quand le moteur de thème lui-même a échoué à s'initialiser — elle ne
+  // peut donc pas dépendre exclusivement des CSS vars qu'il injecte.
+  background: var(--colors-surface-background, white);
+  border-top: 5px solid var(--colors-error-500, $danger);
+
+  p {
+    margin: layout.$spacing-06 0;
+  }
+
+  .cds--snippet {
+    margin-top: layout.$spacing-06;
+  }
+}
+
+#egen-apps-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: calc(100vh - var(--egen-navbar-height));
+  height: fit-content;
+  grid-area: appRoots;
+  overflow-x: auto;
+  min-width: 0;
+}
+
+#egen-left-nav-container {
+  grid-area: leftNav;
+}
+
+#egen-workspaces-container {
+  grid-area: workspace;
+  position: sticky;
+  height: calc(100vh - var(--egen-navbar-height));
+  top: var(--egen-navbar-height);
+  z-index: 1000;
+  will-change: contents;
+}
+
+#egen-top-nav-app-container {
+  grid-area: topNav;
+  height: var(--egen-navbar-height);
+}
+
+// Pied de page — même largeur que le contenu applicatif, sous les trois
+// colonnes (leftNav/appRoots/workspace). Vide (0 hauteur) sur les routes
+// publiques : la garde de routes de l'app footer y rend `null`.
+#egen-footer-app-container {
+  grid-area: footer;
+  width: 100%;
+}
+
+body {
+  display: grid;
+  grid-template-areas:
+    'topNav topNav topNav'
+    'leftNav appRoots workspace'
+    'footer footer footer';
+  grid-template-columns: min-content 1fr min-content;
+  grid-template-rows: min-content 1fr min-content;
+  container-type: inline-size;
+}
+
+@media print {
+  body {
+    display: block;
+    container-type: normal;
+  }
+
+  #egen-left-nav-container,
+  #egen-workspaces-container,
+  #egen-top-nav-app-container,
+  #egen-footer-app-container {
+    display: none;
+  }
+
+  #egen-apps-container {
+    height: auto;
+    min-height: auto;
+    overflow: visible;
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "name": "@egen/esm-framework",
+  "version": "9.0.2",
+  "license": "MPL-2.0",
+  "type": "module",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./src/internal": {
+      "types": "./dist/internal.d.ts",
+      "default": "./dist/internal.js"
+    },
+    "./package.json": {
+      "default": "./package.json"
+    },
+    "./mock": {
+      "import": "./mock.tsx",
+      "require": "./mock-jest.tsx"
+    },
+    "./mock.tsx": {
+      "import": "./mock.tsx",
+      "require": "./mock-jest.tsx"
+    }
+  },
+  "source": true,
+  "scripts": {
+    "document": "../../../tools/document.sh",
+    "test": "cross-env TZ=UTC vitest run --passWithNoTests",
+    "test:watch": "cross-env TZ=UTC vitest watch",
+    "coverage": "cross-env TZ=UTC vitest run --coverage --passWithNoTests",
+    "build": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist\" \"tsc --project tsconfig.build.json\"",
+    "build:development": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist\" \"tsc --project tsconfig.build.json\"",
+    "typescript": "tsc --project tsconfig.build.json",
+    "lint": "eslint src --ext ts,tsx"
+  },
+  "keywords": [
+    "egen",
+    "framework",
+    "frontend",
+    "ui",
+    "microfrontends"
+  ],
+  "browserslist": [
+    "extends browserslist-config-egen"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/egen/egen-esm-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/egen/egen-esm-core/issues"
+  },
+  "homepage": "https://github.com/egen/egen-esm-core#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@egen/esm-api": "workspace:*",
+    "@egen/esm-config": "workspace:*",
+    "@egen/esm-context": "workspace:*",
+    "@egen/esm-data-api": "workspace:*",
+    "@egen/esm-dynamic-loading": "workspace:*",
+    "@egen/esm-error-handling": "workspace:*",
+    "@egen/esm-expression-evaluator": "workspace:*",
+    "@egen/esm-extensions": "workspace:*",
+    "@egen/esm-feature-flags": "workspace:*",
+    "@egen/esm-globals": "workspace:*",
+    "@egen/esm-navigation": "workspace:*",
+    "@egen/esm-offline": "workspace:*",
+    "@egen/esm-react-utils": "workspace:*",
+    "@egen/esm-routes": "workspace:*",
+    "@egen/esm-state": "workspace:*",
+    "@egen/esm-styleguide": "workspace:*",
+    "@egen/esm-tenant": "workspace:*",
+    "@egen/esm-translations": "workspace:*",
+    "@egen/esm-utils": "workspace:*"
+  },
+  "peerDependencies": {
+    "dayjs": "1.x",
+    "i18next": "25.x",
+    "react": "18.x",
+    "react-dom": "18.x",
+    "react-i18next": "16.x",
+    "rxjs": "6.x",
+    "single-spa": "6.x",
+    "swr": "2.x"
+  },
+  "devDependencies": {
+    "@egen/typedoc-plugin-file-categories": "workspace:*",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.21",
+    "@vitest/coverage-v8": "^4.1.2",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "dayjs": "^1.11.13",
+    "happy-dom": "^20.6.0",
+    "i18next": "^25.5.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^16.0.0",
+    "react-is": "^17.0.2",
+    "rimraf": "^6.1.3",
+    "sass": "^1.98.0",
+    "single-spa": "^6.0.3",
+    "typedoc": "^0.28.5",
+    "typedoc-plugin-markdown": "^4.6.3",
+    "typedoc-plugin-no-inherit": "^1.6.1",
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.2"
+  }
+}

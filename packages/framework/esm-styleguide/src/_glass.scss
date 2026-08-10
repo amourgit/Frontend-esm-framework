@@ -1,0 +1,75 @@
+// ============================================================================
+//  EGEN — Design Tokens "Glass" (glassmorphisme à reflet dynamique) (SCSS)
+// ============================================================================
+//
+//  AUCUNE VALEUR EN DUR ICI — même principe que _panel.scss : ce fichier ne
+//  fait que CONSOMMER les variables CSS injectées par le moteur de thème
+//  dynamique (@egen/esm-theme) depuis `effects.glass.*`
+//  (packages/framework/esm-theme/src/themes/theme.default.json).
+//
+//  ORIGINE : cette recette est une extraction fidèle et intégrale du
+//  glassmorphisme du composant `LiquidGlassButton` (biseau + reflet
+//  spéculaire + liseré lumineux). Elle a été portée ici, dans le thème
+//  central, pour que N'IMPORTE QUEL composant du design system puisse
+//  obtenir EXACTEMENT le même rendu via `@include glass.glass-surface;`,
+//  sans dupliquer la recette ni la retoucher.
+//
+//  DYNAMIQUE PAR CONCEPTION : `--effects-glass-cos`, `--effects-glass-sin`,
+//  `--effects-glass-rim-intensity` et `--effects-glass-rim-gradient` ont une
+//  valeur par défaut statique (0, 0, 0.6, none — rendu "au repos", identique
+//  à un LiquidGlassButton non survolé/sans suivi de lumière). Si un jour un
+//  système de suivi de lumière (souris, capteur...) est branché sur un
+//  élément particulier, il lui suffit de faire
+//  `el.style.setProperty('--effects-glass-cos', ...)` sur CET élément pour
+//  faire réagir le reflet — TOUS les autres composants utilisant ce mixin
+//  ailleurs dans l'app restent inchangés (la variable est scoped par défaut
+//  au niveau où elle est redéfinie). Aucune modification de ce fichier n'est
+//  nécessaire pour ça.
+// ============================================================================
+
+/// Applique le glassmorphisme complet (biseau + reflet spéculaire + liseré)
+/// sur l'élément courant. Nécessite `position: relative` (ou tout autre
+/// contexte de positionnement) sur l'élément hôte, et un `border-radius`
+/// (hérité par les couches via `border-radius: inherit`).
+@mixin glass-surface {
+  position: relative;
+  isolation: isolate;
+
+  // ── Couche spéculaire (biseau + reflet + flou de fond) ──
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: var(--effects-glass-specular-background);
+    background-image: var(--effects-glass-specular-highlight);
+    backdrop-filter: var(--effects-glass-specular-backdrop-filter);
+    -webkit-backdrop-filter: var(--effects-glass-specular-backdrop-filter-webkit);
+    box-shadow: var(--effects-glass-bevel-shadow-light), var(--effects-glass-bevel-shadow-dark), var(--effects-glass-bevel-shadow-outer);
+  }
+
+  // ── Liseré lumineux (bordure en dégradé, réservée aux bords via un masque) ──
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    background: var(--effects-glass-rim-gradient);
+    opacity: var(--effects-glass-rim-opacity);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+  }
+
+  // Le contenu réel de l'élément doit passer au-dessus des deux couches ci-dessus.
+  > * {
+    position: relative;
+    z-index: 2;
+  }
+}

@@ -50,15 +50,15 @@ Ce repo contient **3 familles de packages** :
 | `browserslist-config-egen` | Cibles de compatibilité navigateurs |
 | `@egen/rspack-config` | Configuration Rspack partagée |
 | `@egen/webpack-config` | Configuration Webpack partagée |
-| `@eigen/storybook` | Storybook du styleguide |
-| `@eigen/typedoc-plugin-file-categories` | Plugin TypeDoc |
+| `@egen/storybook` | Storybook du styleguide |
+| `@egen/typedoc-plugin-file-categories` | Plugin TypeDoc |
 | `egen` | CLI : `serve`, `build`, `develop` |
 
 ### `packages/shell/` — Template de shell
 
 | Package | Rôle |
 |---|---|
-| `@eigen/esm-app-shell` | Template Single-SPA root-config (à copier dans tes projets) |
+| `@egen/esm-app-shell` | Template Single-SPA root-config (à copier dans tes projets) |
 
 ---
 
@@ -82,18 +82,18 @@ Ce repo contient **3 familles de packages** :
 yarn add @egen/esm-framework @egen/esm-theme @egen/esm-styleguide
 
 # Pour le layer AI (optionnel)
-yarn add @eigen/esm-ai-framework
+yarn add @egen/esm-ai-framework
 
 # CLI de développement
-yarn add --dev eigen
+yarn add --dev egen
 ```
 
 ### Dans une app micro-frontend
 
 ```tsx
 // mon-app/src/index.tsx
-import { defineConfigSchema, getConfig, subscribe } from '@eigen/esm-framework';
-import { useConfig, usePatient } from '@eigen/esm-framework';
+import { defineConfigSchema, getConfig, subscribe } from '@egen/esm-framework';
+import { useConfig, usePatient } from '@egen/esm-framework';
 
 export function start() {
   // Ton app Single-SPA
@@ -104,7 +104,7 @@ export function start() {
 
 ```bash
 # Depuis la racine de TON projet consommateur
-npx eigen develop --sources "packages/apps/*"
+npx egen develop --sources "packages/apps/*"
 ```
 
 ---
@@ -153,10 +153,10 @@ yarn changeset
 Mon-Projet/
 ├── package.json
 │   └── dependencies:
-│       ├── "@eigen/esm-framework": "^9.0.0"
-│       ├── "@eigen/esm-theme": "^9.0.0"
-│       ├── "@eigen/esm-styleguide": "^9.0.0"
-│       └── "eigen": "^9.0.0"
+│       ├── "@egen/esm-framework": "^9.0.0"
+│       ├── "@egen/esm-theme": "^9.0.0"
+│       ├── "@egen/esm-styleguide": "^9.0.0"
+│       └── "egen": "^9.0.0"
 ├── packages/
 │   ├── shell/                   ← copié depuis packages/shell/esm-app-shell
 │   └── apps/

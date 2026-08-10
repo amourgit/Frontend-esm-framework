@@ -169,8 +169,8 @@ describe('runAssemble', () => {
     });
 
     it('merges multiple config files', async () => {
-      const config1 = { frontendModules: { '@egen/esm-a': '1.0.0' }, publicUrl: '.' };
-      const config2 = { frontendModules: { '@egen/esm-b': '2.0.0' } };
+      const config1 = { frontendModules: { '@egen-civitas/esm-a': '1.0.0' }, publicUrl: '.' };
+      const config2 = { frontendModules: { '@egen-civitas/esm-b': '2.0.0' } };
 
       mockExistsSync.mockReturnValue(true);
       mockReadFile.mockResolvedValueOnce(JSON.stringify(config1)).mockResolvedValueOnce(JSON.stringify(config2));
@@ -178,7 +178,7 @@ describe('runAssemble', () => {
       // Both modules will be downloaded; set up minimal mocks
       mockPacoteManifest.mockResolvedValue({ _resolved: 'https://r.test/a.tgz', _integrity: 'sha512-a' });
       mockPacoteTarball.mockResolvedValue(Buffer.from('tarball'));
-      mockUntar.mockResolvedValue(fakeUntarResult('@egen/esm-a', '1.0.0'));
+      mockUntar.mockResolvedValue(fakeUntarResult('@egen-civitas/esm-a', '1.0.0'));
 
       await runAssemble(
         defaultArgs({
@@ -190,18 +190,18 @@ describe('runAssemble', () => {
       const writeCall = mockWriteFile.mock.calls.find(([path]) => String(path).endsWith('importmap.json'));
       expect(writeCall).toBeDefined();
       const importmap = JSON.parse(writeCall![1] as string);
-      expect(importmap.imports).toHaveProperty('@egen/esm-a');
-      expect(importmap.imports).toHaveProperty('@egen/esm-b');
+      expect(importmap.imports).toHaveProperty('@egen-civitas/esm-a');
+      expect(importmap.imports).toHaveProperty('@egen-civitas/esm-b');
     });
 
     it('removes modules listed in frontendModuleExcludes', async () => {
       const config1 = {
-        frontendModules: { '@egen/esm-a': '1.0.0', '@egen/esm-b': '2.0.0' },
+        frontendModules: { '@egen-civitas/esm-a': '1.0.0', '@egen-civitas/esm-b': '2.0.0' },
         publicUrl: '.',
       };
       const config2 = {
         frontendModules: {},
-        frontendModuleExcludes: ['@egen/esm-a'],
+        frontendModuleExcludes: ['@egen-civitas/esm-a'],
       };
 
       mockExistsSync.mockReturnValue(true);
@@ -209,7 +209,7 @@ describe('runAssemble', () => {
 
       mockPacoteManifest.mockResolvedValue({ _resolved: 'https://r.test/b.tgz', _integrity: 'sha512-b' });
       mockPacoteTarball.mockResolvedValue(Buffer.from('tarball'));
-      mockUntar.mockResolvedValue(fakeUntarResult('@egen/esm-b', '2.0.0'));
+      mockUntar.mockResolvedValue(fakeUntarResult('@egen-civitas/esm-b', '2.0.0'));
 
       await runAssemble(
         defaultArgs({
@@ -219,8 +219,8 @@ describe('runAssemble', () => {
 
       const writeCall = mockWriteFile.mock.calls.find(([path]) => String(path).endsWith('importmap.json'));
       const importmap = JSON.parse(writeCall![1] as string);
-      expect(importmap.imports).not.toHaveProperty('@egen/esm-a');
-      expect(importmap.imports).toHaveProperty('@egen/esm-b');
+      expect(importmap.imports).not.toHaveProperty('@egen-civitas/esm-a');
+      expect(importmap.imports).toHaveProperty('@egen-civitas/esm-b');
     });
   });
 
@@ -230,9 +230,9 @@ describe('runAssemble', () => {
     it('fetches packages from npm registry and offers only -app packages in the checkbox', async () => {
       mockNpmFetchJson.mockResolvedValue({
         objects: [
-          { package: { name: '@egen/esm-home-app', version: '1.0.0' } },
-          { package: { name: '@egen/esm-utils', version: '2.0.0' } },
-          { package: { name: '@egen/esm-login-app', version: '3.0.0' } },
+          { package: { name: '@egen-civitas/esm-home-app', version: '1.0.0' } },
+          { package: { name: '@egen-civitas/esm-utils', version: '2.0.0' } },
+          { package: { name: '@egen-civitas/esm-login-app', version: '3.0.0' } },
         ],
         total: 3,
       });
@@ -247,30 +247,30 @@ describe('runAssemble', () => {
       // The checkbox should only list -app packages
       const checkboxConfig = mockCheckbox.mock.calls[0][0];
       const choiceNames = checkboxConfig.choices.map((c: any) => c.name);
-      expect(choiceNames).toContain('@egen/esm-home-app');
-      expect(choiceNames).toContain('@egen/esm-login-app');
-      expect(choiceNames).not.toContain('@egen/esm-utils');
+      expect(choiceNames).toContain('@egen-civitas/esm-home-app');
+      expect(choiceNames).toContain('@egen-civitas/esm-login-app');
+      expect(choiceNames).not.toContain('@egen-civitas/esm-utils');
     });
 
     it('prompts for version of each selected package with semver validation', async () => {
       mockNpmFetchJson.mockResolvedValue({
-        objects: [{ package: { name: '@egen/esm-home-app', version: '1.0.0' } }],
+        objects: [{ package: { name: '@egen-civitas/esm-home-app', version: '1.0.0' } }],
         total: 1,
       });
 
-      mockCheckbox.mockResolvedValue([{ name: '@egen/esm-home-app', version: '1.0.0' }]);
+      mockCheckbox.mockResolvedValue([{ name: '@egen-civitas/esm-home-app', version: '1.0.0' }]);
       mockInput.mockResolvedValue('1.2.0');
 
       mockPacoteManifest.mockResolvedValue({ _resolved: 'https://r.test/home.tgz', _integrity: 'sha512-h' });
       mockPacoteTarball.mockResolvedValue(Buffer.from('tarball'));
-      mockUntar.mockResolvedValue(fakeUntarResult('@egen/esm-home-app', '1.2.0'));
+      mockUntar.mockResolvedValue(fakeUntarResult('@egen-civitas/esm-home-app', '1.2.0'));
       mockExistsSync.mockReturnValue(false);
 
       await runAssemble(defaultArgs({ mode: 'survey', config: [] }));
 
       // Should have prompted for the version of the selected package
       const inputConfig = mockInput.mock.calls[0][0];
-      expect(inputConfig.message).toContain('@egen/esm-home-app');
+      expect(inputConfig.message).toContain('@egen-civitas/esm-home-app');
       expect(inputConfig.default).toBe('1.0.0');
 
       // Verify the validation function accepts exact versions and ranges
@@ -282,7 +282,7 @@ describe('runAssemble', () => {
       );
 
       // The package should be downloaded with the user-specified version
-      expect(mockPacoteManifest).toHaveBeenCalledWith('@egen/esm-home-app@1.2.0', expect.any(Object));
+      expect(mockPacoteManifest).toHaveBeenCalledWith('@egen-civitas/esm-home-app@1.2.0', expect.any(Object));
     });
   });
 
@@ -290,11 +290,11 @@ describe('runAssemble', () => {
 
   describe('package downloading', () => {
     it('downloads npm packages using pacote', async () => {
-      setupSingleModuleRun('@egen/esm-test-app', '1.0.0');
+      setupSingleModuleRun('@egen-civitas/esm-test-app', '1.0.0');
 
       await runAssemble(defaultArgs());
 
-      expect(mockPacoteManifest).toHaveBeenCalledWith('@egen/esm-test-app@1.0.0', expect.any(Object));
+      expect(mockPacoteManifest).toHaveBeenCalledWith('@egen-civitas/esm-test-app@1.0.0', expect.any(Object));
       expect(mockPacoteTarball).toHaveBeenCalledWith(
         expect.stringContaining('registry.npmjs.org'),
         expect.objectContaining({ integrity: 'sha512-fake' }),
@@ -303,7 +303,7 @@ describe('runAssemble', () => {
 
     it('downloads packages from HTTP URLs using fetch', async () => {
       const config = {
-        frontendModules: { '@egen/esm-test-app': 'https://cdn.example.com/app-1.0.0.tgz' },
+        frontendModules: { '@egen-civitas/esm-test-app': 'https://cdn.example.com/app-1.0.0.tgz' },
         publicUrl: '.',
       };
 
@@ -324,7 +324,7 @@ describe('runAssemble', () => {
       });
       vi.stubGlobal('fetch', mockFetch);
 
-      mockUntar.mockResolvedValue(fakeUntarResult('@egen/esm-test-app', '1.0.0'));
+      mockUntar.mockResolvedValue(fakeUntarResult('@egen-civitas/esm-test-app', '1.0.0'));
 
       await runAssemble(defaultArgs());
 
@@ -336,7 +336,7 @@ describe('runAssemble', () => {
 
     it('downloads packages from file:// paths using readFile', async () => {
       const config = {
-        frontendModules: { '@egen/esm-test-app': 'file:./local-build.tgz' },
+        frontendModules: { '@egen-civitas/esm-test-app': 'file:./local-build.tgz' },
         publicUrl: '.',
       };
 
@@ -355,7 +355,7 @@ describe('runAssemble', () => {
         return Promise.reject(new Error(`Unexpected readFile: ${p}`));
       });
 
-      mockUntar.mockResolvedValue(fakeUntarResult('@egen/esm-test-app', '1.0.0'));
+      mockUntar.mockResolvedValue(fakeUntarResult('@egen-civitas/esm-test-app', '1.0.0'));
 
       await runAssemble(defaultArgs());
 
@@ -367,7 +367,7 @@ describe('runAssemble', () => {
 
   describe('output generation', () => {
     it('generates import map with correct module paths', async () => {
-      setupSingleModuleRun('@egen/esm-test-app', '1.0.0', 'dist/main.js');
+      setupSingleModuleRun('@egen-civitas/esm-test-app', '1.0.0', 'dist/main.js');
 
       await runAssemble(defaultArgs());
 
@@ -375,25 +375,25 @@ describe('runAssemble', () => {
       expect(writeCall).toBeDefined();
       const importmap = JSON.parse(writeCall![1] as string);
       // baseDirName = "egen-esm-test-app", dirName = "egen-esm-test-app-1.0.0"
-      expect(importmap.imports['@egen/esm-test-app']).toBe('./egen-esm-test-app-1.0.0/main.js');
+      expect(importmap.imports['@egen-civitas/esm-test-app']).toBe('./egen-esm-test-app-1.0.0/main.js');
     });
 
     it('generates routes registry when buildRoutes is enabled', async () => {
       const routes = { pages: ['/home'], extensions: [] };
-      setupSingleModuleRun('@egen/esm-test-app', '1.0.0', 'dist/main.js', routes);
+      setupSingleModuleRun('@egen-civitas/esm-test-app', '1.0.0', 'dist/main.js', routes);
 
       await runAssemble(defaultArgs({ buildRoutes: true }));
 
       const writeCall = mockWriteFile.mock.calls.find(([path]) => String(path).includes('routes.registry'));
       expect(writeCall).toBeDefined();
       const routesRegistry = JSON.parse(writeCall![1] as string);
-      expect(routesRegistry['@egen/esm-test-app']).toEqual(
+      expect(routesRegistry['@egen-civitas/esm-test-app']).toEqual(
         expect.objectContaining({ pages: ['/home'], version: '1.0.0' }),
       );
     });
 
     it('does not generate routes registry when buildRoutes is disabled', async () => {
-      setupSingleModuleRun('@egen/esm-test-app', '1.0.0');
+      setupSingleModuleRun('@egen-civitas/esm-test-app', '1.0.0');
 
       await runAssemble(defaultArgs({ buildRoutes: false }));
 
@@ -402,7 +402,7 @@ describe('runAssemble', () => {
     });
 
     it('warns and omits routes when routes.json does not exist for a module', async () => {
-      setupSingleModuleRun('@egen/esm-test-app', '1.0.0', 'dist/main.js');
+      setupSingleModuleRun('@egen-civitas/esm-test-app', '1.0.0', 'dist/main.js');
       const { logWarn } = await import('../utils');
 
       await runAssemble(defaultArgs({ buildRoutes: true }));
@@ -412,18 +412,18 @@ describe('runAssemble', () => {
       const writeCall = mockWriteFile.mock.calls.find(([path]) => String(path).includes('routes.registry'));
       expect(writeCall).toBeDefined();
       const routesRegistry = JSON.parse(writeCall![1] as string);
-      expect(routesRegistry).not.toHaveProperty('@egen/esm-test-app');
+      expect(routesRegistry).not.toHaveProperty('@egen-civitas/esm-test-app');
     });
 
     it('generates version manifest when manifest is enabled', async () => {
-      setupSingleModuleRun('@egen/esm-test-app', '1.0.0');
+      setupSingleModuleRun('@egen-civitas/esm-test-app', '1.0.0');
 
       await runAssemble(defaultArgs({ manifest: true }));
 
       const writeCall = mockWriteFile.mock.calls.find(([path]) => String(path).endsWith('spa-assemble-config.json'));
       expect(writeCall).toBeDefined();
       const manifest = JSON.parse(writeCall![1] as string);
-      expect(manifest.frontendModules['@egen/esm-test-app']).toBe('1.0.0');
+      expect(manifest.frontendModules['@egen-civitas/esm-test-app']).toBe('1.0.0');
       expect(manifest.coreVersion).toBeDefined();
     });
 
@@ -446,7 +446,7 @@ describe('runAssemble', () => {
     });
 
     it('uses content hash in filenames when hashFiles is enabled', async () => {
-      setupSingleModuleRun('@egen/esm-test-app', '1.0.0');
+      setupSingleModuleRun('@egen-civitas/esm-test-app', '1.0.0');
       mockContentHash.mockReturnValue('abc123');
 
       await runAssemble(defaultArgs({ hashFiles: true }));

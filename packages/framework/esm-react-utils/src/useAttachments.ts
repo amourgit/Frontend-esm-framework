@@ -1,8 +1,8 @@
 /** @module @category API */
 import { useMemo } from 'react';
 import useSWR from 'swr';
-import { egenFetch, type FetchResponse } from '@egen/esm-api';
-import { attachmentUrl, type AttachmentResponse } from '@egen/esm-data-api';
+import { egenFetch, type FetchResponse } from '@egen-civitas/esm-api';
+import { attachmentUrl, type AttachmentResponse } from '@egen-civitas/esm-data-api';
 
 /**
  * A React hook that fetches attachments for an entity using SWR for caching
@@ -19,7 +19,7 @@ import { attachmentUrl, type AttachmentResponse } from '@egen/esm-data-api';
  *
  * @example
  * ```tsx
- * import { useAttachments } from '@egen/esm-framework';
+ * import { useAttachments } from '@egen-civitas/esm-framework';
  * function EntityAttachments({ entityUuid }) {
  *   const { data, isLoading, error } = useAttachments(entityUuid, true);
  *   if (isLoading) return <span>Loading...</span>;

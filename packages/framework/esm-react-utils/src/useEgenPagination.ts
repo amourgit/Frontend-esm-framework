@@ -1,5 +1,5 @@
 /** @module @category UI */
-import { type FetchResponse, makeUrl, egenFetch } from '@egen/esm-api';
+import { type FetchResponse, makeUrl, egenFetch } from '@egen-civitas/esm-api';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import useSWR, { type SWRConfiguration } from 'swr';
 import useSWRImmutable from 'swr/immutable';

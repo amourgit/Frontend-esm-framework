@@ -1,4 +1,4 @@
-import { type EgenResourceStrict } from '@egen/esm-api';
+import { type EgenResourceStrict } from '@egen-civitas/esm-api';
 
 /**
  * Represents an identifier type for an entity (e.g. national ID, employee number).

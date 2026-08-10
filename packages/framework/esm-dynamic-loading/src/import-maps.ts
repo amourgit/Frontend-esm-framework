@@ -1,5 +1,5 @@
 /** @module @category Import Map */
-import type { ImportMap } from '@egen/esm-globals';
+import type { ImportMap } from '@egen-civitas/esm-globals';
 
 const OVERRIDE_PREFIX = 'import-map-override:';
 const DISABLED_KEY = 'import-map-overrides-disabled';

@@ -1,7 +1,7 @@
 /** @module @category API */
 import { useMemo } from 'react';
 import useSWR from 'swr';
-import { egenFetch, restBaseUrl, type FetchResponse } from '@egen/esm-api';
+import { egenFetch, restBaseUrl, type FetchResponse } from '@egen-civitas/esm-api';
 
 export interface PrimaryIdentifier {
   metadataUuid: string;

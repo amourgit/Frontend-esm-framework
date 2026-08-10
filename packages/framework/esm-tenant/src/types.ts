@@ -1,5 +1,5 @@
 // ============================================================================
-//  @egen/esm-tenant — Types publics
+//  @egen-civitas/esm-tenant — Types publics
 // ============================================================================
 //
 //  PHILOSOPHIE DU SYSTÈME (refonte du 8 août 2026) :
@@ -7,7 +7,7 @@
 //  Ce package a UNE seule responsabilité : CAPTURER l'identifiant du tenant
 //  depuis l'URL (ou une autre source côté client) et le RENDRE DISPONIBLE
 //  globalement (store Zustand + window) pour que le reste du frontend
-//  (et notamment le client HTTP central, `@egen/esm-api`) puisse le
+//  (et notamment le client HTTP central, `@egen-civitas/esm-api`) puisse le
 //  consulter et l'envoyer au backend.
 //
 //  Ce package NE FAIT AUCUNE VALIDATION. Il ne sait pas si un tenant
@@ -16,7 +16,7 @@
 //  TOUTE validation (existence, statut, permissions, thème, données
 //  métier associées au tenant) est une responsabilité BACKEND. Le frontend
 //  fait des appels API normaux avec le header `X-Tenant-ID` déjà injecté
-//  (voir `@egen/esm-api`) ; si le tenant n'existe pas ou n'est pas
+//  (voir `@egen-civitas/esm-api`) ; si le tenant n'existe pas ou n'est pas
 //  autorisé, c'est une réponse HTTP d'erreur normale, gérée comme
 //  n'importe quelle autre erreur API — pas une branche spéciale ici.
 //

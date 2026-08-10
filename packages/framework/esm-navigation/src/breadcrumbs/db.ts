@@ -1,6 +1,6 @@
 /** @module @category Breadcrumb */
 import { pathToRegexp } from 'path-to-regexp';
-import { createGlobalStore } from '@egen/esm-state';
+import { createGlobalStore } from '@egen-civitas/esm-state';
 import type { BreadcrumbSettings, BreadcrumbRegistration } from '../types';
 
 const store = createGlobalStore<Array<BreadcrumbRegistration>>('breadcrumbs', []);

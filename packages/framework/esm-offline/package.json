@@ -1,5 +1,5 @@
 {
-  "name": "@egen/esm-offline",
+  "name": "@egen-civitas/esm-offline",
   "version": "9.0.2",
   "license": "MPL-2.0",
   "description": "Helper utilities for Egen",
@@ -49,9 +49,9 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@egen/esm-api": "9.x",
-    "@egen/esm-globals": "9.x",
-    "@egen/esm-state": "9.x",
+    "@egen-civitas/esm-api": "9.x",
+    "@egen-civitas/esm-globals": "9.x",
+    "@egen-civitas/esm-state": "9.x",
     "rxjs": "6.x"
   },
   "dependencies": {
@@ -61,9 +61,9 @@
     "workbox-window": "^6.1.5"
   },
   "devDependencies": {
-    "@egen/esm-api": "workspace:*",
-    "@egen/esm-globals": "workspace:*",
-    "@egen/esm-state": "workspace:*",
+    "@egen-civitas/esm-api": "workspace:*",
+    "@egen-civitas/esm-globals": "workspace:*",
+    "@egen-civitas/esm-state": "workspace:*",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@types/uuid": "^9.0.1",

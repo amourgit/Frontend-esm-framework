@@ -1,5 +1,5 @@
 /** @module @category Feature Flags */
-import { getGlobalStore } from '@egen/esm-state';
+import { getGlobalStore } from '@egen-civitas/esm-state';
 
 export interface FeatureFlagsStore {
   flags: { [flagName: string]: FeatureFlag };

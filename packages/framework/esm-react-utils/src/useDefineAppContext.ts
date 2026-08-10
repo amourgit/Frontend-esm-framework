@@ -1,7 +1,7 @@
 /** @module @category Context */
 import { useEffect, useRef } from 'react';
-import { getContext, registerContext, unregisterContext, updateContext } from '@egen/esm-context';
-import { shallowEqual } from '@egen/esm-utils';
+import { getContext, registerContext, unregisterContext, updateContext } from '@egen-civitas/esm-context';
+import { shallowEqual } from '@egen-civitas/esm-utils';
 
 /**
  * Tracks the current owner of each namespace so that a stale cleanup from a

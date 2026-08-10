@@ -1,4 +1,4 @@
-import { type ConfigSchema, Type, validators } from '@egen/esm-config';
+import { type ConfigSchema, Type, validators } from '@egen-civitas/esm-config';
 
 export const defaultRedirectAuthFailureUrl = '${egenSpaBase}/login';
 

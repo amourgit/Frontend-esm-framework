@@ -1,5 +1,5 @@
 /** @module @category Extension */
-import { type ConnectedExtension } from '@egen/esm-extensions';
+import { type ConnectedExtension } from '@egen-civitas/esm-extensions';
 import { useAssignedExtensions } from './useAssignedExtensions';
 
 /**

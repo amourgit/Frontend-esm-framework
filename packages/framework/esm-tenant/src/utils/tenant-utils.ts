@@ -1,13 +1,13 @@
 // ============================================================================
-//  @egen/esm-tenant — Utilitaires publics
+//  @egen-civitas/esm-tenant — Utilitaires publics
 // ============================================================================
 //
-//  RELATION AVEC @egen/esm-api :
+//  RELATION AVEC @egen-civitas/esm-api :
 //  ──────────────────────────────
-//  @egen/esm-api expose un sous-ensemble de ces mêmes informations (lecture
+//  @egen-civitas/esm-api expose un sous-ensemble de ces mêmes informations (lecture
 //  du store tenant, sans importer ce package — voir esm-api/src/tenant.ts)
-//  pour rester utilisable sans dépendance runtime sur @egen/esm-tenant.
-//  C'est CETTE version (@egen/esm-api) qui est effectivement câblée dans le
+//  pour rester utilisable sans dépendance runtime sur @egen-civitas/esm-tenant.
+//  C'est CETTE version (@egen-civitas/esm-api) qui est effectivement câblée dans le
 //  client HTTP central du monorepo (`egenFetch`, voir
 //  esm-api/src/egen-fetch.ts) : le header X-Tenant-ID y est injecté
 //  automatiquement, sans action requise de l'appelant.
@@ -32,7 +32,7 @@ import { tenantStore, getActiveTenantId, getTenantSystemMode, getTenantStoreStat
  * Retourne l'ID du tenant actif de manière synchrone (sans React).
  * Utile dans les intercepteurs fetch, les services, etc.
  *
- * @deprecated Préférer `getTenantId()` de `@egen/esm-api` — c'est cette
+ * @deprecated Préférer `getTenantId()` de `@egen-civitas/esm-api` — c'est cette
  * version qui est utilisée par le client HTTP central (`egenFetch`) et qui
  * n'a aucune dépendance runtime sur ce package.
  */
@@ -47,7 +47,7 @@ export function isTenantSystemActive(): boolean {
 
 /**
  * Retourne true si le mode multi-tenant est actif.
- * @deprecated Utiliser `isMultiTenant()` de `@egen/esm-api` — déjà utilisée
+ * @deprecated Utiliser `isMultiTenant()` de `@egen-civitas/esm-api` — déjà utilisée
  * ainsi dans esm-login-app et esm-primary-navigation-app.
  */
 export function isMultiTenantMode(): boolean {
@@ -108,8 +108,8 @@ export function buildTenantUrl(path: string, tenantId?: TenantId): string {
 
 /**
  * Retourne les headers HTTP à ajouter à chaque requête.
- * @deprecated Utiliser `tenantHeaders()` de `@egen/esm-api`. Mieux encore :
- * `egenFetch()` (aussi dans `@egen/esm-api`) injecte déjà automatiquement
+ * @deprecated Utiliser `tenantHeaders()` de `@egen-civitas/esm-api`. Mieux encore :
+ * `egenFetch()` (aussi dans `@egen-civitas/esm-api`) injecte déjà automatiquement
  * X-Tenant-ID sur chaque requête — dans la plupart des cas, aucun appel
  * manuel n'est nécessaire (voir esm-api/src/egen-fetch.ts).
  * @example `{ 'X-Tenant-ID': 'acme' }` ou `{}` si mode "off"/aucun tenant
@@ -121,7 +121,7 @@ export function getTenantHeaders(): Record<string, string> {
 
 /**
  * Wrapper fetch qui ajoute automatiquement les headers tenant.
- * @deprecated Utiliser `egenFetch()` de `@egen/esm-api`, qui fait déjà cette
+ * @deprecated Utiliser `egenFetch()` de `@egen-civitas/esm-api`, qui fait déjà cette
  * injection pour toutes les requêtes passant par le client HTTP central du
  * monorepo (voir esm-api/src/egen-fetch.ts). Cette fonction reste utile
  * uniquement pour un `fetch()` natif ponctuel, hors du client central.

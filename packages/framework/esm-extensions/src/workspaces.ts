@@ -1,9 +1,9 @@
 import { type ReactNode } from 'react';
 import { type LifeCycles } from 'single-spa';
-import { type WorkspaceGroupDefinition, type WorkspaceWindowState } from '@egen/esm-globals';
+import { type WorkspaceGroupDefinition, type WorkspaceWindowState } from '@egen-civitas/esm-globals';
 import { type ExtensionRegistration, getExtensionRegistration } from '.';
-import { createGlobalStore } from '@egen/esm-state';
-import { translateFrom } from '@egen/esm-translations';
+import { createGlobalStore } from '@egen-civitas/esm-state';
+import { translateFrom } from '@egen-civitas/esm-translations';
 
 /** See [[WorkspaceDefinition]] for more information about these properties */
 export interface WorkspaceRegistration {

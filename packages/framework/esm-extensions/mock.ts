@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { getGlobalStore } from '@egen/esm-state/mock';
+import { getGlobalStore } from '@egen-civitas/esm-state/mock';
 import { type WorkspaceGroupRegistration, type WorkspaceRegistration } from '.';
 
 export const attach = vi.fn();

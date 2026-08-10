@@ -36,30 +36,30 @@ describe('route-maps', () => {
       const { setupRouteMapOverrides, getCurrentRouteMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
-      setDomRouteMaps([{ '@egen/esm-foo': { pages: [] }, '@egen/esm-bar': { extensions: [] } }]);
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify({ pages: [{ component: 'evil', route: '/' }] }));
+      setDomRouteMaps([{ '@egen-civitas/esm-foo': { pages: [] }, '@egen-civitas/esm-bar': { extensions: [] } }]);
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify({ pages: [{ component: 'evil', route: '/' }] }));
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-foo']).toEqual({ pages: [] });
-      expect(map['@egen/esm-bar']).toEqual({ extensions: [] });
+      expect(map['@egen-civitas/esm-foo']).toEqual({ pages: [] });
+      expect(map['@egen-civitas/esm-bar']).toEqual({ extensions: [] });
     });
 
     it('getRouteMapNextPageMap returns base map only', async () => {
       const { setupRouteMapOverrides, getRouteMapNextPageMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
-      setDomRouteMaps([{ '@egen/esm-foo': { pages: [] } }]);
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify({ pages: [{ component: 'evil', route: '/' }] }));
+      setDomRouteMaps([{ '@egen-civitas/esm-foo': { pages: [] } }]);
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify({ pages: [{ component: 'evil', route: '/' }] }));
 
       const map = await getRouteMapNextPageMap();
-      expect(map['@egen/esm-foo']).toEqual({ pages: [] });
+      expect(map['@egen-civitas/esm-foo']).toEqual({ pages: [] });
     });
 
     it('getRouteMapOverrideMap returns empty object', async () => {
       const { setupRouteMapOverrides, getRouteMapOverrideMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify({ pages: [] }));
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify({ pages: [] }));
       expect(getRouteMapOverrideMap()).toEqual({});
     });
 
@@ -68,8 +68,8 @@ describe('route-maps', () => {
       await setupRouteMapOverrides();
 
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      addRouteMapOverride('@egen/esm-foo', { pages: [] });
-      expect(localStorage.getItem('egen-routes:@egen/esm-foo')).toBeNull();
+      addRouteMapOverride('@egen-civitas/esm-foo', { pages: [] });
+      expect(localStorage.getItem('egen-routes:@egen-civitas/esm-foo')).toBeNull();
       expect(warn).toHaveBeenCalledWith(expect.stringContaining('disabled outside development'));
     });
 
@@ -78,7 +78,7 @@ describe('route-maps', () => {
       await setupRouteMapOverrides();
 
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      removeRouteMapOverride('@egen/esm-foo');
+      removeRouteMapOverride('@egen-civitas/esm-foo');
       expect(warn).toHaveBeenCalledWith(expect.stringContaining('disabled outside development'));
     });
 
@@ -99,93 +99,93 @@ describe('route-maps', () => {
     });
 
     it('getCurrentRouteMap merges base map with JSON object overrides', async () => {
-      setDomRouteMaps([{ '@egen/esm-foo': { pages: [] }, '@egen/esm-bar': { extensions: [] } }]);
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify({ pages: [{ component: 'root', route: '/' }] }));
+      setDomRouteMaps([{ '@egen-civitas/esm-foo': { pages: [] }, '@egen-civitas/esm-bar': { extensions: [] } }]);
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify({ pages: [{ component: 'root', route: '/' }] }));
 
       const { setupRouteMapOverrides, getCurrentRouteMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-foo']).toEqual({ pages: [{ component: 'root', route: '/' }] });
-      expect(map['@egen/esm-bar']).toEqual({ extensions: [] });
+      expect(map['@egen-civitas/esm-foo']).toEqual({ pages: [{ component: 'root', route: '/' }] });
+      expect(map['@egen-civitas/esm-bar']).toEqual({ extensions: [] });
     });
 
     it('getCurrentRouteMap merges base map with URL-fetched overrides', async () => {
-      setDomRouteMaps([{ '@egen/esm-foo': { pages: [] } }]);
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify('http://localhost:8081/routes.json'));
+      setDomRouteMaps([{ '@egen-civitas/esm-foo': { pages: [] } }]);
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify('http://localhost:8081/routes.json'));
       fetchMock.mockResponseOnce(JSON.stringify({ pages: [{ component: 'root', route: '/fetched' }] }));
 
       const { setupRouteMapOverrides, getCurrentRouteMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-foo']).toEqual({ pages: [{ component: 'root', route: '/fetched' }] });
+      expect(map['@egen-civitas/esm-foo']).toEqual({ pages: [{ component: 'root', route: '/fetched' }] });
     });
 
     it('getRouteMapDefaultMap returns only the base map', async () => {
-      setDomRouteMaps([{ '@egen/esm-foo': { pages: [] } }]);
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify({ pages: [{ component: 'x', route: '/' }] }));
+      setDomRouteMaps([{ '@egen-civitas/esm-foo': { pages: [] } }]);
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify({ pages: [{ component: 'x', route: '/' }] }));
 
       const { setupRouteMapOverrides, getRouteMapDefaultMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
       const map = await getRouteMapDefaultMap();
-      expect(map['@egen/esm-foo']).toEqual({ pages: [] });
+      expect(map['@egen-civitas/esm-foo']).toEqual({ pages: [] });
     });
 
     it('addRouteMapOverride stores an object in localStorage', async () => {
       const { setupRouteMapOverrides, addRouteMapOverride } = await import('./route-maps');
       await setupRouteMapOverrides();
 
-      addRouteMapOverride('@egen/esm-foo', { pages: [{ component: 'root', route: '/' }] });
-      expect(localStorage.getItem('egen-routes:@egen/esm-foo')).toBe('{"pages":[{"component":"root","route":"/"}]}');
+      addRouteMapOverride('@egen-civitas/esm-foo', { pages: [{ component: 'root', route: '/' }] });
+      expect(localStorage.getItem('egen-routes:@egen-civitas/esm-foo')).toBe('{"pages":[{"component":"root","route":"/"}]}');
     });
 
     it('addRouteMapOverride stores a JSON string in localStorage', async () => {
       const { setupRouteMapOverrides, addRouteMapOverride } = await import('./route-maps');
       await setupRouteMapOverrides();
 
-      addRouteMapOverride('@egen/esm-foo', JSON.stringify({ pages: [{ component: 'root', route: '/' }] }));
-      expect(localStorage.getItem('egen-routes:@egen/esm-foo')).toBe('{"pages":[{"component":"root","route":"/"}]}');
+      addRouteMapOverride('@egen-civitas/esm-foo', JSON.stringify({ pages: [{ component: 'root', route: '/' }] }));
+      expect(localStorage.getItem('egen-routes:@egen-civitas/esm-foo')).toBe('{"pages":[{"component":"root","route":"/"}]}');
     });
 
     it('addRouteMapOverride stores an HTTP URL string in localStorage', async () => {
       const { setupRouteMapOverrides, addRouteMapOverride } = await import('./route-maps');
       await setupRouteMapOverrides();
 
-      addRouteMapOverride('@egen/esm-foo', 'http://localhost/my-route-override.json');
-      expect(localStorage.getItem('egen-routes:@egen/esm-foo')).toBe('"http://localhost/my-route-override.json"');
+      addRouteMapOverride('@egen-civitas/esm-foo', 'http://localhost/my-route-override.json');
+      expect(localStorage.getItem('egen-routes:@egen-civitas/esm-foo')).toBe('"http://localhost/my-route-override.json"');
     });
 
     it('addRouteMapOverride stores a URL object in localStorage', async () => {
       const { setupRouteMapOverrides, addRouteMapOverride } = await import('./route-maps');
       await setupRouteMapOverrides();
 
-      addRouteMapOverride('@egen/esm-foo', new URL('http://localhost/my-route-override.json'));
-      expect(localStorage.getItem('egen-routes:@egen/esm-foo')).toBe('"http://localhost/my-route-override.json"');
+      addRouteMapOverride('@egen-civitas/esm-foo', new URL('http://localhost/my-route-override.json'));
+      expect(localStorage.getItem('egen-routes:@egen-civitas/esm-foo')).toBe('"http://localhost/my-route-override.json"');
     });
 
     it('removeRouteMapOverride removes from localStorage', async () => {
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify({ pages: [] }));
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify({ pages: [] }));
 
       const { setupRouteMapOverrides, removeRouteMapOverride } = await import('./route-maps');
       await setupRouteMapOverrides();
 
-      removeRouteMapOverride('@egen/esm-foo');
-      expect(localStorage.getItem('egen-routes:@egen/esm-foo')).toBeNull();
+      removeRouteMapOverride('@egen-civitas/esm-foo');
+      expect(localStorage.getItem('egen-routes:@egen-civitas/esm-foo')).toBeNull();
     });
 
     it('resetRouteMapOverrides clears all override keys', async () => {
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify({ pages: [] }));
-      localStorage.setItem('egen-routes:@egen/esm-bar', JSON.stringify({ extensions: [] }));
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify({ pages: [] }));
+      localStorage.setItem('egen-routes:@egen-civitas/esm-bar', JSON.stringify({ extensions: [] }));
       localStorage.setItem('unrelated-key', 'value');
 
       const { setupRouteMapOverrides, resetRouteMapOverrides } = await import('./route-maps');
       await setupRouteMapOverrides();
 
       resetRouteMapOverrides();
-      expect(localStorage.getItem('egen-routes:@egen/esm-foo')).toBeNull();
-      expect(localStorage.getItem('egen-routes:@egen/esm-bar')).toBeNull();
+      expect(localStorage.getItem('egen-routes:@egen-civitas/esm-foo')).toBeNull();
+      expect(localStorage.getItem('egen-routes:@egen-civitas/esm-bar')).toBeNull();
       expect(localStorage.getItem('unrelated-key')).toBe('value');
     });
 
@@ -196,15 +196,15 @@ describe('route-maps', () => {
       const handler = vi.fn();
       window.addEventListener('egen-routes:change', handler);
 
-      addRouteMapOverride('@egen/esm-foo', { pages: [] });
+      addRouteMapOverride('@egen-civitas/esm-foo', { pages: [] });
       expect(handler).toHaveBeenCalledTimes(1);
 
       window.removeEventListener('egen-routes:change', handler);
     });
 
     it('getRouteMapOverrideMap returns raw localStorage entries in dev mode', async () => {
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify({ pages: [] }));
-      localStorage.setItem('egen-routes:@egen/esm-bar', JSON.stringify('http://localhost/bar-routes.json'));
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify({ pages: [] }));
+      localStorage.setItem('egen-routes:@egen-civitas/esm-bar', JSON.stringify('http://localhost/bar-routes.json'));
       localStorage.setItem('unrelated-key', 'value');
 
       const { setupRouteMapOverrides, getRouteMapOverrideMap } = await import('./route-maps');
@@ -212,8 +212,8 @@ describe('route-maps', () => {
 
       const overrides = getRouteMapOverrideMap();
       expect(Object.keys(overrides)).toHaveLength(2);
-      expect(overrides['@egen/esm-foo']).toBe(JSON.stringify({ pages: [] }));
-      expect(overrides['@egen/esm-bar']).toBe(JSON.stringify('http://localhost/bar-routes.json'));
+      expect(overrides['@egen-civitas/esm-foo']).toBe(JSON.stringify({ pages: [] }));
+      expect(overrides['@egen-civitas/esm-bar']).toBe(JSON.stringify('http://localhost/bar-routes.json'));
     });
 
     it('addRouteMapOverride rejects an invalid JSON string', async () => {
@@ -221,28 +221,28 @@ describe('route-maps', () => {
       await setupRouteMapOverrides();
 
       const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      addRouteMapOverride('@egen/esm-foo', JSON.stringify({ pages: 'not an array' }));
-      expect(localStorage.getItem('egen-routes:@egen/esm-foo')).toBeNull();
+      addRouteMapOverride('@egen-civitas/esm-foo', JSON.stringify({ pages: 'not an array' }));
+      expect(localStorage.getItem('egen-routes:@egen-civitas/esm-foo')).toBeNull();
       expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining('not a valid EgenAppRoutes'), expect.anything());
     });
 
     it('getRouteMapNextPageMap reflects overrides added after setup', async () => {
-      setDomRouteMaps([{ '@egen/esm-foo': { pages: [] } }]);
+      setDomRouteMaps([{ '@egen-civitas/esm-foo': { pages: [] } }]);
 
       const { setupRouteMapOverrides, addRouteMapOverride, getCurrentRouteMap, getRouteMapNextPageMap } = await import(
         './route-maps'
       );
       await setupRouteMapOverrides();
 
-      addRouteMapOverride('@egen/esm-foo', { pages: [{ component: 'new', route: '/new' }] });
+      addRouteMapOverride('@egen-civitas/esm-foo', { pages: [{ component: 'new', route: '/new' }] });
 
       // getCurrentRouteMap uses the snapshot — doesn't reflect post-setup changes
       const currentMap = await getCurrentRouteMap();
-      expect(currentMap['@egen/esm-foo']).toEqual({ pages: [] });
+      expect(currentMap['@egen-civitas/esm-foo']).toEqual({ pages: [] });
 
       // getRouteMapNextPageMap reads live overrides
       const nextMap = await getRouteMapNextPageMap();
-      expect(nextMap['@egen/esm-foo']).toEqual({ pages: [{ component: 'new', route: '/new' }] });
+      expect(nextMap['@egen-civitas/esm-foo']).toEqual({ pages: [{ component: 'new', route: '/new' }] });
     });
   });
 
@@ -252,15 +252,15 @@ describe('route-maps', () => {
       vi.resetModules();
 
       setDomRouteMaps([
-        { '@egen/esm-foo': { pages: [{ component: 'v1', route: '/' }] } },
-        { '@egen/esm-foo': { pages: [{ component: 'v2', route: '/' }] } },
+        { '@egen-civitas/esm-foo': { pages: [{ component: 'v1', route: '/' }] } },
+        { '@egen-civitas/esm-foo': { pages: [{ component: 'v2', route: '/' }] } },
       ]);
 
       const { setupRouteMapOverrides, getCurrentRouteMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-foo']).toEqual({ pages: [{ component: 'v2', route: '/' }] });
+      expect(map['@egen-civitas/esm-foo']).toEqual({ pages: [{ component: 'v2', route: '/' }] });
     });
   });
 
@@ -275,14 +275,14 @@ describe('route-maps', () => {
       document.head.appendChild(script);
 
       fetchMock.mockResponseOnce(
-        JSON.stringify({ '@egen/esm-remote': { pages: [{ component: 'root', route: '/remote' }] } }),
+        JSON.stringify({ '@egen-civitas/esm-remote': { pages: [{ component: 'root', route: '/remote' }] } }),
       );
 
       const { setupRouteMapOverrides, getCurrentRouteMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-remote']).toEqual({ pages: [{ component: 'root', route: '/remote' }] });
+      expect(map['@egen-civitas/esm-remote']).toEqual({ pages: [{ component: 'root', route: '/remote' }] });
       expect(fetchMock).toHaveBeenCalledWith('http://localhost/routes.json');
     });
 
@@ -292,7 +292,7 @@ describe('route-maps', () => {
 
       const inline = document.createElement('script');
       inline.type = 'egen-routes';
-      inline.textContent = JSON.stringify({ '@egen/esm-inline': { extensions: [] } });
+      inline.textContent = JSON.stringify({ '@egen-civitas/esm-inline': { extensions: [] } });
       document.head.appendChild(inline);
 
       const remote = document.createElement('script');
@@ -300,14 +300,14 @@ describe('route-maps', () => {
       Object.defineProperty(remote, 'src', { value: 'http://localhost/routes.json', writable: false });
       document.head.appendChild(remote);
 
-      fetchMock.mockResponseOnce(JSON.stringify({ '@egen/esm-remote': { pages: [] } }));
+      fetchMock.mockResponseOnce(JSON.stringify({ '@egen-civitas/esm-remote': { pages: [] } }));
 
       const { setupRouteMapOverrides, getCurrentRouteMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-inline']).toEqual({ extensions: [] });
-      expect(map['@egen/esm-remote']).toEqual({ pages: [] });
+      expect(map['@egen-civitas/esm-inline']).toEqual({ extensions: [] });
+      expect(map['@egen-civitas/esm-remote']).toEqual({ pages: [] });
     });
 
     it('skips remote route maps that fail to fetch', async () => {
@@ -318,7 +318,7 @@ describe('route-maps', () => {
 
       const good = document.createElement('script');
       good.type = 'egen-routes';
-      good.textContent = JSON.stringify({ '@egen/esm-foo': { pages: [] } });
+      good.textContent = JSON.stringify({ '@egen-civitas/esm-foo': { pages: [] } });
       document.head.appendChild(good);
 
       const bad = document.createElement('script');
@@ -332,8 +332,8 @@ describe('route-maps', () => {
       await setupRouteMapOverrides();
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-foo']).toEqual({ pages: [] });
-      expect(map['@egen/esm-broken']).toBeUndefined();
+      expect(map['@egen-civitas/esm-foo']).toEqual({ pages: [] });
+      expect(map['@egen-civitas/esm-broken']).toBeUndefined();
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Failed to parse routes'), expect.anything());
     });
 
@@ -384,7 +384,7 @@ describe('route-maps', () => {
 
       const good = document.createElement('script');
       good.type = 'egen-routes';
-      good.textContent = JSON.stringify({ '@egen/esm-foo': { pages: [] } });
+      good.textContent = JSON.stringify({ '@egen-civitas/esm-foo': { pages: [] } });
       document.head.appendChild(good);
 
       const bad = document.createElement('script');
@@ -396,7 +396,7 @@ describe('route-maps', () => {
       await setupRouteMapOverrides();
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-foo']).toEqual({ pages: [] });
+      expect(map['@egen-civitas/esm-foo']).toEqual({ pages: [] });
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Failed to parse routes'), expect.anything());
     });
 
@@ -405,14 +405,14 @@ describe('route-maps', () => {
       vi.resetModules();
 
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify('http://localhost:9999/bad.json'));
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify('http://localhost:9999/bad.json'));
       fetchMock.mockRejectOnce(new Error('Network error'));
 
       const { setupRouteMapOverrides, getCurrentRouteMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-foo']).toBeUndefined();
+      expect(map['@egen-civitas/esm-foo']).toBeUndefined();
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Failed to load route override'), expect.anything());
     });
 
@@ -421,14 +421,14 @@ describe('route-maps', () => {
       vi.resetModules();
 
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify('http://localhost/bad-routes.json'));
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify('http://localhost/bad-routes.json'));
       fetchMock.mockResponseOnce(JSON.stringify({ pages: 'not an array' }));
 
       const { setupRouteMapOverrides, getCurrentRouteMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-foo']).toBeUndefined();
+      expect(map['@egen-civitas/esm-foo']).toBeUndefined();
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Failed to load route override'), expect.anything());
     });
 
@@ -437,13 +437,13 @@ describe('route-maps', () => {
       vi.resetModules();
 
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      localStorage.setItem('egen-routes:@egen/esm-foo', JSON.stringify(42));
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify(42));
 
       const { setupRouteMapOverrides, getCurrentRouteMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-foo']).toBeUndefined();
+      expect(map['@egen-civitas/esm-foo']).toBeUndefined();
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Failed to load route override'), expect.anything());
     });
 
@@ -452,13 +452,13 @@ describe('route-maps', () => {
       vi.resetModules();
 
       const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-      localStorage.setItem('egen-routes:@egen/esm-foo', 'not json at all');
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', 'not json at all');
 
       const { setupRouteMapOverrides, getCurrentRouteMap } = await import('./route-maps');
       await setupRouteMapOverrides();
 
       const map = await getCurrentRouteMap();
-      expect(map['@egen/esm-foo']).toBeUndefined();
+      expect(map['@egen-civitas/esm-foo']).toBeUndefined();
       expect(warnSpy).toHaveBeenCalledWith(expect.stringContaining('Failed to load route override'), expect.anything());
     });
   });

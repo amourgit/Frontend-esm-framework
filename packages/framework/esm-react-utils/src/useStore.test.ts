@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
-import { createGlobalStore } from '@egen/esm-state';
+import { createGlobalStore } from '@egen-civitas/esm-state';
 import { useStore, useStoreWithActions } from './useStore';
 
 describe('useStore', () => {

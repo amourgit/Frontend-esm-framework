@@ -1,7 +1,7 @@
 /** @category Icons */
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef } from 'react';
 import classNames, { type Argument } from 'classnames';
-import { RenderIfValueIsTruthy } from '@egen/esm-react-utils';
+import { RenderIfValueIsTruthy } from '@egen-civitas/esm-react-utils';
 import style from './icons.module.scss';
 
 /** Array of all available Egen icon IDs that can be used with the Icon component. */

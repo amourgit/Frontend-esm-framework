@@ -1,4 +1,4 @@
-import { type Concept, type EgenResource } from '@egen/esm-api';
+import { type Concept, type EgenResource } from '@egen-civitas/esm-api';
 
 /**
  * Represents a generic catalog item — a product, service, or configurable asset

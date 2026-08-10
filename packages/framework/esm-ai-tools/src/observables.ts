@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-tools — Registre d'observables IA
+//  @egen-civitas/esm-ai-tools — Registre d'observables IA
 //
 //  Symétrique au registre d'actions UI (ui-actions.ts), mais pour ce que le
 //  LLM doit CONNAÎTRE plutôt que DÉCLENCHER : un message d'erreur affiché,
@@ -17,7 +17,7 @@
 //       immédiatement. `getObservablesCatalogForLLM()` calcule donc le
 //       rectangle (`getBoundingClientRect`) À LA LECTURE, jamais en cache.
 //
-//  Enregistrement, via le hook useAIObservable (@egen/esm-ai-framework) :
+//  Enregistrement, via le hook useAIObservable (@egen-civitas/esm-ai-framework) :
 //
 //  ```tsx
 //  const tableRef = useAIObservable<HTMLDivElement>({

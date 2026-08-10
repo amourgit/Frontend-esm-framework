@@ -1,4 +1,4 @@
-import { type EgenResource } from '@egen/esm-api';
+import { type EgenResource } from '@egen-civitas/esm-api';
 import { type Classification } from './classification-resource';
 import { type Location } from './location-resource';
 import { type DataPoint } from './datapoint-resource';

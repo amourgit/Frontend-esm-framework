@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-tools — Registre de routes IA
+//  @egen-civitas/esm-ai-tools — Registre de routes IA
 //
 //  Problème résolu : le tool `navigate` prend une route en argument, mais
 //  rien n'empêchait le LLM de DEVINER un chemin plausible (ex: "/login")
@@ -10,7 +10,7 @@
 //  au lieu de deviner.
 //
 //  Enregistrement par un microfrontend, via defineAIModule (voir
-//  @egen/esm-ai-extensions) :
+//  @egen-civitas/esm-ai-extensions) :
 //
 //  ```ts
 //  defineAIModule({

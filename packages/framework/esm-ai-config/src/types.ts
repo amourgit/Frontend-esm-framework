@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-config — Types de configuration IA
+//  @egen-civitas/esm-ai-config — Types de configuration IA
 //
 //  Toutes les valeurs proviennent de :
 //    1. Variables d'environnement (EGEN_AI_*)

@@ -1,14 +1,14 @@
 import React from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { getConfig } from '@egen/esm-config';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { getConfig } from '@egen-civitas/esm-config';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { PageHeaderContent } from './page-header.component';
 
 const mockGetConfig = vi.mocked(getConfig);
 const mockGetCoreTranslation = vi.mocked(getCoreTranslation);
 
-vi.mock('@egen/esm-config', () => ({
+vi.mock('@egen-civitas/esm-config', () => ({
   getConfig: vi.fn(),
 }));
 
@@ -60,6 +60,6 @@ describe('PageHeaderContent', () => {
     render(<PageHeaderContent title="Test Title" illustration={mockIllustration} />);
 
     await screen.findByText(/test title/i);
-    expect(getConfig).toHaveBeenCalledWith('@egen/esm-styleguide');
+    expect(getConfig).toHaveBeenCalledWith('@egen-civitas/esm-styleguide');
   });
 });

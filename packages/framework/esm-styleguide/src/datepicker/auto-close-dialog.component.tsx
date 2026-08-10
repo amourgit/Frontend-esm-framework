@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { DatePickerStateContext, DateRangePickerStateContext, Dialog } from 'react-aria-components';
-import { useOnClickOutside } from '@egen/esm-react-utils';
+import { useOnClickOutside } from '@egen-civitas/esm-react-utils';
 import styles from './datepicker.module.scss';
 
 interface AutoCloseDialogProps {

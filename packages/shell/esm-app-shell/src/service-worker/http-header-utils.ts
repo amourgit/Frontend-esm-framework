@@ -1,4 +1,4 @@
-import type { EgenOfflineHttpHeaderNames, EgenOfflineHttpHeaders } from '@egen/esm-offline';
+import type { EgenOfflineHttpHeaderNames, EgenOfflineHttpHeaders } from '@egen-civitas/esm-offline';
 import { egenOfflineResponseBodyHttpHeaderName, egenOfflineResponseStatusHttpHeaderName } from './constants';
 
 export function parseEgenOfflineResponseBodyHeader(headers: Headers) {

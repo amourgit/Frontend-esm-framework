@@ -109,8 +109,8 @@ describe('develop command', () => {
   });
 
   it('accepts multiple --packages flags', async () => {
-    const parsed = await createCli(['develop', '--packages', '@egen/app-a', '--packages', '@egen/app-b']).parseAsync();
-    expect(parsed.packages).toEqual(['@egen/app-a', '@egen/app-b']);
+    const parsed = await createCli(['develop', '--packages', '@egen-civitas/app-a', '--packages', '@egen-civitas/app-b']).parseAsync();
+    expect(parsed.packages).toEqual(['@egen-civitas/app-a', '@egen-civitas/app-b']);
   });
 });
 

@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-config — Point d'entrée public
+//  @egen-civitas/esm-ai-config — Point d'entrée public
 // =============================================================================
 
 export * from './types';

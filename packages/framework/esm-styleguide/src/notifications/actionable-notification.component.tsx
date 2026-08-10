@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ActionableNotification } from '@carbon/react';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 /** @module @category UI */
 
 export interface ActionableNotificationProps {

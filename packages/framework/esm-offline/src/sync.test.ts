@@ -1,6 +1,6 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import 'fake-indexeddb/auto';
-import { getLoggedInUser } from '@egen/esm-api';
+import { getLoggedInUser } from '@egen-civitas/esm-api';
 import type { QueueItemDescriptor } from './sync';
 import {
   getFullSynchronizationItems,
@@ -31,7 +31,7 @@ const defaultMockSyncItemDescriptor: QueueItemDescriptor = {
   entityUuid: '00000000-0000-0000-0000-000000000001',
 };
 
-vi.mock('@egen/esm-api', () => ({
+vi.mock('@egen-civitas/esm-api', () => ({
   getLoggedInUser: vi.fn(async () => ({ uuid: mockUserId })),
 }));
 

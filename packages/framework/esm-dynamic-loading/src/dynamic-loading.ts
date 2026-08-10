@@ -1,7 +1,7 @@
 /** @module @category Dynamic Loading */
 'use strict';
-import { dispatchToastShown, type ImportMap } from '@egen/esm-globals';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { dispatchToastShown, type ImportMap } from '@egen-civitas/esm-globals';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { getCurrentPageMap, getImportMapOverrideMap, resetImportMapOverrides } from './import-maps';
 
 /**
@@ -20,7 +20,7 @@ export function slugify(name: string) {
  * Loads the named export from a named package. This might be used like:
  *
  * ```js
- * const { someComponent } = importDynamic("@egen/esm-template-app")
+ * const { someComponent } = importDynamic("@egen-civitas/esm-template-app")
  * ```
  *
  * @param jsPackage The package to load the export from.

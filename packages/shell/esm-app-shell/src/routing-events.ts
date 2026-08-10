@@ -1,4 +1,4 @@
-import { fireEgenEvent, type EgenEventTypes, subscribeEgenEvent } from '@egen/esm-framework/src/internal';
+import { fireEgenEvent, type EgenEventTypes, subscribeEgenEvent } from '@egen-civitas/esm-framework/src/internal';
 
 interface BeforeRoutingEventPayload {
   appsByNewStatus: {
@@ -46,9 +46,9 @@ window.addEventListener('single-spa:before-routing-event', (event: Event) => {
         event.detail.totalAppChanges > 0
           ? event.detail.appsByNewStatus.MOUNTED.find(
               (it) =>
-                !it.startsWith('@egen/esm-primary-navigation-app') &&
-                !it.startsWith('@egen/esm-devtools-app') &&
-                !it.startsWith('@egen/esm-help-menu-app'),
+                !it.startsWith('@egen-civitas/esm-primary-navigation-app') &&
+                !it.startsWith('@egen-civitas/esm-devtools-app') &&
+                !it.startsWith('@egen-civitas/esm-help-menu-app'),
             )
           : undefined;
 

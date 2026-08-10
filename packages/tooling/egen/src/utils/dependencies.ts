@@ -6,7 +6,7 @@ import type { PackageJson } from './types';
 
 export function getSharedDependencies() {
   const require = createRequire(import.meta.url);
-  return require('@egen/esm-app-shell/dependencies.json');
+  return require('@egen-civitas/esm-app-shell/dependencies.json');
 }
 
 export function getMainBundle(project: PackageJson) {

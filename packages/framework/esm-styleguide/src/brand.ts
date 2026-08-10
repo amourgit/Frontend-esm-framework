@@ -1,4 +1,4 @@
-import { getConfigStore } from '@egen/esm-config';
+import { getConfigStore } from '@egen-civitas/esm-config';
 
 /**
  * Sets up the branding CSS variables by applying the configured brand colors
@@ -7,7 +7,7 @@ import { getConfigStore } from '@egen/esm-config';
  * @internal
  */
 export function setupBranding() {
-  getConfigStore('@egen/esm-styleguide').subscribe((store) => {
+  getConfigStore('@egen-civitas/esm-styleguide').subscribe((store) => {
     if (store.loaded && store.config) {
       setGlobalCSSVariable('--brand-01', store.config['Brand color #1']);
       setGlobalCSSVariable('--brand-02', store.config['Brand color #2']);

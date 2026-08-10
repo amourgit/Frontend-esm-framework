@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-framework — API publique de la couche 1 IA EGEN
+//  @egen-civitas/esm-ai-framework — API publique de la couche 1 IA EGEN
 //
 //  Point d'entrée unique pour tous les consommateurs de la couche IA.
 //  Re-exporte l'ensemble des primitives avec une API stable et versionnée.
@@ -11,12 +11,12 @@
 //    useAIContext,
 //    useExecuteTool,
 //    useAIEnabled,
-//  } from '@egen/esm-ai-framework';
+//  } from '@egen-civitas/esm-ai-framework';
 //  ```
 //
 //  Usage (microfrontend — extension) :
 //  ```ts
-//  import { defineAIModule } from '@egen/esm-ai-framework';
+//  import { defineAIModule } from '@egen-civitas/esm-ai-framework';
 //  ```
 // =============================================================================
 
@@ -41,7 +41,7 @@ export {
   type AISecurityConfig,
   type AIObservabilityConfig,
   type PartialAIConfig,
-} from '@egen/esm-ai-config';
+} from '@egen-civitas/esm-ai-config';
 
 // ─── Événements ───────────────────────────────────────────────────────────────
 export {
@@ -54,7 +54,7 @@ export {
   AI_EVENTS,
   type AIEventName,
   type AIEventPayloadMap,
-} from '@egen/esm-ai-events';
+} from '@egen-civitas/esm-ai-events';
 
 // ─── Contexte ─────────────────────────────────────────────────────────────────
 export {
@@ -73,7 +73,7 @@ export {
   type AIPermissionsContext,
   type AIExtensionContext,
   type AIContextProvider,
-} from '@egen/esm-ai-context';
+} from '@egen-civitas/esm-ai-context';
 
 // ─── Tools ────────────────────────────────────────────────────────────────────
 export {
@@ -121,10 +121,10 @@ export {
   type DescribedElement,
   type DescribedHeading,
   type ScreenDescription,
-} from '@egen/esm-ai-tools';
+} from '@egen-civitas/esm-ai-tools';
 
 // ─── Extensions (API haut niveau pour microfrontends) ─────────────────────────
-export { defineAIModule, type AIModuleDefinition } from '@egen/esm-ai-extensions';
+export { defineAIModule, type AIModuleDefinition } from '@egen-civitas/esm-ai-extensions';
 
 // ─── React hooks ──────────────────────────────────────────────────────────────
 export {

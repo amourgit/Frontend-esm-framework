@@ -1,5 +1,5 @@
 /** @module @category Offline */
-import { getLoggedInUser } from '@egen/esm-api';
+import { getLoggedInUser } from '@egen-civitas/esm-api';
 import Dexie from 'dexie';
 import { OfflineDb } from './offline-db';
 

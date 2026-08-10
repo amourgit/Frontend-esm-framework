@@ -1,10 +1,10 @@
 import { isObservable } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { getConfig } from '@egen/esm-config';
-import { navigate } from '@egen/esm-navigation';
+import { getConfig } from '@egen-civitas/esm-config';
+import { navigate } from '@egen-civitas/esm-navigation';
 import { egenFetch, egenObservableFetch } from './egen-fetch';
 
-vi.mock('@egen/esm-navigation', () => ({
+vi.mock('@egen-civitas/esm-navigation', () => ({
   clearHistory: vi.fn(),
   navigate: vi.fn(),
 }));

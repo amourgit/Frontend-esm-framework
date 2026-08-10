@@ -1,6 +1,6 @@
 /** @module @category API */
 import { useState, useEffect } from 'react';
-import { getLocations, type Location } from '@egen/esm-data-api';
+import { getLocations, type Location } from '@egen-civitas/esm-data-api';
 
 /**
  * A React hook that fetches and returns locations from the Egen server.
@@ -15,7 +15,7 @@ import { getLocations, type Location } from '@egen/esm-data-api';
  *
  * @example
  * ```tsx
- * import { useLocations } from '@egen/esm-framework';
+ * import { useLocations } from '@egen-civitas/esm-framework';
  * function LocationList() {
  *   const locations = useLocations('Login Location');
  *   return (

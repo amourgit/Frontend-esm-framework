@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
 import { NEVER } from 'rxjs';
-import type {} from '@egen/esm-globals';
-import * as utils from '@egen/esm-utils/mock';
+import type {} from '@egen-civitas/esm-globals';
+import * as utils from '@egen-civitas/esm-utils/mock';
 import dayjs from 'dayjs';
 
 window.i18next = { ...window.i18next, language: 'en' };
 
-export * from '@egen/esm-api/mock';
-export * from '@egen/esm-data-api/mock';
-export * from '@egen/esm-config/mock';
-export * from '@egen/esm-context';
-export * from '@egen/esm-expression-evaluator/src/public';
-export * from '@egen/esm-extensions/mock';
-export * from '@egen/esm-react-utils/mock';
-export * from '@egen/esm-state/mock';
-export * from '@egen/esm-styleguide/mock';
-export * from '@egen/esm-translations/mock';
+export * from '@egen-civitas/esm-api/mock';
+export * from '@egen-civitas/esm-data-api/mock';
+export * from '@egen-civitas/esm-config/mock';
+export * from '@egen-civitas/esm-context';
+export * from '@egen-civitas/esm-expression-evaluator/src/public';
+export * from '@egen-civitas/esm-extensions/mock';
+export * from '@egen-civitas/esm-react-utils/mock';
+export * from '@egen-civitas/esm-state/mock';
+export * from '@egen-civitas/esm-styleguide/mock';
+export * from '@egen-civitas/esm-translations/mock';
 
-export { parseDate, formatDate, formatDatetime, formatTime, isEgenDateToday, matchLocale } from '@egen/esm-utils';
+export { parseDate, formatDate, formatDatetime, formatTime, isEgenDateToday, matchLocale } from '@egen-civitas/esm-utils';
 
 /* esm-globals */
 
@@ -45,7 +45,7 @@ export const getFeatureFlag = jest.fn().mockReturnValue(true);
 export const subscribeToFeatureFlag = jest.fn((name: string, callback) => callback(true));
 
 /* esm-navigation */
-export { interpolateUrl, interpolateString } from '@egen/esm-navigation';
+export { interpolateUrl, interpolateString } from '@egen-civitas/esm-navigation';
 export const navigate = jest.fn();
 export const getHistory = jest.fn(() => ['https://egen.alpha.vercel.com/home']);
 export const clearHistory = jest.fn();
@@ -160,7 +160,7 @@ export {
   getEntityName,
   formatEntityName,
   selectPreferredName,
-} from '@egen/esm-utils';
+} from '@egen-civitas/esm-utils';
 
 export const age = jest.fn((arg) => utils.age(arg));
 

@@ -2,7 +2,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import classnames from 'classnames';
 import { ActionableNotification } from '@carbon/react';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import styles from './snackbar.module.scss';
 
 // Design documentation for Snackbars https://egen.alpha.vercel.com/design-system

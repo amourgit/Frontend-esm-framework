@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-config — Validation de la configuration
+//  @egen-civitas/esm-ai-config — Validation de la configuration
 // =============================================================================
 
 import type { AIConfig, PartialAIConfig, DeepPartial } from './types';

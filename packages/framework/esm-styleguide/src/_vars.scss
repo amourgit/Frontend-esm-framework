@@ -11,7 +11,7 @@
 //  n'avait donc aucun effet sur tout ce qui en dépendait.
 //
 //  Chaque variable pointe maintenant vers son équivalent `--colors-*`
-//  injecté dynamiquement par @egen/esm-theme ; l'ancienne valeur Carbon
+//  injecté dynamiquement par @egen-civitas/esm-theme ; l'ancienne valeur Carbon
 //  n'est conservée QUE comme fallback CSS natif `var(x, fallback)`, actif
 //  uniquement le temps que le moteur de thème hydrate ses variables au
 //  chargement (mêmes garanties que --brand-01/02/03 ci-dessous).
@@ -83,7 +83,7 @@ $brand-primary-100: var(--colors-primary-900, #081a1c);
 //  par ces composants, quel que soit le thème chargé.
 //
 //  Correction : `--brand-01/02/03` pointent maintenant vers l'échelle
-//  `--colors-primary-*` injectée dynamiquement par @egen/esm-theme, avec
+//  `--colors-primary-*` injectée dynamiquement par @egen-civitas/esm-theme, avec
 //  l'ancienne valeur OpenMRS conservée UNIQUEMENT comme fallback CSS natif
 //  (`var(--x, fallback)`) — actif seulement tant que le moteur de thème n'a
 //  pas encore injecté ses variables (fenêtre de quelques ms au chargement).

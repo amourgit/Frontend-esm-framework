@@ -1,6 +1,6 @@
 /** @module @category API */
-import { egenFetch, restBaseUrl, type FetchResponse } from '@egen/esm-api';
-import { getGlobalStore } from '@egen/esm-state';
+import { egenFetch, restBaseUrl, type FetchResponse } from '@egen-civitas/esm-api';
+import { getGlobalStore } from '@egen-civitas/esm-state';
 import { BehaviorSubject } from 'rxjs';
 import { type NewWorkSessionPayload, type UpdateWorkSessionPayload, type WorkSession } from './types';
 
@@ -62,7 +62,7 @@ const initialState: WorkSessionStoreState = getSessionSessionStorage() || {
  *
  * @example
  * ```ts
- * import { getWorkSessionStore } from '@egen/esm-framework';
+ * import { getWorkSessionStore } from '@egen-civitas/esm-framework';
  * const store = getWorkSessionStore();
  * const unsubscribe = store.subscribe((state) => {
  *   console.log('Current entity:', state.entityUuid);

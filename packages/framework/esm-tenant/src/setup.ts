@@ -1,5 +1,5 @@
 // ============================================================================
-//  @egen/esm-tenant — Orchestrateur du système tenant
+//  @egen-civitas/esm-tenant — Orchestrateur du système tenant
 // ============================================================================
 //
 //  Rôle UNIQUE : capturer le tenant depuis l'URL (ou une autre source

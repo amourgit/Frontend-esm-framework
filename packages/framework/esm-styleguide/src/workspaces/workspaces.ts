@@ -5,12 +5,12 @@ import {
   getWorkspaceGroupRegistration,
   getWorkspaceRegistration,
   type WorkspaceRegistration,
-} from '@egen/esm-extensions';
-import { type WorkspaceWindowState } from '@egen/esm-globals';
-import { navigate } from '@egen/esm-navigation';
-import { getGlobalStore, createGlobalStore } from '@egen/esm-state';
-import { getCoreTranslation } from '@egen/esm-translations';
-import { useStore } from '@egen/esm-react-utils';
+} from '@egen-civitas/esm-extensions';
+import { type WorkspaceWindowState } from '@egen-civitas/esm-globals';
+import { navigate } from '@egen-civitas/esm-navigation';
+import { getGlobalStore, createGlobalStore } from '@egen-civitas/esm-state';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
+import { useStore } from '@egen-civitas/esm-react-utils';
 
 export interface CloseWorkspaceOptions {
   /**

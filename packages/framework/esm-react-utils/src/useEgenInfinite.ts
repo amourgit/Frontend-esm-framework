@@ -1,5 +1,5 @@
 /** @module @category UI */
-import { type FetchResponse, egenFetch } from '@egen/esm-api';
+import { type FetchResponse, egenFetch } from '@egen-civitas/esm-api';
 import { useCallback } from 'react';
 import useSWRInfinite, { type SWRInfiniteConfiguration, type SWRInfiniteResponse } from 'swr/infinite';
 import {

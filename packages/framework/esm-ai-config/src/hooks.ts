@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-config — React hooks
+//  @egen-civitas/esm-ai-config — React hooks
 //  Pattern identique à useFeatureFlag() du framework.
 // =============================================================================
 

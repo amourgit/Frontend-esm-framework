@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-extensions — API d'extension pour les microfrontends
+//  @egen-civitas/esm-ai-extensions — API d'extension pour les microfrontends
 //
 //  Re-exporte les primitives d'extension depuis les packages spécialisés
 //  et fournit des helpers de haut niveau pour un usage simplifié.
@@ -7,7 +7,7 @@
 //  Usage dans une app microfrontend :
 //
 //  ```ts
-//  import { defineAIModule } from '@egen/esm-ai-extensions';
+//  import { defineAIModule } from '@egen-civitas/esm-ai-extensions';
 //
 //  export function startupApp() {
 //    defineAIModule({
@@ -86,13 +86,13 @@ export {
   type AIObservableDefinition,
   type AIObservableKind,
   type AIObservableSnapshot,
-} from '@egen/esm-ai-tools';
+} from '@egen-civitas/esm-ai-tools';
 
-export { registerAIContextProvider, removeAIContextProvider, type AIContextProvider } from '@egen/esm-ai-context';
+export { registerAIContextProvider, removeAIContextProvider, type AIContextProvider } from '@egen-civitas/esm-ai-context';
 
-export { overrideAIConfig, subscribeToAIConfig, type PartialAIConfig } from '@egen/esm-ai-config';
+export { overrideAIConfig, subscribeToAIConfig, type PartialAIConfig } from '@egen-civitas/esm-ai-config';
 
-export { subscribeToAIEvent, observeAIEvent, AI_EVENTS, type AIEventName } from '@egen/esm-ai-events';
+export { subscribeToAIEvent, observeAIEvent, AI_EVENTS, type AIEventName } from '@egen-civitas/esm-ai-events';
 
 // ─── defineAIModule — API de haut niveau ──────────────────────────────────────
 
@@ -107,9 +107,9 @@ import {
   type AIToolDefinition,
   type AICapability,
   type AIRouteDefinition,
-} from '@egen/esm-ai-tools';
+} from '@egen-civitas/esm-ai-tools';
 
-import { registerAIContextProvider, type AIContextProvider } from '@egen/esm-ai-context';
+import { registerAIContextProvider, type AIContextProvider } from '@egen-civitas/esm-ai-context';
 
 export interface AIModuleDefinition {
   /** Nom du module microfrontend (ex: '@school/esm-grades-app') */
@@ -125,7 +125,7 @@ export interface AIModuleDefinition {
   /**
    * Routes déclarées par ce module, pour que le LLM les consulte (contexte
    * IA + tool `list_routes`) au lieu de deviner un chemin de navigation.
-   * Voir @egen/esm-ai-tools/routes.ts pour le format attendu.
+   * Voir @egen-civitas/esm-ai-tools/routes.ts pour le format attendu.
    */
   routes?: AIRouteDefinition[];
 }

@@ -1,6 +1,6 @@
 /** @module @category Extension */
 import { useEffect, useState } from 'react';
-import { getExtensionStore } from '@egen/esm-extensions';
+import { getExtensionStore } from '@egen-civitas/esm-extensions';
 import { isEqual } from 'lodash-es';
 
 /**

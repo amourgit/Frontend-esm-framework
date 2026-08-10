@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/vitest';
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Pen } from '@carbon/react/icons';
-import { useLayoutType } from '@egen/esm-react-utils';
+import { useLayoutType } from '@egen-civitas/esm-react-utils';
 import { ActionMenuButton } from './action-menu-button.component';
 import { type OpenWorkspace, useWorkspaces, type WorkspacesInfo } from '../workspaces';
 
@@ -16,8 +16,8 @@ vi.mock('@carbon/react/icons', async () => ({
   Pen: vi.fn(({ size }) => <div data-testid="pen-icon">size: {size}</div>),
 }));
 
-vi.mock('@egen/esm-react-utils', async () => {
-  const originalModule = await vi.importActual('@egen/esm-react-utils');
+vi.mock('@egen-civitas/esm-react-utils', async () => {
+  const originalModule = await vi.importActual('@egen-civitas/esm-react-utils');
 
   return {
     ...originalModule,

@@ -16,7 +16,7 @@ console.error = (...args: any[]) => {
 import { afterAll, afterEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
-import type {} from '@egen/esm-globals';
+import type {} from '@egen-civitas/esm-globals';
 
 declare global {
   interface Window {

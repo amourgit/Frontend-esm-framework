@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-tools — Types des tools IA
+//  @egen-civitas/esm-ai-tools — Types des tools IA
 // =============================================================================
 
 // ─── Schéma de paramètre ──────────────────────────────────────────────────────
@@ -43,7 +43,7 @@ export interface AIToolExecutionContext {
   aiContext?: unknown | null;
   /**
    * Session utilisateur (sessionStore snapshot).
-   * Typé loosement pour éviter une dépendance circulaire sur @egen/esm-api.
+   * Typé loosement pour éviter une dépendance circulaire sur @egen-civitas/esm-api.
    */
   session?: {
     authenticated: boolean;

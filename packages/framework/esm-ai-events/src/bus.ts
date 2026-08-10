@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-events — Bus d'événements IA
+//  @egen-civitas/esm-ai-events — Bus d'événements IA
 //
 //  Utilise les CustomEvents du DOM (même pattern que esm-globals/events.ts)
 //  + un Subject RxJS pour la composition réactive.

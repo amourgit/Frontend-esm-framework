@@ -1,5 +1,5 @@
 import React from 'react';
-import { type Classification } from '@egen/esm-data-api';
+import { type Classification } from '@egen-civitas/esm-data-api';
 
 /* Please keep these stubs in alphabetical order for readability */
 
@@ -159,7 +159,7 @@ export const EmptyCard = ({
   </div>
 );
 
-export { CardHeader, ErrorCard, Pagination, PageHeader, PageHeaderContent } from '@egen/esm-styleguide/src/internal';
+export { CardHeader, ErrorCard, Pagination, PageHeader, PageHeaderContent } from '@egen-civitas/esm-styleguide/src/internal';
 
 export const EgenDatePicker = () => <span>EgenDatePicker</span>;
 export const EgenDateRangePicker = () => <span>EgenDateRangePicker</span>;

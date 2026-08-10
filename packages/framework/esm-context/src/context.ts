@@ -2,7 +2,7 @@
 'use strict';
 
 import { createStore } from 'zustand/vanilla';
-import { registerGlobalStore } from '@egen/esm-state';
+import { registerGlobalStore } from '@egen-civitas/esm-state';
 
 interface EgenAppContext {
   [namespace: string]: NonNullable<object>;

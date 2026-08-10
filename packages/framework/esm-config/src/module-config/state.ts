@@ -1,5 +1,5 @@
-import { createGlobalStore, getGlobalStore } from '@egen/esm-state';
-import { shallowEqual } from '@egen/esm-utils';
+import { createGlobalStore, getGlobalStore } from '@egen-civitas/esm-state';
+import { shallowEqual } from '@egen-civitas/esm-utils';
 import { type StoreApi } from 'zustand';
 import type { Config, ConfigObject, ConfigSchema, ExtensionSlotConfig, ProvidedConfig } from '../types';
 

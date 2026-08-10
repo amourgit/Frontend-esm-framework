@@ -1,7 +1,7 @@
 /** @module @category UI */
 import React, { type MouseEvent } from 'react';
 import { Button } from '@carbon/react';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { ChevronDownIcon, ChevronUpIcon } from '../../public';
 
 export interface EntityBannerToggleContactDetailsButtonProps {

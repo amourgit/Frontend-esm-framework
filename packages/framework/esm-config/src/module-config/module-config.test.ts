@@ -1,8 +1,8 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import unset from 'lodash/unset';
 import * as Config from './module-config';
-import type { MockedStore } from '@egen/esm-state/mock';
-import { mockStores } from '@egen/esm-state/mock';
+import type { MockedStore } from '@egen-civitas/esm-state/mock';
+import { mockStores } from '@egen-civitas/esm-state/mock';
 import { validator } from '../validators/validator';
 import { validators, isUrl } from '../validators/validators';
 import type { ConfigExtensionStore, ConfigInternalStore, ImplementerToolsConfigStore } from './state';
@@ -16,7 +16,7 @@ import {
 import { Type } from '../types';
 import { getExtensionSlotsConfigStore } from '..';
 
-vi.mock('@egen/esm-state', () => import('@egen/esm-state/mock'));
+vi.mock('@egen-civitas/esm-state', () => import('@egen-civitas/esm-state/mock'));
 
 // Names from Wikipedia's "Metasyntactic variable" page:
 // foo, bar, baz, qux, quux, corge, grault, garply, waldo, fred, plugh, xyzzy, thud

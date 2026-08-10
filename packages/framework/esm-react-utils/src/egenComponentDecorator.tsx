@@ -1,9 +1,9 @@
 import React, { type ComponentType, type ErrorInfo, Suspense } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { type Cache, SWRConfig, type SWRConfiguration } from 'swr';
-import type {} from '@egen/esm-globals';
-import { egenFetch, EgenFetchError } from '@egen/esm-api';
-import { type ComponentConfig, type ExtensionData } from '@egen/esm-extensions';
+import type {} from '@egen-civitas/esm-globals';
+import { egenFetch, EgenFetchError } from '@egen-civitas/esm-api';
+import { type ComponentConfig, type ExtensionData } from '@egen-civitas/esm-extensions';
 import { ComponentContext } from './ComponentContext';
 
 const defaultOpts = {

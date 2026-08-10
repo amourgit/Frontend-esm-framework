@@ -1,4 +1,4 @@
-import { type EgenResource } from '@egen/esm-api';
+import { type EgenResource } from '@egen-civitas/esm-api';
 
 export interface Location {
   uuid: string;

@@ -1,4 +1,4 @@
-// Storybook-compatible mock for @egen/esm-react-utils.
+// Storybook-compatible mock for @egen-civitas/esm-react-utils.
 // Provides working implementations of the hooks and components that
 // styleguide components actually import, without depending on the
 // full Egen runtime.
@@ -22,7 +22,7 @@ export function isDesktop(layout: string) {
 
 // --- Config (delegates to esm-config mock) ---
 
-export { useConfig } from '@egen/esm-config';
+export { useConfig } from '@egen-civitas/esm-config';
 
 // --- Pagination (pure React hook, no framework dependency) ---
 

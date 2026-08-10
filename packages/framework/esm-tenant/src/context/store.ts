@@ -1,5 +1,5 @@
 // ============================================================================
-//  @egen/esm-tenant — Store Zustand global du système tenant
+//  @egen-civitas/esm-tenant — Store Zustand global du système tenant
 // ============================================================================
 //
 //  Le store est le point central de vérité pour le tenant CAPTURÉ au
@@ -9,16 +9,16 @@
 //  Ce store ne contient QUE ce qui a été capturé (id, source, timestamp) —
 //  aucune métadonnée (nom, thème, permissions…) : ce concept n'existe plus
 //  côté frontend (voir types.ts). C'est exactement ce que consulte
-//  `@egen/esm-api` (getTenantId, tenantHeaders) pour injecter le header
+//  `@egen-civitas/esm-api` (getTenantId, tenantHeaders) pour injecter le header
 //  `X-Tenant-ID` sur chaque requête backend.
 //
 //  IMPORTANT — SINGLETON MODULE FEDERATION :
 //  Ce module DOIT être partagé en singleton via Module Federation pour que
 //  toutes les microfrontends lisent le même état. Configurez :
-//    shared: { '@egen/esm-tenant': { singleton: true, eager: true } }
+//    shared: { '@egen-civitas/esm-tenant': { singleton: true, eager: true } }
 // ============================================================================
 
-import { createGlobalStore } from '@egen/esm-state';
+import { createGlobalStore } from '@egen-civitas/esm-state';
 import type { TenantStore, TenantId, TenantMode, TenantResolutionStrategy, TenantSystemConfig } from '../types';
 
 const DEFAULT_CONFIG: TenantSystemConfig = {
@@ -34,8 +34,8 @@ const DEFAULT_CONFIG: TenantSystemConfig = {
  *
  * Usage direct (avancé) :
  * ```ts
- * import { tenantStore } from '@egen/esm-tenant';
- * import { useStore } from '@egen/esm-react-utils';
+ * import { tenantStore } from '@egen-civitas/esm-tenant';
+ * import { useStore } from '@egen-civitas/esm-react-utils';
  *
  * const { tenantId, mode } = useStore(tenantStore);
  * ```

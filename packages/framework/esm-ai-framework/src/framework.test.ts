@@ -2,9 +2,9 @@
  * @vitest-environment jsdom
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { overrideAIConfig, resetAIConfig } from '@egen/esm-ai-config';
-import { _clearToolRegistry, registerTool } from '@egen/esm-ai-tools';
-import { _clearProviderRegistry } from '@egen/esm-ai-context';
+import { overrideAIConfig, resetAIConfig } from '@egen-civitas/esm-ai-config';
+import { _clearToolRegistry, registerTool } from '@egen-civitas/esm-ai-tools';
+import { _clearProviderRegistry } from '@egen-civitas/esm-ai-context';
 import { initAIFramework, cleanupAIFramework, isAIFrameworkInitialized } from './orchestrator';
 
 function setup() {
@@ -50,7 +50,7 @@ describe('initAIFramework', () => {
     // enabled = false par défaut
     initAIFramework();
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { hasTool } = require('@egen/esm-ai-tools');
+    const { hasTool } = require('@egen-civitas/esm-ai-tools');
     expect(hasTool('navigate')).toBe(false);
   });
 
@@ -58,7 +58,7 @@ describe('initAIFramework', () => {
     overrideAIConfig({ enabled: true }, 'runtime');
     initAIFramework();
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { hasTool } = require('@egen/esm-ai-tools');
+    const { hasTool } = require('@egen-civitas/esm-ai-tools');
     expect(hasTool('navigate')).toBe(true);
     expect(hasTool('show_notification')).toBe(true);
     expect(hasTool('fetch_data')).toBe(true);
@@ -78,7 +78,7 @@ describe('initAIFramework', () => {
     overrideTool(customTool);
     initAIFramework({ force: true });
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { getTool } = require('@egen/esm-ai-tools');
+    const { getTool } = require('@egen-civitas/esm-ai-tools');
     // Le tool custom doit être conservé car registerTool n'écrase pas
     expect(getTool('search')?.definition.name).toBe('Custom Search');
   });
@@ -94,6 +94,6 @@ describe('initAIFramework', () => {
 // Helper pour le dernier test
 function overrideTool(def: any) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { overrideTool: ot } = require('@egen/esm-ai-tools');
+  const { overrideTool: ot } = require('@egen-civitas/esm-ai-tools');
   ot(def);
 }

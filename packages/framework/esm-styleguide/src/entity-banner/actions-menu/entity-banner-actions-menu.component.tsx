@@ -2,8 +2,8 @@
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import { OverflowMenuVertical } from '@carbon/react/icons';
-import { ExtensionSlot, useExtensionSlot, useLayoutType, useOnClickOutside } from '@egen/esm-react-utils';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { ExtensionSlot, useExtensionSlot, useLayoutType, useOnClickOutside } from '@egen-civitas/esm-react-utils';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import customOverflowMenuStyles from '../../custom-overflow-menu/custom-overflow-menu.module.scss';
 import styles from './entity-banner-actions-menu.module.scss';
 

@@ -1,6 +1,6 @@
-import { importDynamic } from '@egen/esm-dynamic-loading';
+import { importDynamic } from '@egen-civitas/esm-dynamic-loading';
 import { type LifeCycles } from 'single-spa';
-import { registerModuleLoad } from '@egen/esm-config';
+import { registerModuleLoad } from '@egen-civitas/esm-config';
 
 // Couldn't figure out how to express this as an interface
 type Module = Omit<Record<string, () => LifeCycles | Promise<LifeCycles>>, 'startupApp'> & {

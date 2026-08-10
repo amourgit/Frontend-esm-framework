@@ -1,6 +1,6 @@
 /** @module @category UI */
 import { useContext, useEffect } from 'react';
-import { type SetLeftNavParams, setLeftNav, unsetLeftNav } from '@egen/esm-extensions';
+import { type SetLeftNavParams, setLeftNav, unsetLeftNav } from '@egen-civitas/esm-extensions';
 import { ComponentContext } from './ComponentContext';
 
 /**
@@ -16,7 +16,7 @@ import { ComponentContext } from './ComponentContext';
  *
  * @example
  * ```tsx
- * import { useLeftNav } from '@egen/esm-framework';
+ * import { useLeftNav } from '@egen-civitas/esm-framework';
  * function MyPageComponent() {
  *   useLeftNav({ name: 'my-nav', slots: ['nav-slot-1', 'nav-slot-2'] });
  *   return <div>My Page</div>;

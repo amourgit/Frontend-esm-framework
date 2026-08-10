@@ -2,8 +2,8 @@ import {
   type WorkspaceDefinition2,
   type WorkspaceGroupDefinition2,
   type WorkspaceWindowDefinition2,
-} from '@egen/esm-globals';
-import { createGlobalStore } from '@egen/esm-state';
+} from '@egen-civitas/esm-globals';
+import { createGlobalStore } from '@egen-civitas/esm-state';
 
 export interface OpenedWorkspace {
   workspaceName: string;

@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-tools — Inspecteur profond d'éléments DOM
+//  @egen-civitas/esm-ai-tools — Inspecteur profond d'éléments DOM
 //
 //  Complémentaire, JAMAIS un remplacement, de describe_screen/list_ui_actions/
 //  list_observables : ces derniers restent volontairement légers et sémantiques

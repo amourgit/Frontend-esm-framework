@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useConfig } from '@egen/esm-react-utils/mock';
+import { useConfig } from '@egen-civitas/esm-react-utils/mock';
 import { EgenDateRangePicker } from './index';
 import { DEFAULT_MIN_DATE_FLOOR } from './defaults';
 import styles from './datepicker.module.scss';

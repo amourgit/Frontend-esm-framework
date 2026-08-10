@@ -1,9 +1,9 @@
 import React, { type PropsWithChildren } from 'react';
 import { vi } from 'vitest';
-import { egenFetch } from '@egen/esm-api/mock';
-import { configSchema } from '@egen/esm-config/mock';
-import { getExtensionInternalStore } from '@egen/esm-extensions/mock';
-import { createGlobalStore } from '@egen/esm-state/mock';
+import { egenFetch } from '@egen-civitas/esm-api/mock';
+import { configSchema } from '@egen-civitas/esm-config/mock';
+import { getExtensionInternalStore } from '@egen-civitas/esm-extensions/mock';
+import { createGlobalStore } from '@egen-civitas/esm-state/mock';
 import { isDesktop as realIsDesktop } from './src/useLayoutType';
 import { useFhirFetchAll as realUseFhirFetchAll } from './src/useFhirFetchAll';
 import { useFhirInfinite as realUseFhirInfinite } from './src/useFhirInfinite';
@@ -17,7 +17,7 @@ import { usePaginationInfo as realUsePaginationInfo } from './src/usePaginationI
 export { ConfigurableLink } from './src/ConfigurableLink';
 export { RenderIfValueIsTruthy } from './src/RenderIfValueIsTruthy';
 export { useStore, useStoreWithActions, createUseStore } from './src/useStore';
-import * as utils from '@egen/esm-utils';
+import * as utils from '@egen-civitas/esm-utils';
 
 export const ComponentContext = React.createContext(null);
 
@@ -32,7 +32,7 @@ export const useAttachments = vi.fn(() => ({
 }));
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-export const useConfig = vi.fn<typeof import('@egen/esm-react-utils').useConfig>(
+export const useConfig = vi.fn<typeof import('@egen-civitas/esm-react-utils').useConfig>(
   (options?: { externalModuleName?: string }) => {
     if (options?.externalModuleName) {
       console.warn(`Mock useConfig called with externalModuleName: ${options.externalModuleName}`);

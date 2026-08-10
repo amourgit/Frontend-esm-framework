@@ -12,7 +12,7 @@ export interface PageChanged {
    */
   cancelNavigation(val?: boolean | Promise<boolean> | (() => boolean | Promise<boolean>)): void;
   /**
-   * The name of the main content page that will be displayed, e.g., "@egen/esm-my-app-page-0".
+   * The name of the main content page that will be displayed, e.g., "@egen-civitas/esm-my-app-page-0".
    * May be undefined if the navigation will not result in a main content page.
    */
   newPage: string | undefined;

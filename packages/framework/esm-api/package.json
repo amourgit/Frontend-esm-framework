@@ -1,5 +1,5 @@
 {
-  "name": "@egen/esm-api",
+  "name": "@egen-civitas/esm-api",
   "version": "9.0.2",
   "license": "MPL-2.0",
   "description": "The javascript module for interacting with the Egen API",
@@ -59,18 +59,18 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@egen/esm-config": "9.x",
-    "@egen/esm-error-handling": "9.x",
-    "@egen/esm-globals": "9.x",
-    "@egen/esm-navigation": "9.x",
-    "@egen/esm-state": "9.x"
+    "@egen-civitas/esm-config": "9.x",
+    "@egen-civitas/esm-error-handling": "9.x",
+    "@egen-civitas/esm-globals": "9.x",
+    "@egen-civitas/esm-navigation": "9.x",
+    "@egen-civitas/esm-state": "9.x"
   },
   "devDependencies": {
-    "@egen/esm-config": "workspace:*",
-    "@egen/esm-error-handling": "workspace:*",
-    "@egen/esm-globals": "workspace:*",
-    "@egen/esm-navigation": "workspace:*",
-    "@egen/esm-tenant": "workspace:*",
+    "@egen-civitas/esm-config": "workspace:*",
+    "@egen-civitas/esm-error-handling": "workspace:*",
+    "@egen-civitas/esm-globals": "workspace:*",
+    "@egen-civitas/esm-navigation": "workspace:*",
+    "@egen-civitas/esm-tenant": "workspace:*",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

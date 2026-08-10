@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Layer, Tile } from '@carbon/react';
-import { useLayoutType } from '@egen/esm-react-utils';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { useLayoutType } from '@egen-civitas/esm-react-utils';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { CardHeader } from '../cards';
 import styles from './empty-card.module.scss';
 

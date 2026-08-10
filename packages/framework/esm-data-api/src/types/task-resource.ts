@@ -1,4 +1,4 @@
-import { type Concept, type EgenResource } from '@egen/esm-api';
+import { type Concept, type EgenResource } from '@egen-civitas/esm-api';
 import { type CatalogItem } from './catalog-item-resource';
 
 export type TaskFulfillmentStatus =

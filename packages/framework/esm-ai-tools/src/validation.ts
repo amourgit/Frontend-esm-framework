@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-tools — Validation des arguments de tools
+//  @egen-civitas/esm-ai-tools — Validation des arguments de tools
 // =============================================================================
 
 import type { AIToolParam, AIToolValidationResult } from './types';

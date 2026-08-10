@@ -1,4 +1,4 @@
-import { type Concept, type ConceptClass, type EgenResource } from '@egen/esm-api';
+import { type Concept, type ConceptClass, type EgenResource } from '@egen-civitas/esm-api';
 import { type Interaction } from './interaction-resource';
 import { type Entity } from './entity-resource';
 

@@ -1,4 +1,4 @@
-// Storybook-compatible mock for @egen/esm-data-api.
+// Storybook-compatible mock for @egen-civitas/esm-data-api.
 
 export function setCurrentSession() {}
 export const attachmentUrl = '/ws/rest/v1/attachment';

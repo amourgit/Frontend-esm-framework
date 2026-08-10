@@ -1,4 +1,4 @@
-# @egen/esm-translations
+# @egen-civitas/esm-translations
 
 This framework library supports translations that can be used throughout the O3 application.
 

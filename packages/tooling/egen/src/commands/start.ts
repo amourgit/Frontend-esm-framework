@@ -18,7 +18,7 @@ export function runStart(args: StartArgs, signal?: AbortSignal) {
   const { backend, host, port, open, addCookie } = args;
   const app = express();
   const require = createRequire(import.meta.url);
-  const source = resolve(require.resolve('@egen/esm-app-shell/package.json'), '..', 'dist');
+  const source = resolve(require.resolve('@egen-civitas/esm-app-shell/package.json'), '..', 'dist');
   const index = resolve(source, 'index.html');
   const spaPath = '/egen/spa';
   const pageUrl = `http://${host}:${port}${spaPath}`;

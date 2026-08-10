@@ -1,5 +1,5 @@
 // ============================================================================
-//  @egen/esm-tenant — Utilitaires de domaine (hostname ↔ tenant)
+//  @egen-civitas/esm-tenant — Utilitaires de domaine (hostname ↔ tenant)
 // ============================================================================
 //
 //  Source UNIQUE de vérité pour toute logique de dérivation "hostname ↔

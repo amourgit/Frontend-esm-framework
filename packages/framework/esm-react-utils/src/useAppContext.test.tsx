@@ -1,7 +1,7 @@
 import React from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { act, render, renderHook, screen } from '@testing-library/react';
-import { registerContext, unregisterContext, updateContext } from '@egen/esm-context';
+import { registerContext, unregisterContext, updateContext } from '@egen-civitas/esm-context';
 import { useAppContext } from './useAppContext';
 import { useDefineAppContext } from './useDefineAppContext';
 

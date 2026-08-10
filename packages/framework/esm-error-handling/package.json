@@ -1,5 +1,5 @@
 {
-  "name": "@egen/esm-error-handling",
+  "name": "@egen-civitas/esm-error-handling",
   "version": "9.0.2",
   "license": "MPL-2.0",
   "description": "An ES module to help with error handling",
@@ -45,10 +45,10 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@egen/esm-globals": "9.x"
+    "@egen-civitas/esm-globals": "9.x"
   },
   "devDependencies": {
-    "@egen/esm-globals": "workspace:*",
+    "@egen-civitas/esm-globals": "workspace:*",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

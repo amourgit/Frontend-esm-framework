@@ -4,13 +4,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import userEvent from '@testing-library/user-event';
 import { act, render, screen, waitFor, within } from '@testing-library/react';
-import { registerFeatureFlag, setFeatureFlag } from '@egen/esm-feature-flags';
+import { registerFeatureFlag, setFeatureFlag } from '@egen-civitas/esm-feature-flags';
 import {
   attach,
   getExtensionNameFromId,
   registerExtension,
   updateInternalExtensionStore,
-} from '@egen/esm-extensions';
+} from '@egen-civitas/esm-extensions';
 import {
   getSyncLifecycle,
   Extension,

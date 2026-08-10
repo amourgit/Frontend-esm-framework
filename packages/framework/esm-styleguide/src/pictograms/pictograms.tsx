@@ -1,7 +1,7 @@
 /** @category Pictograms */
 import React, { forwardRef, memo, useEffect, useRef } from 'react';
 import classNames, { type Argument } from 'classnames';
-import { RenderIfValueIsTruthy } from '@egen/esm-react-utils';
+import { RenderIfValueIsTruthy } from '@egen-civitas/esm-react-utils';
 import style from './pictograms.module.scss';
 
 /** Array of all available Egen pictogram IDs that can be used with the Pictogram component. */

@@ -2,7 +2,7 @@ import {
   cleanupObsoleteFeatureFlags,
   getCurrentUser,
   subscribeEgenEvent,
-} from '@egen/esm-framework/src/internal';
+} from '@egen-civitas/esm-framework/src/internal';
 import { setupOptionalDependencies } from './optionaldeps';
 
 subscribeEgenEvent('started', () => cleanupObsoleteFeatureFlags());

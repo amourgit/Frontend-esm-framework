@@ -2,7 +2,7 @@ import type {
   MessageServiceWorkerResult,
   OnImportMapChangedMessage,
   RegisterDynamicRouteMessage,
-} from '@egen/esm-offline';
+} from '@egen-civitas/esm-offline';
 import escapeRegExp from 'lodash-es/escapeRegExp';
 import { cacheImportMapReferences } from './caching';
 import type { DynamicRouteRegistration } from './storage';

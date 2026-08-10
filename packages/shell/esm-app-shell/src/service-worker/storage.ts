@@ -1,4 +1,4 @@
-import type { EgenOfflineCachingStrategy } from '@egen/esm-offline';
+import type { EgenOfflineCachingStrategy } from '@egen-civitas/esm-offline';
 import type { Table } from 'dexie';
 import Dexie from 'dexie';
 

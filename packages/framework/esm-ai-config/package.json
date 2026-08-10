@@ -1,5 +1,5 @@
 {
-  "name": "@egen/esm-ai-config",
+  "name": "@egen-civitas/esm-ai-config",
   "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Configuration typée, validée et observable pour la couche IA EGEN. Zéro valeur codée en dur.",
@@ -42,14 +42,14 @@
     "access": "public"
   },
   "dependencies": {
-    "@egen/esm-state": "workspace:*"
+    "@egen-civitas/esm-state": "workspace:*"
   },
   "peerDependencies": {
-    "@egen/esm-state": "9.x",
+    "@egen-civitas/esm-state": "9.x",
     "rxjs": "^6.5.3"
   },
   "devDependencies": {
-    "@egen/esm-state": "workspace:*",
+    "@egen-civitas/esm-state": "workspace:*",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

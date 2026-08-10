@@ -49,4 +49,4 @@ export * from './useSessionContextStore';
 export * from './useSessionTypes';
 export * from './useStore';
 export * from './UserHasAccess';
-// NOTE: see public.ts — tenant hooks exported from @egen/esm-tenant directly.
+// NOTE: see public.ts — tenant hooks exported from @egen-civitas/esm-tenant directly.

@@ -3,8 +3,8 @@ import { I18nextProvider, useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import { Header, HeaderGlobalAction, HeaderGlobalBar, HeaderMenuButton, HeaderName } from '@carbon/react';
 import { DownToBottom, Maximize, Minimize } from '@carbon/react/icons';
-import { ComponentContext, ExtensionSlot, isDesktop, useBodyScrollLock, useLayoutType } from '@egen/esm-react-utils';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { ComponentContext, ExtensionSlot, isDesktop, useBodyScrollLock, useLayoutType } from '@egen-civitas/esm-react-utils';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { ArrowLeftIcon, ArrowRightIcon, CloseIcon } from '../../icons';
 import { WorkspaceNotification } from '../notification/workspace-notification.component';
 import { type OpenWorkspace, updateWorkspaceWindowState, useWorkspaces } from '../workspaces';
@@ -44,7 +44,7 @@ export interface WorkspaceContainerProps {
  * must not be mounted multiple times on the same page. If there are multiple apps on a page, only
  * one of those apps should use this component—it "hosts" the workspaces.
  *
- * Workspaces may be opened with the [[launchWorkspace]] function from `@egen/esm-framework`
+ * Workspaces may be opened with the [[launchWorkspace]] function from `@egen-civitas/esm-framework`
  * (among other options).
  *
  * The `overlay` prop determines whether the workspace is rendered as an overlay or a window.

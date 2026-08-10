@@ -1,6 +1,6 @@
 /** @module @category API */
-import type { Session } from '@egen/esm-api';
-import { getSessionStore } from '@egen/esm-api';
+import type { Session } from '@egen-civitas/esm-api';
+import { getSessionStore } from '@egen-civitas/esm-api';
 import { useState, useEffect, useRef } from 'react';
 
 let promise: undefined | Promise<Session>;

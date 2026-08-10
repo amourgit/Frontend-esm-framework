@@ -7,7 +7,7 @@ import {
   registerWorkspaceGroups2,
   registerWorkspaces2,
   registerWorkspaceWindows2,
-} from '@egen/esm-extensions';
+} from '@egen-civitas/esm-extensions';
 import {
   type ExtensionDefinition,
   type FeatureFlagDefinition,
@@ -17,8 +17,8 @@ import {
   type WorkspaceGroupDefinition,
   type WorkspaceGroupDefinition2,
   type WorkspaceWindowDefinition2,
-} from '@egen/esm-globals';
-import { registerFeatureFlag } from '@egen/esm-feature-flags';
+} from '@egen-civitas/esm-globals';
+import { registerFeatureFlag } from '@egen-civitas/esm-feature-flags';
 import { loadLifeCycles } from './load-lifecycles';
 
 /**

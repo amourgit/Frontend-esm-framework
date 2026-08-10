@@ -1,4 +1,4 @@
-export const appName = '@egen/esm-app-shell';
+export const appName = '@egen-civitas/esm-app-shell';
 
 export function getCoreExtensions() {
   return [];

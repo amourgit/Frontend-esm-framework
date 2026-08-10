@@ -1,6 +1,6 @@
 import React from 'react';
 import { vi } from 'vitest';
-import { type Classification } from '@egen/esm-data-api';
+import { type Classification } from '@egen-civitas/esm-data-api';
 
 /* Please keep these stubs in alphabetical order for readability */
 
@@ -160,7 +160,7 @@ export const EmptyCard = ({
   </div>
 );
 
-export { CardHeader, ErrorCard, Pagination, PageHeader, PageHeaderContent } from '@egen/esm-styleguide/src/internal';
+export { CardHeader, ErrorCard, Pagination, PageHeader, PageHeaderContent } from '@egen-civitas/esm-styleguide/src/internal';
 
 export const EgenDatePicker = () => <span>EgenDatePicker</span>;
 export const EgenDateRangePicker = () => <span>EgenDateRangePicker</span>;
@@ -219,4 +219,4 @@ export const NumericDataPoint = vi.fn(({ value, unit, label }) => (
 export const TableBatchActions = vi.fn(({ children }) => <>{children}</>);
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-export const showModal = vi.fn<typeof import('@egen/esm-styleguide').showModal>();
+export const showModal = vi.fn<typeof import('@egen-civitas/esm-styleguide').showModal>();

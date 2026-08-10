@@ -1,5 +1,5 @@
 {
-  "name": "@egen/esm-data-api",
+  "name": "@egen-civitas/esm-data-api",
   "version": "9.0.2",
   "license": "MPL-2.0",
   "description": "The javascript module for interacting with the Egen generic data API",
@@ -56,14 +56,14 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@egen/esm-api": "9.x",
-    "@egen/esm-offline": "9.x",
-    "@egen/esm-state": "9.x"
+    "@egen-civitas/esm-api": "9.x",
+    "@egen-civitas/esm-offline": "9.x",
+    "@egen-civitas/esm-state": "9.x"
   },
   "devDependencies": {
-    "@egen/esm-api": "workspace:*",
-    "@egen/esm-offline": "workspace:*",
-    "@egen/esm-state": "workspace:*",
+    "@egen-civitas/esm-api": "workspace:*",
+    "@egen-civitas/esm-offline": "workspace:*",
+    "@egen-civitas/esm-state": "workspace:*",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@types/node": "^22.0.0",

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import type { ImportMap } from '@egen/esm-globals';
-import { retry } from '@egen/esm-utils';
+import type { ImportMap } from '@egen-civitas/esm-globals';
+import { retry } from '@egen-civitas/esm-utils';
 import { absoluteWbManifestUrls, egenCacheName } from './constants';
 import { fetchUrlsToCacheFromImportMap } from './import-map-utils';
 import { ServiceWorkerDb } from './storage';

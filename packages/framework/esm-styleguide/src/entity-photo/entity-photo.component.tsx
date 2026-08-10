@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import GeoPattern from 'geopattern';
 import { SkeletonIcon } from '@carbon/react';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { useEntityPhoto } from './useEntityPhoto';
 import PlaceholderIcon from './placeholder-icon.component';
 import styles from './entity-photo.module.scss';
@@ -30,7 +30,7 @@ function getInitials(name: string, maxInitials = 3): string {
  *
  * @example
  * ```tsx
- * import { EntityPhoto } from '@egen/esm-framework';
+ * import { EntityPhoto } from '@egen-civitas/esm-framework';
  * <EntityPhoto entityUuid="abc-123" entityName="Alice Martin" />
  * ```
  */

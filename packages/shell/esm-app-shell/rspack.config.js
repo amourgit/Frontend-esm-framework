@@ -27,7 +27,7 @@ const { removeTrailingSlash, getTimestamp } = require('./tools/helpers');
 
 const { name, version, dependencies } = require('./package.json');
 const sharedDependencies = require('./dependencies.json');
-const frameworkVersion = require('@egen/esm-framework/package.json').version;
+const frameworkVersion = require('@egen-civitas/esm-framework/package.json').version;
 
 const timestamp = getTimestamp();
 const production = 'production';
@@ -110,7 +110,7 @@ const egenAiConfigDef = Object.keys(egenAiWindowOverrides).length > 0 ? JSON.str
 /**
  * Pont EGEN_TENANT_* (process.env, coté build Node) → window.egenTenant*
  * (runtime navigateur). Même raison d'être que le pont EGEN_AI_* ci-dessus —
- * voir @egen/esm-tenant/src/config/env.ts pour le détail complet et le
+ * voir @egen-civitas/esm-tenant/src/config/env.ts pour le détail complet et le
  * tableau de correspondance. Sans ce pont, tout `.env` EGEN_TENANT_* est
  * silencieusement ignoré et `setupTenantSystem()` démarre toujours en
  * mode "off", quelle que soit la configuration.
@@ -121,7 +121,7 @@ const egenAiConfigDef = Object.keys(egenAiWindowOverrides).length > 0 ? JSON.str
  *
  * Refonte du 8 août 2026 : EGEN_TENANT_REGISTRY_URL / EGEN_TENANT_THEME_APPLY
  * retirés — il n'y a plus de registry de tenants ni de thème piloté par
- * tenant côté frontend (voir @egen/esm-tenant/src/types.ts).
+ * tenant côté frontend (voir @egen-civitas/esm-tenant/src/types.ts).
  */
 const EGEN_TENANT_ENV_TO_WINDOW_KEY = {
   EGEN_TENANT_MODE: 'egenTenantMode',
@@ -295,7 +295,7 @@ module.exports = (env, argv = []) => {
   // with no JS involvement. The result is content-hashed for long-term caching.
   // Sass preserves @import of .css files as plain CSS @import rules rather than
   // inlining them, so we strip those out and prepend the actual file contents.
-  const sassOutput = sass.compile(require.resolve('@egen/esm-styleguide/styles'), {
+  const sassOutput = sass.compile(require.resolve('@egen-civitas/esm-styleguide/styles'), {
     style: isProd ? 'compressed' : 'expanded',
     quietDeps: true,
     loadPaths: [resolve(__dirname, '..', '..', '..', 'node_modules')],
@@ -344,7 +344,7 @@ module.exports = (env, argv = []) => {
 
   // ── Thème EGEN : source UNIQUE de vérité ──────────────────────────────────
   // Les fichiers JSON de thème vivent exclusivement dans le package
-  // @egen/esm-theme (packages/framework/esm-theme/src/themes/). Le shell ne
+  // @egen-civitas/esm-theme (packages/framework/esm-theme/src/themes/). Le shell ne
   // possède PAS sa propre copie : il la copie/sert depuis cette unique
   // source, pour qu'il soit structurellement impossible que le shell serve
   // une version périmée pendant qu'un⋅e développeur⋅se édite « le » JSON de
@@ -442,7 +442,7 @@ module.exports = (env, argv = []) => {
       static: [
         'src/assets',
         // Sert le JSON de thème canonique directement depuis le package
-        // @egen/esm-theme en dev — édition sur disque reflétée immédiatement
+        // @egen-civitas/esm-theme en dev — édition sur disque reflétée immédiatement
         // (le fichier est lu depuis le disque à chaque requête HTTP, aucun
         // rebuild requis) et reprise par le polling client (cf. run.ts /
         // ThemeEngine.pollIntervalMs) pour le hot-reload visuel.
@@ -529,15 +529,15 @@ module.exports = (env, argv = []) => {
         url: false,
       },
       alias: {
-        '@egen/esm-framework': '@egen/esm-framework/src/internal',
+        '@egen-civitas/esm-framework': '@egen-civitas/esm-framework/src/internal',
         'lodash.debounce': 'lodash-es/debounce',
         'lodash.findlast': 'lodash-es/findLast',
         'lodash.isequal': 'lodash-es/isEqual',
         'lodash.omit': 'lodash-es/omit',
         'lodash.throttle': 'lodash-es/throttle',
         // ugly, stupid hack to support dynamic translation resolution here
-        '@egen/esm-translations/translations': resolve(
-          dirname(require.resolve('@egen/esm-translations/package.json')),
+        '@egen-civitas/esm-translations/translations': resolve(
+          dirname(require.resolve('@egen-civitas/esm-translations/package.json')),
           'translations',
         ),
       },

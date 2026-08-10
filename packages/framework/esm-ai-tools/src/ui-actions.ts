@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-tools — Registre d'actions UI génériques
+//  @egen-civitas/esm-ai-tools — Registre d'actions UI génériques
 //
 //  Contrairement à un "workflow" codé en dur (« pour changer le mot de
 //  passe, fais ceci puis cela »), ce registre ne décrit QUE les éléments
@@ -17,7 +17,7 @@
 //  c'est exactement le même DOM/JS qui s'exécute dedans — aucune adaptation
 //  spécifique à la plateforme n'est nécessaire.
 //
-//  Enregistrement (voir @egen/esm-ai-framework, hook useAIActionable) :
+//  Enregistrement (voir @egen-civitas/esm-ai-framework, hook useAIActionable) :
 //
 //  ```tsx
 //  const submitRef = useAIActionable<HTMLButtonElement>({

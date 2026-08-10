@@ -101,7 +101,7 @@ describe('runDevelop', () => {
     }, 15_000);
 
     it('serves the inline importmap at /importmap.json', async () => {
-      const importmap = '{"imports":{"@egen/foo":"https://cdn.example.com/foo.js"}}';
+      const importmap = '{"imports":{"@egen-civitas/foo":"https://cdn.example.com/foo.js"}}';
       const port = await getAvailablePort(19100);
       const baseUrl = await startDevServer(defaultArgs({ port, importmap: { type: 'inline', value: importmap } }));
 
@@ -112,7 +112,7 @@ describe('runDevelop', () => {
     }, 15_000);
 
     it('serves the inline routes at /routes.registry.json', async () => {
-      const routes = '{"@egen/foo":{"pages":["/home"]}}';
+      const routes = '{"@egen-civitas/foo":{"pages":["/home"]}}';
       const port = await getAvailablePort(19200);
       const baseUrl = await startDevServer(defaultArgs({ port, routes: { type: 'inline', value: routes } }));
 
@@ -151,7 +151,7 @@ describe('runDevelop', () => {
     }, 15_000);
 
     it('does not serve importmap.json from static assets when importmap is inline', async () => {
-      const customImportmap = '{"imports":{"@egen/custom":"http://localhost/custom.js"}}';
+      const customImportmap = '{"imports":{"@egen-civitas/custom":"http://localhost/custom.js"}}';
       const port = await getAvailablePort(19500);
       const baseUrl = await startDevServer(
         defaultArgs({ port, importmap: { type: 'inline', value: customImportmap } }),
@@ -184,7 +184,7 @@ describe('runDevelop', () => {
     }, 15_000);
 
     it('serves the inline importmap under the custom spaPath', async () => {
-      const importmap = '{"imports":{"@egen/bar":"https://cdn.example.com/bar.js"}}';
+      const importmap = '{"imports":{"@egen-civitas/bar":"https://cdn.example.com/bar.js"}}';
       const port = await getAvailablePort(19700);
       const baseUrl = await startDevServer(
         defaultArgs({
@@ -200,7 +200,7 @@ describe('runDevelop', () => {
     }, 15_000);
 
     it('serves the inline routes under the custom spaPath', async () => {
-      const routes = '{"@egen/bar":{"pages":["/dashboard"]}}';
+      const routes = '{"@egen-civitas/bar":{"pages":["/dashboard"]}}';
       const port = await getAvailablePort(19800);
       const baseUrl = await startDevServer(
         defaultArgs({

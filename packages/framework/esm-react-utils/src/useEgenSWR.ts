@@ -2,7 +2,7 @@
 import { useCallback, useMemo } from 'react';
 import type { SWRConfiguration } from 'swr';
 import useSWR from 'swr';
-import { type FetchConfig, egenFetch, type FetchResponse } from '@egen/esm-api';
+import { type FetchConfig, egenFetch, type FetchResponse } from '@egen-civitas/esm-api';
 import useAbortController from './useAbortController';
 
 export type ArgumentsTuple = [any, ...unknown[]];
@@ -37,7 +37,7 @@ function getUrl(key: Key, url?: string | ((key: Key) => string)): string {
  *
  * @example
  * ```tsx
- * import { useEgenSWR } from "@egen/esm-framework";
+ * import { useEgenSWR } from "@egen-civitas/esm-framework";
  *
  * function MyComponent() {
  *  const { data } = useEgenSWR(key);
@@ -53,7 +53,7 @@ function getUrl(key: Key, url?: string | ((key: Key) => string)): string {
  *
  * @example
  * ```tsx
- * import { useEgenSWR } from "@egen/esm-framework";
+ * import { useEgenSWR } from "@egen-civitas/esm-framework";
  *
  * function MyComponent() {
  *  const { data } = useEgenSWR(['key', 'url'], { url: (key) => key[1] });

@@ -85,19 +85,19 @@ describe('assemble survey mode (integration with real @inquirer/prompts)', () =>
   it('checkbox prompt renders available packages and allows selection', async () => {
     mockNpmFetchJson.mockResolvedValue({
       objects: [
-        { package: { name: '@egen/esm-home-app', version: '1.0.0' } },
-        { package: { name: '@egen/esm-login-app', version: '2.0.0' } },
+        { package: { name: '@egen-civitas/esm-home-app', version: '1.0.0' } },
+        { package: { name: '@egen-civitas/esm-login-app', version: '2.0.0' } },
       ],
       total: 2,
     });
 
     // Set up download mocks for the selected package
     mockPacoteManifest.mockResolvedValue({
-      _resolved: 'https://registry.npmjs.org/@egen/esm-home-app/-/esm-home-app-1.0.0.tgz',
+      _resolved: 'https://registry.npmjs.org/@egen-civitas/esm-home-app/-/esm-home-app-1.0.0.tgz',
       _integrity: 'sha512-test',
     });
     mockPacoteTarball.mockResolvedValue(Buffer.from('tarball'));
-    mockUntar.mockResolvedValue(fakeUntarResult('@egen/esm-home-app', '1.0.0'));
+    mockUntar.mockResolvedValue(fakeUntarResult('@egen-civitas/esm-home-app', '1.0.0'));
     mockExistsSync.mockReturnValue(false);
 
     const resultPromise = runAssemble(defaultArgs());
@@ -105,8 +105,8 @@ describe('assemble survey mode (integration with real @inquirer/prompts)', () =>
     // Wait for the checkbox prompt to render
     await screen.next();
     expect(screen.getScreen()).toContain('Select frontend modules to include');
-    expect(screen.getScreen()).toContain('@egen/esm-home-app');
-    expect(screen.getScreen()).toContain('@egen/esm-login-app');
+    expect(screen.getScreen()).toContain('@egen-civitas/esm-home-app');
+    expect(screen.getScreen()).toContain('@egen-civitas/esm-login-app');
 
     // Select the first package (cursor starts on first item)
     screen.keypress('space');
@@ -116,7 +116,7 @@ describe('assemble survey mode (integration with real @inquirer/prompts)', () =>
     // Wait for the version input prompt
     await screen.next();
     expect(screen.getScreen()).toContain('Version for');
-    expect(screen.getScreen()).toContain('@egen/esm-home-app');
+    expect(screen.getScreen()).toContain('@egen-civitas/esm-home-app');
 
     // Accept the default version by pressing enter
     screen.keypress('enter');
@@ -124,12 +124,12 @@ describe('assemble survey mode (integration with real @inquirer/prompts)', () =>
     await resultPromise;
 
     // The selected package should have been downloaded with its default version
-    expect(mockPacoteManifest).toHaveBeenCalledWith('@egen/esm-home-app@1.0.0', expect.any(Object));
+    expect(mockPacoteManifest).toHaveBeenCalledWith('@egen-civitas/esm-home-app@1.0.0', expect.any(Object));
   });
 
   it('selecting no packages in checkbox produces an empty import map', async () => {
     mockNpmFetchJson.mockResolvedValue({
-      objects: [{ package: { name: '@egen/esm-home-app', version: '1.0.0' } }],
+      objects: [{ package: { name: '@egen-civitas/esm-home-app', version: '1.0.0' } }],
       total: 1,
     });
 
@@ -156,7 +156,7 @@ describe('assemble survey mode (integration with real @inquirer/prompts)', () =>
 
   it('input prompt accepts a custom version', async () => {
     mockNpmFetchJson.mockResolvedValue({
-      objects: [{ package: { name: '@egen/esm-home-app', version: '1.0.0' } }],
+      objects: [{ package: { name: '@egen-civitas/esm-home-app', version: '1.0.0' } }],
       total: 1,
     });
 
@@ -165,7 +165,7 @@ describe('assemble survey mode (integration with real @inquirer/prompts)', () =>
       _integrity: 'sha512-test',
     });
     mockPacoteTarball.mockResolvedValue(Buffer.from('tarball'));
-    mockUntar.mockResolvedValue(fakeUntarResult('@egen/esm-home-app', '2.0.0'));
+    mockUntar.mockResolvedValue(fakeUntarResult('@egen-civitas/esm-home-app', '2.0.0'));
     mockExistsSync.mockReturnValue(false);
 
     const resultPromise = runAssemble(defaultArgs());
@@ -187,12 +187,12 @@ describe('assemble survey mode (integration with real @inquirer/prompts)', () =>
     await resultPromise;
 
     // Should download the user-specified version
-    expect(mockPacoteManifest).toHaveBeenCalledWith('@egen/esm-home-app@2.0.0', expect.any(Object));
+    expect(mockPacoteManifest).toHaveBeenCalledWith('@egen-civitas/esm-home-app@2.0.0', expect.any(Object));
   });
 
   it('input prompt rejects invalid semver and re-prompts', async () => {
     mockNpmFetchJson.mockResolvedValue({
-      objects: [{ package: { name: '@egen/esm-home-app', version: '1.0.0' } }],
+      objects: [{ package: { name: '@egen-civitas/esm-home-app', version: '1.0.0' } }],
       total: 1,
     });
 
@@ -201,7 +201,7 @@ describe('assemble survey mode (integration with real @inquirer/prompts)', () =>
       _integrity: 'sha512-test',
     });
     mockPacoteTarball.mockResolvedValue(Buffer.from('tarball'));
-    mockUntar.mockResolvedValue(fakeUntarResult('@egen/esm-home-app', '1.0.0'));
+    mockUntar.mockResolvedValue(fakeUntarResult('@egen-civitas/esm-home-app', '1.0.0'));
     mockExistsSync.mockReturnValue(false);
 
     const resultPromise = runAssemble(defaultArgs());
@@ -232,14 +232,14 @@ describe('assemble survey mode (integration with real @inquirer/prompts)', () =>
 
     await resultPromise;
 
-    expect(mockPacoteManifest).toHaveBeenCalledWith('@egen/esm-home-app@1.0.0', expect.any(Object));
+    expect(mockPacoteManifest).toHaveBeenCalledWith('@egen-civitas/esm-home-app@1.0.0', expect.any(Object));
   });
 
   it('selecting multiple packages prompts for version of each', async () => {
     mockNpmFetchJson.mockResolvedValue({
       objects: [
-        { package: { name: '@egen/esm-home-app', version: '1.0.0' } },
-        { package: { name: '@egen/esm-login-app', version: '2.0.0' } },
+        { package: { name: '@egen-civitas/esm-home-app', version: '1.0.0' } },
+        { package: { name: '@egen-civitas/esm-login-app', version: '2.0.0' } },
       ],
       total: 2,
     });
@@ -250,8 +250,8 @@ describe('assemble survey mode (integration with real @inquirer/prompts)', () =>
     });
     mockPacoteTarball.mockResolvedValue(Buffer.from('tarball'));
     mockUntar
-      .mockResolvedValueOnce(fakeUntarResult('@egen/esm-home-app', '1.0.0'))
-      .mockResolvedValueOnce(fakeUntarResult('@egen/esm-login-app', '2.0.0'));
+      .mockResolvedValueOnce(fakeUntarResult('@egen-civitas/esm-home-app', '1.0.0'))
+      .mockResolvedValueOnce(fakeUntarResult('@egen-civitas/esm-login-app', '2.0.0'));
     mockExistsSync.mockReturnValue(false);
 
     const resultPromise = runAssemble(defaultArgs());
@@ -267,19 +267,19 @@ describe('assemble survey mode (integration with real @inquirer/prompts)', () =>
 
     // First version prompt (home-app)
     await screen.next();
-    expect(screen.getScreen()).toContain('@egen/esm-home-app');
+    expect(screen.getScreen()).toContain('@egen-civitas/esm-home-app');
     screen.keypress('enter'); // accept default 1.0.0
 
     // Second version prompt (login-app)
     await screen.next();
-    expect(screen.getScreen()).toContain('@egen/esm-login-app');
+    expect(screen.getScreen()).toContain('@egen-civitas/esm-login-app');
     screen.keypress('enter'); // accept default 2.0.0
 
     await resultPromise;
 
     // Both packages should have been downloaded
     expect(mockPacoteManifest).toHaveBeenCalledTimes(2);
-    expect(mockPacoteManifest).toHaveBeenCalledWith('@egen/esm-home-app@1.0.0', expect.any(Object));
-    expect(mockPacoteManifest).toHaveBeenCalledWith('@egen/esm-login-app@2.0.0', expect.any(Object));
+    expect(mockPacoteManifest).toHaveBeenCalledWith('@egen-civitas/esm-home-app@1.0.0', expect.any(Object));
+    expect(mockPacoteManifest).toHaveBeenCalledWith('@egen-civitas/esm-login-app@2.0.0', expect.any(Object));
   });
 });

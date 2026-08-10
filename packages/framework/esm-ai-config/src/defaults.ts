@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-config — Valeurs par défaut
+//  @egen-civitas/esm-ai-config — Valeurs par défaut
 //
 //  PRIORITÉ DE RÉSOLUTION :
 //    1. window.egenAi* (overrides runtime injectés par le serveur HTML)

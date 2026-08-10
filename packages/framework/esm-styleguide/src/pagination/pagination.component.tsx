@@ -1,8 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Pagination as CarbonPagination, type PaginationProps as CarbonPaginationProps } from '@carbon/react';
-import { ConfigurableLink, useLayoutType, usePaginationInfo } from '@egen/esm-react-utils';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { ConfigurableLink, useLayoutType, usePaginationInfo } from '@egen-civitas/esm-react-utils';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import styles from './pagination.module.scss';
 
 export interface PaginationProps {

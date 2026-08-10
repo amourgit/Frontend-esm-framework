@@ -1,6 +1,6 @@
 /** @module @category API */
-import { fhirBaseUrl, egenFetch, type FetchConfig, type FetchResponse } from '@egen/esm-api';
-import { getSynchronizationItems } from '@egen/esm-offline';
+import { fhirBaseUrl, egenFetch, type FetchConfig, type FetchResponse } from '@egen-civitas/esm-api';
+import { getSynchronizationItems } from '@egen-civitas/esm-offline';
 
 export type CurrentEntity = fhir.Patient | FetchResponse<fhir.Patient>;
 
@@ -31,7 +31,7 @@ export type EntityUuid = string | null;
  *
  * @example
  * ```ts
- * import { fetchCurrentEntity } from '@egen/esm-framework';
+ * import { fetchCurrentEntity } from '@egen-civitas/esm-framework';
  * const entity = await fetchCurrentEntity('entity-uuid');
  * if (entity) {
  *   console.log('Entity name:', entity.name?.[0]?.text);

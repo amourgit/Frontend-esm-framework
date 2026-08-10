@@ -1,7 +1,7 @@
 /** @module @category UI */
 import React from 'react';
 import { FormLabel, Tag } from '@carbon/react';
-import { useConfig, usePrimaryIdentifierCode } from '@egen/esm-react-utils';
+import { useConfig, usePrimaryIdentifierCode } from '@egen-civitas/esm-react-utils';
 import { type StyleguideConfigObject } from '../../config-schema';
 import styles from './entity-banner-entity-info.module.scss';
 

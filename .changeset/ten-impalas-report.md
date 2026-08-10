@@ -1,6 +1,6 @@
 ---
-"@egen/esm-framework": minor
-"@egen/esm-utils": minor
+"@egen-civitas/esm-framework": minor
+"@egen-civitas/esm-utils": minor
 ---
 
 (feat) Add matchLocale framework function

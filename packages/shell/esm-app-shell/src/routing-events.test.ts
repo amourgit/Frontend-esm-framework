@@ -19,7 +19,7 @@ function dispatchSingleSpaEvent(detail: {
 function makeEventDetail(overrides: Partial<Parameters<typeof dispatchSingleSpaEvent>[0]> = {}) {
   return {
     appsByNewStatus: {
-      MOUNTED: ['@egen/esm-patient-chart-app'],
+      MOUNTED: ['@egen-civitas/esm-patient-chart-app'],
       NOT_MOUNTED: [],
       NOT_LOADED: [],
       SKIP_BECAUSE_BROKEN: [],
@@ -60,7 +60,7 @@ describe('routing-events', () => {
 
     expect(pageChangedHandler).toHaveBeenCalledTimes(1);
     const payload = pageChangedHandler.mock.calls[0][0].detail;
-    expect(payload.newPage).toBe('@egen/esm-patient-chart-app');
+    expect(payload.newPage).toBe('@egen-civitas/esm-patient-chart-app');
   });
 
   it('should set newPage to undefined for pathname-only changes (no app changes)', () => {

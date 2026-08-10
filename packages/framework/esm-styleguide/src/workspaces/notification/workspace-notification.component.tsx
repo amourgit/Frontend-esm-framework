@@ -2,8 +2,8 @@
 import React, { useEffect } from 'react';
 import { Button, ComposedModal, ModalBody, ModalFooter, ModalHeader } from '@carbon/react';
 import { escapeRegExp } from 'lodash-es';
-import { navigate } from '@egen/esm-navigation';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { navigate } from '@egen-civitas/esm-navigation';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { type SingleSpaCustomEventDetail } from 'single-spa';
 import {
   cancelPrompt,

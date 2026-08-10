@@ -1,5 +1,5 @@
-import { defineConfigSchema, Type, getConfigStore } from '@egen/esm-framework';
-import { registerModuleLoad, featureFlagsStore } from '@egen/esm-framework/src/internal';
+import { defineConfigSchema, Type, getConfigStore } from '@egen-civitas/esm-framework';
+import { registerModuleLoad, featureFlagsStore } from '@egen-civitas/esm-framework/src/internal';
 import { appName } from './ui';
 
 /**

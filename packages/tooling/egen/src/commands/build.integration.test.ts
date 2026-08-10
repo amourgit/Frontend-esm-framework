@@ -121,7 +121,7 @@ describe('runBuild', () => {
     mkdirSync(target, { recursive: true });
 
     // Simulate a prior assemble --hash-importmap
-    const hashedImportmap = JSON.stringify({ imports: { '@egen/esm-test': './test.js' } });
+    const hashedImportmap = JSON.stringify({ imports: { '@egen-civitas/esm-test': './test.js' } });
     writeFileSync(join(target, 'importmap.abc123.json'), hashedImportmap);
 
     // Request importmap.json (which doesn't exist); the build should find the hashed version

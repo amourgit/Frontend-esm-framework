@@ -1,4 +1,4 @@
-import type { SpaConfig } from '@egen/esm-framework/src/internal';
+import type { SpaConfig } from '@egen-civitas/esm-framework/src/internal';
 
 function _createSpaBase(baseUrl: string) {
   return () => baseUrl;
@@ -100,10 +100,10 @@ function initializeSpa(config: SpaConfig) {
   initPromise = Promise.resolve(__webpack_init_sharing__('default')).then(async () => {
     const shareScope = __webpack_share_scopes__.default;
     // MF will deduplicate these as they're aliased at build time, but at runtime
-    // apps try to load `@egen/esm-framework`, so here we provide a runtime
+    // apps try to load `@egen-civitas/esm-framework`, so here we provide a runtime
     // alias that resolves to the "internal" copy of the framework
-    if (shareScope['@egen/esm-framework/src/internal'] && !shareScope['@egen/esm-framework']) {
-      shareScope['@egen/esm-framework'] = shareScope['@egen/esm-framework/src/internal'];
+    if (shareScope['@egen-civitas/esm-framework/src/internal'] && !shareScope['@egen-civitas/esm-framework']) {
+      shareScope['@egen-civitas/esm-framework'] = shareScope['@egen-civitas/esm-framework/src/internal'];
     }
 
     const { configUrls = [], offline = false } = config;

@@ -1,3 +1,3 @@
 import { vi } from 'vitest';
 
-vi.mock('@egen/esm-config', () => import('@egen/esm-config/mock'));
+vi.mock('@egen-civitas/esm-config', () => import('@egen-civitas/esm-config/mock'));

@@ -10,7 +10,7 @@ import {
   parseEgenOfflineResponseBodyHeader,
   parseEgenOfflineResponseStatusHeader,
 } from './http-header-utils';
-import type { EgenOfflineCachingStrategy } from '@egen/esm-offline';
+import type { EgenOfflineCachingStrategy } from '@egen-civitas/esm-offline';
 import uniq from 'lodash-es/uniq';
 
 const networkOnly = new NetworkOnly();

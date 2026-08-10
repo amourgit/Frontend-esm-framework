@@ -1,5 +1,5 @@
 {
-  "name": "@egen/esm-theme",
+  "name": "@egen-civitas/esm-theme",
   "version": "9.0.2",
   "license": "MPL-2.0",
   "description": "Dynamic, schema-agnostic theme engine with priority-based JSON loading, light/dark resolution and per-app scoped overrides for EGEN SPA",

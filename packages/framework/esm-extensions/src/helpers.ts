@@ -1,4 +1,4 @@
-import { isOnline } from '@egen/esm-utils';
+import { isOnline } from '@egen-civitas/esm-utils';
 
 export function checkStatus(online: boolean | object = true, offline: boolean | object = false) {
   return checkStatusFor(isOnline(), online, offline);

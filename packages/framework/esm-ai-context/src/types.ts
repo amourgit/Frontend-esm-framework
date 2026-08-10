@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-context — Types du contexte IA
+//  @egen-civitas/esm-ai-context — Types du contexte IA
 // =============================================================================
 
 // ─── Représentations stables (sérialisables) ──────────────────────────────────
@@ -19,7 +19,7 @@ export interface AIUserContext {
  * Contexte tenant — refonte du 8 août 2026 : le frontend ne connaît plus
  * QUE l'ID brut du tenant capturé (URL/JWT/storage…), sans aucune
  * métadonnée locale (nom, locale, timezone, feature flags). Ce concept de
- * registry de tenants a été supprimé — voir @egen/esm-tenant/src/types.ts.
+ * registry de tenants a été supprimé — voir @egen-civitas/esm-tenant/src/types.ts.
  * `mode` ne peut valoir que "single" | "multi" ici : en mode "off" ou sans
  * tenant capturé, `AIContext.tenant` est `null` (voir buildTenantContext()).
  */

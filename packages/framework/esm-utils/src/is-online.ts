@@ -1,4 +1,4 @@
-import type {} from '@egen/esm-globals';
+import type {} from '@egen-civitas/esm-globals';
 
 /**
  * Determines if the application should behave as if it is online.

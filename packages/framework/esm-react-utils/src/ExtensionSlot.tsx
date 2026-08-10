@@ -1,6 +1,6 @@
 /** @module @category Extension */
 import React, { useRef, useMemo, useEffect } from 'react';
-import { updateInternalExtensionStore, type AssignedExtension } from '@egen/esm-extensions';
+import { updateInternalExtensionStore, type AssignedExtension } from '@egen-civitas/esm-extensions';
 import { ComponentContext } from './ComponentContext';
 import { Extension } from './Extension';
 import { useExtensionSlot } from './useExtensionSlot';

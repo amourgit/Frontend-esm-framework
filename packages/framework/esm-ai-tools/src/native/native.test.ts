@@ -5,17 +5,17 @@ import { registerObservable, _clearObservableRegistry } from '../observables';
 
 const mockNavigate = vi.fn();
 
-vi.mock('@egen/esm-navigation', () => ({
+vi.mock('@egen-civitas/esm-navigation', () => ({
   navigate: (...args: unknown[]) => mockNavigate(...args),
 }));
 
-vi.mock('@egen/esm-styleguide/src/public', () => ({
+vi.mock('@egen-civitas/esm-styleguide/src/public', () => ({
   showNotification: vi.fn(),
   showSnackbar: vi.fn(),
   showModal: vi.fn(),
 }));
 
-vi.mock('@egen/esm-api', () => ({
+vi.mock('@egen-civitas/esm-api', () => ({
   egenFetch: vi.fn(),
 }));
 
@@ -145,7 +145,7 @@ describe('describeScreenTool', () => {
 describe('switchTenantTool', () => {
   // Régression : ce tool réimplémentait sa propre extraction de domaine
   // racine au lieu de réutiliser inferRootDomain/buildTenantSubdomainUrl de
-  // @egen/esm-tenant (source unique de vérité, voir utils/domain-utils.ts).
+  // @egen-civitas/esm-tenant (source unique de vérité, voir utils/domain-utils.ts).
   // Conséquence concrète du bug : un EGEN_TENANT_ROOT_DOMAIN configuré
   // explicitement (nécessaire sur les TLD à plusieurs niveaux, ex: "gov.ga")
   // était totalement ignoré par ce tool.
@@ -157,7 +157,7 @@ describe('switchTenantTool', () => {
   }
 
   it('utilise le rootDomain explicitement configuré (setupTenantSystem) plutôt que l\'heuristique', async () => {
-    const { setupTenantSystem } = await import('@egen/esm-tenant');
+    const { setupTenantSystem } = await import('@egen-civitas/esm-tenant');
     setupTenantSystem({ mode: 'multi', rootDomain: 'egen.gabon.gov.ga' });
     // Hostname à 2 segments seulement ("gov.ga" à la fin) : l'heuristique
     // best-effort (retirer le 1er label) découperait mal un TLD à plusieurs
@@ -171,7 +171,7 @@ describe('switchTenantTool', () => {
   });
 
   it("retombe sur l'heuristique (retire le 1er label) si aucun rootDomain n'est configuré", async () => {
-    const { setupTenantSystem } = await import('@egen/esm-tenant');
+    const { setupTenantSystem } = await import('@egen-civitas/esm-tenant');
     setupTenantSystem({ mode: 'multi' }); // pas de rootDomain
     setHostname('mef.egen-demo.com');
 

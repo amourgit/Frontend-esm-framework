@@ -57,13 +57,13 @@ declare global {
     // ── Tenant system globals ──────────────────────────────────────────────
     // Injectées par le shell (esm-app-shell/rspack.config.js + src/index.ejs)
     // à partir des variables EGEN_TENANT_* de .env, sur le modèle exact du
-    // pont EGEN_AI_* → window.egenAi*. Lues par @egen/esm-tenant/config/env.ts.
+    // pont EGEN_AI_* → window.egenAi*. Lues par @egen-civitas/esm-tenant/config/env.ts.
     // C'est l'UNIQUE canal de configuration par environnement — il n'existe
     // pas d'équivalent `import.meta.env` fonctionnel dans ce projet (rspack).
     //
     // Refonte du 8 août 2026 : plus de registry de tenants ni de thème piloté
     // par tenant côté frontend (egenTenantRegistryUrl / egenTenantApplyTheme
-    // retirés) — voir @egen/esm-tenant/src/types.ts.
+    // retirés) — voir @egen-civitas/esm-tenant/src/types.ts.
 
     /**
      * Mode du système tenant : "off" | "single" | "multi".
@@ -107,7 +107,7 @@ declare global {
     /**
      * Domaine racine explicite (ex: "egen.gabon.gov.ga"), utilisé pour toute
      * dérivation hostname ↔ sous-domaine tenant (voir
-     * @egen/esm-tenant utils/domain-utils.ts). Depuis EGEN_TENANT_ROOT_DOMAIN.
+     * @egen-civitas/esm-tenant utils/domain-utils.ts). Depuis EGEN_TENANT_ROOT_DOMAIN.
      */
     egenTenantRootDomain?: string;
   }

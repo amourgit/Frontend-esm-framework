@@ -1,5 +1,5 @@
 import { of } from 'rxjs';
-import { createGlobalStore } from '@egen/esm-state/mock';
+import { createGlobalStore } from '@egen-civitas/esm-state/mock';
 import { type SessionStore } from './src/current-user';
 
 export const setSessionLocation = jest.fn(() => Promise.resolve());

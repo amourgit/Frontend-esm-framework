@@ -1,4 +1,4 @@
-# @egen/esm-data-api
+# @egen-civitas/esm-data-api
 
 A generic, domain-agnostic data API module for the Egen framework.
 
@@ -30,7 +30,7 @@ import {
   getSessionsForEntity,
   getSessionTypes,
   getLocations,
-} from '@egen/esm-framework';
+} from '@egen-civitas/esm-framework';
 ```
 
 ## Architecture
@@ -49,7 +49,7 @@ This module is part of the Egen micro-frontend framework. It provides:
 
 To adapt this module for your domain, configure:
 
-1. **REST base URL** via `@egen/esm-api` configuration
+1. **REST base URL** via `@egen-civitas/esm-api` configuration
 2. **Session types** — define your domain's session categories in your backend
 3. **Entity identifiers** — configure identifier types relevant to your domain
 4. **Attributes** — extend entities with domain-specific custom attributes

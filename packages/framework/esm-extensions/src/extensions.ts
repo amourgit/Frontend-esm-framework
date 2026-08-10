@@ -8,7 +8,7 @@
  * - connected (computed from assigned using connectivity and online / offline)
  */
 
-import { type Session, type SessionStore, sessionStore, userHasAccess } from '@egen/esm-api';
+import { type Session, type SessionStore, sessionStore, userHasAccess } from '@egen-civitas/esm-api';
 import {
   type ExtensionSlotConfig,
   type ExtensionSlotsConfigStore,
@@ -19,11 +19,11 @@ import {
   getExtensionSlotConfigFromStore,
   getExtensionSlotsConfigStore,
   getExtensionsConfigStore,
-} from '@egen/esm-config';
-import { evaluateAsBoolean } from '@egen/esm-expression-evaluator';
-import { type FeatureFlagsStore, featureFlagsStore } from '@egen/esm-feature-flags';
-import { subscribeConnectivityChanged } from '@egen/esm-globals';
-import { isOnline as isOnlineFn } from '@egen/esm-utils';
+} from '@egen-civitas/esm-config';
+import { evaluateAsBoolean } from '@egen-civitas/esm-expression-evaluator';
+import { type FeatureFlagsStore, featureFlagsStore } from '@egen-civitas/esm-feature-flags';
+import { subscribeConnectivityChanged } from '@egen-civitas/esm-globals';
+import { isOnline as isOnlineFn } from '@egen-civitas/esm-utils';
 import { isEqual, merge } from 'lodash-es';
 import { checkStatusFor } from './helpers';
 import {

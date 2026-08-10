@@ -1,6 +1,6 @@
-// Storybook-compatible mock for @egen/esm-translations.
+// Storybook-compatible mock for @egen-civitas/esm-translations.
 // Uses the real English translation strings so components render realistic text.
-import { coreTranslations } from '@egen/esm-translations/src/translations';
+import { coreTranslations } from '@egen-civitas/esm-translations/src/translations';
 
 function interpolate(template: string, params?: Record<string, unknown>): string {
   if (!params) {

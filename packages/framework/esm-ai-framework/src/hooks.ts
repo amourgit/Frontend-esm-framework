@@ -1,17 +1,17 @@
 // =============================================================================
-//  @egen/esm-ai-framework — React hooks pour les consommateurs (Layer 2)
+//  @egen-civitas/esm-ai-framework — React hooks pour les consommateurs (Layer 2)
 // =============================================================================
 
 import { useSyncExternalStore, useCallback, useEffect, useRef } from 'react';
 import type { RefObject } from 'react';
-import { useAIConfig, useAIEnabled } from '@egen/esm-ai-config';
-import { aiContextStore, getAIContextJson } from '@egen/esm-ai-context';
-import { getAllTools, executeTool, getToolsSchemaForLLM, registerUIAction, registerObservable } from '@egen/esm-ai-tools';
-import { sessionStore } from '@egen/esm-api';
-import type { AIToolRequest, AIToolResult, AIUIActionDefinition, AIObservableDefinition } from '@egen/esm-ai-tools';
-import type { AIContext } from '@egen/esm-ai-context';
+import { useAIConfig, useAIEnabled } from '@egen-civitas/esm-ai-config';
+import { aiContextStore, getAIContextJson } from '@egen-civitas/esm-ai-context';
+import { getAllTools, executeTool, getToolsSchemaForLLM, registerUIAction, registerObservable } from '@egen-civitas/esm-ai-tools';
+import { sessionStore } from '@egen-civitas/esm-api';
+import type { AIToolRequest, AIToolResult, AIUIActionDefinition, AIObservableDefinition } from '@egen-civitas/esm-ai-tools';
+import type { AIContext } from '@egen-civitas/esm-ai-context';
 
-export { useAIConfig, useAIEnabled } from '@egen/esm-ai-config';
+export { useAIConfig, useAIEnabled } from '@egen-civitas/esm-ai-config';
 
 // ─── useAIContext ─────────────────────────────────────────────────────────────
 
@@ -118,7 +118,7 @@ export function useAvailableToolsSchema(): object[] {
 
 /**
  * Rend un élément DOM "actionnable" par l'assistant IA : l'enregistre dans le
- * registre d'actions UI (voir @egen/esm-ai-tools/ui-actions.ts) tant qu'il est
+ * registre d'actions UI (voir @egen-civitas/esm-ai-tools/ui-actions.ts) tant qu'il est
  * monté, et le retire automatiquement au démontage. Le LLM le découvre alors
  * via le contexte (catalogue des actions visibles) ou le tool list_ui_actions,
  * et peut le déclencher via click_element / fill_field — sans qu'AUCUN
@@ -155,7 +155,7 @@ export function useAIActionable<T extends HTMLElement>(def: AIUIActionDefinition
 /**
  * Rend un élément DOM "observable" par l'assistant IA : contenu descriptif
  * (message d'état, liste, tableau, carte) que le LLM doit CONNAÎTRE sans
- * pouvoir le déclencher — voir @egen/esm-ai-tools/observables.ts. Enregistré
+ * pouvoir le déclencher — voir @egen-civitas/esm-ai-tools/observables.ts. Enregistré
  * tant que l'élément est monté, retiré automatiquement au démontage.
  *
  * `getData` est réévalué à CHAQUE lecture du catalogue (pas seulement au

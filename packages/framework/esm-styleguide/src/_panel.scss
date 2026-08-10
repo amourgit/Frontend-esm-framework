@@ -4,7 +4,7 @@
 //
 //  AUCUNE VALEUR EN DUR ICI. Ce fichier ne contient ni `:root { ... }`, ni
 //  bloc `[data-theme='...']` avec des valeurs codées en dur. Le moteur
-//  dynamique (@egen/esm-theme) est l'UNIQUE source de vérité : il charge le
+//  dynamique (@egen-civitas/esm-theme) est l'UNIQUE source de vérité : il charge le
 //  JSON de thème actif (par défaut `theme.default.json`, ou tout JSON
 //  fourni/surchargé par une app — cf. `applyAppThemeOverride()`), l'aplatit
 //  et injecte lui-même les variables CSS dans le DOM (`:root`,
@@ -17,7 +17,7 @@
 //    - le schéma TypeScript : packages/framework/esm-theme/src/types.ts
 //    - le thème par défaut  : packages/framework/esm-theme/src/themes/theme.default.json
 //  Toute personnalisation passe par une surcharge JSON (cf. README de
-//  @egen/esm-theme), jamais par une modification de ce fichier SCSS.
+//  @egen-civitas/esm-theme), jamais par une modification de ce fichier SCSS.
 //
 //  Le nom "panel" est volontairement générique : il désigne toute surface de
 //  composant (carte, modale, menu, info-bulle, champ de saisie...) — le
@@ -41,7 +41,7 @@
 //  réintroduisant des valeurs statiques ici.
 //
 //  UTILISATION dans un composant SCSS :
-//    @use '@egen/esm-styleguide/src/panel' as panel;
+//    @use '@egen-civitas/esm-styleguide/src/panel' as panel;
 //
 //    .ma-card {
 //      @include panel.panel-surface('card');

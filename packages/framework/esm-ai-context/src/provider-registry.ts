@@ -1,8 +1,8 @@
 // =============================================================================
-//  @egen/esm-ai-context — Registre des Context Providers
+//  @egen-civitas/esm-ai-context — Registre des Context Providers
 // =============================================================================
 
-import { dispatchAIEvent, AI_EVENTS } from '@egen/esm-ai-events';
+import { dispatchAIEvent, AI_EVENTS } from '@egen-civitas/esm-ai-events';
 import type { AIContextProvider } from './types';
 
 interface ProviderEntry {

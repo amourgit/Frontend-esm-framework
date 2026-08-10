@@ -18,9 +18,9 @@ import { egenComponentDecorator } from './egenComponentDecorator';
  *
  * @example
  * ```ts
- * import { getLifecycle } from '@egen/esm-framework';
+ * import { getLifecycle } from '@egen-civitas/esm-framework';
  * import MyComponent from './MyComponent';
- * export const lifecycle = getLifecycle(MyComponent, { featureName: 'my-feature', moduleName: '@egen/esm-my-app' });
+ * export const lifecycle = getLifecycle(MyComponent, { featureName: 'my-feature', moduleName: '@egen-civitas/esm-my-app' });
  * ```
  */
 export function getLifecycle<T>(Component: ComponentType<T>, options: ComponentDecoratorOptions) {
@@ -44,8 +44,8 @@ export function getLifecycle<T>(Component: ComponentType<T>, options: ComponentD
  *
  * @example
  * ```ts
- * import { getAsyncLifecycle } from '@egen/esm-framework';
- * const options = { featureName: 'my-feature', moduleName: '@egen/esm-my-app' };
+ * import { getAsyncLifecycle } from '@egen-civitas/esm-framework';
+ * const options = { featureName: 'my-feature', moduleName: '@egen-civitas/esm-my-app' };
  * export const root = getAsyncLifecycle(() => import('./root.component'), options);
  * ```
  */
@@ -68,9 +68,9 @@ export function getAsyncLifecycle<T>(
  *
  * @example
  * ```ts
- * import { getSyncLifecycle } from '@egen/esm-framework';
+ * import { getSyncLifecycle } from '@egen-civitas/esm-framework';
  * import MyComponent from './MyComponent';
- * const options = { featureName: 'my-feature', moduleName: '@egen/esm-my-app' };
+ * const options = { featureName: 'my-feature', moduleName: '@egen-civitas/esm-my-app' };
  * export const myExtension = getSyncLifecycle(MyComponent, options);
  * ```
  */

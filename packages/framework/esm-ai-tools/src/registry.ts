@@ -1,11 +1,11 @@
 // =============================================================================
-//  @egen/esm-ai-tools — Registre des tools IA
+//  @egen-civitas/esm-ai-tools — Registre des tools IA
 //
 //  Supporte : enregistrement, override, décoration, suppression.
 //  Thread-safe (synchrone — JavaScript single-threaded).
 // =============================================================================
 
-import { dispatchAIEvent, AI_EVENTS } from '@egen/esm-ai-events';
+import { dispatchAIEvent, AI_EVENTS } from '@egen-civitas/esm-ai-events';
 import type { AIToolDefinition, AIToolDecorator, AIToolRegistryEntry, AICapability } from './types';
 
 const _tools = new Map<string, AIToolRegistryEntry>();

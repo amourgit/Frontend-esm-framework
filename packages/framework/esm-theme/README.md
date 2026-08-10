@@ -1,4 +1,4 @@
-# `@egen/esm-theme` — Moteur de Thème Dynamique
+# `@egen-civitas/esm-theme` — Moteur de Thème Dynamique
 
 Système de chargement de thèmes JSON par **priorité**, génération dynamique de variables CSS, résolution **clair/sombre**, **hot-reload**, et **surcharges scopées par application avec priorité**. Conçu pour le framework EGEN (Single-SPA, micro-frontends).
 
@@ -98,7 +98,7 @@ Le schéma JSON ne contient **aucune** clé qui présuppose un style visuel part
 Une microfrontend peut surcharger uniquement les clés qui l'intéressent, sans dupliquer tout le schéma, et sans affecter les autres apps :
 
 ```ts
-import { applyAppThemeOverride } from '@egen/esm-theme';
+import { applyAppThemeOverride } from '@egen-civitas/esm-theme';
 
 // Dans le run.ts (ou au montage) de l'app "egen-academique"
 applyAppThemeOverride(
@@ -158,7 +158,7 @@ Le moteur est initialisé automatiquement dans `run.ts`. Pour ajouter des thème
 ## API TypeScript
 
 ```ts
-import { setupThemeEngine, getThemeEngine, reloadTheme, setThemeMode, applyAppThemeOverride } from '@egen/esm-theme';
+import { setupThemeEngine, getThemeEngine, reloadTheme, setThemeMode, applyAppThemeOverride } from '@egen-civitas/esm-theme';
 
 // Initialisation (shell uniquement)
 await setupThemeEngine({
@@ -192,7 +192,7 @@ await reloadTheme();
 ## Usage SCSS dans les composants
 
 ```scss
-@use '@egen/esm-styleguide/src/panel' as panel;
+@use '@egen-civitas/esm-styleguide/src/panel' as panel;
 
 .ma-card {
   @include panel.panel-surface('card');

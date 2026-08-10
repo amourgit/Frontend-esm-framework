@@ -3,8 +3,8 @@ import React, { useContext } from 'react';
 import classNames from 'classnames';
 import { Button, IconButton } from '@carbon/react';
 import { SingleSpaContext } from 'single-spa-react';
-import { ComponentContext, useLayoutType } from '@egen/esm-react-utils';
-import { type OpenedWindow } from '@egen/esm-extensions';
+import { ComponentContext, useLayoutType } from '@egen-civitas/esm-react-utils';
+import { type OpenedWindow } from '@egen-civitas/esm-extensions';
 import { launchWorkspace2, useWorkspace2Store } from '../workspace2';
 import styles from './action-menu-button2.module.scss';
 

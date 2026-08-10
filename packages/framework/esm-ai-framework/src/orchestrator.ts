@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-framework — Orchestrateur central
+//  @egen-civitas/esm-ai-framework — Orchestrateur central
 //
 //  Point d'initialisation unique du système IA EGEN.
 //  Appelé UNE SEULE FOIS depuis run.ts du shell (ou startupApp d'une app hôte).
@@ -12,10 +12,10 @@
 //    5. Émettre l'événement SESSION_STARTED
 // =============================================================================
 
-import { getAIConfig, subscribeToAIConfig } from '@egen/esm-ai-config';
-import { initAIContextReactivity, aiContextStore } from '@egen/esm-ai-context';
-import { dispatchAIEvent, AI_EVENTS, enableAIEventDebugLogger } from '@egen/esm-ai-events';
-import { registerTool, hasTool, NATIVE_TOOLS } from '@egen/esm-ai-tools';
+import { getAIConfig, subscribeToAIConfig } from '@egen-civitas/esm-ai-config';
+import { initAIContextReactivity, aiContextStore } from '@egen-civitas/esm-ai-context';
+import { dispatchAIEvent, AI_EVENTS, enableAIEventDebugLogger } from '@egen-civitas/esm-ai-events';
+import { registerTool, hasTool, NATIVE_TOOLS } from '@egen-civitas/esm-ai-tools';
 
 let _initialized = false;
 let _cleanupContext: (() => void) | null = null;

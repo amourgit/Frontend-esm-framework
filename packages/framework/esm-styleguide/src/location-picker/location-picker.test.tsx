@@ -3,9 +3,9 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { type LoggedInUser, type Session } from '@egen/esm-api';
-import { type FHIRLocationResource } from '@egen/esm-data-api';
-import { useConfig, useSession } from '@egen/esm-react-utils';
+import { type LoggedInUser, type Session } from '@egen-civitas/esm-api';
+import { type FHIRLocationResource } from '@egen-civitas/esm-data-api';
+import { useConfig, useSession } from '@egen-civitas/esm-react-utils';
 import {
   inpatientWardResponse,
   locationResponseForNonExistingSearch,
@@ -29,8 +29,8 @@ vi.mock('./location-picker.resource', () => ({
   useLocations: vi.fn(),
 }));
 
-vi.mock('@egen/esm-api', async () => ({
-  ...(await import('@egen/esm-api')),
+vi.mock('@egen-civitas/esm-api', async () => ({
+  ...(await import('@egen-civitas/esm-api')),
   egenFetch: vi.fn((url) => {
     if (url === `/ws/fhir2/R4/Location?_id=${inpatientWardLocationUuid}`) {
       return inpatientWardResponse;

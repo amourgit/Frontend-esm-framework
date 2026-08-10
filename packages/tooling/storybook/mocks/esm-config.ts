@@ -1,8 +1,8 @@
-// Storybook-compatible mock for @egen/esm-config.
+// Storybook-compatible mock for @egen-civitas/esm-config.
 // Provides getConfig/useConfig that return default values, plus the Type
 // enum and validators that config-schema.ts imports at definition time.
 
-// Inlined from @egen/esm-config/src/types to avoid subpath export restrictions.
+// Inlined from @egen-civitas/esm-config/src/types to avoid subpath export restrictions.
 export enum Type {
   Array = 'Array',
   Boolean = 'Boolean',
@@ -19,7 +19,7 @@ export interface ConfigSchema {
   [key: string]: any;
 }
 
-// Inlined from @egen/esm-config/src/validators
+// Inlined from @egen-civitas/esm-config/src/validators
 export function validator(check: (val: any) => boolean, message: string) {
   return (val: any) => {
     if (!check(val)) {
@@ -65,12 +65,12 @@ let cachedDefaults: any = null;
 function getDefaults() {
   if (!cachedDefaults) {
     // The config-schema module is imported at build time by Rspack, which
-    // resolves @egen/esm-config to this mock. So by the time
+    // resolves @egen-civitas/esm-config to this mock. So by the time
     // getDefaults() runs, the schema has already been defined.
     try {
       // Dynamic import to break the circular dependency at module load time.
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const { esmStyleGuideSchema } = require('@egen/esm-styleguide/src/config-schema');
+      const { esmStyleGuideSchema } = require('@egen-civitas/esm-styleguide/src/config-schema');
       cachedDefaults = extractDefaults(esmStyleGuideSchema);
     } catch {
       // Fallback: return sensible defaults if the schema can't be loaded.

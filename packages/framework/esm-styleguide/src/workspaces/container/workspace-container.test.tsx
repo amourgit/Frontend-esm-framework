@@ -3,8 +3,8 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { act, screen, renderHook, render, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { registerWorkspace } from '@egen/esm-extensions';
-import { ComponentContext, isDesktop, useLayoutType } from '@egen/esm-react-utils';
+import { registerWorkspace } from '@egen-civitas/esm-extensions';
+import { ComponentContext, isDesktop, useLayoutType } from '@egen-civitas/esm-react-utils';
 import { type DefaultWorkspaceProps, WorkspaceContainer, launchWorkspace, useWorkspaces } from '..';
 
 vi.mock('./workspace-renderer.component.tsx', () => {
@@ -40,7 +40,7 @@ describe('WorkspaceContainer in window mode', () => {
       name: 'clinical-form',
       title: 'clinicalForm',
       load: vi.fn(),
-      moduleName: '@egen/foo',
+      moduleName: '@egen-civitas/foo',
       canHide: true,
       canMaximize: true,
     });
@@ -49,7 +49,7 @@ describe('WorkspaceContainer in window mode', () => {
       name: 'order-basket',
       title: 'orderBasket',
       load: vi.fn(),
-      moduleName: '@egen/bar',
+      moduleName: '@egen-civitas/bar',
       canHide: true,
       canMaximize: true,
     });
@@ -209,7 +209,7 @@ describe('WorkspaceContainer in window mode', () => {
 
 function renderWorkspaceWindow() {
   render(
-    <ComponentContext.Provider value={{ featureName: 'test', moduleName: '@egen/foo' }}>
+    <ComponentContext.Provider value={{ featureName: 'test', moduleName: '@egen-civitas/foo' }}>
       <WorkspaceContainer contextKey="workspace-container" />
     </ComponentContext.Provider>,
   );
@@ -221,7 +221,7 @@ describe('WorkspaceContainer in overlay mode', () => {
       name: 'entity-search',
       title: 'Entity Search',
       load: vi.fn(),
-      moduleName: '@egen/foo',
+      moduleName: '@egen-civitas/foo',
     });
   });
 
@@ -247,7 +247,7 @@ describe('WorkspaceContainer in overlay mode', () => {
 
 function renderWorkspaceOverlay() {
   render(
-    <ComponentContext.Provider value={{ featureName: 'test', moduleName: '@egen/foo' }}>
+    <ComponentContext.Provider value={{ featureName: 'test', moduleName: '@egen-civitas/foo' }}>
       <WorkspaceContainer overlay contextKey="workspace-container" />
     </ComponentContext.Provider>,
   );

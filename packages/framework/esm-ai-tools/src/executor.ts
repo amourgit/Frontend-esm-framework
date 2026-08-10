@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-tools — Pipeline d'exécution
+//  @egen-civitas/esm-ai-tools — Pipeline d'exécution
 //
 //  Ordre pour chaque requête de tool :
 //    1. Résoudre le tool dans le registre
@@ -11,16 +11,16 @@
 //    7. Retourner AIToolResult
 // =============================================================================
 
-import { dispatchAIEvent, AI_EVENTS } from '@egen/esm-ai-events';
-import { getAIConfig } from '@egen/esm-ai-config';
-import { sessionStore } from '@egen/esm-api';
+import { dispatchAIEvent, AI_EVENTS } from '@egen-civitas/esm-ai-events';
+import { getAIConfig } from '@egen-civitas/esm-ai-config';
+import { sessionStore } from '@egen-civitas/esm-api';
 import { getTool } from './registry';
 import { validateToolArgs, checkToolPermissions } from './validation';
 import type { AIToolRequest, AIToolResult, AIToolExecutionContext, AIToolDefinition, AIToolDecorator } from './types';
 
 // AIContext est importé dynamiquement pour éviter la dépendance circulaire
 // esm-ai-tools → esm-ai-context → esm-ai-tools
-import type { AIContext } from '@egen/esm-ai-context';
+import type { AIContext } from '@egen-civitas/esm-ai-context';
 type AIContextLazy = AIContext | null | undefined;
 
 let _executionCounter = 0;

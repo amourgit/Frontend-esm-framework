@@ -1,7 +1,7 @@
 /** @module @category API */
 import { useEffect, useMemo, useState } from 'react';
 import useSWR from 'swr';
-import { fetchCurrentEntity } from '@egen/esm-data-api';
+import { fetchCurrentEntity } from '@egen-civitas/esm-data-api';
 
 export type NullableEntity = fhir.Patient | null;
 
@@ -22,7 +22,7 @@ function getEntityUuidFromUrl() {
  *
  * @example
  * ```tsx
- * import { useEntity } from '@egen/esm-framework';
+ * import { useEntity } from '@egen-civitas/esm-framework';
  * function EntityDetail({ entityUuid }) {
  *   const { entity, isLoading } = useEntity(entityUuid);
  *   if (isLoading) return <Spinner />;

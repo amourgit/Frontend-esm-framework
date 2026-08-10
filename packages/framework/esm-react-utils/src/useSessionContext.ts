@@ -3,8 +3,8 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import useSWR from 'swr';
 import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday.js';
-import { egenFetch, restBaseUrl } from '@egen/esm-api';
-import { defaultWorkSessionCustomRepresentation, type WorkSession } from '@egen/esm-data-api';
+import { egenFetch, restBaseUrl } from '@egen-civitas/esm-api';
+import { defaultWorkSessionCustomRepresentation, type WorkSession } from '@egen-civitas/esm-data-api';
 import { useSessionContextStore } from './useSessionContextStore';
 
 dayjs.extend(isToday);
@@ -34,7 +34,7 @@ export interface SessionContextReturnType {
  *
  * @example
  * ```tsx
- * import { useSessionContext } from '@egen/esm-framework';
+ * import { useSessionContext } from '@egen-civitas/esm-framework';
  * function EntityWorkSessionStatus({ entityUuid }) {
  *   const { activeSession, isLoading } = useSessionContext(entityUuid);
  *   if (isLoading) return <Spinner />;

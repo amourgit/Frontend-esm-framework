@@ -1,5 +1,5 @@
 /** @module @category API */
-import { egenObservableFetch, restBaseUrl } from '@egen/esm-api';
+import { egenObservableFetch, restBaseUrl } from '@egen-civitas/esm-api';
 import type { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators/index.js';
 import type { Location } from './types';

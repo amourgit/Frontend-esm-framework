@@ -3,8 +3,8 @@ import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
-import { type Person } from '@egen/esm-api';
-import { mockSessionStore } from '@egen/esm-api/mock';
+import { type Person } from '@egen-civitas/esm-api';
+import { mockSessionStore } from '@egen-civitas/esm-api/mock';
 import { attach, registerExtension, updateInternalExtensionStore } from '../../../esm-extensions/src';
 import { ExtensionSlot, getSyncLifecycle, egenComponentDecorator, useConfig } from '../../../esm-react-utils/src';
 import {
@@ -18,8 +18,8 @@ import {
   temporaryConfigStore,
 } from '../../../esm-config/src';
 
-vi.mock('@egen/esm-api', async () => {
-  const original = await import('@egen/esm-api');
+vi.mock('@egen-civitas/esm-api', async () => {
+  const original = await import('@egen-civitas/esm-api');
   return {
     ...original,
     sessionStore: mockSessionStore,

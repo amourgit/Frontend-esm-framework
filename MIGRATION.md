@@ -1,6 +1,6 @@
-# Guide de Migration — Consommer @egen/esm-framework dans un Projet Externe
+# Guide de Migration — Consommer @egen-civitas/esm-framework dans un Projet Externe
 
-Ce document explique comment extraire une application ou un projet métier existant (ou en créer un nouveau) pour consommer le framework `@egen/esm-framework` isolé.
+Ce document explique comment extraire une application ou un projet métier existant (ou en créer un nouveau) pour consommer le framework `@egen-civitas/esm-framework` isolé.
 
 ---
 
@@ -16,10 +16,10 @@ Avant (Monorepo tout-en-un) :
 
 Après (Architecture isolée & réutilisable) :
 [ Framework Standalone ] (Nouveau repo : Frontend-esm-framework)
- ├── Publié sur NPM sous le scope @egen/* (@egen/esm-framework, @egen/esm-theme, @egen/esm-styleguide, egen CLI, etc.)
+ ├── Publié sur NPM sous le scope @egen-civitas/* (@egen-civitas/esm-framework, @egen-civitas/esm-theme, @egen-civitas/esm-styleguide, egen CLI, etc.)
 
 [ Projet Consommateur ] (Ex: Frontend-esm-core ou NouveauProjet)
- ├── Dépendances NPM : "@egen/esm-framework": "^9.0.2", "egen": "^9.0.2"
+ ├── Dépendances NPM : "@egen-civitas/esm-framework": "^9.0.2", "egen": "^9.0.2"
  ├── packages/shell/  (copié depuis le template esm-app-shell)
  └── packages/apps/*  (uniquement tes micro-frontends métier)
 ```
@@ -56,9 +56,9 @@ Exemple de `package.json` minimal pour un monorepo consommateur :
     "verify": "turbo run lint test typescript"
   },
   "devDependencies": {
-    "@egen/esm-framework": "^9.0.2",
-    "@egen/esm-theme": "^9.0.2",
-    "@egen/esm-styleguide": "^9.0.2",
+    "@egen-civitas/esm-framework": "^9.0.2",
+    "@egen-civitas/esm-theme": "^9.0.2",
+    "@egen-civitas/esm-styleguide": "^9.0.2",
     "egen": "^9.0.2",
     "turbo": "^2.5.2",
     "typescript": "^5.8.3"
@@ -74,8 +74,8 @@ Chaque app métier dans `packages/apps/mon-app-1` importera le framework depuis 
 
 ```tsx
 import React from 'react';
-import { useConfig, useSession } from '@egen/esm-framework';
-import { Button } from '@egen/esm-styleguide';
+import { useConfig, useSession } from '@egen-civitas/esm-framework';
+import { Button } from '@egen-civitas/esm-styleguide';
 
 export function MonComposant() {
   const config = useConfig();
@@ -96,5 +96,5 @@ export function MonComposant() {
 
 1. **Isolation stricte** : Le framework évolue de manière autonome sans risquer de casser des projets métier spécifiques.
 2. **Réutilisabilité multi-projets** : Plusieurs équipes ou projets peuvent partager le même core framework via NPM.
-3. **Mise à jour simplifiée** : Une mise à jour du framework se fait simplement via `yarn update @egen/esm-framework`.
-4. **Standardisation UI/UX** : Le thème dynamique (`@egen/esm-theme`) et le styleguide (`@egen/esm-styleguide`) garantissent une cohérence visuelle parfaite.
+3. **Mise à jour simplifiée** : Une mise à jour du framework se fait simplement via `yarn update @egen-civitas/esm-framework`.
+4. **Standardisation UI/UX** : Le thème dynamique (`@egen-civitas/esm-theme`) et le styleguide (`@egen-civitas/esm-styleguide`) garantissent une cohérence visuelle parfaite.

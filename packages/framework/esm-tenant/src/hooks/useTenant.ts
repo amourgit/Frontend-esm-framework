@@ -1,5 +1,5 @@
 // ============================================================================
-//  @egen/esm-tenant — Hooks React
+//  @egen-civitas/esm-tenant — Hooks React
 // ============================================================================
 //
 //  Tous les hooks suivent le même pattern que les hooks EGEN existants
@@ -13,7 +13,7 @@
 //  USAGE DANS UNE APP MICROFRONTEND :
 //  ───────────────────────────────────
 //  ```tsx
-//  import { useTenant } from '@egen/esm-tenant';
+//  import { useTenant } from '@egen-civitas/esm-tenant';
 //
 //  function MyPage() {
 //    const tenantId = useTenant();

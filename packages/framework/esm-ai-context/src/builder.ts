@@ -1,14 +1,14 @@
 // =============================================================================
-//  @egen/esm-ai-context — Context Builder
+//  @egen-civitas/esm-ai-context — Context Builder
 //
 //  Agrège tous les stores EGEN dans une représentation sérialisable stable.
 //  N'expose JAMAIS les stores internes directement.
 //  Accède aux stores via leurs APIs publiques (getState(), not subscribe).
 // =============================================================================
 
-import { sessionStore, getTenantId, isMultiTenant } from '@egen/esm-api';
-import { getAIConfig } from '@egen/esm-ai-config';
-import { AI_EVENTS, dispatchAIEvent } from '@egen/esm-ai-events';
+import { sessionStore, getTenantId, isMultiTenant } from '@egen-civitas/esm-api';
+import { getAIConfig } from '@egen-civitas/esm-ai-config';
+import { AI_EVENTS, dispatchAIEvent } from '@egen-civitas/esm-ai-events';
 import { collectProviderData } from './provider-registry';
 import type { AIContext, AINavigationContext, AIPermissionsContext, AIExtensionContext } from './types';
 
@@ -107,9 +107,9 @@ function buildPermissionsContext(): AIPermissionsContext {
 
 /**
  * Construit le contexte tenant à partir de l'API synchrone canonique de
- * @egen/esm-api (getTenantId/isMultiTenant) — le même point d'accès que
+ * @egen-civitas/esm-api (getTenantId/isMultiTenant) — le même point d'accès que
  * celui utilisé par egenFetch pour injecter X-Tenant-ID. Zéro dépendance
- * directe sur @egen/esm-tenant, zéro accès spéculatif à des globals window
+ * directe sur @egen-civitas/esm-tenant, zéro accès spéculatif à des globals window
  * non garantis (voir historique de cette fonction avant le 8 août 2026).
  *
  * `null` en mode "off" ET quand aucun tenant n'est encore capturé (ex: URL

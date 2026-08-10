@@ -1,7 +1,7 @@
 /** @module @category Context */
 import { useEffect, useState } from 'react';
-import { getContext, subscribeToContext } from '@egen/esm-context';
-import { shallowEqual } from '@egen/esm-utils';
+import { getContext, subscribeToContext } from '@egen-civitas/esm-context';
+import { shallowEqual } from '@egen-civitas/esm-utils';
 
 /**
  * This hook is used to access a namespace within the overall AppContext, so that a component can

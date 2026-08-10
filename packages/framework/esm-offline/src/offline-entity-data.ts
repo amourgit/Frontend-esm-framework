@@ -1,5 +1,5 @@
 /** @module @category Offline */
-import { createGlobalStore } from '@egen/esm-state';
+import { createGlobalStore } from '@egen-civitas/esm-state';
 import { setupDynamicOfflineDataHandler, syncDynamicOfflineData } from './dynamic-offline-data';
 
 /** @deprecated Will be removed once all modules have been migrated to the new dynamic offline data API. */

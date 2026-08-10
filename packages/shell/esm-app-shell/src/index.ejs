@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--
       Anti-FOUC : pose data-theme AVANT le chargement de la CSS, pour que les
-      blocs [data-theme="light"/"dark"] injectés par @egen/esm-theme
+      blocs [data-theme="light"/"dark"] injectés par @egen-civitas/esm-theme
       s'appliquent dès la première peinture. Source de vérité : esm-theme
       n'a plus aucun fallback statique de valeurs en SCSS — seul cet
       attribut + le moteur JS déterminent le rendu.
@@ -65,13 +65,13 @@
 <% } %>
 <% if (egenAiConfigDef) { %>
     <script>
-      // Pont EGEN_AI_* (.env, build) → window.egenAi* (lu par @egen/esm-ai-config au runtime)
+      // Pont EGEN_AI_* (.env, build) → window.egenAi* (lu par @egen-civitas/esm-ai-config au runtime)
       Object.assign(window, <%= egenAiConfigDef %>);
     </script>
 <% } %>
 <% if (egenTenantConfigDef) { %>
     <script>
-      // Pont EGEN_TENANT_* (.env, build) → window.egenTenant* (lu par @egen/esm-tenant au runtime)
+      // Pont EGEN_TENANT_* (.env, build) → window.egenTenant* (lu par @egen-civitas/esm-tenant au runtime)
       Object.assign(window, <%= egenTenantConfigDef %>);
     </script>
 <% } %>

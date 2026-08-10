@@ -4,22 +4,22 @@
  * Régression du 8 août 2026 : buildTenantContext() lisait encore l'ancien
  * format du store tenant (activeTenant.id/name/locale/timezone/featureFlags)
  * après la refonte du système tenant vers un modèle "capture-only"
- * ({ tenantId, mode }, voir @egen/esm-tenant/src/types.ts). Le contexte IA
+ * ({ tenantId, mode }, voir @egen-civitas/esm-tenant/src/types.ts). Le contexte IA
  * perdait alors silencieusement toute information de tenant, sans jamais
  * lever d'erreur (accès non typé sur `any`).
  *
  * Ces tests figent le contrat : buildAIContext().context.tenant reflète
  * fidèlement le store tenant global "tenant", accédé exclusivement via
- * l'API synchrone canonique de @egen/esm-api (getTenantId/isMultiTenant) —
+ * l'API synchrone canonique de @egen-civitas/esm-api (getTenantId/isMultiTenant) —
  * jamais un accès direct/spéculatif à window.stores ou window.egenTenant*.
  */
 import { afterEach, describe, expect, it } from 'vitest';
-import { createGlobalStore } from '@egen/esm-state';
+import { createGlobalStore } from '@egen-civitas/esm-state';
 import { buildAIContext } from '.';
 
 type FakeTenantState = { tenantId: string | null; mode: 'off' | 'single' | 'multi' };
 
-// Simule le store tenant réel de @egen/esm-tenant (même nom "tenant", même
+// Simule le store tenant réel de @egen-civitas/esm-tenant (même nom "tenant", même
 // forme d'état) SANS en dépendre — exactement comme le fait le code testé.
 function setFakeTenantState(state: FakeTenantState) {
   const store = createGlobalStore<FakeTenantState>('tenant', state);

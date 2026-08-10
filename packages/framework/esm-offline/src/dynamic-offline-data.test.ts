@@ -12,7 +12,7 @@ import {
 
 const mockUserId = '00000000-0000-0000-0000-000000000000';
 
-vi.mock('@egen/esm-api', () => ({
+vi.mock('@egen-civitas/esm-api', () => ({
   getLoggedInUser: vi.fn(async () => ({ uuid: mockUserId })),
 }));
 

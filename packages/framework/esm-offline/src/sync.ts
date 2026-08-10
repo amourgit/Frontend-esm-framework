@@ -1,7 +1,7 @@
 /** @module @category Offline */
 import Dexie from 'dexie';
-import { getLoggedInUser } from '@egen/esm-api';
-import { createGlobalStore } from '@egen/esm-state';
+import { getLoggedInUser } from '@egen-civitas/esm-api';
+import { createGlobalStore } from '@egen-civitas/esm-state';
 import { OfflineDb } from './offline-db';
 
 /**

@@ -2,7 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Button, IconButton } from '@carbon/react';
-import { useLayoutType } from '@egen/esm-react-utils';
+import { useLayoutType } from '@egen-civitas/esm-react-utils';
 import { useWorkspaces } from '../workspaces';
 import styles from './action-menu-button.module.scss';
 

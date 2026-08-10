@@ -107,7 +107,7 @@ export function loadBundlerConfig(options: BuildOptions = {}) {
   const require = createRequire(import.meta.url);
   const config:
     | ((env: Record<string | number | symbol, unknown>) => RspackConfig)
-    | RspackConfig = require('@egen/esm-app-shell/rspack.config.js');
+    | RspackConfig = require('@egen-civitas/esm-app-shell/rspack.config.js');
 
   if (typeof config === 'function') {
     return config({});

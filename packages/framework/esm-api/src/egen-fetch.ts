@@ -1,8 +1,8 @@
 /** @module @category API */
 import { Observable } from 'rxjs';
 import { isPlainObject } from 'lodash-es';
-import { getConfig } from '@egen/esm-config';
-import { clearHistory, navigate } from '@egen/esm-navigation';
+import { getConfig } from '@egen-civitas/esm-config';
+import { clearHistory, navigate } from '@egen-civitas/esm-navigation';
 import type { FetchResponse } from './types';
 import { getTenantId } from './tenant';
 import { defaultRedirectAuthFailureUrl, type EsmApiConfigObject } from './config-schema';
@@ -59,7 +59,7 @@ export function makeUrl(path: string) {
  *
  * @example
  * ```js
- * import { egenFetch } from '@egen/esm-api'
+ * import { egenFetch } from '@egen-civitas/esm-api'
  * const abortController = new AbortController();
  * egenFetch(`${restBaseUrl}/session', {signal: abortController.signal})
  *   .then(response => {
@@ -90,16 +90,16 @@ export function makeUrl(path: string) {
  */
 export function egenFetch<T = any>(path: string, fetchInit: FetchConfig = {}): Promise<FetchResponse<T>> {
   if (typeof path !== 'string') {
-    throw Error("The first argument to @egen/api's egenFetch function must be a url string");
+    throw Error("The first argument to @egen-civitas/api's egenFetch function must be a url string");
   }
 
   if (typeof fetchInit !== 'object') {
-    throw Error("The second argument to @egen/api's egenFetch function must be a plain object.");
+    throw Error("The second argument to @egen-civitas/api's egenFetch function must be a plain object.");
   }
 
   if (!window.egenBase) {
     throw Error(
-      "@egen/api is running in a browser that doesn't have window.egenBase, which is provided by egen-module-spa's HTML file.",
+      "@egen-civitas/api is running in a browser that doesn't have window.egenBase, which is provided by egen-module-spa's HTML file.",
     );
   }
 
@@ -165,13 +165,13 @@ export function egenFetch<T = any>(path: string, fetchInit: FetchConfig = {}): P
   /* We capture the stacktrace before making the request, so that if an error occurs we can
    * log a full stacktrace that includes the code that made the request and handled the response
    * Otherwise, we could run into situations where the stacktrace doesn't even show which code
-   * called @egen/api.
+   * called @egen-civitas/api.
    */
   const requestStacktrace = Error();
 
   return window.fetch(url, fetchInit as RequestInit).then(async (r) => {
     const response = r as FetchResponse<T>;
-    const { redirectAuthFailure, followRedirects } = await getConfig<EsmApiConfigObject>('@egen/esm-api');
+    const { redirectAuthFailure, followRedirects } = await getConfig<EsmApiConfigObject>('@egen-civitas/esm-api');
     if (response.ok) {
       if (response.status === 204) {
         if (followRedirects && response.headers.has('location')) {
@@ -276,7 +276,7 @@ export function egenFetch<T = any>(path: string, fetchInit: FetchConfig = {}): P
  * @example
  *
  * ```js
- * import { egenObservableFetch } from '@egen/esm-api'
+ * import { egenObservableFetch } from '@egen-civitas/esm-api'
  * const subscription = egenObservableFetch(`${restBaseUrl}/session').subscribe(
  *   response => console.log(response.data),
  *   err => {throw err},

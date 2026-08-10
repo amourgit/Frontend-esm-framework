@@ -44,7 +44,7 @@ export async function runDevelop(args: DevelopArgs, signal?: AbortSignal) {
   const localConfigUrls = configFiles.map((path) => `${spaPath}/${localConfigUrlPrefix}/${basename(path)}`);
 
   const require = createRequire(import.meta.url);
-  const source = resolve(require.resolve('@egen/esm-app-shell/package.json'), '..', 'dist');
+  const source = resolve(require.resolve('@egen-civitas/esm-app-shell/package.json'), '..', 'dist');
   const index = resolve(source, 'index.html');
   const indexContent = readFileSync(index, 'utf8')
     .replace(

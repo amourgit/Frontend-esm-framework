@@ -1,12 +1,12 @@
 // =============================================================================
-//  @egen/esm-ai-config — Store Zustand de configuration IA
+//  @egen-civitas/esm-ai-config — Store Zustand de configuration IA
 //
 //  Suit exactement le pattern des stores EGEN existants :
 //    createGlobalStore + subscribeTo + getGlobalStore
-//  Compatible avec useStore() de @egen/esm-react-utils.
+//  Compatible avec useStore() de @egen-civitas/esm-react-utils.
 // =============================================================================
 
-import { createGlobalStore, subscribeTo } from '@egen/esm-state';
+import { createGlobalStore, subscribeTo } from '@egen-civitas/esm-state';
 import type { AIConfig, AIConfigStore, PartialAIConfig } from './types';
 import { DEFAULT_AI_CONFIG } from './defaults';
 import { validateAIConfig, mergeConfig } from './validation';
@@ -19,13 +19,13 @@ const STORE_NAME = 'egen:ai:config';
  *
  * Usage direct (avancé) :
  * ```ts
- * import { aiConfigStore } from '@egen/esm-ai-config';
+ * import { aiConfigStore } from '@egen-civitas/esm-ai-config';
  * const { config } = aiConfigStore.getState();
  * ```
  *
  * Usage React (recommandé) :
  * ```ts
- * import { useAIConfig } from '@egen/esm-ai-config';
+ * import { useAIConfig } from '@egen-civitas/esm-ai-config';
  * const { enabled } = useAIConfig();
  * ```
  */

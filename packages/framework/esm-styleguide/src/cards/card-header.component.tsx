@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import { useLayoutType } from '@egen/esm-react-utils';
+import { useLayoutType } from '@egen-civitas/esm-react-utils';
 import styles from './card-header.module.scss';
 
 export interface CardHeaderProps {

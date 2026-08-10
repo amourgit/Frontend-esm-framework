@@ -1,6 +1,6 @@
 /**
- * A test that validates that `@egen/esm-framework/mock` has
- * the same API as `@egen/esm-framework`.
+ * A test that validates that `@egen-civitas/esm-framework/mock` has
+ * the same API as `@egen-civitas/esm-framework`.
  *
  * Disabled because the mock is nowhere close to having the same
  * API. You can change `xit` to `it` to run the test and see a
@@ -10,8 +10,8 @@ import { describe, expect, it } from 'vitest';
 import * as real from './index';
 import * as mock from '../mock';
 
-describe('@egen/esm-framework/mock', () => {
-  it.skip('should have the same exports as @egen/esm-framework', () => {
+describe('@egen-civitas/esm-framework/mock', () => {
+  it.skip('should have the same exports as @egen-civitas/esm-framework', () => {
     expect(new Set(Object.keys(real))).toEqual(new Set(Object.keys(mock)));
   });
 

@@ -71,7 +71,7 @@ describe('checkImportmapJson', () => {
 
 describe('checkRoutesJson', () => {
   it('returns true for a valid routes object', () => {
-    expect(checkRoutesJson('{"@egen/foo":{"pages":[]}}')).toBe(true);
+    expect(checkRoutesJson('{"@egen-civitas/foo":{"pages":[]}}')).toBe(true);
   });
 
   it('returns true for an empty object', () => {
@@ -91,11 +91,11 @@ describe('checkRoutesJson', () => {
   });
 
   it('returns false when a value is null', () => {
-    expect(checkRoutesJson('{"@egen/foo":null}')).toBe(false);
+    expect(checkRoutesJson('{"@egen-civitas/foo":null}')).toBe(false);
   });
 
   it('returns false when a value is an array', () => {
-    expect(checkRoutesJson('{"@egen/foo":[]}')).toBe(false);
+    expect(checkRoutesJson('{"@egen-civitas/foo":[]}')).toBe(false);
   });
 
   it('returns false for null', () => {
@@ -131,7 +131,7 @@ describe('getImportMap', () => {
   });
 
   it('returns an inline declaration when the path is valid import map JSON', async () => {
-    const inlineJson = '{"imports":{"@egen/foo":"https://cdn.example.com/foo.js"}}';
+    const inlineJson = '{"imports":{"@egen-civitas/foo":"https://cdn.example.com/foo.js"}}';
     mockExistsSync.mockReturnValue(false);
 
     const result = await getImportMap(inlineJson);
@@ -157,7 +157,7 @@ describe('getRoutes', () => {
   });
 
   it('returns an inline declaration when the local file exists and is valid', async () => {
-    const content = '{"@egen/foo":{"pages":[]}}';
+    const content = '{"@egen-civitas/foo":{"pages":[]}}';
     mockExistsSync.mockReturnValue(true);
     mockReadFileSync.mockReturnValue(content);
 
@@ -176,7 +176,7 @@ describe('getRoutes', () => {
   });
 
   it('returns an inline declaration when the path is valid routes JSON', async () => {
-    const inlineJson = '{"@egen/foo":{"pages":[]}}';
+    const inlineJson = '{"@egen-civitas/foo":{"pages":[]}}';
     mockExistsSync.mockReturnValue(false);
 
     const result = await getRoutes(inlineJson);
@@ -191,13 +191,13 @@ describe('mergeImportmapAndRoutes', () => {
   it('returns the original declarations unchanged when additionalImportsAndRoutes is false', async () => {
     const original: ImportmapAndRoutes = {
       importMap: { type: 'inline', value: '{"imports":{"a":"1"}}' },
-      routes: { type: 'inline', value: '{"@egen/a":{"pages":[]}}' },
+      routes: { type: 'inline', value: '{"@egen-civitas/a":{"pages":[]}}' },
     };
 
     const result = await mergeImportmapAndRoutes(original, false);
 
     expect(result.importMap.value).toBe('{"imports":{"a":"1"}}');
-    expect(result.routes.value).toBe('{"@egen/a":{"pages":[]}}');
+    expect(result.routes.value).toBe('{"@egen-civitas/a":{"pages":[]}}');
   });
 
   it('merges additional imports into an inline import map', async () => {
@@ -265,18 +265,18 @@ describe('mergeImportmapAndRoutes', () => {
   it('merges additional routes into the routes declaration', async () => {
     const original: ImportmapAndRoutes = {
       importMap: { type: 'inline', value: '{"imports":{}}' },
-      routes: { type: 'inline', value: '{"@egen/a":{"pages":[]}}' },
+      routes: { type: 'inline', value: '{"@egen-civitas/a":{"pages":[]}}' },
     };
 
     const result = await mergeImportmapAndRoutes(original, {
       importMap: {},
-      routes: { '@egen/b': { pages: ['/new'] } },
+      routes: { '@egen-civitas/b': { pages: ['/new'] } },
       watchedRoutesPaths: {},
     });
 
     const merged = JSON.parse(result.routes.value);
-    expect(merged['@egen/a']).toEqual({ pages: [] });
-    expect(merged['@egen/b']).toEqual({ pages: ['/new'] });
+    expect(merged['@egen-civitas/a']).toEqual({ pages: [] });
+    expect(merged['@egen-civitas/b']).toEqual({ pages: ['/new'] });
   });
 });
 
@@ -292,7 +292,7 @@ describe('proxyImportmapAndRoutes', () => {
         type: 'inline',
         value: JSON.stringify({
           imports: {
-            '@egen/foo': 'https://dev.egen.alpha.vercel.com/egen/spa/foo-1.0.0/foo.js',
+            '@egen-civitas/foo': 'https://dev.egen.alpha.vercel.com/egen/spa/foo-1.0.0/foo.js',
           },
         }),
       },
@@ -303,7 +303,7 @@ describe('proxyImportmapAndRoutes', () => {
     const result = proxyImportmapAndRoutes(input, backend, spaPath);
 
     const map = JSON.parse(result.importmap.value);
-    expect(map.imports['@egen/foo']).toBe('./foo-1.0.0/foo.js');
+    expect(map.imports['@egen-civitas/foo']).toBe('./foo-1.0.0/foo.js');
   });
 
   it('preserves URLs that point to different hosts', () => {
@@ -312,8 +312,8 @@ describe('proxyImportmapAndRoutes', () => {
         type: 'inline',
         value: JSON.stringify({
           imports: {
-            '@egen/local': 'http://localhost:8081/main.js',
-            '@egen/remote': 'https://dev.egen.alpha.vercel.com/egen/spa/remote.js',
+            '@egen-civitas/local': 'http://localhost:8081/main.js',
+            '@egen-civitas/remote': 'https://dev.egen.alpha.vercel.com/egen/spa/remote.js',
           },
         }),
       },
@@ -324,8 +324,8 @@ describe('proxyImportmapAndRoutes', () => {
     const result = proxyImportmapAndRoutes(input, backend, spaPath);
 
     const map = JSON.parse(result.importmap.value);
-    expect(map.imports['@egen/local']).toBe('http://localhost:8081/main.js');
-    expect(map.imports['@egen/remote']).toBe('./remote.js');
+    expect(map.imports['@egen-civitas/local']).toBe('http://localhost:8081/main.js');
+    expect(map.imports['@egen-civitas/remote']).toBe('./remote.js');
   });
 
   it('handles URLs with search params and hash fragments', () => {
@@ -334,7 +334,7 @@ describe('proxyImportmapAndRoutes', () => {
         type: 'inline',
         value: JSON.stringify({
           imports: {
-            '@egen/foo': 'https://dev.egen.alpha.vercel.com/egen/spa/foo.js?v=1#section',
+            '@egen-civitas/foo': 'https://dev.egen.alpha.vercel.com/egen/spa/foo.js?v=1#section',
           },
         }),
       },
@@ -345,7 +345,7 @@ describe('proxyImportmapAndRoutes', () => {
     const result = proxyImportmapAndRoutes(input, backend, spaPath);
 
     const map = JSON.parse(result.importmap.value);
-    expect(map.imports['@egen/foo']).toBe('./foo.js?v=1#section');
+    expect(map.imports['@egen-civitas/foo']).toBe('./foo.js?v=1#section');
   });
 
   it('throws when called with a non-inline import map', () => {

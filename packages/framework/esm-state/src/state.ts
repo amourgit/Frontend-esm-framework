@@ -1,6 +1,6 @@
 /** @module @category Store */
-import type {} from '@egen/esm-globals';
-import { shallowEqual } from '@egen/esm-utils';
+import type {} from '@egen-civitas/esm-globals';
+import { shallowEqual } from '@egen-civitas/esm-utils';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { StoreApi } from 'zustand/vanilla';
 import { createStore } from 'zustand/vanilla';

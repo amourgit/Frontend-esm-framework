@@ -1,6 +1,6 @@
-// Storybook-compatible mock for @egen/esm-framework.
+// Storybook-compatible mock for @egen-civitas/esm-framework.
 // Re-exports from individual package mocks so that components importing
-// from the barrel (e.g., `import { X } from '@egen/esm-framework'`)
+// from the barrel (e.g., `import { X } from '@egen-civitas/esm-framework'`)
 // resolve correctly.
 export * from './esm-react-utils';
 export * from './esm-config';

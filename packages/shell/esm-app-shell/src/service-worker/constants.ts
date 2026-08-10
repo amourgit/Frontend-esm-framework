@@ -1,6 +1,6 @@
 import uniq from 'lodash-es/uniq';
 
-// note that these constants are also defined in @egen/esm-offline
+// note that these constants are also defined in @egen-civitas/esm-offline
 export const egenOfflineResponseBodyHttpHeaderName = 'x-egen-offline-response-body';
 export const egenOfflineResponseStatusHttpHeaderName = 'x-egen-offline-response-status';
 export const egenOfflineCachingStrategyHttpHeaderName = 'x-egen-offline-caching-strategy';

@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-api — Bypass d'authentification pour développement
+//  @egen-civitas/esm-api — Bypass d'authentification pour développement
 //
 //  ACTIVÉ via EGEN_DEV_NO_AUTH=true dans l'environnement de build.
 //  Ne jamais utiliser en production.
@@ -16,7 +16,7 @@
 //
 //  1. INJECTION IMMÉDIATE AU BOOT (initDevAuthBypass, appelé une seule fois
 //     dans esm-app-shell/run.ts, avant le montage de la moindre app) :
-//     le sessionStore global (@egen/esm-state, store "session") est peuplé
+//     le sessionStore global (@egen-civitas/esm-state, store "session") est peuplé
 //     directement et synchrones avec la session fictive — exactement comme
 //     s'il venait de recevoir une réponse 200 authentifiée du backend. Toute
 //     app qui lit useSession()/getSessionStore() dès son premier rendu voit
@@ -25,13 +25,13 @@
 //     dépendre de l'ordre de montage des microfrontends.
 //
 //     IMPORTANT — PARTAGE MODULE FEDERATION : cette injection n'a d'effet
-//     "partout" que si @egen/esm-state est bien partagé en singleton entre
-//     le shell et CHAQUE app (shared: { '@egen/esm-state': { singleton: true } }).
+//     "partout" que si @egen-civitas/esm-state est bien partagé en singleton entre
+//     le shell et CHAQUE app (shared: { '@egen-civitas/esm-state': { singleton: true } }).
 //     Sans cela, chaque conteneur fédéré aurait sa propre copie du registre
 //     de stores globaux, et cette injection ne serait visible que dans le
 //     shell. Voir packages/*/package.json (peerDependencies) et
 //     esm-app-shell/dependencies.json — c'est la même exigence que pour le
-//     store tenant (voir @egen/esm-tenant/src/context/store.ts).
+//     store tenant (voir @egen-civitas/esm-tenant/src/context/store.ts).
 //
 //  2. INTERCEPTION FETCH (filet de sécurité) : intercepte window.fetch pour
 //     l'URL du session endpoint, au cas où un code appellerait explicitement
@@ -204,9 +204,9 @@ export function removeSessionFetchInterception(): void {
 /**
  * Applique le bypass complet, comme une vraie session déjà établie :
  *   1. Injecte IMMÉDIATEMENT la session fictive dans le sessionStore global
- *      (voir @egen/esm-state — c'est le même store, quel que soit le
+ *      (voir @egen-civitas/esm-state — c'est le même store, quel que soit le
  *      conteneur fédéré qui appelle getSessionStore()/useSession() ensuite,
- *      à condition que @egen/esm-state soit bien partagé en singleton — voir
+ *      à condition que @egen-civitas/esm-state soit bien partagé en singleton — voir
  *      le commentaire de tête de fichier).
  *   2. Intercepte window.fetch pour le session endpoint (filet de sécurité
  *      pour tout refetch explicite ultérieur).

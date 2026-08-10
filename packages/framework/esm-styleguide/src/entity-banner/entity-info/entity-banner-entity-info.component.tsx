@@ -1,9 +1,9 @@
 /** @module @category UI */
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
-import { ExtensionSlot } from '@egen/esm-react-utils';
-import { getCoreTranslation } from '@egen/esm-translations';
-import { formatPartialDate } from '@egen/esm-utils';
+import { ExtensionSlot } from '@egen-civitas/esm-react-utils';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
+import { formatPartialDate } from '@egen-civitas/esm-utils';
 import EntityBannerEntityIdentifiers from './entity-banner-entity-identifiers.component';
 import styles from './entity-banner-entity-info.module.scss';
 

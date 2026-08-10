@@ -1,5 +1,5 @@
 // ============================================================================
-//  @egen/esm-tenant — Stratégies de capture du tenant actif
+//  @egen-civitas/esm-tenant — Stratégies de capture du tenant actif
 // ============================================================================
 //
 //  Chaque stratégie tente d'extraire un TenantId BRUT depuis une source.

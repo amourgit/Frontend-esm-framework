@@ -2,9 +2,9 @@
 import React, { useMemo } from 'react';
 import classNames from 'classnames';
 import { InlineLoading } from '@carbon/react';
-import { type CoreTranslationKey, getCoreTranslation } from '@egen/esm-translations';
-import { ConfigurableLink, useEntity } from '@egen/esm-react-utils';
-import { parseDate } from '@egen/esm-utils';
+import { type CoreTranslationKey, getCoreTranslation } from '@egen-civitas/esm-translations';
+import { ConfigurableLink, useEntity } from '@egen-civitas/esm-react-utils';
+import { parseDate } from '@egen-civitas/esm-utils';
 import { useEntityContactAttributes } from './useEntityAttributes';
 import { useEntityGroupsForEntity } from './useEntityGroupsForEntity';
 import { useRelationships } from './useRelationships';

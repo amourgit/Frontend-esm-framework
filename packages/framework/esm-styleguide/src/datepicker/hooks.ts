@@ -1,8 +1,8 @@
 import { createContext, type CSSProperties, type ReactNode, useContext, useMemo } from 'react';
 import { createCalendar, getLocalTimeZone, toCalendar, today, type Calendar } from '@internationalized/date';
 import { type AriaLabelingProps, type DOMProps } from '@react-types/shared';
-import { useConfig } from '@egen/esm-react-utils';
-import { getLocale, getDefaultCalendar } from '@egen/esm-utils';
+import { useConfig } from '@egen-civitas/esm-react-utils';
+import { getLocale, getDefaultCalendar } from '@egen-civitas/esm-utils';
 import { type StyleguideConfigObject } from '../config-schema';
 
 export const EgenIntlLocaleContext = createContext<Intl.Locale | null>(null);
@@ -29,7 +29,7 @@ interface DatepickerContext {
  * Depends on `window.i18next.language` to re-compute when the UI language changes.
  */
 export function useDatepickerContext(): DatepickerContext {
-  const config = useConfig<StyleguideConfigObject>({ externalModuleName: '@egen/esm-styleguide' });
+  const config = useConfig<StyleguideConfigObject>({ externalModuleName: '@egen-civitas/esm-styleguide' });
   const preferredDateLocaleMap = config.preferredDateLocale;
 
   const locale = useMemo(() => {

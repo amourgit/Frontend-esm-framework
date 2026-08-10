@@ -1,5 +1,5 @@
 /** @module @category Route Map */
-import { isEgenAppRoutes, isEgenRoutes, type EgenAppRoutes, type EgenRoutes } from '@egen/esm-globals';
+import { isEgenAppRoutes, isEgenRoutes, type EgenAppRoutes, type EgenRoutes } from '@egen-civitas/esm-globals';
 
 const OVERRIDE_PREFIX = 'egen-routes:';
 const CHANGE_EVENT = 'egen-routes:change';

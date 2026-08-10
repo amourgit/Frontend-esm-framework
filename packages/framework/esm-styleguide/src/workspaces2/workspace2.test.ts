@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { WorkspaceStoreState2 } from '@egen/esm-extensions';
+import type { WorkspaceStoreState2 } from '@egen-civitas/esm-extensions';
 import { workspace2StoreActions } from './workspace2';
 
 function makeState(overrides: Partial<WorkspaceStoreState2> = {}): WorkspaceStoreState2 {

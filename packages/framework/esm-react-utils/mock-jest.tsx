@@ -1,8 +1,8 @@
 import React from 'react';
-import { egenFetch } from '@egen/esm-api/mock';
-import { configSchema } from '@egen/esm-config/mock';
-import { getExtensionInternalStore } from '@egen/esm-extensions/mock';
-import { createGlobalStore } from '@egen/esm-state/mock';
+import { egenFetch } from '@egen-civitas/esm-api/mock';
+import { configSchema } from '@egen-civitas/esm-config/mock';
+import { getExtensionInternalStore } from '@egen-civitas/esm-extensions/mock';
+import { createGlobalStore } from '@egen-civitas/esm-state/mock';
 import { isDesktop as realIsDesktop } from './src/useLayoutType';
 import { useFhirFetchAll as realUseFhirFetchAll } from './src/useFhirFetchAll';
 import { useFhirInfinite as realUseFhirInfinite } from './src/useFhirInfinite';
@@ -15,7 +15,7 @@ import { usePagination as realUsePagination } from './src/usePagination';
 import { usePaginationInfo as realUsePaginationInfo } from './src/usePaginationInfo';
 export { ConfigurableLink } from './src/ConfigurableLink';
 export { useStore, useStoreWithActions, createUseStore } from './src/useStore';
-import * as utils from '@egen/esm-utils';
+import * as utils from '@egen-civitas/esm-utils';
 
 export const ComponentContext = React.createContext(null);
 

@@ -10,7 +10,7 @@ import type { ThemeEngineOptions, ThemeEngineState, ThemeMode, ThemeSchema } fro
  * Elle est initialisée par `setupThemeEngine()` au boot du shell.
  *
  * NOTE MICROFRONTENDS : ce module DOIT être partagé en singleton via la
- * configuration Module Federation (`shared: { '@egen/esm-theme': { singleton: true, eager: true } }`)
+ * configuration Module Federation (`shared: { '@egen-civitas/esm-theme': { singleton: true, eager: true } }`)
  * pour toutes les apps consommatrices. Si chaque remote embarque sa propre
  * copie du module, plusieurs instances de `_engine` coexisteront et se
  * marcheront dessus (chacune réécrivant la même balise `<style>`).

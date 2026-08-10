@@ -1,7 +1,7 @@
 /** @module @category UI */
 import React from 'react';
 import { TableBatchActions as CarbonTableBatchActions, type TableBatchActionsProps } from '@carbon/react';
-import { type CoreTranslationKey, getCoreTranslation } from '@egen/esm-translations';
+import { type CoreTranslationKey, getCoreTranslation } from '@egen-civitas/esm-translations';
 
 // Maps Carbon's internal translateWithId keys to Egen core translation keys
 const carbonToCoreTranslationMap: Record<string, CoreTranslationKey> = {

@@ -1,7 +1,7 @@
 /** @module @category Navigation */
 import { navigateToUrl } from 'single-spa';
 import { interpolateUrl } from './interpolate-string';
-import type {} from '@egen/esm-globals';
+import type {} from '@egen-civitas/esm-globals';
 
 function trimTrailingSlash(str: string) {
   return str.replace(/\/$/, '');

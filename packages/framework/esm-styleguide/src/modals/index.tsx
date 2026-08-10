@@ -1,8 +1,8 @@
 /** @module @category UI */
 import { mountRootParcel, type Parcel } from 'single-spa';
-import { createGlobalStore } from '@egen/esm-state';
-import { getModalRegistration } from '@egen/esm-extensions';
-import { reportError } from '@egen/esm-error-handling';
+import { createGlobalStore } from '@egen-civitas/esm-state';
+import { getModalRegistration } from '@egen-civitas/esm-extensions';
+import { reportError } from '@egen-civitas/esm-error-handling';
 
 type ModalInstanceState = 'NEW' | 'MOUNTED' | 'TO_BE_DELETED';
 type ModalSize = 'xs' | 'sm' | 'md' | 'lg';

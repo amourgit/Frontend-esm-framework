@@ -1,5 +1,5 @@
 {
-  "name": "@egen/typedoc-plugin-file-categories",
+  "name": "@egen-civitas/typedoc-plugin-file-categories",
   "version": "9.0.2",
   "license": "MPL-2.0",
   "type": "module",

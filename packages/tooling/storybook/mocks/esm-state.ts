@@ -1,4 +1,4 @@
-// Storybook-compatible mock for @egen/esm-state.
+// Storybook-compatible mock for @egen-civitas/esm-state.
 
 const stores: Record<string, any> = {};
 

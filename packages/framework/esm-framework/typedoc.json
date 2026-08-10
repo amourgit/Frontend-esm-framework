@@ -9,7 +9,7 @@
     }
   ],
   "plugin": [
-    "@egen/typedoc-plugin-file-categories",
+    "@egen-civitas/typedoc-plugin-file-categories",
     "typedoc-plugin-markdown",
     "typedoc-plugin-no-inherit"
   ],

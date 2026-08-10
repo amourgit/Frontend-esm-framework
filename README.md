@@ -1,4 +1,4 @@
-# @egen/esm-framework — Framework Micro-Frontend EGEN
+# @egen-civitas/esm-framework — Framework Micro-Frontend EGEN
 
 Monorepo du framework frontend EGEN. Fournit l'ensemble des packages nécessaires pour construire des applications micro-frontend basées sur **Single-SPA**, **React 18**, **RxJS**, et **@carbon/react**.
 
@@ -10,55 +10,55 @@ Ce repo contient **3 familles de packages** :
 
 | Package | Rôle |
 |---|---|
-| `@egen/esm-globals` | Types FHIR, globals Single-SPA |
-| `@egen/esm-utils` | Utilitaires généraux |
-| `@egen/esm-state` | Store réactif (RxJS) |
-| `@egen/esm-translations` | Internationalisation (i18next) |
-| `@egen/esm-config` | Configuration dynamique runtime |
-| `@egen/esm-theme` | Moteur de thème dynamique (tokens CSS) |
-| `@egen/esm-navigation` | Router SPA |
-| `@egen/esm-api` | Couche HTTP (fetch + SWR) |
-| `@egen/esm-data-api` | Abstraction données (FHIR-ready) |
-| `@egen/esm-error-handling` | Gestion des erreurs |
-| `@egen/esm-feature-flags` | Feature flags runtime |
-| `@egen/esm-context` | Contexte React partagé |
-| `@egen/esm-tenant` | Support multi-tenant |
-| `@egen/esm-offline` | Mode hors-ligne (IndexedDB/Dexie) |
-| `@egen/esm-extensions` | Système de plugins/extensions |
-| `@egen/esm-dynamic-loading` | Chargement dynamique de modules |
-| `@egen/esm-react-utils` | Hooks React réutilisables |
-| `@egen/esm-routes` | Système de routing |
-| `@egen/esm-styleguide` | Design system + composants UI |
-| `@egen/esm-expression-evaluator` | Évaluateur d'expressions |
-| **`@egen/esm-framework`** | **Façade publique — point d'entrée unique** |
+| `@egen-civitas/esm-globals` | Types FHIR, globals Single-SPA |
+| `@egen-civitas/esm-utils` | Utilitaires généraux |
+| `@egen-civitas/esm-state` | Store réactif (RxJS) |
+| `@egen-civitas/esm-translations` | Internationalisation (i18next) |
+| `@egen-civitas/esm-config` | Configuration dynamique runtime |
+| `@egen-civitas/esm-theme` | Moteur de thème dynamique (tokens CSS) |
+| `@egen-civitas/esm-navigation` | Router SPA |
+| `@egen-civitas/esm-api` | Couche HTTP (fetch + SWR) |
+| `@egen-civitas/esm-data-api` | Abstraction données (FHIR-ready) |
+| `@egen-civitas/esm-error-handling` | Gestion des erreurs |
+| `@egen-civitas/esm-feature-flags` | Feature flags runtime |
+| `@egen-civitas/esm-context` | Contexte React partagé |
+| `@egen-civitas/esm-tenant` | Support multi-tenant |
+| `@egen-civitas/esm-offline` | Mode hors-ligne (IndexedDB/Dexie) |
+| `@egen-civitas/esm-extensions` | Système de plugins/extensions |
+| `@egen-civitas/esm-dynamic-loading` | Chargement dynamique de modules |
+| `@egen-civitas/esm-react-utils` | Hooks React réutilisables |
+| `@egen-civitas/esm-routes` | Système de routing |
+| `@egen-civitas/esm-styleguide` | Design system + composants UI |
+| `@egen-civitas/esm-expression-evaluator` | Évaluateur d'expressions |
+| **`@egen-civitas/esm-framework`** | **Façade publique — point d'entrée unique** |
 
 ### `packages/ai/` (dans `packages/framework/`) — Layer AI
 
 | Package | Rôle |
 |---|---|
-| `@egen/esm-ai-config` | Configuration AI |
-| `@egen/esm-ai-events` | Événements AI |
-| `@egen/esm-ai-context` | Contexte de conversation |
-| `@egen/esm-ai-tools` | Outils natifs (inspect-element, describe_screen...) |
-| `@egen/esm-ai-extensions` | Bridge AI ↔ extensions |
-| **`@egen/esm-ai-framework`** | **Façade publique AI** |
+| `@egen-civitas/esm-ai-config` | Configuration AI |
+| `@egen-civitas/esm-ai-events` | Événements AI |
+| `@egen-civitas/esm-ai-context` | Contexte de conversation |
+| `@egen-civitas/esm-ai-tools` | Outils natifs (inspect-element, describe_screen...) |
+| `@egen-civitas/esm-ai-extensions` | Bridge AI ↔ extensions |
+| **`@egen-civitas/esm-ai-framework`** | **Façade publique AI** |
 
 ### `packages/tooling/` — Outils de build
 
 | Package | Rôle |
 |---|---|
 | `browserslist-config-egen` | Cibles de compatibilité navigateurs |
-| `@egen/rspack-config` | Configuration Rspack partagée |
-| `@egen/webpack-config` | Configuration Webpack partagée |
-| `@egen/storybook` | Storybook du styleguide |
-| `@egen/typedoc-plugin-file-categories` | Plugin TypeDoc |
+| `@egen-civitas/rspack-config` | Configuration Rspack partagée |
+| `@egen-civitas/webpack-config` | Configuration Webpack partagée |
+| `@egen-civitas/storybook` | Storybook du styleguide |
+| `@egen-civitas/typedoc-plugin-file-categories` | Plugin TypeDoc |
 | `egen` | CLI : `serve`, `build`, `develop` |
 
 ### `packages/shell/` — Template de shell
 
 | Package | Rôle |
 |---|---|
-| `@egen/esm-app-shell` | Template Single-SPA root-config (à copier dans tes projets) |
+| `@egen-civitas/esm-app-shell` | Template Single-SPA root-config (à copier dans tes projets) |
 
 ---
 
@@ -79,10 +79,10 @@ Ce repo contient **3 familles de packages** :
 
 ```bash
 # Dans le package.json de ton projet
-yarn add @egen/esm-framework @egen/esm-theme @egen/esm-styleguide
+yarn add @egen-civitas/esm-framework @egen-civitas/esm-theme @egen-civitas/esm-styleguide
 
 # Pour le layer AI (optionnel)
-yarn add @egen/esm-ai-framework
+yarn add @egen-civitas/esm-ai-framework
 
 # CLI de développement
 yarn add --dev egen
@@ -92,8 +92,8 @@ yarn add --dev egen
 
 ```tsx
 // mon-app/src/index.tsx
-import { defineConfigSchema, getConfig, subscribe } from '@egen/esm-framework';
-import { useConfig, usePatient } from '@egen/esm-framework';
+import { defineConfigSchema, getConfig, subscribe } from '@egen-civitas/esm-framework';
+import { useConfig, usePatient } from '@egen-civitas/esm-framework';
 
 export function start() {
   // Ton app Single-SPA
@@ -153,9 +153,9 @@ yarn changeset
 Mon-Projet/
 ├── package.json
 │   └── dependencies:
-│       ├── "@egen/esm-framework": "^9.0.0"
-│       ├── "@egen/esm-theme": "^9.0.0"
-│       ├── "@egen/esm-styleguide": "^9.0.0"
+│       ├── "@egen-civitas/esm-framework": "^9.0.0"
+│       ├── "@egen-civitas/esm-theme": "^9.0.0"
+│       ├── "@egen-civitas/esm-styleguide": "^9.0.0"
 │       └── "egen": "^9.0.0"
 ├── packages/
 │   ├── shell/                   ← copié depuis packages/shell/esm-app-shell

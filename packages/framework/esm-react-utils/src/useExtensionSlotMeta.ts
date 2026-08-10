@@ -1,5 +1,5 @@
 /** @module @category Extension */
-import type { ExtensionMeta } from '@egen/esm-extensions';
+import type { ExtensionMeta } from '@egen-civitas/esm-extensions';
 import { useMemo } from 'react';
 import { useAssignedExtensions } from './useAssignedExtensions';
 

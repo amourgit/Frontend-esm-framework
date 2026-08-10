@@ -1,4 +1,4 @@
-import { type ConfigSchema } from '@egen/esm-config';
+import { type ConfigSchema } from '@egen-civitas/esm-config';
 
 export const mockConfig: ConfigSchema = {
   provider: {

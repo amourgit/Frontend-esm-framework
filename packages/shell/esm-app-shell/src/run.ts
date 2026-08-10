@@ -1,6 +1,6 @@
 import { start, triggerAppChange } from 'single-spa';
-import { setupThemeEngine } from '@egen/esm-theme';
-import { setupTenantSystem } from '@egen/esm-tenant';
+import { setupThemeEngine } from '@egen-civitas/esm-theme';
+import { setupTenantSystem } from '@egen-civitas/esm-tenant';
 import { type CalendarIdentifier } from '@internationalized/date';
 import {
   activateOfflineCapability,
@@ -46,8 +46,8 @@ import {
   tryRegisterExtension,
   type Config,
   type StyleguideConfigObject,
-} from '@egen/esm-framework/src/internal';
-import { initDevAuthBypass } from '@egen/esm-api';
+} from '@egen-civitas/esm-framework/src/internal';
+import { initDevAuthBypass } from '@egen-civitas/esm-api';
 import { setupI18n } from './locale';
 import './routing-events';
 import './events';
@@ -62,7 +62,7 @@ import { setupCoreConfig } from './core-config';
 //
 //  Effets quand activé :
 //    1. Désactive la redirection 401 → /login dans egenFetch
-//       (via override config @egen/esm-api.redirectAuthFailure.enabled)
+//       (via override config @egen-civitas/esm-api.redirectAuthFailure.enabled)
 //    2. Injecte une session admin fictive dans le sessionStore global
 //       pour que les composants qui appellent useSession() reçoivent un
 //       utilisateur authentifié sans appel réseau.
@@ -71,7 +71,7 @@ import { setupCoreConfig } from './core-config';
 //
 //  Activé via EGEN_DEV_NO_AUTH=true dans le .env (injecté par rspack DefinePlugin).
 //
-//  La logique est centralisée dans @egen/esm-api → initDevAuthBypass() :
+//  La logique est centralisée dans @egen-civitas/esm-api → initDevAuthBypass() :
 //    1. Intercepte window.fetch pour /ws/rest/v1/session → retourne session fictive
 //       (empêche getSessionStore() de détruire la session via refetchCurrentUser)
 //    2. Injecte la session fictive dans sessionStore (composants React immédiats)
@@ -86,7 +86,7 @@ function applyDevNoAuthBypass() {
     // Désactiver la redirection 401 → /login dans egenFetch (couche réseau)
     provide(
       {
-        '@egen/esm-api': {
+        '@egen-civitas/esm-api': {
           redirectAuthFailure: {
             enabled: false,
             url: '',
@@ -166,7 +166,7 @@ async function runShell() {
   return setupI18n()
     .catch((err) => console.error(`Failed to initialize translations`, err))
     .then(async () => {
-      const { preferredCalendar } = await getConfig<StyleguideConfigObject>('@egen/esm-styleguide');
+      const { preferredCalendar } = await getConfig<StyleguideConfigObject>('@egen-civitas/esm-styleguide');
 
       for (const entry of Object.entries(preferredCalendar)) {
         registerDefaultCalendar(entry[0], entry[1] as CalendarIdentifier);
@@ -440,7 +440,7 @@ export function run(configUrls: Array<string>) {
   // Initialisé juste avant le boot des apps. COMPLÈTEMENT INERTE si
   // EGEN_TENANT_MODE="off" ou absent — zéro overhead.
   //
-  // Configuration (voir @egen/esm-tenant/src/config/env.ts pour le détail) :
+  // Configuration (voir @egen-civitas/esm-tenant/src/config/env.ts pour le détail) :
   //   .env (build)      → EGEN_TENANT_MODE=multi | single | off, etc.
   //   window.* (runtime) → window.egenTenantMode = 'multi' (pont injecté par
   //                        rspack.config.js + index.ejs, seul canal
@@ -449,13 +449,13 @@ export function run(configUrls: Array<string>) {
   //
   // Rôle STRICT de ce système : capturer l'ID tenant depuis l'URL (sous-
   // domaine) et le rendre disponible dans le store global + `X-Tenant-ID`
-  // sur chaque requête backend (voir @egen/esm-api). AUCUNE validation
+  // sur chaque requête backend (voir @egen-civitas/esm-api). AUCUNE validation
   // frontend (existence, statut, thème, permissions) — c'est une
   // responsabilité backend. 100% synchrone, ne peut pas échouer : pas de
   // `.catch()` nécessaire, pas de registry à charger.
   setupTenantSystem();
 
-  return Promise.all([import('@egen/esm-styleguide/src/index'), themeReady]).then(([_styleguide]) => {
+  return Promise.all([import('@egen-civitas/esm-styleguide/src/index'), themeReady]).then(([_styleguide]) => {
     integrateBreakpoints();
     showToasts();
     showModals();

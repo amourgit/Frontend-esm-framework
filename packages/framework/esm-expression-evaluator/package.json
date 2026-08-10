@@ -1,5 +1,5 @@
 {
-  "name": "@egen/esm-expression-evaluator",
+  "name": "@egen-civitas/esm-expression-evaluator",
   "version": "9.0.2",
   "license": "MPL-2.0",
   "description": "Utilities for evaluating user-defined expressions",

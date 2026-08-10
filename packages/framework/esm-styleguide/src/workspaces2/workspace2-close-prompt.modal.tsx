@@ -1,6 +1,6 @@
 import React from 'react';
 import { ModalHeader, ModalBody, ModalFooter, Button } from '@carbon/react';
-import { getCoreTranslation } from '@egen/esm-translations';
+import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import styles from './workspace2-close-prompt.module.scss';
 
 interface WorkspaceUnsavedChangesModal {

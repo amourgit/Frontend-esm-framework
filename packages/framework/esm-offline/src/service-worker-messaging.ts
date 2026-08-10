@@ -1,5 +1,5 @@
 /** @module @category Offline */
-import type { ImportMap } from '@egen/esm-globals';
+import type { ImportMap } from '@egen-civitas/esm-globals';
 import type { EgenOfflineCachingStrategy } from './service-worker-http-headers';
 import { getEgenServiceWorker } from './service-worker';
 

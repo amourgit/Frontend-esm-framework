@@ -1,4 +1,4 @@
-import { restBaseUrl } from '@egen/esm-api';
+import { restBaseUrl } from '@egen-civitas/esm-api';
 import useSWRImmutable from 'swr/immutable';
 
 interface EntityGroup {

@@ -1,13 +1,13 @@
 /** @module @category Feature Flags */
 import { useStore } from './useStore';
-import { featureFlagsStore } from '@egen/esm-feature-flags';
+import { featureFlagsStore } from '@egen-civitas/esm-feature-flags';
 
 /** Use this function to tell whether a feature flag is toggled on or off.
  *
  * Example:
  *
  * ```tsx
- * import { useFeatureFlag } from "@egen/esm-react-utils";
+ * import { useFeatureFlag } from "@egen-civitas/esm-react-utils";
  *
  * export function MyComponent() {
  *  const isMyFeatureFlagOn = useFeatureFlag("my-feature-flag");

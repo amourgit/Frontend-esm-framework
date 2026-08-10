@@ -9,16 +9,16 @@ import {
   provide,
   temporaryConfigStore,
   type ConfigInternalStore,
-} from '@egen/esm-config';
-import { type MockedStore } from '@egen/esm-state/mock';
+} from '@egen-civitas/esm-config';
+import { type MockedStore } from '@egen-civitas/esm-state/mock';
 import { useConfig } from './useConfig';
 import { ComponentContext } from './ComponentContext';
 
-vi.mock('@egen/esm-state', () => import('@egen/esm-state/mock'));
+vi.mock('@egen-civitas/esm-state', () => import('@egen-civitas/esm-state/mock'));
 
-vi.mock('@egen/esm-config', async () => {
-  const actual = await vi.importActual('@egen/esm-config');
-  const mock = await import('@egen/esm-config/mock');
+vi.mock('@egen-civitas/esm-config', async () => {
+  const actual = await vi.importActual('@egen-civitas/esm-config');
+  const mock = await import('@egen-civitas/esm-config/mock');
 
   return {
     ...actual,

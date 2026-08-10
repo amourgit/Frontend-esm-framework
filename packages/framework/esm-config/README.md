@@ -1,6 +1,6 @@
 # egen-esm-config
 
-[![npm: egen/esm-module-config](https://img.shields.io/npm/v/@egen/esm-config)](https://www.npmjs.com/package/@egen/esm-config)
+[![npm: egen/esm-module-config](https://img.shields.io/npm/v/@egen-civitas/esm-config)](https://www.npmjs.com/package/@egen-civitas/esm-config)
 
 ## What is this?
 

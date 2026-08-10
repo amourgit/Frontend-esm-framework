@@ -1,4 +1,4 @@
-import { registerDefaultCalendar } from '@egen/esm-utils';
+import { registerDefaultCalendar } from '@egen-civitas/esm-utils';
 
 // Sets up the global variables that the Egen framework expects to find
 // on window. Without these, components that call interpolateUrl() or

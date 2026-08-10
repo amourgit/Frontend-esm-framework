@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-events — Types d'événements IA
+//  @egen-civitas/esm-ai-events — Types d'événements IA
 //
 //  Tous les événements du système IA EGEN sont définis ici.
 //  Le système d'événements permet : logging, debugging, analytics, extensions.

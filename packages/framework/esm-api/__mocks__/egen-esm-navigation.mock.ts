@@ -1,4 +1,4 @@
-export { interpolateUrl, interpolateString } from '@egen/esm-navigation';
+export { interpolateUrl, interpolateString } from '@egen-civitas/esm-navigation';
 
 export const navigate = jest.fn();
 

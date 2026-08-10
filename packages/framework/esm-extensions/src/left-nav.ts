@@ -1,5 +1,5 @@
-import type {} from '@egen/esm-globals';
-import { createGlobalStore } from '@egen/esm-state';
+import type {} from '@egen-civitas/esm-globals';
+import { createGlobalStore } from '@egen-civitas/esm-state';
 import { type ComponentConfig } from './types';
 import { type ExtensionSlotState } from './store';
 

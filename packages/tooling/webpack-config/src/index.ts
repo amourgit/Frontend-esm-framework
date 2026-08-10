@@ -65,7 +65,7 @@ const { ModuleFederationPlugin } = container;
 function getFrameworkVersion() {
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { version } = require('@egen/esm-framework/package.json');
+    const { version } = require('@egen-civitas/esm-framework/package.json');
     return `^${version}`;
   } catch {
     return '5.x';
@@ -300,7 +300,7 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
         exposes: {
           './start': srcFile,
         },
-        shared: [...Object.keys(peerDependencies), '@egen/esm-framework/src/internal'].reduce((obj, depName) => {
+        shared: [...Object.keys(peerDependencies), '@egen-civitas/esm-framework/src/internal'].reduce((obj, depName) => {
           if (depName === 'swr') {
             // SWR is annoying with Module Federation
             // See: https://github.com/webpack/webpack/issues/16125 and https://github.com/vercel/swr/issues/2356
@@ -355,7 +355,7 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
     resolve: {
       extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.json'],
       alias: {
-        '@egen/esm-framework': '@egen/esm-framework/src/internal',
+        '@egen-civitas/esm-framework': '@egen-civitas/esm-framework/src/internal',
         'lodash.debounce': 'lodash-es/debounce',
         'lodash.findlast': 'lodash-es/findLast',
         'lodash.omit': 'lodash-es/omit',

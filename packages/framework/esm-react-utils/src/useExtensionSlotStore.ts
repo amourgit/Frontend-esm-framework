@@ -1,5 +1,5 @@
 /** @module @category Extension */
-import { type ExtensionSlotState, type ExtensionStore, getExtensionStore } from '@egen/esm-extensions';
+import { type ExtensionSlotState, type ExtensionStore, getExtensionStore } from '@egen-civitas/esm-extensions';
 import { useStore } from './useStore';
 
 export const useExtensionSlotStore = (slot: string) =>

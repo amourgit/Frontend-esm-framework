@@ -1,6 +1,6 @@
 /** @module @category Offline */
-import { subscribeConnectivityChanged } from '@egen/esm-globals';
-import { isOnline as isOnlineFn } from '@egen/esm-utils';
+import { subscribeConnectivityChanged } from '@egen-civitas/esm-globals';
+import { isOnline as isOnlineFn } from '@egen-civitas/esm-utils';
 import { useEffect, useState } from 'react';
 
 /**
@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
  *
  * @example
  * ```tsx
- * import { useConnectivity } from '@egen/esm-framework';
+ * import { useConnectivity } from '@egen-civitas/esm-framework';
  * function NetworkStatus() {
  *   const isOnline = useConnectivity();
  *   return <span>{isOnline ? 'Online' : 'Offline'}</span>;

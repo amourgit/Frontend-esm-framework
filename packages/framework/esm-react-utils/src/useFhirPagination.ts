@@ -1,5 +1,5 @@
 /** @module @category UI */
-import { type FetchResponse, makeUrl, egenFetch } from '@egen/esm-api';
+import { type FetchResponse, makeUrl, egenFetch } from '@egen-civitas/esm-api';
 import {
   type ServerPaginationHandlers,
   useServerPagination,

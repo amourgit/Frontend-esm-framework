@@ -1,7 +1,7 @@
 /** @module @category Workspace */
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { ComponentContext, ExtensionSlot, isDesktop, useLayoutType } from '@egen/esm-react-utils';
+import { ComponentContext, ExtensionSlot, isDesktop, useLayoutType } from '@egen-civitas/esm-react-utils';
 import styles from './action-menu.module.scss';
 
 export interface ActionMenuProps {

@@ -1,13 +1,13 @@
 // =============================================================================
-//  @egen/esm-ai-context — Store et réactivité
+//  @egen-civitas/esm-ai-context — Store et réactivité
 //
 //  Le store écoute tous les stores EGEN pertinents et reconstruit
 //  le contexte automatiquement à chaque changement.
 // =============================================================================
 
-import { createGlobalStore, subscribeTo } from '@egen/esm-state';
-import { sessionStore, subscribeTenant } from '@egen/esm-api';
-import { AI_EVENTS, dispatchAIEvent } from '@egen/esm-ai-events';
+import { createGlobalStore, subscribeTo } from '@egen-civitas/esm-state';
+import { sessionStore, subscribeTenant } from '@egen-civitas/esm-api';
+import { AI_EVENTS, dispatchAIEvent } from '@egen-civitas/esm-ai-events';
 import { buildAIContext } from './builder';
 import { onProviderRegistryChange } from './provider-registry';
 import type { AIContextStore } from './types';
@@ -83,8 +83,8 @@ export function initAIContextReactivity(): () => void {
 
   // ── Tenant (capture initiale, switchTenant() à la volée) ────────────────────
   // subscribeTenant() dégrade silencieusement en no-op si le store tenant
-  // n'est pas encore initialisé (voir @egen/esm-api/src/tenant.ts) — non
-  // bloquant même si @egen/esm-tenant n'est pas chargé dans ce contexte.
+  // n'est pas encore initialisé (voir @egen-civitas/esm-api/src/tenant.ts) — non
+  // bloquant même si @egen-civitas/esm-tenant n'est pas chargé dans ce contexte.
   _unsubscribers.push(subscribeTenant(() => scheduleContextRebuild()));
 
   // ── Navigation (Single-SPA routing events) ──────────────────────────────────

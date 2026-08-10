@@ -1,5 +1,5 @@
 {
-  "name": "@egen/webpack-config",
+  "name": "@egen-civitas/webpack-config",
   "version": "9.0.2",
   "license": "MPL-2.0",
   "main": "dist/index.js",

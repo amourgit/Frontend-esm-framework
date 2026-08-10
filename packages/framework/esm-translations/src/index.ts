@@ -30,7 +30,7 @@ i18n.on('initialized', function () {
  * load the module's translations if they have not already been loaded via `useTranslation`.
  * **This function should therefore be avoided when possible.**
  *
- * @param moduleName The module to get the translation from, e.g. '@egen/esm-login-app'
+ * @param moduleName The module to get the translation from, e.g. '@egen-civitas/esm-login-app'
  * @param key The i18next translation key
  * @param fallback Fallback text for if the lookup fails
  * @param options Options object passed to the i18next `t` function. See https://www.i18next.com/translation-function/essentials#overview-options

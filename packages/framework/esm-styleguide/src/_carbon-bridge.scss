@@ -28,7 +28,7 @@
 //  On définit ici, UNE SEULE FOIS, tous les `--cds-*` couramment consommés
 //  par Carbon, chacun pointant vers son équivalent EGEN via `var(--colors-*,
 //  --panel-*)`. Comme ces derniers sont déjà scopés par `[data-theme]` et
-//  injectés dynamiquement par @egen/esm-theme (voir inject.ts), CE FICHIER
+//  injectés dynamiquement par @egen-civitas/esm-theme (voir inject.ts), CE FICHIER
 //  N'A PAS besoin d'être conditionné par data-theme lui-même : il se contente
 //  de rediriger, la résolution finale suit automatiquement le thème actif.
 //

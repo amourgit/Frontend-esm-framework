@@ -14,7 +14,7 @@ import {
 } from './current-user';
 import type * as egenFetchExport from './egen-fetch';
 import { egenFetch } from './egen-fetch';
-import { reportError } from '@egen/esm-error-handling';
+import { reportError } from '@egen-civitas/esm-error-handling';
 import type { LoggedInUser, Privilege, Role, Session } from './types';
 
 // Mock only the function calls, not constants
@@ -26,7 +26,7 @@ vi.mock('./egen-fetch', async () => {
   };
 });
 
-vi.mock('@egen/esm-error-handling', () => ({
+vi.mock('@egen-civitas/esm-error-handling', () => ({
   reportError: vi.fn(),
 }));
 

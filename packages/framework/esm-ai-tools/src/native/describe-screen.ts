@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-tools — describe_screen
+//  @egen-civitas/esm-ai-tools — describe_screen
 //
 //  Filet de secours pour toute page qui n'a PAS déclaré ses actions/
 //  observables via useAIActionable/useAIObservable : décrit l'écran

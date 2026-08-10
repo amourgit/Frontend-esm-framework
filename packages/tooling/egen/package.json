@@ -49,9 +49,9 @@
   ],
   "homepage": "https://github.com/egen/egen-esm-core#readme",
   "dependencies": {
-    "@egen/esm-app-shell": "workspace:*",
-    "@egen/rspack-config": "workspace:*",
-    "@egen/webpack-config": "workspace:*",
+    "@egen-civitas/esm-app-shell": "workspace:*",
+    "@egen-civitas/rspack-config": "workspace:*",
+    "@egen-civitas/webpack-config": "workspace:*",
     "@inquirer/prompts": "8.3.2",
     "@pnpm/npm-conf": "^3.0.2",
     "@rspack/cli": "1.7.9",

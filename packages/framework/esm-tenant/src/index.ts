@@ -1,5 +1,5 @@
 // ============================================================================
-//  @egen/esm-tenant — Point d'entrée public
+//  @egen-civitas/esm-tenant — Point d'entrée public
 // ============================================================================
 //
 //  Ce fichier expose UNIQUEMENT l'API publique stable du package.
@@ -23,7 +23,7 @@
 //    // React component
 //    TenantProvider, useTenantContext,
 //    // API non-React (pour l'accès HTTP/service simple — ID tenant,
-//    // headers) — préférer @egen/esm-api à la place (getTenantId,
+//    // headers) — préférer @egen-civitas/esm-api à la place (getTenantId,
 //    // tenantHeaders, egenFetch) : c'est cette version qui est câblée
 //    // dans le client HTTP central du monorepo. Voir les JSDoc
 //    // @deprecated dans utils/tenant-utils.ts.
@@ -34,7 +34,7 @@
 //    inferRootDomain, extractSubdomain, buildTenantSubdomainUrl,
 //    // Setup (shell uniquement)
 //    setupTenantSystem, switchTenant, recaptureTenant, storeHeaderTenantId,
-//  } from '@egen/esm-tenant';
+//  } from '@egen-civitas/esm-tenant';
 // ============================================================================
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -74,8 +74,8 @@ export {
 } from './utils/tenant-utils';
 
 // ── Store (accès direct via useStore(tenantStore) dans esm-react-utils) ─────
-// Usage: import { tenantStore } from '@egen/esm-tenant';
-//        import { useStore } from '@egen/esm-react-utils';
+// Usage: import { tenantStore } from '@egen-civitas/esm-tenant';
+//        import { useStore } from '@egen-civitas/esm-react-utils';
 //        const { tenantId, mode } = useStore(tenantStore);
 export { tenantStore, getTenantStoreState, getActiveTenantId, getTenantSystemMode, subscribeTenantStore } from './context/store';
 

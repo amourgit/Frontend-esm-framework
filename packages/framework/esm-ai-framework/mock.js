@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-framework — Mock pour les tests des consommateurs
+//  @egen-civitas/esm-ai-framework — Mock pour les tests des consommateurs
 // =============================================================================
 export const initAIFramework = jest.fn ? jest.fn(() => () => { }) : () => () => { };
 export const cleanupAIFramework = jest.fn ? jest.fn() : () => { };

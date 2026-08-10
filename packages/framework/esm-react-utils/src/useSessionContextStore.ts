@@ -1,5 +1,5 @@
 import { useEffect, useId } from 'react';
-import { getWorkSessionStore, type WorkSession, type WorkSessionStoreState } from '@egen/esm-data-api';
+import { getWorkSessionStore, type WorkSession, type WorkSessionStoreState } from '@egen-civitas/esm-data-api';
 import { type Actions, useStoreWithActions } from './useStore';
 
 const sessionContextStoreActions = {
@@ -29,7 +29,7 @@ const sessionContextStoreActions = {
  *
  * @example
  * ```tsx
- * import { useSessionContextStore } from '@egen/esm-framework';
+ * import { useSessionContextStore } from '@egen-civitas/esm-framework';
  * function SessionManager() {
  *   const { currentSession, setSessionContext } = useSessionContextStore();
  *   return <div>Current: {currentSession?.uuid}</div>;

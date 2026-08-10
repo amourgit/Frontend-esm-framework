@@ -1,6 +1,6 @@
 # egen-esm-feature-flags
 
-[![npm: egen/esm-feature-flags](https://img.shields.io/npm/v/@egen/esm-feature-flags)](https://www.npmjs.com/package/@egen/esm-feature-flags)
+[![npm: egen/esm-feature-flags](https://img.shields.io/npm/v/@egen-civitas/esm-feature-flags)](https://www.npmjs.com/package/@egen-civitas/esm-feature-flags)
 
 ## What is this?
 

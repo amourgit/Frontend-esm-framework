@@ -1,5 +1,5 @@
 {
-  "name": "@egen/esm-ai-extensions",
+  "name": "@egen-civitas/esm-ai-extensions",
   "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Points d'extension de la couche IA EGEN — hooks lifecycle, surcharges, décorateurs pour les microfrontends.",
@@ -35,16 +35,16 @@
     "access": "public"
   },
   "dependencies": {
-    "@egen/esm-ai-config": "workspace:*",
-    "@egen/esm-ai-context": "workspace:*",
-    "@egen/esm-ai-events": "workspace:*",
-    "@egen/esm-ai-tools": "workspace:*"
+    "@egen-civitas/esm-ai-config": "workspace:*",
+    "@egen-civitas/esm-ai-context": "workspace:*",
+    "@egen-civitas/esm-ai-events": "workspace:*",
+    "@egen-civitas/esm-ai-tools": "workspace:*"
   },
   "devDependencies": {
-    "@egen/esm-ai-config": "workspace:*",
-    "@egen/esm-ai-context": "workspace:*",
-    "@egen/esm-ai-events": "workspace:*",
-    "@egen/esm-ai-tools": "workspace:*",
+    "@egen-civitas/esm-ai-config": "workspace:*",
+    "@egen-civitas/esm-ai-context": "workspace:*",
+    "@egen-civitas/esm-ai-events": "workspace:*",
+    "@egen-civitas/esm-ai-tools": "workspace:*",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

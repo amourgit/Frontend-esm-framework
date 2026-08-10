@@ -1,4 +1,4 @@
-import type { ImportMap } from '@egen/esm-globals';
+import type { ImportMap } from '@egen-civitas/esm-globals';
 import { buildManifestSuffix } from './constants';
 import type { BuildManifest } from './types';
 import flatten from 'lodash-es/flatten';

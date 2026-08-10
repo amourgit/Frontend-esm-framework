@@ -1,7 +1,7 @@
 // =============================================================================
-//  @egen/esm-ai-tools — Tools natifs EGEN
+//  @egen-civitas/esm-ai-tools — Tools natifs EGEN
 //
-//  Tous les imports utilisent les barrels publics @egen/* officiels.
+//  Tous les imports utilisent les barrels publics @egen-civitas/* officiels.
 //  Signatures d'appel vérifiées contre les types réels du framework :
 //    showNotification(NotificationDescriptor) → { description: string, kind?, title?, ... }
 //    showSnackbar(SnackbarDescriptor)         → { title: string, subtitle?, kind?, ... }
@@ -10,10 +10,10 @@
 //    navigate({ to })
 // =============================================================================
 
-import { navigate } from '@egen/esm-navigation';
-import { showNotification, showSnackbar, showModal } from '@egen/esm-styleguide/src/public';
-import { egenFetch } from '@egen/esm-api';
-import { inferRootDomain, buildTenantSubdomainUrl, getTenantStoreState } from '@egen/esm-tenant';
+import { navigate } from '@egen-civitas/esm-navigation';
+import { showNotification, showSnackbar, showModal } from '@egen-civitas/esm-styleguide/src/public';
+import { egenFetch } from '@egen-civitas/esm-api';
+import { inferRootDomain, buildTenantSubdomainUrl, getTenantStoreState } from '@egen-civitas/esm-tenant';
 import type { AIToolDefinition } from '../types';
 import { getRoutesCatalogForLLM } from '../routes';
 import { getVisibleUIActions, getUIActionElement, setNativeInputValue } from '../ui-actions';
@@ -41,11 +41,11 @@ export const navigateTool: AIToolDefinition = {
       description: 'Route applicative cible, relative à la racine de la SPA (ex: "/students/123", "/login").',
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const route = String(ctx.args.route);
-      // navigate() (voir @egen/esm-navigation) ne déclenche une vraie
+      // navigate() (voir @egen-civitas/esm-navigation) ne déclenche une vraie
       // navigation SPA (navigateToUrl) QUE si la cible commence déjà par
       // egenSpaBase (ex: "/egen/spa") — sinon elle fait un rechargement
       // complet de page (window.location.assign), ce qui casse l'état de
@@ -93,7 +93,7 @@ export const showNotificationTool: AIToolDefinition = {
       description: "Durée d'affichage en millisecondes",
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       showNotification({
@@ -132,7 +132,7 @@ export const showSnackbarTool: AIToolDefinition = {
       description: "Durée d'affichage",
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       showSnackbar({
@@ -159,7 +159,7 @@ export const openModalTool: AIToolDefinition = {
     name: { type: 'string', required: true, description: 'Nom de la modale à ouvrir' },
     props: { type: 'object', required: false, description: 'Props à passer à la modale' },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       // showModal(modalName: string, props: ModalProps = {}, onClose: () => void = () => {})
@@ -180,7 +180,7 @@ export const copyToClipboardTool: AIToolDefinition = {
   parameters: {
     text: { type: 'string', required: true, description: 'Texte à copier' },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const text = String(ctx.args.text);
@@ -213,7 +213,7 @@ export const downloadFileTool: AIToolDefinition = {
       description: 'Type MIME',
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const { url, content, filename, mimeType } = ctx.args as Record<string, string>;
@@ -251,7 +251,7 @@ export const fetchDataTool: AIToolDefinition = {
       description: "Paramètres de requête supplémentaires (mergeés dans l'URL)",
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const endpoint = String(ctx.args.endpoint);
@@ -284,7 +284,7 @@ export const refreshDataTool: AIToolDefinition = {
       description: 'Clé SWR à invalider. Si absent, invalide tout.',
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const { mutate } = await import('swr');
@@ -314,7 +314,7 @@ export const switchTenantTool: AIToolDefinition = {
       description: "Slug/identifiant de l'établissement cible",
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const slug = String(ctx.args.tenantSlug);
@@ -322,7 +322,7 @@ export const switchTenantTool: AIToolDefinition = {
       // Domaine racine : priorité au rootDomain explicitement configuré
       // (EGEN_TENANT_ROOT_DOMAIN / setupTenantSystem({ rootDomain })), avec
       // repli heuristique sinon — même source unique de vérité que le reste
-      // du système tenant (@egen/esm-tenant/src/utils/domain-utils.ts),
+      // du système tenant (@egen-civitas/esm-tenant/src/utils/domain-utils.ts),
       // au lieu d'une extraction de domaine réimplémentée localement ici.
       const rootDomain = inferRootDomain(hostname, getTenantStoreState().config.rootDomain);
       const spaBase = window.getEgenSpaBase?.() ?? '/';
@@ -349,7 +349,7 @@ export const searchTool: AIToolDefinition = {
       description: 'Catégorie (students, courses, reports…)',
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const query = String(ctx.args.query);
@@ -376,7 +376,7 @@ export const listRoutesTool: AIToolDefinition = {
     "À appeler AVANT navigate quand on n'est pas certain à 100% du chemin exact d'une page — ne JAMAIS deviner " +
     "un chemin de navigation : soit il figure déjà dans le contexte fourni, soit il faut appeler ce tool pour le vérifier.",
   parameters: {},
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async () => {
     try {
       return { success: true, data: { routes: getRoutesCatalogForLLM() }, durationMs: 0 };
@@ -397,7 +397,7 @@ export const listUIActionsTool: AIToolDefinition = {
     "change — appeler ce tool seulement si le contexte semble tronqué ou pour revérifier après une navigation. " +
     "Ne JAMAIS deviner un id d'action : un id n'existe que s'il apparaît ici ou dans le contexte.",
   parameters: {},
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async () => {
     try {
       return { success: true, data: { actions: getVisibleUIActions() }, durationMs: 0 };
@@ -422,7 +422,7 @@ export const clickElementTool: AIToolDefinition = {
       description: "Identifiant exact de l'action, tel que fourni dans le catalogue — jamais deviné.",
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const actionId = String(ctx.args.actionId);
@@ -462,7 +462,7 @@ export const fillFieldTool: AIToolDefinition = {
       description: 'Valeur à saisir dans le champ.',
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const actionId = String(ctx.args.actionId);
@@ -496,7 +496,7 @@ export const listObservablesTool: AIToolDefinition = {
     "fourni dans le contexte à chaque message et se met à jour automatiquement ; appeler ce tool seulement si le " +
     "contexte semble tronqué ou pour revérifier après un changement d'écran.",
   parameters: {},
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async () => {
     try {
       return { success: true, data: { observables: getObservablesCatalogForLLM() }, durationMs: 0 };
@@ -519,7 +519,7 @@ export const describeScreenTool: AIToolDefinition = {
     "une fois l'élément identifié ici, s'il ne figure pas dans le catalogue d'actions, informer l'utilisateur " +
     "que cette action précise n'est pas encore prise en charge plutôt que de tenter une manipulation directe du DOM.",
   parameters: {},
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async () => {
     try {
       return { success: true, data: describeCurrentScreen(), durationMs: 0 };
@@ -572,7 +572,7 @@ export const inspectElementTool: AIToolDefinition = {
       description: 'Si selector matche plusieurs éléments, index (0-based) de celui à inspecter. Défaut : 0.',
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const actionId = ctx.args.actionId ? String(ctx.args.actionId) : undefined;
@@ -633,7 +633,7 @@ export const inspectInterfaceTool: AIToolDefinition = {
         "Si absent, inspecte tout <body>.",
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const rootSelector = ctx.args.rootSelector ? String(ctx.args.rootSelector) : undefined;
@@ -675,7 +675,7 @@ export const navigateAndInspectTool: AIToolDefinition = {
       description: "Sélecteur CSS pour limiter l'inspection à une sous-partie de l'écran cible.",
     },
   },
-  moduleName: '@egen/esm-ai-tools',
+  moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const route = String(ctx.args.route);

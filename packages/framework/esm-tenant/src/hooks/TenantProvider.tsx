@@ -1,5 +1,5 @@
 // ============================================================================
-//  @egen/esm-tenant — Composant React : Provider
+//  @egen-civitas/esm-tenant — Composant React : Provider
 // ============================================================================
 //
 //  TenantProvider :

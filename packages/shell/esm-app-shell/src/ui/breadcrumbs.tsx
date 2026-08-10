@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Breadcrumb, BreadcrumbItem, InlineLoading } from '@carbon/react';
-import type { BreadcrumbRegistration } from '@egen/esm-framework';
-import { getBreadcrumbsFor, ConfigurableLink } from '@egen/esm-framework';
+import type { BreadcrumbRegistration } from '@egen-civitas/esm-framework';
+import { getBreadcrumbsFor, ConfigurableLink } from '@egen-civitas/esm-framework';
 
 function getPath(path: string, params: Array<string>) {
   const parts = [...params];

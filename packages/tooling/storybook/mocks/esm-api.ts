@@ -1,4 +1,4 @@
-// Storybook-compatible mock for @egen/esm-api.
+// Storybook-compatible mock for @egen-civitas/esm-api.
 import { of } from 'rxjs';
 import humanPhotoUrl from '../public/human.jpg';
 

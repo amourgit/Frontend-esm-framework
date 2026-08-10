@@ -47,12 +47,12 @@ describe('resolvePackages', () => {
 
       mockFs({
         '/repo/package.json': { name: 'root', workspaces: ['packages/*'] },
-        '/repo/packages/app-a/package.json': { name: '@egen/app-a' },
-        '/repo/packages/app-b/package.json': { name: '@egen/app-b' },
+        '/repo/packages/app-a/package.json': { name: '@egen-civitas/app-a' },
+        '/repo/packages/app-b/package.json': { name: '@egen-civitas/app-b' },
       });
       mockGlob.mockResolvedValue(['packages/app-a', 'packages/app-b']);
 
-      const result = await resolvePackages(['@egen/app-a']);
+      const result = await resolvePackages(['@egen-civitas/app-a']);
       expect(result).toEqual(['/repo/packages/app-a']);
     });
 
@@ -61,12 +61,12 @@ describe('resolvePackages', () => {
 
       mockFs({
         '/repo/package.json': { name: 'root', workspaces: ['packages/*'] },
-        '/repo/packages/app-a/package.json': { name: '@egen/app-a' },
-        '/repo/packages/app-b/package.json': { name: '@egen/app-b' },
+        '/repo/packages/app-a/package.json': { name: '@egen-civitas/app-a' },
+        '/repo/packages/app-b/package.json': { name: '@egen-civitas/app-b' },
       });
       mockGlob.mockResolvedValue(['packages/app-a', 'packages/app-b']);
 
-      const result = await resolvePackages(['@egen/app-a', '@egen/app-b']);
+      const result = await resolvePackages(['@egen-civitas/app-a', '@egen-civitas/app-b']);
       expect(result).toEqual(['/repo/packages/app-a', '/repo/packages/app-b']);
     });
 
@@ -75,13 +75,13 @@ describe('resolvePackages', () => {
 
       mockFs({
         '/repo/package.json': { name: 'root', workspaces: ['packages/apps/*', 'packages/libs/*'] },
-        '/repo/packages/apps/login/package.json': { name: '@egen/esm-login-app' },
-        '/repo/packages/libs/utils/package.json': { name: '@egen/esm-utils' },
+        '/repo/packages/apps/login/package.json': { name: '@egen-civitas/esm-login-app' },
+        '/repo/packages/libs/utils/package.json': { name: '@egen-civitas/esm-utils' },
       });
       // glob is called once per pattern
       mockGlob.mockResolvedValueOnce(['packages/apps/login']).mockResolvedValueOnce(['packages/libs/utils']);
 
-      const result = await resolvePackages(['@egen/esm-login-app']);
+      const result = await resolvePackages(['@egen-civitas/esm-login-app']);
       expect(result).toEqual(['/repo/packages/apps/login']);
       expect(mockGlob).toHaveBeenCalledTimes(2);
     });
@@ -91,12 +91,12 @@ describe('resolvePackages', () => {
 
       mockFs({
         '/repo/package.json': { name: 'root', workspaces: ['packages/*'] },
-        '/repo/packages/app-a/package.json': { name: '@egen/app-a' },
+        '/repo/packages/app-a/package.json': { name: '@egen-civitas/app-a' },
         // packages/orphan has no package.json
       });
       mockGlob.mockResolvedValue(['packages/app-a', 'packages/orphan']);
 
-      const result = await resolvePackages(['@egen/app-a']);
+      const result = await resolvePackages(['@egen-civitas/app-a']);
       expect(result).toEqual(['/repo/packages/app-a']);
     });
   });
@@ -107,11 +107,11 @@ describe('resolvePackages', () => {
 
       mockFs({
         '/repo/package.json': { name: 'root', workspaces: { packages: ['packages/*'] } },
-        '/repo/packages/app-a/package.json': { name: '@egen/app-a' },
+        '/repo/packages/app-a/package.json': { name: '@egen-civitas/app-a' },
       });
       mockGlob.mockResolvedValue(['packages/app-a']);
 
-      const result = await resolvePackages(['@egen/app-a']);
+      const result = await resolvePackages(['@egen-civitas/app-a']);
       expect(result).toEqual(['/repo/packages/app-a']);
     });
   });
@@ -121,13 +121,13 @@ describe('resolvePackages', () => {
       vi.spyOn(process, 'cwd').mockReturnValue('/repo/packages/app-a');
 
       mockFs({
-        '/repo/packages/app-a/package.json': { name: '@egen/app-a' },
+        '/repo/packages/app-a/package.json': { name: '@egen-civitas/app-a' },
         '/repo/package.json': { name: 'root', workspaces: ['packages/*'] },
-        '/repo/packages/app-b/package.json': { name: '@egen/app-b' },
+        '/repo/packages/app-b/package.json': { name: '@egen-civitas/app-b' },
       });
       mockGlob.mockResolvedValue(['packages/app-a', 'packages/app-b']);
 
-      const result = await resolvePackages(['@egen/app-b']);
+      const result = await resolvePackages(['@egen-civitas/app-b']);
       expect(result).toEqual(['/repo/packages/app-b']);
     });
   });
@@ -137,10 +137,10 @@ describe('resolvePackages', () => {
       vi.spyOn(process, 'cwd').mockReturnValue('/projects/lab-app');
 
       mockFs({
-        '/projects/lab-app/package.json': { name: '@egen/esm-laboratory-app' },
+        '/projects/lab-app/package.json': { name: '@egen-civitas/esm-laboratory-app' },
       });
 
-      const result = await resolvePackages(['@egen/esm-laboratory-app']);
+      const result = await resolvePackages(['@egen-civitas/esm-laboratory-app']);
       expect(result).toEqual(['/projects/lab-app']);
     });
   });
@@ -151,11 +151,11 @@ describe('resolvePackages', () => {
 
       mockFs({
         '/repo/package.json': { name: 'root', workspaces: ['packages/*'] },
-        '/repo/packages/app-a/package.json': { name: '@egen/app-a' },
+        '/repo/packages/app-a/package.json': { name: '@egen-civitas/app-a' },
       });
       mockGlob.mockResolvedValue(['packages/app-a']);
 
-      await expect(resolvePackages(['@egen/nonexistent'])).rejects.toThrow(
+      await expect(resolvePackages(['@egen-civitas/nonexistent'])).rejects.toThrow(
         'Could not resolve the following package(s)',
       );
     });
@@ -165,11 +165,11 @@ describe('resolvePackages', () => {
 
       mockFs({
         '/repo/package.json': { name: 'root', workspaces: ['packages/*'] },
-        '/repo/packages/app-a/package.json': { name: '@egen/app-a' },
+        '/repo/packages/app-a/package.json': { name: '@egen-civitas/app-a' },
       });
       mockGlob.mockResolvedValue(['packages/app-a']);
 
-      await expect(resolvePackages(['@egen/nonexistent'])).rejects.toThrow('@egen/nonexistent');
+      await expect(resolvePackages(['@egen-civitas/nonexistent'])).rejects.toThrow('@egen-civitas/nonexistent');
     });
 
     it('includes available packages in the error message', async () => {
@@ -177,11 +177,11 @@ describe('resolvePackages', () => {
 
       mockFs({
         '/repo/package.json': { name: 'root', workspaces: ['packages/*'] },
-        '/repo/packages/app-a/package.json': { name: '@egen/app-a' },
+        '/repo/packages/app-a/package.json': { name: '@egen-civitas/app-a' },
       });
       mockGlob.mockResolvedValue(['packages/app-a']);
 
-      await expect(resolvePackages(['@egen/nonexistent'])).rejects.toThrow('@egen/app-a');
+      await expect(resolvePackages(['@egen-civitas/nonexistent'])).rejects.toThrow('@egen-civitas/app-a');
     });
 
     it('reports when no packages are found at all', async () => {
@@ -189,7 +189,7 @@ describe('resolvePackages', () => {
 
       mockExistsSync.mockReturnValue(false);
 
-      await expect(resolvePackages(['@egen/anything'])).rejects.toThrow(
+      await expect(resolvePackages(['@egen-civitas/anything'])).rejects.toThrow(
         'No packages were found in the current directory',
       );
     });
@@ -199,11 +199,11 @@ describe('resolvePackages', () => {
 
       mockFs({
         '/repo/package.json': { name: 'root', workspaces: ['packages/*'] },
-        '/repo/packages/app-a/package.json': { name: '@egen/app-a' },
+        '/repo/packages/app-a/package.json': { name: '@egen-civitas/app-a' },
       });
       mockGlob.mockResolvedValue(['packages/app-a']);
 
-      await expect(resolvePackages(['@egen/app-a', '@egen/missing'])).rejects.toThrow('@egen/missing');
+      await expect(resolvePackages(['@egen-civitas/app-a', '@egen-civitas/missing'])).rejects.toThrow('@egen-civitas/missing');
     });
   });
 });

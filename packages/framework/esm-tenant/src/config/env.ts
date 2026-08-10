@@ -1,5 +1,5 @@
 // ============================================================================
-//  @egen/esm-tenant — Résolution de la configuration depuis l'environnement
+//  @egen-civitas/esm-tenant — Résolution de la configuration depuis l'environnement
 // ============================================================================
 //
 //  Ce projet est construit avec rspack (pas Vite) : il n'y a pas
@@ -38,7 +38,7 @@
 //    string ex: "egen.gabon.gov.ga" — domaine racine explicite, utilisé par
 //    toute logique de dérivation hostname ↔ tenant (voir utils/domain-utils.ts).
 //
-//  Voir les types `Window` étendus dans `@egen/esm-globals` pour la
+//  Voir les types `Window` étendus dans `@egen-civitas/esm-globals` pour la
 //  déclaration TypeScript de chacun de ces globals.
 //
 //  Pas de EGEN_TENANT_REGISTRY_URL / EGEN_TENANT_THEME_APPLY ici : il n'y a

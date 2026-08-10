@@ -47,7 +47,7 @@ function fakeStats(overrides: Partial<Stats> = {}): Stats {
 }
 
 function pkg(overrides: Partial<PackageJson> = {}): PackageJson {
-  return { name: '@egen/esm-test', ...overrides };
+  return { name: '@egen-civitas/esm-test', ...overrides };
 }
 
 describe('getMainBundle', () => {

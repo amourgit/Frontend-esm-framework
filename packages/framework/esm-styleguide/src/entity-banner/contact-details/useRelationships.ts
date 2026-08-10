@@ -1,4 +1,4 @@
-import { egenFetch, restBaseUrl } from '@egen/esm-api';
+import { egenFetch, restBaseUrl } from '@egen-civitas/esm-api';
 import useSWR from 'swr';
 
 const customRepresentation =

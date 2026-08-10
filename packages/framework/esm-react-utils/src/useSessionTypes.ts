@@ -1,5 +1,5 @@
 /** @module @category API */
-import { getWorkSessionTypes, type WorkSessionType } from '@egen/esm-data-api';
+import { getWorkSessionTypes, type WorkSessionType } from '@egen-civitas/esm-data-api';
 import { useEffect, useState } from 'react';
 
 /**
@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
  *
  * @example
  * ```tsx
- * import { useWorkSessionTypes } from '@egen/esm-framework';
+ * import { useWorkSessionTypes } from '@egen-civitas/esm-framework';
  * function WorkSessionTypeSelector() {
  *   const sessionTypes = useWorkSessionTypes();
  *   return (

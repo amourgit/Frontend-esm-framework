@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-framework-core",
-  "version": "9.0.2",
+  "version": "1.0.0",
   "private": true,
   "packageManager": "yarn@4.10.3",
   "workspaces": [

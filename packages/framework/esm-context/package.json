@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-context",
-  "version": "9.0.2",
+  "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Utilities for managing the current execution context",
   "type": "module",
@@ -50,8 +50,8 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-globals": "9.x",
-    "@egen-civitas/esm-state": "9.x"
+    "@egen-civitas/esm-globals": "workspace:*",
+    "@egen-civitas/esm-state": "workspace:*"
   },
   "devDependencies": {
     "@egen-civitas/esm-globals": "workspace:*",

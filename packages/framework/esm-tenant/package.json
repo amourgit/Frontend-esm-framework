@@ -27,7 +27,7 @@
     "@egen-civitas/esm-state": "workspace:*"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-state": "9.x",
+    "@egen-civitas/esm-state": "workspace:*",
     "react": "^18.0.0",
     "rxjs": "^6.5.3"
   },

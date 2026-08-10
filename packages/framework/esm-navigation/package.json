@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-navigation",
-  "version": "9.0.2",
+  "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Egen library providing tools for breadcrumbs, navigation, and history.",
   "type": "module",
@@ -52,7 +52,7 @@
     "path-to-regexp": "^8.3.0"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-state": "9.x"
+    "@egen-civitas/esm-state": "workspace:*"
   },
   "devDependencies": {
     "@egen-civitas/esm-state": "workspace:*",

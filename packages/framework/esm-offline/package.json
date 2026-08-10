@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-offline",
-  "version": "9.0.2",
+  "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Helper utilities for Egen",
   "type": "module",
@@ -49,9 +49,9 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-api": "9.x",
-    "@egen-civitas/esm-globals": "9.x",
-    "@egen-civitas/esm-state": "9.x",
+    "@egen-civitas/esm-api": "workspace:*",
+    "@egen-civitas/esm-globals": "workspace:*",
+    "@egen-civitas/esm-state": "workspace:*",
     "rxjs": "6.x"
   },
   "dependencies": {

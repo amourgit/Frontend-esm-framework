@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-api",
-  "version": "9.0.2",
+  "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "The javascript module for interacting with the Egen API",
   "type": "module",
@@ -59,11 +59,11 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-config": "9.x",
-    "@egen-civitas/esm-error-handling": "9.x",
-    "@egen-civitas/esm-globals": "9.x",
-    "@egen-civitas/esm-navigation": "9.x",
-    "@egen-civitas/esm-state": "9.x"
+    "@egen-civitas/esm-config": "workspace:*",
+    "@egen-civitas/esm-error-handling": "workspace:*",
+    "@egen-civitas/esm-globals": "workspace:*",
+    "@egen-civitas/esm-navigation": "workspace:*",
+    "@egen-civitas/esm-state": "workspace:*"
   },
   "devDependencies": {
     "@egen-civitas/esm-config": "workspace:*",

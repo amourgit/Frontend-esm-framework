@@ -52,8 +52,8 @@
     "rxjs": "^6.5.3"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-api": "9.x",
-    "@egen-civitas/esm-state": "9.x",
+    "@egen-civitas/esm-api": "workspace:*",
+    "@egen-civitas/esm-state": "workspace:*",
     "react": "18.x",
     "rxjs": "^6.5.3"
   },

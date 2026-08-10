@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-dynamic-loading",
-  "version": "9.0.2",
+  "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Utilities for dynamically loading code in Egen",
   "type": "module",
@@ -53,8 +53,8 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-globals": "9.x",
-    "@egen-civitas/esm-translations": "9.x"
+    "@egen-civitas/esm-globals": "workspace:*",
+    "@egen-civitas/esm-translations": "workspace:*"
   },
   "devDependencies": {
     "@egen-civitas/esm-globals": "workspace:*",

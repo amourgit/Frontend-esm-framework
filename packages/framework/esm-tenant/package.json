@@ -24,10 +24,10 @@
     "lint": "eslint src --ext ts,tsx"
   },
   "dependencies": {
-    "@egen-civitas/esm-state": "workspace:*"
+    "@egen-civitas/esm-state": "^1.0.0"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-state": "workspace:*",
+    "@egen-civitas/esm-state": "^1.0.0",
     "react": "^18.0.0",
     "rxjs": "^6.5.3"
   },

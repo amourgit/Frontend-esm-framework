@@ -38,15 +38,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@egen-civitas/esm-ai-config": "workspace:*",
+    "@egen-civitas/esm-ai-config": "^1.0.0",
     "rxjs": "^6.5.3"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-ai-config": "workspace:*",
+    "@egen-civitas/esm-ai-config": "^1.0.0",
     "rxjs": "^6.5.3"
   },
   "devDependencies": {
-    "@egen-civitas/esm-ai-config": "workspace:*",
+    "@egen-civitas/esm-ai-config": "^1.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

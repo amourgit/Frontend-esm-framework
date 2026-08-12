@@ -49,6 +49,13 @@ export const AI_EVENTS = {
   PIPELINE_STARTED: 'egen:ai:pipeline:started',
   PIPELINE_COMPLETED: 'egen:ai:pipeline:completed',
   PIPELINE_FAILED: 'egen:ai:pipeline:failed',
+
+  // Mémoire de conversation (voir @egen-civitas/esm-ai-memory)
+  MEMORY_CONVERSATION_LOADED: 'egen:ai:memory:conversation:loaded',
+  MEMORY_USER_SWITCHED: 'egen:ai:memory:user:switched',
+  MEMORY_SYNC_SUCCEEDED: 'egen:ai:memory:sync:succeeded',
+  MEMORY_SYNC_FAILED: 'egen:ai:memory:sync:failed',
+  MEMORY_HYDRATED: 'egen:ai:memory:hydrated',
 } as const;
 
 export type AIEventName = (typeof AI_EVENTS)[keyof typeof AI_EVENTS];
@@ -133,6 +140,22 @@ export interface AIPipelinePayload extends AIEventPayload {
   step?: string;
 }
 
+export interface AIMemoryConversationPayload extends AIEventPayload {
+  userId: string;
+  conversationId: string;
+  messageCount: number;
+}
+
+export interface AIMemoryUserSwitchedPayload extends AIEventPayload {
+  previousUserId: string | null;
+  newUserId: string | null;
+}
+
+export interface AIMemorySyncPayload extends AIEventPayload {
+  conversationId: string;
+  adapter: string;
+}
+
 // ─── Map événement → payload ──────────────────────────────────────────────────
 
 export interface AIEventPayloadMap {
@@ -164,6 +187,11 @@ export interface AIEventPayloadMap {
   [AI_EVENTS.PIPELINE_STARTED]: AIPipelinePayload;
   [AI_EVENTS.PIPELINE_COMPLETED]: AIPipelinePayload & { durationMs: number };
   [AI_EVENTS.PIPELINE_FAILED]: AIPipelinePayload & { error: string };
+  [AI_EVENTS.MEMORY_CONVERSATION_LOADED]: AIMemoryConversationPayload;
+  [AI_EVENTS.MEMORY_USER_SWITCHED]: AIMemoryUserSwitchedPayload;
+  [AI_EVENTS.MEMORY_SYNC_SUCCEEDED]: AIMemorySyncPayload;
+  [AI_EVENTS.MEMORY_SYNC_FAILED]: AIMemorySyncPayload & { error: string };
+  [AI_EVENTS.MEMORY_HYDRATED]: AIMemoryConversationPayload & { conversationsUpdated: number };
 }
 
 // ─── Listener ─────────────────────────────────────────────────────────────────

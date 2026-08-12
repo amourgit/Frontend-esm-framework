@@ -57,13 +57,13 @@
     "semver": "^7.7.3"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-globals": "workspace:*",
+    "@egen-civitas/esm-globals": "^1.0.0",
     "dayjs": "1.x",
     "i18next": "25.x",
     "rxjs": "6.x"
   },
   "devDependencies": {
-    "@egen-civitas/esm-globals": "workspace:*",
+    "@egen-civitas/esm-globals": "^1.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@types/fhir": "0.0.31",

@@ -56,14 +56,14 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-api": "workspace:*",
-    "@egen-civitas/esm-offline": "workspace:*",
-    "@egen-civitas/esm-state": "workspace:*"
+    "@egen-civitas/esm-api": "^1.0.0",
+    "@egen-civitas/esm-offline": "^1.0.0",
+    "@egen-civitas/esm-state": "^1.0.0"
   },
   "devDependencies": {
-    "@egen-civitas/esm-api": "workspace:*",
-    "@egen-civitas/esm-offline": "workspace:*",
-    "@egen-civitas/esm-state": "workspace:*",
+    "@egen-civitas/esm-api": "^1.0.0",
+    "@egen-civitas/esm-offline": "^1.0.0",
+    "@egen-civitas/esm-state": "^1.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@types/node": "^22.0.0",

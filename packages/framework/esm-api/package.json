@@ -59,18 +59,18 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-config": "workspace:*",
-    "@egen-civitas/esm-error-handling": "workspace:*",
-    "@egen-civitas/esm-globals": "workspace:*",
-    "@egen-civitas/esm-navigation": "workspace:*",
-    "@egen-civitas/esm-state": "workspace:*"
+    "@egen-civitas/esm-config": "^1.0.0",
+    "@egen-civitas/esm-error-handling": "^1.0.0",
+    "@egen-civitas/esm-globals": "^1.0.0",
+    "@egen-civitas/esm-navigation": "^1.0.0",
+    "@egen-civitas/esm-state": "^1.0.0"
   },
   "devDependencies": {
-    "@egen-civitas/esm-config": "workspace:*",
-    "@egen-civitas/esm-error-handling": "workspace:*",
-    "@egen-civitas/esm-globals": "workspace:*",
-    "@egen-civitas/esm-navigation": "workspace:*",
-    "@egen-civitas/esm-tenant": "workspace:*",
+    "@egen-civitas/esm-config": "^1.0.0",
+    "@egen-civitas/esm-error-handling": "^1.0.0",
+    "@egen-civitas/esm-globals": "^1.0.0",
+    "@egen-civitas/esm-navigation": "^1.0.0",
+    "@egen-civitas/esm-tenant": "^1.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

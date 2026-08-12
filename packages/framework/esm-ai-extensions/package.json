@@ -35,16 +35,16 @@
     "access": "public"
   },
   "dependencies": {
-    "@egen-civitas/esm-ai-config": "workspace:*",
-    "@egen-civitas/esm-ai-context": "workspace:*",
-    "@egen-civitas/esm-ai-events": "workspace:*",
-    "@egen-civitas/esm-ai-tools": "workspace:*"
+    "@egen-civitas/esm-ai-config": "^1.0.0",
+    "@egen-civitas/esm-ai-context": "^1.0.0",
+    "@egen-civitas/esm-ai-events": "^1.0.0",
+    "@egen-civitas/esm-ai-tools": "^1.0.0"
   },
   "devDependencies": {
-    "@egen-civitas/esm-ai-config": "workspace:*",
-    "@egen-civitas/esm-ai-context": "workspace:*",
-    "@egen-civitas/esm-ai-events": "workspace:*",
-    "@egen-civitas/esm-ai-tools": "workspace:*",
+    "@egen-civitas/esm-ai-config": "^1.0.0",
+    "@egen-civitas/esm-ai-context": "^1.0.0",
+    "@egen-civitas/esm-ai-events": "^1.0.0",
+    "@egen-civitas/esm-ai-tools": "^1.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

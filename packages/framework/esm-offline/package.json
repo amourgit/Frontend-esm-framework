@@ -49,9 +49,9 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-api": "workspace:*",
-    "@egen-civitas/esm-globals": "workspace:*",
-    "@egen-civitas/esm-state": "workspace:*",
+    "@egen-civitas/esm-api": "^1.0.0",
+    "@egen-civitas/esm-globals": "^1.0.0",
+    "@egen-civitas/esm-state": "^1.0.0",
     "rxjs": "6.x"
   },
   "dependencies": {
@@ -61,9 +61,9 @@
     "workbox-window": "^6.1.5"
   },
   "devDependencies": {
-    "@egen-civitas/esm-api": "workspace:*",
-    "@egen-civitas/esm-globals": "workspace:*",
-    "@egen-civitas/esm-state": "workspace:*",
+    "@egen-civitas/esm-api": "^1.0.0",
+    "@egen-civitas/esm-globals": "^1.0.0",
+    "@egen-civitas/esm-state": "^1.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@types/uuid": "^9.0.1",

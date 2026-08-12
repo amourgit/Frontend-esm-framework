@@ -15,7 +15,7 @@ describe('history', () => {
     Document.prototype,
     'referrer',
   ) as PropertyDescriptor;
-  const mockReferrer = 'https://egen.alpha.vercel.com/egen/spa/lalaland';
+  const mockReferrer = 'https://egen.alpha.vercel.com/egen-civitas/spa/lalaland';
   let mockLocationAssign: Mock<typeof window.location.assign>;
 
   beforeAll(() => {
@@ -24,11 +24,11 @@ describe('history', () => {
     // @ts-expect-error
     window.location = {
       assign: vi.fn(),
-      href: 'https://egen.alpha.vercel.com/egen/spa/chart',
+      href: 'https://egen.alpha.vercel.com/egen-civitas/spa/chart',
       origin: 'https://egen.alpha.vercel.com',
     };
     mockLocationAssign = window.location.assign as Mock<typeof window.location.assign>;
-    window.getEgenSpaBase = () => 'https://egen.alpha.vercel.com/egen/spa';
+    window.getEgenSpaBase = () => 'https://egen.alpha.vercel.com/egen-civitas/spa';
     Object.defineProperty(document, 'referrer', {
       value: mockReferrer,
       writable: true,
@@ -58,16 +58,16 @@ describe('history', () => {
 
   it('should update history on routing events and go back correctly', () => {
     setupHistory();
-    window.location.href = 'https://egen.alpha.vercel.com/egen/spa/labs';
+    window.location.href = 'https://egen.alpha.vercel.com/egen-civitas/spa/labs';
     dispatchRoutingEvent();
-    expect(getHistory()).toEqual([mockReferrer, 'https://egen.alpha.vercel.com/egen/spa/labs']);
+    expect(getHistory()).toEqual([mockReferrer, 'https://egen.alpha.vercel.com/egen-civitas/spa/labs']);
     window.location.href = 'https://egen.alpha.vercel.com/pharmacy';
     dispatchRoutingEvent();
     window.location.href = 'https://egen.alpha.vercel.com/x-ray';
     dispatchRoutingEvent();
     expect(getHistory()).toEqual([
       mockReferrer,
-      'https://egen.alpha.vercel.com/egen/spa/labs',
+      'https://egen.alpha.vercel.com/egen-civitas/spa/labs',
       'https://egen.alpha.vercel.com/pharmacy',
       'https://egen.alpha.vercel.com/x-ray',
     ]);
@@ -76,30 +76,30 @@ describe('history', () => {
       window.location.href = params.to;
       dispatchRoutingEvent();
     });
-    goBackInHistory({ toUrl: 'https://egen.alpha.vercel.com/egen/spa/labs' });
-    expect(getHistory()).toEqual([mockReferrer, 'https://egen.alpha.vercel.com/egen/spa/labs']);
+    goBackInHistory({ toUrl: 'https://egen.alpha.vercel.com/egen-civitas/spa/labs' });
+    expect(getHistory()).toEqual([mockReferrer, 'https://egen.alpha.vercel.com/egen-civitas/spa/labs']);
     goBackInHistory({ toUrl: mockReferrer });
     expect(getHistory()).toEqual([mockReferrer]);
   });
 
   it('should handle in-SPA redirects / replaceState correctly', () => {
     setupHistory();
-    window.location.href = 'https://egen.alpha.vercel.com/egen/spa/tests';
+    window.location.href = 'https://egen.alpha.vercel.com/egen-civitas/spa/tests';
     dispatchRoutingEvent();
-    window.location.href = 'https://egen.alpha.vercel.com/egen/spa/tests/home';
+    window.location.href = 'https://egen.alpha.vercel.com/egen-civitas/spa/tests/home';
     dispatchRoutingEvent({ originalEvent: { singleSpaTrigger: 'replaceState' } });
-    expect(getHistory()).toEqual([mockReferrer, 'https://egen.alpha.vercel.com/egen/spa/tests/home']);
+    expect(getHistory()).toEqual([mockReferrer, 'https://egen.alpha.vercel.com/egen-civitas/spa/tests/home']);
   });
 
   it('should handle back button navigation', () => {
     setupHistory();
-    window.location.href = 'https://egen.alpha.vercel.com/egen/spa/home';
+    window.location.href = 'https://egen.alpha.vercel.com/egen-civitas/spa/home';
     dispatchRoutingEvent();
-    window.location.href = 'https://egen.alpha.vercel.com/egen/spa/dentist';
+    window.location.href = 'https://egen.alpha.vercel.com/egen-civitas/spa/dentist';
     dispatchRoutingEvent();
-    window.location.href = 'https://egen.alpha.vercel.com/egen/spa/home';
+    window.location.href = 'https://egen.alpha.vercel.com/egen-civitas/spa/home';
     dispatchRoutingEvent({ originalEvent: { singleSpa: null } });
-    expect(getHistory()).toEqual([mockReferrer, 'https://egen.alpha.vercel.com/egen/spa/home']);
+    expect(getHistory()).toEqual([mockReferrer, 'https://egen.alpha.vercel.com/egen-civitas/spa/home']);
   });
 });
 

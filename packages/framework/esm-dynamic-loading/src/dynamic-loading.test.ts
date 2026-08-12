@@ -59,7 +59,7 @@ describe('dynamic-loading', () => {
     localStorage.clear();
     document.head.querySelectorAll('script').forEach((el) => el.remove());
     (globalThis as any).__webpack_share_scopes__ = { default: {} };
-    (window as any).spaBase = '/egen/spa';
+    (window as any).spaBase = '/egen-civitas/spa';
     mockGetImportMapOverrideMap.mockReturnValue({ imports: {} });
   });
 
@@ -209,7 +209,7 @@ describe('dynamic-loading', () => {
       });
 
       const promise = preloadImport('@egen-civitas/esm-foo');
-      const script = await waitForScript('/egen/spa/foo.js');
+      const script = await waitForScript('/egen-civitas/spa/foo.js');
 
       expect(script).not.toBeNull();
       script.dispatchEvent(new Event('load'));

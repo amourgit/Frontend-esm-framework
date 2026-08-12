@@ -47,7 +47,7 @@ export const navigateTool: AIToolDefinition = {
       const route = String(ctx.args.route);
       // navigate() (voir @egen-civitas/esm-navigation) ne déclenche une vraie
       // navigation SPA (navigateToUrl) QUE si la cible commence déjà par
-      // egenSpaBase (ex: "/egen/spa") — sinon elle fait un rechargement
+      // egenSpaBase (ex: "/egen-civitas/spa") — sinon elle fait un rechargement
       // complet de page (window.location.assign), ce qui casse l'état de
       // l'application et l'expérience de navigation. On ne peut pas
       // compter sur le LLM pour toujours préfixer ${egenSpaBase} lui-même

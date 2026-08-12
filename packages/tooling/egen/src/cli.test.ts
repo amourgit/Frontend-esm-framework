@@ -88,14 +88,14 @@ describe('develop command', () => {
     expect(parsed.open).toBe(true);
   });
 
-  it('defaults spa-path to /egen/spa/', async () => {
+  it('defaults spa-path to /egen-civitas/spa/', async () => {
     const parsed = await createCli(['develop']).parseAsync();
-    expect(parsed.spaPath).toBe('/egen/spa/');
+    expect(parsed.spaPath).toBe('/egen-civitas/spa/');
   });
 
-  it('defaults api-url to /egen/', async () => {
+  it('defaults api-url to /egen-civitas/', async () => {
     const parsed = await createCli(['develop']).parseAsync();
-    expect(parsed.apiUrl).toBe('/egen/');
+    expect(parsed.apiUrl).toBe('/egen-civitas/');
   });
 
   it('defaults sources to undefined (no default)', async () => {

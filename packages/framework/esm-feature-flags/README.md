@@ -1,6 +1,6 @@
 # egen-esm-feature-flags
 
-[![npm: egen/esm-feature-flags](https://img.shields.io/npm/v/@egen-civitas/esm-feature-flags)](https://www.npmjs.com/package/@egen-civitas/esm-feature-flags)
+[![npm: egen-civitas/esm-feature-flags](https://img.shields.io/npm/v/@egen-civitas/esm-feature-flags)](https://www.npmjs.com/package/@egen-civitas/esm-feature-flags)
 
 ## What is this?
 
@@ -12,5 +12,5 @@ for information about how to use it.
 ## Contributing & Development
 
 PRs welcome! See
-[Egen Frontend RFC-20](https://github.com/egen/egen-rfc-frontend/blob/master/text/0020-contributing-guidelines.md#contributing-guidelines)
+[Egen Frontend RFC-20](https://github.com/egen-civitas/egen-rfc-frontend/blob/master/text/0020-contributing-guidelines.md#contributing-guidelines)
 for guidelines about contributing.

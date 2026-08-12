@@ -17,12 +17,12 @@ export const mockLoginLocations = {
     link: [
       {
         relation: 'self',
-        url: 'http://egen:8081/egen/ws/fhir2/R4/Location?_count=50&_summary=data&_tag=login%20location',
+        url: 'http://egen:8081/egen-civitas/ws/fhir2/R4/Location?_count=50&_summary=data&_tag=login%20location',
       },
     ],
     entry: [
       {
-        fullUrl: 'http://egen:8081/egen/ws/fhir2/R4/Location/44c3efb0-2583-4c80-a79e-1f756a03c0a1',
+        fullUrl: 'http://egen:8081/egen-civitas/ws/fhir2/R4/Location/44c3efb0-2583-4c80-a79e-1f756a03c0a1',
         resource: {
           resourceType: 'Location',
           id: '44c3efb0-2583-4c80-a79e-1f756a03c0a1',
@@ -104,7 +104,7 @@ export const mockLoginLocations = {
         },
       },
       {
-        fullUrl: 'http://egen:8081/egen/ws/fhir2/R4/Location/ba685651-ed3b-4e63-9b35-78893060758a',
+        fullUrl: 'http://egen:8081/egen-civitas/ws/fhir2/R4/Location/ba685651-ed3b-4e63-9b35-78893060758a',
         resource: {
           resourceType: 'Location',
           id: 'ba685651-ed3b-4e63-9b35-78893060758a',
@@ -182,7 +182,7 @@ export const mockLoginLocations = {
         },
       },
       {
-        fullUrl: 'http://egen:8081/egen/ws/fhir2/R4/Location/8d9045ad-50f0-45b8-93c8-3ed4bce19dbf',
+        fullUrl: 'http://egen:8081/egen-civitas/ws/fhir2/R4/Location/8d9045ad-50f0-45b8-93c8-3ed4bce19dbf',
         resource: {
           resourceType: 'Location',
           id: '8d9045ad-50f0-45b8-93c8-3ed4bce19dbf',
@@ -260,7 +260,7 @@ export const mockLoginLocations = {
         },
       },
       {
-        fullUrl: 'http://egen:8081/egen/ws/fhir2/R4/Location/1ce1b7d4-c865-4178-82b0-5932e51503d6',
+        fullUrl: 'http://egen:8081/egen-civitas/ws/fhir2/R4/Location/1ce1b7d4-c865-4178-82b0-5932e51503d6',
         resource: {
           resourceType: 'Location',
           id: '1ce1b7d4-c865-4178-82b0-5932e51503d6',
@@ -354,12 +354,12 @@ export const inpatientWardResponse = {
     link: [
       {
         relation: 'self',
-        url: 'https://dev.egen.alpha.vercel.com/egen/ws/fhir2/R4/Location?_id=1ce1b7d4-c865-4178-82b0-5932e51503d6',
+        url: 'https://dev.egen.alpha.vercel.com/egen-civitas/ws/fhir2/R4/Location?_id=1ce1b7d4-c865-4178-82b0-5932e51503d6',
       },
     ],
     entry: [
       {
-        fullUrl: 'http://egen:8081/egen/ws/fhir2/R4/Location/ba685651-ed3b-4e63-9b35-78893060758a',
+        fullUrl: 'http://egen:8081/egen-civitas/ws/fhir2/R4/Location/ba685651-ed3b-4e63-9b35-78893060758a',
         resource: {
           resourceType: 'Location',
           id: 'ba685651-ed3b-4e63-9b35-78893060758a',
@@ -459,7 +459,7 @@ export const locationResponseForNonExistingSearch = {
     link: [
       {
         relation: 'self',
-        url: 'http://egen:8081/egen/ws/fhir2/R4/Location?_count=50&_summary=data&_tag=login%20location',
+        url: 'http://egen:8081/egen-civitas/ws/fhir2/R4/Location?_count=50&_summary=data&_tag=login%20location',
       },
     ],
     entry: [],
@@ -485,12 +485,12 @@ export const outpatientClinicResponse = {
     link: [
       {
         relation: 'self',
-        url: 'http://egen:8081/egen/ws/fhir2/R4/Location?_count=50&_summary=data&_tag=login%20location',
+        url: 'http://egen:8081/egen-civitas/ws/fhir2/R4/Location?_count=50&_summary=data&_tag=login%20location',
       },
     ],
     entry: [
       {
-        fullUrl: 'http://egen:8081/egen/ws/fhir2/R4/Location/44c3efb0-2583-4c80-a79e-1f756a03c0a1',
+        fullUrl: 'http://egen:8081/egen-civitas/ws/fhir2/R4/Location/44c3efb0-2583-4c80-a79e-1f756a03c0a1',
         resource: {
           resourceType: 'Location',
           id: '44c3efb0-2583-4c80-a79e-1f756a03c0a1',

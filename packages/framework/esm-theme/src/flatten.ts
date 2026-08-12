@@ -120,7 +120,7 @@ function serializeLeaf(value: unknown, varNameForWarning: string): string | null
   if (!verdict.ok) {
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console
-      console.warn(`[egen/esm-theme] ⚠️  Valeur rejetée pour "${varNameForWarning}" : ${verdict.reason}`);
+      console.warn(`[egen-civitas/esm-theme] ⚠️  Valeur rejetée pour "${varNameForWarning}" : ${verdict.reason}`);
     }
     return null;
   }

@@ -14,10 +14,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/egen/egen-esm-core.git"
+    "url": "git+https://github.com/egen-civitas/egen-esm-core.git"
   },
   "bugs": {
-    "url": "https://github.com/egen/egen-esm-core/issues"
+    "url": "https://github.com/egen-civitas/egen-esm-core/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -28,7 +28,7 @@
     "webpack",
     "config"
   ],
-  "homepage": "https://github.com/egen/egen-esm-core#readme",
+  "homepage": "https://github.com/egen-civitas/egen-esm-core#readme",
   "dependencies": {
     "@rspack/cli": "1.7.9",
     "@rspack/core": "1.7.9",
@@ -40,6 +40,7 @@
     "lodash": "4.17.21",
     "sass-embedded": "1.89.2",
     "sass-loader": "16.0.5",
+    "semver": "^7.7.3",
     "style-loader": "3.3.4",
     "swc-loader": "0.2.7",
     "ts-checker-rspack-plugin": "1.1.4",

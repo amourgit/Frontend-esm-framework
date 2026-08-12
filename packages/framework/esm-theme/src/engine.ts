@@ -70,7 +70,7 @@ const DEFAULT_OPTIONS: Required<
  */
 const EMBEDDED_FALLBACK_THEME: ThemeSchema = {
   priority: -1,
-  meta: { name: 'Fallback intégré (egen/esm-theme)' },
+  meta: { name: 'Fallback intégré (egen-civitas/esm-theme)' },
   colors: {
     primary: {
       '50': '#eef2ff', '100': '#e0e7ff', '200': '#c7d2fe', '300': '#a5b4fc', '400': '#818cf8',
@@ -190,7 +190,7 @@ export class ThemeEngine {
       const message = err instanceof Error ? err.message : String(err);
       this.options.onError?.(err instanceof Error ? err : new Error(message));
       console.error(
-        "[egen/esm-theme] ❌ Erreur lors de l'application du thème — repli sur le thème de secours intégré:",
+        "[egen-civitas/esm-theme] ❌ Erreur lors de l'application du thème — repli sur le thème de secours intégré:",
         message,
       );
 
@@ -222,7 +222,7 @@ export class ThemeEngine {
 
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console
-      console.log(`[egen/esm-theme] 🔄 Hot-reload activé (polling toutes les ${interval}ms)`);
+      console.log(`[egen-civitas/esm-theme] 🔄 Hot-reload activé (polling toutes les ${interval}ms)`);
     }
 
     this.pollTimer = setInterval(async () => {
@@ -240,7 +240,7 @@ export class ThemeEngine {
 
         if (process.env.NODE_ENV !== 'production') {
           // eslint-disable-next-line no-console
-          console.log('[egen/esm-theme] 🔥 Changement de thème détecté — rechargement à chaud');
+          console.log('[egen-civitas/esm-theme] 🔥 Changement de thème détecté — rechargement à chaud');
         }
         const cssVars = this.processTheme(loaded);
         this.setState({
@@ -260,7 +260,7 @@ export class ThemeEngine {
         // Une égalité de priorité levée en dev (cf. loader.ts) ou toute
         // autre erreur ne doit pas arrêter le polling — on log et on
         // réessaiera au prochain tick.
-        console.warn('[egen/esm-theme] ⚠️  Erreur pendant le polling de hot-reload:', err);
+        console.warn('[egen-civitas/esm-theme] ⚠️  Erreur pendant le polling de hot-reload:', err);
       }
     }, interval);
   }
@@ -271,7 +271,7 @@ export class ThemeEngine {
       this.pollTimer = null;
       if (process.env.NODE_ENV !== 'production') {
         // eslint-disable-next-line no-console
-        console.log('[egen/esm-theme] ⏹  Hot-reload désactivé');
+        console.log('[egen-civitas/esm-theme] ⏹  Hot-reload désactivé');
       }
     }
   }

@@ -49,7 +49,7 @@ function defaultArgs(overrides: Partial<DevelopArgs> = {}): DevelopArgs {
     importmap: { type: 'inline', value: '{"imports":{}}' },
     routes: { type: 'inline', value: '{}' },
     watchedRoutesPaths: {},
-    spaPath: '/egen/spa',
+    spaPath: '/egen-civitas/spa',
     apiUrl: '/egen',
     configUrls: [],
     configFiles: [],
@@ -81,7 +81,7 @@ async function startDevServer(args: DevelopArgs) {
 }
 
 describe('runDevelop', () => {
-  describe('with default spaPath (/egen/spa)', () => {
+  describe('with default spaPath (/egen-civitas/spa)', () => {
     it('serves a rewritten index.html with development env and configUrls', async () => {
       const port = await getAvailablePort(19000);
       const baseUrl = await startDevServer(
@@ -91,7 +91,7 @@ describe('runDevelop', () => {
         }),
       );
 
-      const res = await fetch(`${baseUrl}/egen/spa/home`);
+      const res = await fetch(`${baseUrl}/egen-civitas/spa/home`);
       expect(res.status).toBe(200);
       expect(res.headers.get('content-type')).toContain('text/html');
 
@@ -105,7 +105,7 @@ describe('runDevelop', () => {
       const port = await getAvailablePort(19100);
       const baseUrl = await startDevServer(defaultArgs({ port, importmap: { type: 'inline', value: importmap } }));
 
-      const res = await fetch(`${baseUrl}/egen/spa/importmap.json`);
+      const res = await fetch(`${baseUrl}/egen-civitas/spa/importmap.json`);
       expect(res.status).toBe(200);
       expect(res.headers.get('content-type')).toContain('application/json');
       expect(await res.text()).toBe(importmap);
@@ -116,7 +116,7 @@ describe('runDevelop', () => {
       const port = await getAvailablePort(19200);
       const baseUrl = await startDevServer(defaultArgs({ port, routes: { type: 'inline', value: routes } }));
 
-      const res = await fetch(`${baseUrl}/egen/spa/routes.registry.json`);
+      const res = await fetch(`${baseUrl}/egen-civitas/spa/routes.registry.json`);
       expect(res.status).toBe(200);
       expect(await res.text()).toBe(routes);
     }, 15_000);
@@ -129,7 +129,7 @@ describe('runDevelop', () => {
       const port = await getAvailablePort(19300);
       const baseUrl = await startDevServer(defaultArgs({ port, configFiles: [configFile] }));
 
-      const res = await fetch(`${baseUrl}/egen/spa/__local_config__/my-config.json`);
+      const res = await fetch(`${baseUrl}/egen-civitas/spa/__local_config__/my-config.json`);
       expect(res.status).toBe(200);
       expect(await res.json()).toEqual({ setting: 'value' });
     }, 15_000);
@@ -138,14 +138,14 @@ describe('runDevelop', () => {
       const port = await getAvailablePort(19400);
       const baseUrl = await startDevServer(defaultArgs({ port }));
 
-      const indexRes = await fetch(`${baseUrl}/egen/spa/home`);
+      const indexRes = await fetch(`${baseUrl}/egen-civitas/spa/home`);
       const html = await indexRes.text();
 
       // Extract a CSS filename from the HTML and fetch it
       const cssMatch = /egen\.[a-f0-9]+\.css/.exec(html);
       expect(cssMatch).not.toBeNull();
 
-      const cssRes = await fetch(`${baseUrl}/egen/spa/${cssMatch![0]}`);
+      const cssRes = await fetch(`${baseUrl}/egen-civitas/spa/${cssMatch![0]}`);
       expect(cssRes.status).toBe(200);
       expect(cssRes.headers.get('content-type')).toContain('css');
     }, 15_000);
@@ -157,7 +157,7 @@ describe('runDevelop', () => {
         defaultArgs({ port, importmap: { type: 'inline', value: customImportmap } }),
       );
 
-      const res = await fetch(`${baseUrl}/egen/spa/importmap.json`);
+      const res = await fetch(`${baseUrl}/egen-civitas/spa/importmap.json`);
       const body = await res.text();
       expect(body).toBe(customImportmap);
     }, 15_000);

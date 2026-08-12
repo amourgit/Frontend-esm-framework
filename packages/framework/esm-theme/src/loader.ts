@@ -40,7 +40,7 @@ async function fetchThemeJson(url: string): Promise<FetchedFile | null> {
     });
 
     if (!res.ok) {
-      console.warn(`[egen/esm-theme] ⚠️  HTTP ${res.status} pour "${url}" → ignoré`);
+      console.warn(`[egen-civitas/esm-theme] ⚠️  HTTP ${res.status} pour "${url}" → ignoré`);
       return null;
     }
 
@@ -51,14 +51,14 @@ async function fetchThemeJson(url: string): Promise<FetchedFile | null> {
     try {
       parsed = JSON.parse(rawText);
     } catch (parseErr) {
-      console.warn(`[egen/esm-theme] ⚠️  JSON invalide pour "${url}" →`, parseErr);
+      console.warn(`[egen-civitas/esm-theme] ⚠️  JSON invalide pour "${url}" →`, parseErr);
       return null;
     }
 
     const validation = validateThemeSchema(parsed);
     if (!validation.valid) {
       console.warn(
-        `[egen/esm-theme] ⚠️  Fichier de thème structurellement invalide, rejeté : "${url}"\n` +
+        `[egen-civitas/esm-theme] ⚠️  Fichier de thème structurellement invalide, rejeté : "${url}"\n` +
           validation.errors.map((e) => `    - ${e}`).join('\n'),
       );
       return null;
@@ -66,7 +66,7 @@ async function fetchThemeJson(url: string): Promise<FetchedFile | null> {
 
     return { url, json: parsed as ThemeSchema, contentHash };
   } catch (err) {
-    console.warn(`[egen/esm-theme] ⚠️  Impossible de charger "${url}" →`, err);
+    console.warn(`[egen-civitas/esm-theme] ⚠️  Impossible de charger "${url}" →`, err);
     return null;
   }
 }
@@ -96,7 +96,7 @@ function pickWinner(valid: FetchedFile[]): FetchedFile {
 
   if (ties.length > 1) {
     const tieUrls = ties.map((t) => t.url).join(', ');
-    const message = `[egen/esm-theme] Égalité de priorité (${winnerPriority}) entre plusieurs fichiers de thème : ${tieUrls}. Départage déterministe par ordre alphabétique d'URL → "${winner.url}" retenu. Corrigez les valeurs "priority" pour lever l'ambiguïté.`;
+    const message = `[egen-civitas/esm-theme] Égalité de priorité (${winnerPriority}) entre plusieurs fichiers de thème : ${tieUrls}. Départage déterministe par ordre alphabétique d'URL → "${winner.url}" retenu. Corrigez les valeurs "priority" pour lever l'ambiguïté.`;
 
     if (process.env.NODE_ENV !== 'production') {
       // En dev, une égalité de priorité est une erreur de configuration —
@@ -116,7 +116,7 @@ function pickWinner(valid: FetchedFile[]): FetchedFile {
  */
 export async function loadHighestPriorityTheme(themeUrls: string[]): Promise<LoadedTheme | null> {
   if (!themeUrls || themeUrls.length === 0) {
-    console.warn('[egen/esm-theme] Aucun URL de thème fourni.');
+    console.warn('[egen-civitas/esm-theme] Aucun URL de thème fourni.');
     return null;
   }
 
@@ -124,13 +124,13 @@ export async function loadHighestPriorityTheme(themeUrls: string[]): Promise<Loa
   const valid = results.filter((r): r is FetchedFile => r !== null);
 
   if (valid.length === 0) {
-    console.warn('[egen/esm-theme] Aucun fichier de thème valide chargé.');
+    console.warn('[egen-civitas/esm-theme] Aucun fichier de thème valide chargé.');
     return null;
   }
 
   if (process.env.NODE_ENV !== 'production') {
     // eslint-disable-next-line no-console
-    console.group('[egen/esm-theme] 📂 Fichiers de thème détectés');
+    console.group('[egen-civitas/esm-theme] 📂 Fichiers de thème détectés');
     for (const { url, json } of valid) {
       const p = typeof json.priority === 'number' ? json.priority : 'N/A';
       const name = json.meta?.name ?? url;
@@ -147,7 +147,7 @@ export async function loadHighestPriorityTheme(themeUrls: string[]): Promise<Loa
   if (process.env.NODE_ENV !== 'production') {
     const name = winner.json.meta?.name ?? winner.url;
     // eslint-disable-next-line no-console
-    console.log(`[egen/esm-theme] 🏆 Thème retenu : "${name}" (priority = ${winnerPriority})`);
+    console.log(`[egen-civitas/esm-theme] 🏆 Thème retenu : "${name}" (priority = ${winnerPriority})`);
   }
 
   return {

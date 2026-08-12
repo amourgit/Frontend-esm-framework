@@ -29,15 +29,15 @@ describe('trimEnd', () => {
 
 describe('removeTrailingSlash', () => {
   it('removes a single trailing slash', () => {
-    expect(removeTrailingSlash('/egen/spa/')).toBe('/egen/spa');
+    expect(removeTrailingSlash('/egen-civitas/spa/')).toBe('/egen-civitas/spa');
   });
 
   it('removes multiple trailing slashes', () => {
-    expect(removeTrailingSlash('/egen/spa///')).toBe('/egen/spa');
+    expect(removeTrailingSlash('/egen-civitas/spa///')).toBe('/egen-civitas/spa');
   });
 
   it('returns the string unchanged when no trailing slash', () => {
-    expect(removeTrailingSlash('/egen/spa')).toBe('/egen/spa');
+    expect(removeTrailingSlash('/egen-civitas/spa')).toBe('/egen-civitas/spa');
   });
 
   it('handles root slash', () => {

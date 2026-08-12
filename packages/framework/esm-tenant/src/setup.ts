@@ -42,7 +42,7 @@ function activate(tenantId: TenantId | null, source: TenantResolutionStrategy | 
 
   if (process.env.NODE_ENV !== 'production') {
     // eslint-disable-next-line no-console
-    console.info(tenantId ? `[egen/esm-tenant] ✅ Tenant capturé : "${tenantId}" (via "${source}")` : '[egen/esm-tenant] Aucun tenant capturé.');
+    console.info(tenantId ? `[egen-civitas/esm-tenant] ✅ Tenant capturé : "${tenantId}" (via "${source}")` : '[egen-civitas/esm-tenant] Aucun tenant capturé.');
   }
 }
 
@@ -87,7 +87,7 @@ export function setupTenantSystem(userConfig: Partial<TenantSystemConfig> = {}):
   if (config.mode === 'off') {
     if (process.env.NODE_ENV !== 'production') {
       // eslint-disable-next-line no-console
-      console.info('[egen/esm-tenant] Système tenant désactivé (mode: "off").');
+      console.info('[egen-civitas/esm-tenant] Système tenant désactivé (mode: "off").');
     }
     return;
   }
@@ -118,11 +118,11 @@ export function switchTenant(tenantId: TenantId | null): void {
   const state = getTenantStoreState();
 
   if (state.mode === 'off') {
-    console.warn('[egen/esm-tenant] switchTenant() ignoré : mode "off".');
+    console.warn('[egen-civitas/esm-tenant] switchTenant() ignoré : mode "off".');
     return;
   }
   if (state.mode === 'single') {
-    console.warn('[egen/esm-tenant] switchTenant() ignoré : mode "single".');
+    console.warn('[egen-civitas/esm-tenant] switchTenant() ignoré : mode "single".');
     return;
   }
 

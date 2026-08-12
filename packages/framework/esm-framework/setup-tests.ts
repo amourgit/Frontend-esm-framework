@@ -45,7 +45,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
 window.egenBase = '/egen';
 window.spaBase = '/spa';
-window.getEgenSpaBase = () => '/egen/spa/';
+window.getEgenSpaBase = () => '/egen-civitas/spa/';
 const { getComputedStyle } = window;
 window.getComputedStyle = (elt) => getComputedStyle(elt);
 

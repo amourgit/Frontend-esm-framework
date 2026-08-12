@@ -1,3 +1,3 @@
-const { default: extendConfig, ...rest } = require('@egen/rspack-config');
+const { default: extendConfig, ...rest } = require('@egen-civitas/rspack-config');
 
 module.exports = Object.assign(extendConfig, rest);

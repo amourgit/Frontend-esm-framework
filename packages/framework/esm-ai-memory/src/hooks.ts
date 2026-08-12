@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-memory — Hooks React
+//  @egen-civitas/esm-ai-memory — Hooks React
 // =============================================================================
 
 import { useState, useEffect } from 'react';

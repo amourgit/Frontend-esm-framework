@@ -34,7 +34,7 @@ declare global {
      */
     egenBase: string;
     /**
-     * Gets the SPA base path, e.g. /egen/spa
+     * Gets the SPA base path, e.g. /egen-civitas/spa
      */
     spaBase: string;
     /**

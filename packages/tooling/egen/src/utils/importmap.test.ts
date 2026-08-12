@@ -283,7 +283,7 @@ describe('mergeImportmapAndRoutes', () => {
 // ─── proxyImportmapAndRoutes ────────────────────────────────────────────────
 
 describe('proxyImportmapAndRoutes', () => {
-  const spaPath = '/egen/spa/';
+  const spaPath = '/egen-civitas/spa/';
   const backend = 'https://dev.egen.alpha.vercel.com';
 
   it('rewrites backend URLs to relative paths, stripping the spaPath prefix', () => {
@@ -292,7 +292,7 @@ describe('proxyImportmapAndRoutes', () => {
         type: 'inline',
         value: JSON.stringify({
           imports: {
-            '@egen-civitas/foo': 'https://dev.egen.alpha.vercel.com/egen/spa/foo-1.0.0/foo.js',
+            '@egen-civitas/foo': 'https://dev.egen.alpha.vercel.com/egen-civitas/spa/foo-1.0.0/foo.js',
           },
         }),
       },
@@ -313,7 +313,7 @@ describe('proxyImportmapAndRoutes', () => {
         value: JSON.stringify({
           imports: {
             '@egen-civitas/local': 'http://localhost:8081/main.js',
-            '@egen-civitas/remote': 'https://dev.egen.alpha.vercel.com/egen/spa/remote.js',
+            '@egen-civitas/remote': 'https://dev.egen.alpha.vercel.com/egen-civitas/spa/remote.js',
           },
         }),
       },
@@ -334,7 +334,7 @@ describe('proxyImportmapAndRoutes', () => {
         type: 'inline',
         value: JSON.stringify({
           imports: {
-            '@egen-civitas/foo': 'https://dev.egen.alpha.vercel.com/egen/spa/foo.js?v=1#section',
+            '@egen-civitas/foo': 'https://dev.egen.alpha.vercel.com/egen-civitas/spa/foo.js?v=1#section',
           },
         }),
       },

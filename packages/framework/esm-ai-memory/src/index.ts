@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-memory — Point d'entrée public
+//  @egen-civitas/esm-ai-memory — Point d'entrée public
 //
 //  Persistance de conversation IA, par utilisateur, avec stockage local
 //  (IndexedDB) synchronisé vers un backend interchangeable (voir types.ts,

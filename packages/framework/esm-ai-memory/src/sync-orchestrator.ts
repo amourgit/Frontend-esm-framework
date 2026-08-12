@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-memory — Orchestrateur de synchronisation local ↔ backend
+//  @egen-civitas/esm-ai-memory — Orchestrateur de synchronisation local ↔ backend
 //
 //  RÈGLE EXACTE DEMANDÉE :
 //  - Le stockage LOCAL (IndexedDB) est mis à jour à CHAQUE interaction —
@@ -145,7 +145,7 @@ export function createSyncOrchestrator(options: SyncOrchestratorOptions): Conver
           conversationsUpdated,
         });
       } catch (err) {
-        console.warn('[egen/esm-ai-memory] hydrateFromBackend() a échoué, historique local conservé tel quel:', err);
+        console.warn('[egen-civitas/esm-ai-memory] hydrateFromBackend() a échoué, historique local conservé tel quel:', err);
       }
     },
 

@@ -20,13 +20,13 @@ export function runStart(args: StartArgs, signal?: AbortSignal) {
   const require = createRequire(import.meta.url);
   const source = resolve(require.resolve('@egen-civitas/esm-app-shell/package.json'), '..', 'dist');
   const index = resolve(source, 'index.html');
-  const spaPath = '/egen/spa';
+  const spaPath = '/egen-civitas/spa';
   const pageUrl = `http://${host}:${port}${spaPath}`;
 
   app.use(spaPath, express.static(source));
   app.use(
     '/egen',
-    createProxyMiddleware([`/egen/**`, `!${spaPath}/**`], {
+    createProxyMiddleware([`/egen-civitas/**`, `!${spaPath}/**`], {
       target: backend,
       changeOrigin: true,
       onProxyReq(proxyReq) {

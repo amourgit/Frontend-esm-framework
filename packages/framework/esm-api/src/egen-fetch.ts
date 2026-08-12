@@ -25,7 +25,7 @@ export const sessionEndpoint = `${restBaseUrl}/session`;
  *
  * ```ts
  * makeUrl('/foo/bar');
- * // => '/egen/foo/bar'
+ * // => '/egen-civitas/foo/bar'
  * ```
  */
 export function makeUrl(path: string) {

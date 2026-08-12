@@ -4,8 +4,8 @@ import { registerDefaultCalendar } from '@egen-civitas/esm-utils';
 // on window. Without these, components that call interpolateUrl() or
 // reference egenBase will throw at runtime.
 (window as any).egenBase = '/egen';
-(window as any).spaBase = '/egen/spa';
-(window as any).getEgenSpaBase = () => '/egen/spa/';
+(window as any).spaBase = '/egen-civitas/spa';
+(window as any).getEgenSpaBase = () => '/egen-civitas/spa/';
 (window as any).i18next = { language: 'en' };
 
 // Register non-Gregorian calendars for locales that use them by default.

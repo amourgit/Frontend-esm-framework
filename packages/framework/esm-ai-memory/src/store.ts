@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-memory — Store réactif de la mémoire de conversation
+//  @egen-civitas/esm-ai-memory — Store réactif de la mémoire de conversation
 //
 //  RÔLE : la SEULE source de vérité pour "quelle conversation est affichée
 //  en ce moment" côté UI. Vit dans le store global (@egen-civitas/esm-state,
@@ -230,7 +230,7 @@ function summarize(c: StoredConversation): ConversationSummary {
 function requireActive(): StoredConversation {
   const { activeConversation } = conversationMemoryStore.getState();
   if (!activeConversation) {
-    throw new Error('[egen/esm-ai-memory] Aucune conversation active — appeler initConversationMemory() (et être connecté) avant toute mutation.');
+    throw new Error('[egen-civitas/esm-ai-memory] Aucune conversation active — appeler initConversationMemory() (et être connecté) avant toute mutation.');
   }
   return activeConversation;
 }
@@ -276,7 +276,7 @@ export async function recordToolCall(messageId: string, toolCall: StoredToolCall
 /** Démarre une nouvelle conversation (l'ancienne reste dans l'historique, jamais supprimée). */
 export async function startNewConversation(): Promise<StoredConversation> {
   const { userId, tenantId } = conversationMemoryStore.getState();
-  if (!userId) throw new Error('[egen/esm-ai-memory] startNewConversation() nécessite un utilisateur connecté.');
+  if (!userId) throw new Error('[egen-civitas/esm-ai-memory] startNewConversation() nécessite un utilisateur connecté.');
 
   const conversation: StoredConversation = {
     id: generateId(),
@@ -301,9 +301,9 @@ export async function startNewConversation(): Promise<StoredConversation> {
 /** Bascule sur une conversation existante de l'historique (voir conversationSummaries). */
 export async function switchToConversation(conversationId: string): Promise<void> {
   const { userId } = conversationMemoryStore.getState();
-  if (!userId) throw new Error('[egen/esm-ai-memory] switchToConversation() nécessite un utilisateur connecté.');
+  if (!userId) throw new Error('[egen-civitas/esm-ai-memory] switchToConversation() nécessite un utilisateur connecté.');
   const conversation = await localAdapter.getConversation(userId, conversationId);
-  if (!conversation) throw new Error(`[egen/esm-ai-memory] Conversation "${conversationId}" introuvable.`);
+  if (!conversation) throw new Error(`[egen-civitas/esm-ai-memory] Conversation "${conversationId}" introuvable.`);
   conversationMemoryStore.setState((s) => ({ ...s, activeConversation: conversation }));
 }
 

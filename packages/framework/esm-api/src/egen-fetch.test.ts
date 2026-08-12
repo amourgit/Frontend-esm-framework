@@ -25,7 +25,7 @@ describe('egenFetch', () => {
       }),
     );
     window.egenBase = '/egen';
-    window.getEgenSpaBase = () => '/egen/spa/';
+    window.getEgenSpaBase = () => '/egen-civitas/spa/';
     window.fetch = vi.fn();
     Object.defineProperty(window, 'location', {
       writable: true,
@@ -66,7 +66,7 @@ describe('egenFetch', () => {
     // @ts-expect-error
     window.fetch.mockReturnValue(new Promise(() => {}));
     egenFetch('/ws/rest/v1/session');
-    expect(window.fetch).toHaveBeenCalledWith('/egen/ws/rest/v1/session', {
+    expect(window.fetch).toHaveBeenCalledWith('/egen-civitas/ws/rest/v1/session', {
       headers: {
         Accept: 'application/json',
         'Disable-WWW-Authenticate': 'true',
@@ -82,7 +82,7 @@ describe('egenFetch', () => {
       method: 'POST',
       body: requestBody,
     });
-    expect(window.fetch).toHaveBeenCalledWith('/egen/ws/rest/v1/session', {
+    expect(window.fetch).toHaveBeenCalledWith('/egen-civitas/ws/rest/v1/session', {
       headers: {
         Accept: 'application/json',
         'Disable-WWW-Authenticate': 'true',
@@ -100,7 +100,7 @@ describe('egenFetch', () => {
         Accept: 'application/xml',
       },
     });
-    expect(window.fetch).toHaveBeenCalledWith('/egen/ws/rest/v1/session', {
+    expect(window.fetch).toHaveBeenCalledWith('/egen-civitas/ws/rest/v1/session', {
       headers: {
         Accept: 'application/xml',
         'Disable-WWW-Authenticate': 'true',
@@ -118,7 +118,7 @@ describe('egenFetch', () => {
       },
     });
 
-    expect(window.fetch).toHaveBeenCalledWith('/egen/ws/rest/v1/session', {
+    expect(window.fetch).toHaveBeenCalledWith('/egen-civitas/ws/rest/v1/session', {
       headers: {
         'Disable-WWW-Authenticate': 'true',
       },
@@ -276,7 +276,7 @@ describe('egenFetch', () => {
     mockGetConfig.mockResolvedValueOnce({
       redirectAuthFailure: {
         enabled: true,
-        url: '/egen/spa/login',
+        url: '/egen-civitas/spa/login',
         errors: [401],
         resolvePromise: true,
       },
@@ -295,7 +295,7 @@ describe('egenFetch', () => {
     await egenFetch('/ws/rest/v1/session');
 
     expect(mockNavigate.mock.calls[0][0]).toStrictEqual({
-      to: '/egen/spa/login',
+      to: '/egen-civitas/spa/login',
     });
   });
 });
@@ -335,7 +335,7 @@ describe('egenObservableFetch', () => {
 
     expect(window.fetch).toHaveBeenCalled();
     // @ts-expect-error
-    expect(window.fetch.mock.calls[0][0]).toEqual('/egen/ws/rest/v1/session');
+    expect(window.fetch.mock.calls[0][0]).toEqual('/egen-civitas/ws/rest/v1/session');
     // @ts-expect-error
     expect(window.fetch.mock.calls[0][1].headers.Accept).toEqual('application/json');
   });

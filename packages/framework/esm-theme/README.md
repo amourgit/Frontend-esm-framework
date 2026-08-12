@@ -285,6 +285,6 @@ Comme aucune valeur n'est plus dupliquée en dur dans `esm-styleguide`, le rendu
 En mode `development`, le moteur peut poller les URLs de thème (`pollIntervalMs`). Si un fichier JSON change (ou si un fichier avec une priorité plus haute est ajouté), les variables CSS sont mises à jour **immédiatement** sans rechargement de page.
 
 ```
-[egen/esm-theme] 🔥 Changement de thème détecté — rechargement à chaud
-[egen/esm-theme] ✅ Thème appliqué : "Mon thème custom" (247 vars CSS)
+[egen-civitas/esm-theme] 🔥 Changement de thème détecté — rechargement à chaud
+[egen-civitas/esm-theme] ✅ Thème appliqué : "Mon thème custom" (247 vars CSS)
 ```

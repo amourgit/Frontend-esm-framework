@@ -5,7 +5,7 @@ import { cleanup } from '@testing-library/react';
 
 global.window.egenBase = '/egen';
 global.window.spaBase = '/spa';
-global.window.getEgenSpaBase = () => '/egen/spa/';
+global.window.getEgenSpaBase = () => '/egen-civitas/spa/';
 
 vi.mock('@egen-civitas/esm-navigation', async () => {
   const actual = await vi.importActual('@egen-civitas/esm-navigation');

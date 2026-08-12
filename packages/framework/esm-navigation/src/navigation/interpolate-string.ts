@@ -13,11 +13,11 @@ function trimTrailingSlash(str: string) {
  * Example usage:
  * ```js
  * interpolateUrl("test ${egenBase} ${egenSpaBase} ok");
- *    // will return "test /egen /egen/spa ok"
+ *    // will return "test /egen /egen-civitas/spa ok"
  *
  * interpolateUrl("${egenSpaBase}/entity/${entityUuid}", {
  *    entityUuid: "4fcb7185-c6c9-450f-8828-ccae9436bd82",
- * }); // will return "/egen/spa/patient/4fcb7185-c6c9-450f-8828-ccae9436bd82"
+ * }); // will return "/egen-civitas/spa/patient/4fcb7185-c6c9-450f-8828-ccae9436bd82"
  * ```
  *
  * This can be used in conjunction with the `navigate` function like so
@@ -27,7 +27,7 @@ function trimTrailingSlash(str: string) {
  *    "${egenSpaBase}/entity/${entityUuid}",
  *    { entityUuid: entity.uuid }
  *  )
- * }); // will navigate to "/egen/spa/patient/4fcb7185-c6c9-450f-8828-ccae9436bd82"
+ * }); // will navigate to "/egen-civitas/spa/patient/4fcb7185-c6c9-450f-8828-ccae9436bd82"
  * ```
  *
  * @param template A string to interpolate

@@ -51,7 +51,7 @@ function resolveBySubdomain(rootDomain?: string): TenantId | undefined {
   ) {
     // eslint-disable-next-line no-console
     console.warn(
-      `[egen/esm-tenant] ⚠️ EGEN_TENANT_ROOT_DOMAIN="${effectiveRoot}" configuré, mais le hostname ` +
+      `[egen-civitas/esm-tenant] ⚠️ EGEN_TENANT_ROOT_DOMAIN="${effectiveRoot}" configuré, mais le hostname ` +
         `courant "${hostname}" n'en est pas un sous-domaine. La stratégie "subdomain" ne capturera ` +
         `jamais rien ici tant que rootDomain n'est pas corrigé (ou retiré pour utiliser la détection ` +
         `automatique).`,
@@ -69,7 +69,7 @@ function resolveBySubdomain(rootDomain?: string): TenantId | undefined {
  * Une ancienne variante devinait le premier segment du path en l'absence de
  * préfixe configuré (ex: `parts[0]`) — dangereux dans une app single-spa où
  * TOUT pathname a un premier segment "significatif" qui n'est presque
- * jamais un tenant (ex: "/egen/spa/home" → aurait capturé "egen", le SPA
+ * jamais un tenant (ex: "/egen-civitas/spa/home" → aurait capturé "egen", le SPA
  * base lui-même, comme si c'était un tenant). Corrigé le 9 août 2026.
  */
 function resolveByPath(config?: TenantSystemConfig['pathConfig']): TenantId | undefined {
@@ -236,7 +236,7 @@ export function resolveActiveTenantId(
     if (result) {
       if (process.env.NODE_ENV !== 'production') {
         // eslint-disable-next-line no-console
-        console.info(`[egen/esm-tenant] ✅ Tenant capturé via stratégie "${strategy}": "${result}"`);
+        console.info(`[egen-civitas/esm-tenant] ✅ Tenant capturé via stratégie "${strategy}": "${result}"`);
       }
       return { tenantId: result, source: strategy };
     }

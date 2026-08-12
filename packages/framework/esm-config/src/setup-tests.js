@@ -11,4 +11,4 @@ global.window.System = {
 
 global.window.egenBase = '/egen';
 global.window.spaBase = '/spa';
-global.window.getEgenSpaBase = () => '/egen/spa/';
+global.window.getEgenSpaBase = () => '/egen-civitas/spa/';

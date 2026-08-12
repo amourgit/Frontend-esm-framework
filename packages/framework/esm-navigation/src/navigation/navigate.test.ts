@@ -39,31 +39,31 @@ describe('navigate', () => {
 
   it('uses location.assign() to navigate to non-SPA interpolated path', () => {
     navigate({ to: '${egenBase}/some/path' });
-    expect(window.location.assign).toHaveBeenCalledWith('/egen/some/path');
+    expect(window.location.assign).toHaveBeenCalledWith('/egen-civitas/some/path');
     expect(navigateToUrl).not.toHaveBeenCalled();
   });
 
   it('uses single-spa navigateToUrl to navigate to SPA path literal', () => {
-    navigate({ to: '/egen/spa/foo/page' });
-    expect(navigateToUrl).toHaveBeenCalledWith('/egen/spa/foo/page');
+    navigate({ to: '/egen-civitas/spa/foo/page' });
+    expect(navigateToUrl).toHaveBeenCalledWith('/egen-civitas/spa/foo/page');
     expect(window.location.assign).not.toHaveBeenCalled();
   });
 
   it('uses single-spa navigateToUrl to navigate to interpolated SPA path', () => {
     navigate({ to: '${egenSpaBase}/bar/page' });
-    expect(navigateToUrl).toHaveBeenCalledWith('/egen/spa/bar/page');
+    expect(navigateToUrl).toHaveBeenCalledWith('/egen-civitas/spa/bar/page');
     expect(window.location.assign).not.toHaveBeenCalled();
   });
 
   it('tolerates an extra inital slash', () => {
     navigate({ to: '/${egenSpaBase}/baz/page' });
-    expect(navigateToUrl).toHaveBeenCalledWith('/egen/spa/baz/page');
+    expect(navigateToUrl).toHaveBeenCalledWith('/egen-civitas/spa/baz/page');
     expect(window.location.assign).not.toHaveBeenCalled();
   });
 
   it('uses single-spa navigateToUrl if the URL has the current origin', () => {
-    navigate({ to: `${window.location.origin}/egen/spa/qux/page` });
-    expect(navigateToUrl).toHaveBeenCalledWith('/egen/spa/qux/page');
+    navigate({ to: `${window.location.origin}/egen-civitas/spa/qux/page` });
+    expect(navigateToUrl).toHaveBeenCalledWith('/egen-civitas/spa/qux/page');
     expect(window.location.assign).not.toHaveBeenCalled();
   });
 });

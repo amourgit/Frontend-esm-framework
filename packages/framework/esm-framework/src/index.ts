@@ -16,3 +16,4 @@ export * from '@egen-civitas/esm-state/src/public';
 export * from '@egen-civitas/esm-styleguide/src/public';
 export * from '@egen-civitas/esm-translations/src/public';
 export * from '@egen-civitas/esm-utils';
+export * from '@egen-civitas/esm-ai-framework';

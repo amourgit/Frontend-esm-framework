@@ -1,5 +1,5 @@
 // =============================================================================
-//  @egen/esm-ai-memory — Adaptateur de stockage backend (REST, prêt pour
+//  @egen-civitas/esm-ai-memory — Adaptateur de stockage backend (REST, prêt pour
 //  quand le backend existera)
 //
 //  CONTRAT REST ATTENDU (à implémenter côté backend — voir chaque méthode) :
@@ -25,7 +25,7 @@ import type { ConversationStorageAdapter, ConversationSummary, StoredConversatio
 
 function warnOnce(message: string, err: unknown): void {
   if (typeof console !== 'undefined') {
-    console.warn(`[egen/esm-ai-memory] ${message} (backend probablement indisponible) :`, err);
+    console.warn(`[egen-civitas/esm-ai-memory] ${message} (backend probablement indisponible) :`, err);
   }
 }
 

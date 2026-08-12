@@ -8,13 +8,13 @@ describe('setBundlerEnv', () => {
   });
 
   it('sets EGEN_PUBLIC_PATH when spaPath is provided', () => {
-    setBundlerEnv({ spaPath: '/egen/spa/' });
-    expect(process.env.EGEN_PUBLIC_PATH).toBe('/egen/spa/');
+    setBundlerEnv({ spaPath: '/egen-civitas/spa/' });
+    expect(process.env.EGEN_PUBLIC_PATH).toBe('/egen-civitas/spa/');
   });
 
   it('sets EGEN_API_URL when apiUrl is provided', () => {
-    setBundlerEnv({ apiUrl: '/egen/' });
-    expect(process.env.EGEN_API_URL).toBe('/egen/');
+    setBundlerEnv({ apiUrl: '/egen-civitas/' });
+    expect(process.env.EGEN_API_URL).toBe('/egen-civitas/');
   });
 
   it('sets EGEN_PAGE_TITLE when pageTitle is provided', () => {

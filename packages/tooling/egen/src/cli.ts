@@ -61,12 +61,12 @@ export function buildCli(y: Argv) {
           type: 'string',
         })
         .option('spa-path', {
-          default: '/egen/spa/',
+          default: '/egen-civitas/spa/',
           describe: 'The path of the application on the target server.',
           type: 'string',
         })
         .option('api-url', {
-          default: '/egen/',
+          default: '/egen-civitas/',
           describe: 'The URL of the API. Can be a path if the API is on the same target server.',
           type: 'string',
         })
@@ -217,7 +217,7 @@ export function buildCli(y: Argv) {
           coerce: (arg) => resolve(process.cwd(), arg),
         })
         .option('spa-path', {
-          default: '/egen/spa/',
+          default: '/egen-civitas/spa/',
           describe: 'The path of the application on the target server.',
           type: 'string',
         })
@@ -226,7 +226,7 @@ export function buildCli(y: Argv) {
           describe: 'The title of the web app usually displayed in the browser tab.',
         })
         .option('api-url', {
-          default: '/egen/',
+          default: '/egen-civitas/',
           describe: 'The URL of the API. Can be a path if the API is on the same target server.',
           type: 'string',
         })
@@ -384,7 +384,7 @@ export function buildCli(y: Argv) {
         'for keys and versions for values.\n' +
         '  publicUrl  \tThe URL at which the frontend modules will be made available. Can be relative to the importmap. ' +
         'Defaults to `.` (which means they will be colocated with the import map).\n\n' +
-        'For more information visit https://github.com/egen/egen-esm-core.',
+        'For more information visit https://github.com/egen-civitas/egen-esm-core.',
     )
     .help()
     .demandCommand()

@@ -95,6 +95,9 @@ export const Toast: React.FC<ToastProps> = ({ toast, closeToast }) => {
 
   const eyebrowText = eyebrow ?? config.defaultEyebrow;
 
+  // Ensure description is always renderable (convert Error objects to strings)
+  const renderableDescription = description instanceof Error ? description.message : description;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30, scale: 0.9, filter: 'blur(4px)' }}
@@ -116,7 +119,7 @@ export const Toast: React.FC<ToastProps> = ({ toast, closeToast }) => {
           <div className={styles.textArea}>
             <span className={styles.eyebrow}>{eyebrowText}</span>
             {title && <p className={styles.title}>{title}</p>}
-            <div className={styles.description}>{description}</div>
+            <div className={styles.description}>{renderableDescription}</div>
           </div>
 
           <button type="button" onClick={closeToast} className={styles.closeButton} aria-label="Fermer">

@@ -90,8 +90,8 @@ export function extractSubdomain(hostname: string, rootDomain: string): string |
  * protocole et le port courants.
  *
  * @example
- * buildTenantSubdomainUrl('lycee-lb', 'egen.gabon.gov.ga', '/egen/spa/home')
- * // → 'https://lycee-lb.egen.gabon.gov.ga/egen/spa/home'
+ * buildTenantSubdomainUrl('lycee-lb', 'egen.gabon.gov.ga', '/egen-civitas/spa/home')
+ * // → 'https://lycee-lb.egen.gabon.gov.ga/egen-civitas/spa/home'
  */
 export function buildTenantSubdomainUrl(tenantSlug: string, rootDomain: string, path: string): string {
   if (typeof window === 'undefined') {

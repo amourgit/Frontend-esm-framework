@@ -1,6 +1,6 @@
 # egen-esm-config
 
-[![npm: egen/esm-module-config](https://img.shields.io/npm/v/@egen-civitas/esm-config)](https://www.npmjs.com/package/@egen-civitas/esm-config)
+[![npm: egen-civitas/esm-module-config](https://img.shields.io/npm/v/@egen-civitas/esm-config)](https://www.npmjs.com/package/@egen-civitas/esm-config)
 
 ## What is this?
 
@@ -12,5 +12,5 @@ for information about how to use it.
 ## Contributing & Development
 
 PRs welcome! See
-[Egen Frontend RFC-20](https://github.com/egen/egen-rfc-frontend/blob/master/text/0020-contributing-guidelines.md#contributing-guidelines)
+[Egen Frontend RFC-20](https://github.com/egen-civitas/egen-rfc-frontend/blob/master/text/0020-contributing-guidelines.md#contributing-guidelines)
 for guidelines about contributing.

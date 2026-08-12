@@ -96,10 +96,10 @@ describe('resolveActiveTenantId — path', () => {
 
   it(
     'ne capture RIEN sans préfixe configuré — régression du 9 août 2026 : deviner le ' +
-      'premier segment confondait le SPA base ("/egen/spa/home" → "egen") avec un tenant',
+      'premier segment confondait le SPA base ("/egen-civitas/spa/home" → "egen") avec un tenant',
     () => {
       Object.defineProperty(window, 'location', {
-        value: { ...window.location, hostname: 'localhost', pathname: '/egen/spa/home', search: '' },
+        value: { ...window.location, hostname: 'localhost', pathname: '/egen-civitas/spa/home', search: '' },
         writable: true,
       });
       const result = resolveActiveTenantId({ mode: 'multi', resolutionOrder: ['path'] });

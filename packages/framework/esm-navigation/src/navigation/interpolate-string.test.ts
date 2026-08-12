@@ -4,14 +4,14 @@ import { interpolateString, interpolateUrl } from './interpolate-string';
 describe('interpolateUrl', () => {
   it('interpolates URL template elements', () => {
     const result = interpolateUrl('test ${egenBase} ${egenSpaBase} ok');
-    expect(result).toBe('test /egen /egen/spa ok');
+    expect(result).toBe('test /egen /egen-civitas/spa ok');
   });
 
   it('interpolates other URL template parameters', () => {
     const result = interpolateUrl('${egenSpaBase}/entity/${entityUuid}', {
       entityUuid: '4fcb7185-c6c9-450f-8828-ccae9436bd82',
     });
-    expect(result).toBe('/egen/spa/entity/4fcb7185-c6c9-450f-8828-ccae9436bd82');
+    expect(result).toBe('/egen-civitas/spa/entity/4fcb7185-c6c9-450f-8828-ccae9436bd82');
   });
 
   it('works when no interpolation needed', () => {
@@ -51,7 +51,7 @@ describe('interpolateString', () => {
 
   it('removes double slashes at the start of URLs', () => {
     const result = interpolateUrl('${egenBase}/${path}', { path: 'test' });
-    expect(result).toBe('/egen/test');
+    expect(result).toBe('/egen-civitas/test');
   });
 
   it('handles special characters in parameters', () => {

@@ -78,7 +78,7 @@ function toSummary(conversation: StoredConversation): ConversationSummary {
 export function createIndexedDBAdapter(): ConversationStorageAdapter {
   if (!isIndexedDBAvailable()) {
     if (typeof console !== 'undefined') {
-      console.warn('[egen/esm-ai-memory] IndexedDB indisponible — persistance locale désactivée pour cette session.');
+      console.warn('[egen-civitas/esm-ai-memory] IndexedDB indisponible — persistance locale désactivée pour cette session.');
     }
     return {
       name: 'indexeddb (indisponible)',
@@ -100,7 +100,7 @@ export function createIndexedDBAdapter(): ConversationStorageAdapter {
         const all = await promisifyRequest(index.getAll(IDBKeyRange.only(userId)));
         return (all as StoredConversation[]).map(toSummary).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
       } catch (err) {
-        console.warn('[egen/esm-ai-memory] listConversations() a échoué, dégradation en liste vide:', err);
+        console.warn('[egen-civitas/esm-ai-memory] listConversations() a échoué, dégradation en liste vide:', err);
         return [];
       }
     },
@@ -115,7 +115,7 @@ export function createIndexedDBAdapter(): ConversationStorageAdapter {
         if (!result || result.userId !== userId) return null;
         return result;
       } catch (err) {
-        console.warn('[egen/esm-ai-memory] getConversation() a échoué:', err);
+        console.warn('[egen-civitas/esm-ai-memory] getConversation() a échoué:', err);
         return null;
       }
     },
@@ -126,7 +126,7 @@ export function createIndexedDBAdapter(): ConversationStorageAdapter {
         const tx = db.transaction(STORE_NAME, 'readwrite');
         await promisifyRequest(tx.objectStore(STORE_NAME).put(conversation));
       } catch (err) {
-        console.warn('[egen/esm-ai-memory] saveConversation() a échoué (quota dépassé ?), non bloquant:', err);
+        console.warn('[egen-civitas/esm-ai-memory] saveConversation() a échoué (quota dépassé ?), non bloquant:', err);
       }
     },
 
@@ -140,7 +140,7 @@ export function createIndexedDBAdapter(): ConversationStorageAdapter {
           await promisifyRequest(store.delete(conversationId));
         }
       } catch (err) {
-        console.warn('[egen/esm-ai-memory] deleteConversation() a échoué:', err);
+        console.warn('[egen-civitas/esm-ai-memory] deleteConversation() a échoué:', err);
       }
     },
   };

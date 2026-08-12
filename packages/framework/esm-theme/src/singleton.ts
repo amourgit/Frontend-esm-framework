@@ -37,7 +37,7 @@ export async function setupThemeEngine(options: ThemeEngineOptions): Promise<The
  */
 export function getThemeEngine(): ThemeEngine {
   if (!_engine) {
-    throw new Error('[egen/esm-theme] ThemeEngine non initialisé. Appelez setupThemeEngine() au boot du shell.');
+    throw new Error('[egen-civitas/esm-theme] ThemeEngine non initialisé. Appelez setupThemeEngine() au boot du shell.');
   }
   return _engine;
 }

@@ -425,15 +425,15 @@ export function run(configUrls: Array<string>) {
         const count =
           Object.keys(cssVars.base).length + Object.keys(cssVars.light).length + Object.keys(cssVars.dark).length;
         // eslint-disable-next-line no-console
-        console.info(`[egen/esm-theme] ✅ Thème appliqué : "${name}" (${count} vars CSS)`);
+        console.info(`[egen-civitas/esm-theme] ✅ Thème appliqué : "${name}" (${count} vars CSS)`);
       }
     },
     onError: (err) => {
-      console.warn('[egen/esm-theme] Le thème par défaut sera utilisé.', err.message);
+      console.warn('[egen-civitas/esm-theme] Le thème par défaut sera utilisé.', err.message);
     },
   }).catch((err) => {
     // Erreur non bloquante : l'app démarre quand même avec les fallbacks SCSS
-    console.warn('[egen/esm-theme] Initialisation thème échouée (fallback SCSS actif):', err);
+    console.warn('[egen-civitas/esm-theme] Initialisation thème échouée (fallback SCSS actif):', err);
   });
 
   // ── Tenant system setup ─────────────────────────────────────────────────

@@ -41,7 +41,7 @@ async function startServer(args: StartArgs) {
   const baseUrl = `http://${args.host}:${args.port}`;
   for (let i = 0; i < 50; i++) {
     try {
-      await fetch(`${baseUrl}/egen/spa/`);
+      await fetch(`${baseUrl}/egen-civitas/spa/`);
       return baseUrl;
     } catch {
       await new Promise((r) => setTimeout(r, 100));
@@ -55,7 +55,7 @@ describe('runStart', () => {
     const port = await getAvailablePort(18000);
     const baseUrl = await startServer(defaultArgs({ port }));
 
-    const res = await fetch(`${baseUrl}/egen/spa/`);
+    const res = await fetch(`${baseUrl}/egen-civitas/spa/`);
     expect(res.status).toBe(200);
     expect(res.headers.get('content-type')).toContain('text/html');
 
@@ -68,13 +68,13 @@ describe('runStart', () => {
     const baseUrl = await startServer(defaultArgs({ port }));
 
     // Fetch index.html and extract a JS bundle reference
-    const indexRes = await fetch(`${baseUrl}/egen/spa/`);
+    const indexRes = await fetch(`${baseUrl}/egen-civitas/spa/`);
     const html = await indexRes.text();
 
     const jsMatch = /egen\.[a-f0-9]+\.js/.exec(html);
     expect(jsMatch).not.toBeNull();
 
-    const jsRes = await fetch(`${baseUrl}/egen/spa/${jsMatch![0]}`);
+    const jsRes = await fetch(`${baseUrl}/egen-civitas/spa/${jsMatch![0]}`);
     expect(jsRes.status).toBe(200);
     expect(jsRes.headers.get('content-type')).toContain('javascript');
   }, 15_000);
@@ -83,13 +83,13 @@ describe('runStart', () => {
     const port = await getAvailablePort(18200);
     const baseUrl = await startServer(defaultArgs({ port }));
 
-    const indexRes = await fetch(`${baseUrl}/egen/spa/`);
+    const indexRes = await fetch(`${baseUrl}/egen-civitas/spa/`);
     const html = await indexRes.text();
 
     const cssMatch = /egen\.[a-f0-9]+\.css/.exec(html);
     expect(cssMatch).not.toBeNull();
 
-    const cssRes = await fetch(`${baseUrl}/egen/spa/${cssMatch![0]}`);
+    const cssRes = await fetch(`${baseUrl}/egen-civitas/spa/${cssMatch![0]}`);
     expect(cssRes.status).toBe(200);
     expect(cssRes.headers.get('content-type')).toContain('css');
   }, 15_000);

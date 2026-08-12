@@ -29,7 +29,7 @@ describe(`ConfigurableLink`, () => {
     // eslint-disable-next-line testing-library/no-node-access
     expect(link.closest('a')).toHaveClass('fancy-link');
     // eslint-disable-next-line testing-library/no-node-access
-    expect(link.closest('a')).toHaveAttribute('href', '/egen/spa/home');
+    expect(link.closest('a')).toHaveAttribute('href', '/egen-civitas/spa/home');
   });
 
   it('calls navigate on normal click but not special clicks', async () => {

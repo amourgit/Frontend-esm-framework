@@ -46,12 +46,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/egen/egen-esm-core.git"
+    "url": "git+https://github.com/egen-civitas/egen-esm-core.git"
   },
   "bugs": {
-    "url": "https://github.com/egen/egen-esm-core/issues"
+    "url": "https://github.com/egen-civitas/egen-esm-core/issues"
   },
-  "homepage": "https://github.com/egen/egen-esm-core#readme",
+  "homepage": "https://github.com/egen-civitas/egen-esm-core#readme",
   "publishConfig": {
     "access": "public"
   },

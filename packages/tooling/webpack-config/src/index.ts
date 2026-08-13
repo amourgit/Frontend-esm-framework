@@ -6,14 +6,14 @@
  * You can use it as simply as
  *
  * ```ts
- * module.exports = require('egen-civitas/default-webpack-config');
+ * module.exports = require('@egen-civitas/egen/default-webpack-config');
  * ```
  *
  * or you can customize the configuration using merges and overrides
  * like
  *
  * ```ts
- * const config = require('egen-civitas/default-webpack-config');
+ * const config = require('@egen-civitas/egen/default-webpack-config');
  * config.cssRuleConfig.rules = [myCustomRule];
  * module.exports = config;
  * ```
@@ -27,7 +27,7 @@
  * After you `yarn build --watch`, do something like
  * `watch "cp -R dist /path/to/packages/esm-patient-chart-app/webpack"`
  * and then change the webpack line from
- * `module.exports = require('egen-civitas/default-webpack-config');`
+ * `module.exports = require('@egen-civitas/egen/default-webpack-config');`
  * to
  * `module.exports = require('./webpack');`
  *

@@ -52,7 +52,7 @@ Ce repo contient **3 familles de packages** :
 | `@egen-civitas/webpack-config` | Configuration Webpack partagée |
 | `@egen-civitas/storybook` | Storybook du styleguide |
 | `@egen-civitas/typedoc-plugin-file-categories` | Plugin TypeDoc |
-| `egen` | CLI : `serve`, `build`, `develop` |
+| `@egen-civitas/egen` | CLI (commande : `egen`) : `serve`, `build`, `develop` |
 
 ### `packages/shell/` — Template de shell
 
@@ -85,7 +85,7 @@ yarn add @egen-civitas/esm-framework @egen-civitas/esm-theme @egen-civitas/esm-s
 yarn add @egen-civitas/esm-ai-framework
 
 # CLI de développement
-yarn add --dev egen
+yarn add --dev @egen-civitas/egen
 ```
 
 ### Dans une app micro-frontend
@@ -104,7 +104,7 @@ export function start() {
 
 ```bash
 # Depuis la racine de TON projet consommateur
-npx egen develop --sources "packages/apps/*"
+npx @egen-civitas/egen develop --sources "packages/apps/*"
 ```
 
 ---
@@ -156,7 +156,7 @@ Mon-Projet/
 │       ├── "@egen-civitas/esm-framework": "^9.0.0"
 │       ├── "@egen-civitas/esm-theme": "^9.0.0"
 │       ├── "@egen-civitas/esm-styleguide": "^9.0.0"
-│       └── "egen": "^9.0.0"
+│       └── "@egen-civitas/egen": "^9.0.0"
 ├── packages/
 │   ├── shell/                   ← copié depuis packages/shell/esm-app-shell
 │   └── apps/

@@ -16,10 +16,10 @@ Avant (Monorepo tout-en-un) :
 
 Après (Architecture isolée & réutilisable) :
 [ Framework Standalone ] (Nouveau repo : Frontend-esm-framework)
- ├── Publié sur NPM sous le scope @egen-civitas/* (@egen-civitas/esm-framework, @egen-civitas/esm-theme, @egen-civitas/esm-styleguide, egen CLI, etc.)
+ ├── Publié sur NPM sous le scope @egen-civitas/* (@egen-civitas/esm-framework, @egen-civitas/esm-theme, @egen-civitas/esm-styleguide, @egen-civitas/egen CLI, etc.)
 
 [ Projet Consommateur ] (Ex: Frontend-esm-core ou NouveauProjet)
- ├── Dépendances NPM : "@egen-civitas/esm-framework": "^9.0.2", "egen": "^9.0.2"
+ ├── Dépendances NPM : "@egen-civitas/esm-framework": "^9.0.2", "@egen-civitas/egen": "^9.0.2"
  ├── packages/shell/  (copié depuis le template esm-app-shell)
  └── packages/apps/*  (uniquement tes micro-frontends métier)
 ```
@@ -59,7 +59,7 @@ Exemple de `package.json` minimal pour un monorepo consommateur :
     "@egen-civitas/esm-framework": "^9.0.2",
     "@egen-civitas/esm-theme": "^9.0.2",
     "@egen-civitas/esm-styleguide": "^9.0.2",
-    "egen": "^9.0.2",
+    "@egen-civitas/egen": "^9.0.2",
     "turbo": "^2.5.2",
     "typescript": "^5.8.3"
   }

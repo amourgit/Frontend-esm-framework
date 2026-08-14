@@ -8,6 +8,10 @@
     "packages/tooling/*",
     "packages/shell/*"
   ],
+  "resolutions": {
+    "@types/react": "18.3.25",
+    "csstype": "3.2.3"
+  },
   "scripts": {
     "build": "turbo run build",
     "document": "turbo run document",

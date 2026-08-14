@@ -58,7 +58,7 @@
     "@egen-civitas/esm-state": "^1.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
-    "@types/react": "^18.0.0",
+    "@types/react": "^18.3.21",
     "@vitest/coverage-v8": "^4.1.2",
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",

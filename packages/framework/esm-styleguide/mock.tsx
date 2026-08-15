@@ -160,7 +160,7 @@ export const EmptyCard = ({
   </div>
 );
 
-export { CardHeader, ErrorCard, Pagination, PageHeader, PageHeaderContent } from '@egen-civitas/esm-styleguide/src/internal';
+export { CardHeader, ErrorCard, Pagination, PageHeader, PageHeaderContent } from '@egen-civitas/esm-styleguide';
 
 export const EgenDatePicker = () => <span>EgenDatePicker</span>;
 export const EgenDateRangePicker = () => <span>EgenDateRangePicker</span>;

@@ -9,7 +9,7 @@ vi.mock('@egen-civitas/esm-navigation', () => ({
   navigate: (...args: unknown[]) => mockNavigate(...args),
 }));
 
-vi.mock('@egen-civitas/esm-styleguide/src/public', () => ({
+vi.mock('@egen-civitas/esm-styleguide', () => ({
   showNotification: vi.fn(),
   showSnackbar: vi.fn(),
   showModal: vi.fn(),

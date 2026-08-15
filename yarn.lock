@@ -533,6 +533,71 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@egen-civitas/egen@workspace:*, @egen-civitas/egen@workspace:packages/tooling/egen":
+  version: 0.0.0-use.local
+  resolution: "@egen-civitas/egen@workspace:packages/tooling/egen"
+  dependencies:
+    "@egen-civitas/esm-app-shell": "npm:^1.0.0"
+    "@egen-civitas/rspack-config": "npm:^1.0.0"
+    "@egen-civitas/webpack-config": "npm:^1.0.0"
+    "@inquirer/prompts": "npm:8.3.2"
+    "@inquirer/testing": "npm:^3.3.2"
+    "@pnpm/npm-conf": "npm:^3.0.2"
+    "@rspack/cli": "npm:1.7.9"
+    "@rspack/core": "npm:1.7.9"
+    "@rspack/dev-server": "npm:1.1.5"
+    "@swc/cli": "npm:0.8.1"
+    "@swc/core": "npm:1.15.21"
+    "@types/express": "npm:^4.11.1"
+    "@types/lodash": "npm:^4.17.21"
+    "@types/node": "npm:^20"
+    "@types/pacote": "npm:^11.1.8"
+    "@types/react": "npm:^18.3.21"
+    "@types/semver": "npm:^7"
+    "@types/yargs": "npm:^17.0.0"
+    autoprefixer: "npm:10.4.20"
+    browserslist-config-egen: "npm:^1.0.0"
+    chalk: "npm:5.6.2"
+    clean-webpack-plugin: "npm:4.0.0"
+    concurrently: "npm:^9.2.1"
+    copy-webpack-plugin: "npm:11.0.0"
+    cross-env: "npm:^10.1.0"
+    css-loader: "npm:5.2.7"
+    ejs: "npm:5.0.1"
+    glob: "npm:13.0.6"
+    html-webpack-plugin: "npm:5.6.6"
+    html-webpack-tags-plugin: "npm:3.0.2"
+    lodash: "npm:4.17.21"
+    mini-css-extract-plugin: "npm:2.9.1"
+    node-watch: "npm:0.7.4"
+    npm-registry-fetch: "npm:19.1.1"
+    open: "npm:11.0.0"
+    pacote: "npm:21.5.0"
+    postcss: "npm:^8.5.8"
+    react-is: "npm:^17.0.2"
+    rimraf: "npm:^6.1.3"
+    sass: "npm:^1.98.0"
+    sass-embedded: "npm:1.89.2"
+    sass-loader: "npm:16.0.5"
+    semver: "npm:^7.7.3"
+    style-loader: "npm:3.3.4"
+    swc-loader: "npm:0.2.7"
+    tar: "npm:7.5.13"
+    typescript: "npm:5.8.3"
+    vitest: "npm:^4.1.2"
+    webpack: "npm:^5.105.3"
+    webpack-bundle-analyzer: "npm:4.10.2"
+    webpack-cli: "npm:6.0.1"
+    webpack-dev-server: "npm:5.2.3"
+    webpack-stats-plugin: "npm:1.1.3"
+    yargs: "npm:17.7.2"
+  bin:
+    egen: ./dist/cli.js
+    rspack: ./bin/rspack.cjs
+    webpack: ./bin/webpack.cjs
+  languageName: unknown
+  linkType: soft
+
 "@egen-civitas/esm-ai-config@npm:^1.0.0, @egen-civitas/esm-ai-config@workspace:packages/framework/esm-ai-config":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-ai-config@workspace:packages/framework/esm-ai-config"
@@ -648,7 +713,7 @@ __metadata:
     "@egen-civitas/esm-state": "npm:^1.0.0"
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.21"
-    "@types/react": "npm:^18.0.0"
+    "@types/react": "npm:^18.3.21"
     "@vitest/coverage-v8": "npm:^4.1.2"
     concurrently: "npm:^9.2.1"
     cross-env: "npm:^10.1.0"
@@ -826,7 +891,7 @@ __metadata:
     "@egen-civitas/esm-state": "npm:^1.0.0"
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.21"
-    "@types/node": "npm:^22.0.0"
+    "@types/node": "npm:^20"
     "@vitest/coverage-v8": "npm:^4.1.2"
     concurrently: "npm:^9.2.1"
     cross-env: "npm:^10.1.0"
@@ -959,10 +1024,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-framework-core@workspace:.":
+"@egen-civitas/esm-framework@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@egen-civitas/esm-framework-core@workspace:."
+  resolution: "@egen-civitas/esm-framework@workspace:."
   dependencies:
+    "@egen-civitas/egen": "workspace:*"
     "@playwright/test": "npm:^1.55.1"
     "@swc/core": "npm:1.15.21"
     "@testing-library/dom": "npm:^10.4.1"
@@ -977,7 +1043,6 @@ __metadata:
     classnames: "npm:^2.3.2"
     cross-env: "npm:^10.1.0"
     dotenv: "npm:^16.0.3"
-    egen: "workspace:*"
     eslint: "npm:^8.57.0"
     eslint-plugin-import: "npm:^2.31.0"
     eslint-plugin-jest-dom: "npm:^5.5.0"
@@ -1147,7 +1212,7 @@ __metadata:
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.21"
     "@types/fhir": "npm:0.0.31"
-    "@types/node": "npm:^22.0.0"
+    "@types/node": "npm:^20"
     "@vitest/coverage-v8": "npm:^4.1.2"
     concurrently: "npm:^9.2.1"
     cross-env: "npm:^10.1.0"
@@ -1382,7 +1447,7 @@ __metadata:
     "@swc/core": "npm:1.15.21"
     "@types/fhir": "npm:0.0.31"
     "@types/lodash-es": "npm:^4.17.12"
-    "@types/node": "npm:^22.0.0"
+    "@types/node": "npm:^20"
     "@types/semver": "npm:^7.3.4"
     "@vitest/coverage-v8": "npm:^4.1.2"
     any-date-parser: "npm:^2.0.3"
@@ -1505,7 +1570,7 @@ __metadata:
     style-loader: "npm:3.3.4"
     swc-loader: "npm:0.2.7"
     typescript: "npm:^5.8.3"
-    webpack: "npm:5.105.3"
+    webpack: "npm:^5.105.3"
     webpack-bundle-analyzer: "npm:4.10.2"
     webpack-cli: "npm:6.0.1"
     webpack-stats-plugin: "npm:1.1.3"
@@ -5875,27 +5940,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/eslint-scope@npm:^3.7.7":
-  version: 3.7.7
-  resolution: "@types/eslint-scope@npm:3.7.7"
-  dependencies:
-    "@types/eslint": "npm:*"
-    "@types/estree": "npm:*"
-  checksum: 10/e2889a124aaab0b89af1bab5959847c5bec09809209255de0e63b9f54c629a94781daa04adb66bffcdd742f5e25a17614fb933965093c0eea64aacda4309380e
-  languageName: node
-  linkType: hard
-
-"@types/eslint@npm:*":
-  version: 9.6.1
-  resolution: "@types/eslint@npm:9.6.1"
-  dependencies:
-    "@types/estree": "npm:*"
-    "@types/json-schema": "npm:*"
-  checksum: 10/719fcd255760168a43d0e306ef87548e1e15bffe361d5f4022b0f266575637acc0ecb85604ac97879ee8ae83c6a6d0613b0ed31d0209ddf22a0fe6d608fc56fe
-  languageName: node
-  linkType: hard
-
-"@types/estree@npm:*, @types/estree@npm:^1.0.0, @types/estree@npm:^1.0.8":
+"@types/estree@npm:^1.0.0, @types/estree@npm:^1.0.8":
   version: 1.0.9
   resolution: "@types/estree@npm:1.0.9"
   checksum: 10/16aabfa703b5bdac83f719b07ce92a11b2d3c9b8628eacc92889d8af46cab2d78fc45c7b5378de383d0500585cea5c2f79125eeddfe5fbc6bd6a27eb0c8ccee5
@@ -6026,7 +6071,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/json-schema@npm:*, @types/json-schema@npm:^7.0.15, @types/json-schema@npm:^7.0.4, @types/json-schema@npm:^7.0.5, @types/json-schema@npm:^7.0.8, @types/json-schema@npm:^7.0.9":
+"@types/json-schema@npm:^7.0.15, @types/json-schema@npm:^7.0.4, @types/json-schema@npm:^7.0.5, @types/json-schema@npm:^7.0.8, @types/json-schema@npm:^7.0.9":
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
   checksum: 10/1a3c3e06236e4c4aab89499c428d585527ce50c24fe8259e8b3926d3df4cfbbbcf306cfc73ddfb66cbafc973116efd15967020b0f738f63e09e64c7d260519e7
@@ -6120,15 +6165,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.0.0":
-  version: 22.20.1
-  resolution: "@types/node@npm:22.20.1"
-  dependencies:
-    undici-types: "npm:~6.21.0"
-  checksum: 10/0949e49d0383569ebd1222a2f65a9adb9328a6a6dbed459a02cdb37c61147755386c004c4ffbe436de59f5859df1774b1dd6bf168f7aeee46884bb190e0c384f
-  languageName: node
-  linkType: hard
-
 "@types/npm-package-arg@npm:*":
   version: 6.1.4
   resolution: "@types/npm-package-arg@npm:6.1.4"
@@ -6207,13 +6243,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^18.0.0, @types/react@npm:^18.3.21":
-  version: 18.3.31
-  resolution: "@types/react@npm:18.3.31"
+"@types/react@npm:18.3.25":
+  version: 18.3.25
+  resolution: "@types/react@npm:18.3.25"
   dependencies:
     "@types/prop-types": "npm:*"
-    csstype: "npm:^3.2.2"
-  checksum: 10/0a5d73b1ba3ce73273b28cc50da78d520b1a8d4253075820dc5cf6c9e286ff6cb339b56bd613d05885fec214fbecd8137bddcbdb475612fdcc46e061d88f00fc
+    csstype: "npm:^3.0.2"
+  checksum: 10/1b806cc90207558bd96384f2a74e8a457c6211bd71b22d74ed7efb745e4e1b4fe7aea59eb906b8cf96571f9e0ab4fdb89e00395a082a361cfd7a8baf50bcb9c1
   languageName: node
   linkType: hard
 
@@ -7099,15 +7135,6 @@ __metadata:
     mime-types: "npm:~2.1.34"
     negotiator: "npm:0.6.3"
   checksum: 10/67eaaa90e2917c58418e7a9b89392002d2b1ccd69bcca4799135d0c632f3b082f23f4ae4ddeedbced5aa59bcc7bdf4699c69ebed4593696c922462b7bc5744d6
-  languageName: node
-  linkType: hard
-
-"acorn-import-phases@npm:^1.0.3":
-  version: 1.0.4
-  resolution: "acorn-import-phases@npm:1.0.4"
-  peerDependencies:
-    acorn: ^8.14.0
-  checksum: 10/471050ac7d9b61909c837b426de9eeef2958997f6277ad7dea88d5894fd9b3245d8ed4a225c2ca44f814dbb20688009db7a80e525e8196fc9e98c5285b66161d
   languageName: node
   linkType: hard
 
@@ -8650,7 +8677,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^3.2.2":
+"csstype@npm:3.2.3":
   version: 3.2.3
   resolution: "csstype@npm:3.2.3"
   checksum: 10/ad41baf7e2ffac65ab544d79107bf7cd1a4bb9bab9ac3302f59ab4ba655d5e30942a8ae46e10ba160c6f4ecea464cc95b975ca2fefbdeeacd6ac63f12f99fe1f
@@ -9510,71 +9537,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"egen@workspace:*, egen@workspace:packages/tooling/egen":
-  version: 0.0.0-use.local
-  resolution: "egen@workspace:packages/tooling/egen"
-  dependencies:
-    "@egen-civitas/esm-app-shell": "npm:^1.0.0"
-    "@egen-civitas/rspack-config": "npm:^1.0.0"
-    "@egen-civitas/webpack-config": "npm:^1.0.0"
-    "@inquirer/prompts": "npm:8.3.2"
-    "@inquirer/testing": "npm:^3.3.2"
-    "@pnpm/npm-conf": "npm:^3.0.2"
-    "@rspack/cli": "npm:1.7.9"
-    "@rspack/core": "npm:1.7.9"
-    "@rspack/dev-server": "npm:1.1.5"
-    "@swc/cli": "npm:0.8.1"
-    "@swc/core": "npm:1.15.21"
-    "@types/express": "npm:^4.11.1"
-    "@types/lodash": "npm:^4.17.21"
-    "@types/node": "npm:^20"
-    "@types/pacote": "npm:^11.1.8"
-    "@types/react": "npm:^18.3.21"
-    "@types/semver": "npm:^7"
-    "@types/yargs": "npm:^17.0.0"
-    autoprefixer: "npm:10.4.20"
-    browserslist-config-egen: "npm:^1.0.0"
-    chalk: "npm:5.6.2"
-    clean-webpack-plugin: "npm:4.0.0"
-    concurrently: "npm:^9.2.1"
-    copy-webpack-plugin: "npm:11.0.0"
-    cross-env: "npm:^10.1.0"
-    css-loader: "npm:5.2.7"
-    ejs: "npm:5.0.1"
-    glob: "npm:13.0.6"
-    html-webpack-plugin: "npm:5.6.6"
-    html-webpack-tags-plugin: "npm:3.0.2"
-    lodash: "npm:4.17.21"
-    mini-css-extract-plugin: "npm:2.9.1"
-    node-watch: "npm:0.7.4"
-    npm-registry-fetch: "npm:19.1.1"
-    open: "npm:11.0.0"
-    pacote: "npm:21.5.0"
-    postcss: "npm:^8.5.8"
-    react-is: "npm:^17.0.2"
-    rimraf: "npm:^6.1.3"
-    sass: "npm:^1.98.0"
-    sass-embedded: "npm:1.89.2"
-    sass-loader: "npm:16.0.5"
-    semver: "npm:^7.7.3"
-    style-loader: "npm:3.3.4"
-    swc-loader: "npm:0.2.7"
-    tar: "npm:7.5.13"
-    typescript: "npm:5.8.3"
-    vitest: "npm:^4.1.2"
-    webpack: "npm:5.105.3"
-    webpack-bundle-analyzer: "npm:4.10.2"
-    webpack-cli: "npm:6.0.1"
-    webpack-dev-server: "npm:5.2.3"
-    webpack-stats-plugin: "npm:1.1.3"
-    yargs: "npm:17.7.2"
-  bin:
-    egen: ./dist/cli.js
-    rspack: ./bin/rspack.cjs
-    webpack: ./bin/webpack.cjs
-  languageName: unknown
-  linkType: soft
-
 "ejs@npm:5.0.1":
   version: 5.0.1
   resolution: "ejs@npm:5.0.1"
@@ -9684,7 +9646,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"enhanced-resolve@npm:^5.19.0, enhanced-resolve@npm:^5.24.4":
+"enhanced-resolve@npm:^5.24.4":
   version: 5.24.5
   resolution: "enhanced-resolve@npm:5.24.5"
   dependencies:
@@ -11328,13 +11290,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob-to-regexp@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "glob-to-regexp@npm:0.4.1"
-  checksum: 10/9009529195a955c40d7b9690794aeff5ba665cc38f1519e111c58bb54366fd0c106bde80acf97ba4e533208eb53422c83b136611a54c5fefb1edd8dc267cb62e
-  languageName: node
-  linkType: hard
-
 "glob@npm:13.0.6, glob@npm:^13.0.0, glob@npm:^13.0.3":
   version: 13.0.6
   resolution: "glob@npm:13.0.6"
@@ -12843,7 +12798,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"json-parse-even-better-errors@npm:^2.3.0, json-parse-even-better-errors@npm:^2.3.1":
+"json-parse-even-better-errors@npm:^2.3.0":
   version: 2.3.1
   resolution: "json-parse-even-better-errors@npm:2.3.1"
   checksum: 10/5f3a99009ed5f2a5a67d06e2f298cc97bc86d462034173308156f15b43a6e850be8511dc204b9b94566305da2947f7d90289657237d210351a39059ff9d666cf
@@ -13179,13 +13134,6 @@ __metadata:
     xhr: "npm:^2.0.1"
     xtend: "npm:^4.0.0"
   checksum: 10/73d80e9d5bd3ba12ba1174a33a6dfdc90a635106bb9a040b375060f24a9e15f757f06f3adfbcaa1f6effd93e380ef8c51f2b946dc6d976037f7119f0dd5266bf
-  languageName: node
-  linkType: hard
-
-"loader-runner@npm:^4.3.1":
-  version: 4.3.2
-  resolution: "loader-runner@npm:4.3.2"
-  checksum: 10/fc0cf0026cdea7182720f58e8ff07869334bf299bd451d6192a8c2c4119ad493f1e0f5df099d031e81361f96196150d21047bf415edef4dc1e0fa02fa65ecced
   languageName: node
   linkType: hard
 
@@ -13552,21 +13500,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mime-types@npm:^2.1.27, mime-types@npm:~2.1.24, mime-types@npm:~2.1.34, mime-types@npm:~2.1.35":
-  version: 2.1.35
-  resolution: "mime-types@npm:2.1.35"
-  dependencies:
-    mime-db: "npm:1.52.0"
-  checksum: 10/89aa9651b67644035de2784a6e665fc685d79aba61857e02b9c8758da874a754aed4a9aced9265f5ed1171fd934331e5516b84a7f0218031b6fa0270eca1e51a
-  languageName: node
-  linkType: hard
-
 "mime-types@npm:^3.0.1":
   version: 3.0.2
   resolution: "mime-types@npm:3.0.2"
   dependencies:
     mime-db: "npm:^1.54.0"
   checksum: 10/9db0ad31f5eff10ee8f848130779b7f2d056ddfdb6bda696cb69be68d486d33a3457b4f3f9bdeb60d0736edb471bd5a7c0a384375c011c51c889fd0d5c3b893e
+  languageName: node
+  linkType: hard
+
+"mime-types@npm:~2.1.24, mime-types@npm:~2.1.34, mime-types@npm:~2.1.35":
+  version: 2.1.35
+  resolution: "mime-types@npm:2.1.35"
+  dependencies:
+    mime-db: "npm:1.52.0"
+  checksum: 10/89aa9651b67644035de2784a6e665fc685d79aba61857e02b9c8758da874a754aed4a9aced9265f5ed1171fd934331e5516b84a7f0218031b6fa0270eca1e51a
   languageName: node
   linkType: hard
 
@@ -17956,45 +17904,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"terser-webpack-plugin@npm:^5.3.16":
-  version: 5.6.1
-  resolution: "terser-webpack-plugin@npm:5.6.1"
-  dependencies:
-    "@jridgewell/trace-mapping": "npm:^0.3.25"
-    jest-worker: "npm:^27.4.5"
-    schema-utils: "npm:^4.3.0"
-    terser: "npm:^5.31.1"
-  peerDependencies:
-    webpack: ^5.1.0
-  peerDependenciesMeta:
-    "@minify-html/node":
-      optional: true
-    "@swc/core":
-      optional: true
-    "@swc/css":
-      optional: true
-    "@swc/html":
-      optional: true
-    clean-css:
-      optional: true
-    cssnano:
-      optional: true
-    csso:
-      optional: true
-    esbuild:
-      optional: true
-    html-minifier-terser:
-      optional: true
-    lightningcss:
-      optional: true
-    postcss:
-      optional: true
-    uglify-js:
-      optional: true
-  checksum: 10/75e5ebb6759ccd85f34a5af04c2f1693f61d7691a4a1614f0892a1d2caf29c12395d1d04d4f4014d4c4a77b63f9f7f36ac9241fcbcc24085a7575d4a4310d70f
-  languageName: node
-  linkType: hard
-
 "terser@npm:^5.10.0, terser@npm:^5.15.1, terser@npm:^5.31.1":
   version: 5.49.2
   resolution: "terser@npm:5.49.2"
@@ -19059,7 +18968,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"watchpack@npm:^2.5.1, watchpack@npm:^2.5.2":
+"watchpack@npm:^2.5.2":
   version: 2.5.2
   resolution: "watchpack@npm:2.5.2"
   dependencies:
@@ -19295,7 +19204,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webpack-sources@npm:^3.3.4, webpack-sources@npm:^3.5.1":
+"webpack-sources@npm:^3.5.1":
   version: 3.5.1
   resolution: "webpack-sources@npm:3.5.1"
   checksum: 10/50b9699a3ab9a698e117d8a6b816235576f17e60aeca0a44269041773f960c3beb2ad10d07bc5f2ef8eebde3db5275c6a23566dad475db8f840a34a7bfabd2c3
@@ -19306,44 +19215,6 @@ __metadata:
   version: 1.1.3
   resolution: "webpack-stats-plugin@npm:1.1.3"
   checksum: 10/31cf10e0ee4ffe72a876785248805b5bd4ae68eb1fa546a0b3cd3c9f651054eb119903cc021829bef6e50f9108639bd2b985cbbfe3b72ca916650733c1840e5a
-  languageName: node
-  linkType: hard
-
-"webpack@npm:5.105.3":
-  version: 5.105.3
-  resolution: "webpack@npm:5.105.3"
-  dependencies:
-    "@types/eslint-scope": "npm:^3.7.7"
-    "@types/estree": "npm:^1.0.8"
-    "@types/json-schema": "npm:^7.0.15"
-    "@webassemblyjs/ast": "npm:^1.14.1"
-    "@webassemblyjs/wasm-edit": "npm:^1.14.1"
-    "@webassemblyjs/wasm-parser": "npm:^1.14.1"
-    acorn: "npm:^8.16.0"
-    acorn-import-phases: "npm:^1.0.3"
-    browserslist: "npm:^4.28.1"
-    chrome-trace-event: "npm:^1.0.2"
-    enhanced-resolve: "npm:^5.19.0"
-    es-module-lexer: "npm:^2.0.0"
-    eslint-scope: "npm:5.1.1"
-    events: "npm:^3.2.0"
-    glob-to-regexp: "npm:^0.4.1"
-    graceful-fs: "npm:^4.2.11"
-    json-parse-even-better-errors: "npm:^2.3.1"
-    loader-runner: "npm:^4.3.1"
-    mime-types: "npm:^2.1.27"
-    neo-async: "npm:^2.6.2"
-    schema-utils: "npm:^4.3.3"
-    tapable: "npm:^2.3.0"
-    terser-webpack-plugin: "npm:^5.3.16"
-    watchpack: "npm:^2.5.1"
-    webpack-sources: "npm:^3.3.4"
-  peerDependenciesMeta:
-    webpack-cli:
-      optional: true
-  bin:
-    webpack: bin/webpack.js
-  checksum: 10/0c465ce3f5522f6ae1cd9dde59096040855e8eda0a74c9c083796f1028564da92943e04a965fa4205a83393157e94c5b73128ed489138de0d46f8482b382e284
   languageName: node
   linkType: hard
 

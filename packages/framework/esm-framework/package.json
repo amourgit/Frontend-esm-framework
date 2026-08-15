@@ -65,6 +65,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@egen-civitas/esm-ai-framework": "^1.0.0",
     "@egen-civitas/esm-api": "^1.0.0",
     "@egen-civitas/esm-config": "^1.0.0",
     "@egen-civitas/esm-context": "^1.0.0",

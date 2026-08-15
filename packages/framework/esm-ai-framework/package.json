@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Couche 1 IA EGEN — orchestrateur central, API publique unifiée, initialisation du système IA.",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "mock.ts"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": true,

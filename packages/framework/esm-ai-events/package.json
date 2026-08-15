@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Système d'événements IA EGEN — bus d'événements typé, observable et extensible.",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": true,

@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Registry de tools IA EGEN — tools natifs, pipeline de validation, vérification des permissions, exécution contrôlée.",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": true,

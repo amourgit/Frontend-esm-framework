@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Agrégation du contexte global EGEN pour la couche IA — session, tenant, navigation, extensions, feature flags.",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": true,

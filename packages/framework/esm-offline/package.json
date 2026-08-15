@@ -4,6 +4,10 @@
   "license": "MPL-2.0",
   "description": "Helper utilities for Egen",
   "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

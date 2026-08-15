@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Tenant capture system for EGEN SPA — resolves the active tenant from the URL (subdomain/path/query/JWT) and exposes it globally (store + window). No local tenant registry, no frontend validation — see src/types.ts.",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

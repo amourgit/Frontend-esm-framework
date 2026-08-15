@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "Dynamic, schema-agnostic theme engine with priority-based JSON loading, light/dark resolution and per-app scoped overrides for EGEN SPA",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

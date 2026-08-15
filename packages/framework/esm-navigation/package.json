@@ -4,6 +4,10 @@
   "license": "MPL-2.0",
   "description": "Egen library providing tools for breadcrumbs, navigation, and history.",
   "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

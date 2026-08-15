@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "license": "MPL-2.0",
   "description": "The styleguide for Egen SPA",
+  "main": "dist/internal.js",
+  "files": [
+    "dist",
+    "mock.tsx",
+    "mock-jest.tsx",
+    "src/_vars.scss"
+  ],
   "module": "dist/internal.js",
   "types": "dist/public.d.ts",
   "exports": {

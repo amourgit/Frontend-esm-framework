@@ -4,6 +4,13 @@
   "license": "MPL-2.0",
   "description": "Frontend stores & state management for Egen",
   "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "mock.ts",
+    "mock-jest.ts",
+    "src/index.ts"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

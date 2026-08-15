@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "license": "MPL-2.0",
   "main": "dist/egen.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "yarn run watch",
     "test": "cross-env TZ=UTC vitest run --passWithNoTests",

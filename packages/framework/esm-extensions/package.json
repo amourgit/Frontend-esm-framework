@@ -4,6 +4,12 @@
   "license": "MPL-2.0",
   "description": "Coordinates extensions and extension points in the Egen Frontend",
   "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "mock.ts",
+    "mock-jest.ts"
+  ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

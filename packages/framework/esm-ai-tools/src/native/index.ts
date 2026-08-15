@@ -11,7 +11,7 @@
 // =============================================================================
 
 import { navigate } from '@egen-civitas/esm-navigation';
-import { showNotification, showSnackbar, showModal } from '@egen-civitas/esm-styleguide/src/public';
+import { showNotification, showSnackbar, showModal } from '@egen-civitas/esm-styleguide';
 import { egenFetch } from '@egen-civitas/esm-api';
 import { inferRootDomain, buildTenantSubdomainUrl, getTenantStoreState } from '@egen-civitas/esm-tenant';
 import type { AIToolDefinition } from '../types';

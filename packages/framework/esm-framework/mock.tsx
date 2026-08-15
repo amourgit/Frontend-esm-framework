@@ -11,7 +11,7 @@ export * from '@egen-civitas/esm-api/mock';
 export * from '@egen-civitas/esm-data-api/mock';
 export * from '@egen-civitas/esm-config/mock';
 export * from '@egen-civitas/esm-context';
-export * from '@egen-civitas/esm-expression-evaluator/src/public';
+export * from '@egen-civitas/esm-expression-evaluator';
 export * from '@egen-civitas/esm-extensions/mock';
 export * from '@egen-civitas/esm-react-utils/mock';
 export * from '@egen-civitas/esm-state/mock';

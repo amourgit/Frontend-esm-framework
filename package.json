@@ -1,5 +1,5 @@
 {
-  "name": "@egen-civitas/esm-framework",
+  "name": "@egen-civitas/esm-framework-core",
   "version": "1.0.0",
   "private": true,
   "packageManager": "yarn@4.10.3",
@@ -21,8 +21,8 @@
     "test": "turbo run test",
     "coverage": "turbo run test --coverage",
     "storybook": "yarn workspace @egen-civitas/storybook storybook",
-    "ci:publish-next": "yarn workspaces foreach --all --topological --exclude @egen-civitas/esm-framework --exclude @egen-civitas/storybook exec npm publish --access public --tag next",
-    "ci:publish": "yarn workspaces foreach --all --topological --exclude @egen-civitas/esm-framework --exclude @egen-civitas/storybook exec npm publish --access public --tag latest",
+    "ci:publish-next": "yarn workspaces foreach --all --topological --exclude @egen-civitas/esm-framework-core --exclude @egen-civitas/storybook exec npm publish --access public --tag next",
+    "ci:publish": "yarn workspaces foreach --all --topological --exclude @egen-civitas/esm-framework-core --exclude @egen-civitas/storybook exec npm publish --access public --tag latest",
     "release": "yarn workspaces foreach --all --topological version"
   },
   "devDependencies": {

@@ -124,7 +124,9 @@ function findMonorepoRoot(startDir: string): string | null {
 }
 
 /**
- * Charge les variables `EGEN_AI_*` depuis les fichiers `.env*` du monorepo et
+ * Charge les variables `EGEN_AI_*` (et quelques clés runtime ponctuelles,
+ * voir ADDITIONAL_RUNTIME_KEYS ci-dessous — actuellement EGEN_DEV_NO_AUTH)
+ * depuis les fichiers `.env*` du monorepo et
  * les prépare pour `DefinePlugin`, afin que `@egen-civitas/esm-ai-config` (qui lit
  * `process.env.EGEN_AI_*` côté navigateur) reçoive de vraies valeurs au lieu
  * de retomber systématiquement sur ses défauts internes.
@@ -157,16 +159,24 @@ function loadEgenAiEnvDefines(root: string, mode: string | undefined): Record<st
     }
   }
 
+  // Variables transmises telles quelles au bundle navigateur (process.env.X)
+  // en plus de toutes les EGEN_AI_* : EGEN_DEV_NO_AUTH est lue par
+  // applyDevNoAuthBypass() dans esm-app-shell/src/run.ts, exactement de la
+  // même façon (process.env.EGEN_DEV_NO_AUTH), donc elle doit passer par le
+  // même canal DefinePlugin ou le bypass ne s'active jamais, même avec
+  // EGEN_DEV_NO_AUTH=true dans .env.development.
+  const ADDITIONAL_RUNTIME_KEYS = new Set(['EGEN_DEV_NO_AUTH']);
+
   const defines: Record<string, string> = {};
   for (const [key, value] of Object.entries(merged)) {
-    if (!key.startsWith('EGEN_AI_')) continue;
+    if (!key.startsWith('EGEN_AI_') && !ADDITIONAL_RUNTIME_KEYS.has(key)) continue;
     defines[`process.env.${key}`] = JSON.stringify(value);
   }
 
   // Les variables déjà présentes dans le process courant (CI/CD, secrets
   // d'infra) ont toujours le dernier mot sur celles lues depuis les fichiers.
   for (const key of Object.keys(process.env)) {
-    if (!key.startsWith('EGEN_AI_')) continue;
+    if (!key.startsWith('EGEN_AI_') && !ADDITIONAL_RUNTIME_KEYS.has(key)) continue;
     const value = process.env[key];
     if (value !== undefined) {
       defines[`process.env.${key}`] = JSON.stringify(value);

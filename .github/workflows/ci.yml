@@ -31,3 +31,36 @@ jobs:
 
       - name: TypeScript check
         run: yarn workspaces foreach --all run typescript --if-present
+
+  verify-publish:
+    name: Vérification pré-publication (publint + pack/install isolé)
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build all packages
+        run: yarn build
+
+      # Vérifie la forme réelle de chaque tarball publiable (exports, main,
+      # types, files) contre ce que `npm pack` publierait vraiment.
+      - name: publint
+        run: node scripts/verify-publint.mjs
+
+      # Le test décisif : pack chaque package publiable, l'installe dans un
+      # projet neuf totalement isolé du monorepo (aucun hoisting Yarn), puis
+      # importe réellement chacun d'eux. C'est ce test précis qui aurait
+      # détecté les dépendances internes non déclarées avant toute
+      # publication, plutôt que de les découvrir chez un consommateur externe.
+      - name: Pack + install isolé + smoke-import
+        run: node scripts/verify-pack-install.mjs

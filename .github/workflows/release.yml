@@ -31,6 +31,15 @@ jobs:
       - name: Build all packages
         run: yarn build
 
+      # Verrou bloquant : aucune publication ne doit avoir lieu si un package
+      # a une dépendance interne non déclarée ou un pointeur main/exports
+      # cassé. Voir scripts/verify-pack-install.mjs pour le détail du test.
+      - name: publint
+        run: node scripts/verify-publint.mjs
+
+      - name: Pack + install isolé + smoke-import
+        run: node scripts/verify-pack-install.mjs
+
       - name: Create Release Pull Request or Publish
         uses: changesets/action@v1
         with:

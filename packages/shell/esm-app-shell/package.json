@@ -2,7 +2,6 @@
   "name": "@egen-civitas/esm-app-shell",
   "version": "1.0.0",
   "license": "MPL-2.0",
-  "main": "dist/egen.js",
   "files": [
     "dist"
   ],

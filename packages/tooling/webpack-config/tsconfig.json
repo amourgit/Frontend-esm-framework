@@ -9,6 +9,7 @@
     "strictNullChecks": true,
     "moduleResolution": "node",
     "outDir": "dist",
+    "declaration": true,
     "lib": ["es5", "es2015", "es2015.promise", "es2016.array.include", "es2018"]
   },
   "include": ["src/**/*"]

@@ -41,8 +41,8 @@
 //     et écraserait la session fictive avec authenticated:false.
 // =============================================================================
 
-import { sessionStore, type SessionStore } from './current-user';
-import { sessionEndpoint } from './egen-fetch';
+import { sessionStore, type SessionStore } from './current-user.js';
+import { sessionEndpoint } from './egen-fetch.js';
 
 // ─── Vérification d'activation ────────────────────────────────────────────────
 

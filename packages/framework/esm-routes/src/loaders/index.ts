@@ -1,3 +1,3 @@
-export { registerApp, finishRegisteringAllApps } from './pages';
-export { tryRegisterExtension } from './components';
-export * from './load-lifecycles';
+export { registerApp, finishRegisteringAllApps } from './pages.js';
+export { tryRegisterExtension } from './components.js';
+export * from './load-lifecycles.js';

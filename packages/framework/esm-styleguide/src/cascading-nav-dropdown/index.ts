@@ -1,3 +1,3 @@
-export * from './cascading-nav-dropdown.component';
-export * from './cascading-nav-dropdown.types';
-export * from './column-with-search.component';
+export * from './cascading-nav-dropdown.component.js';
+export * from './cascading-nav-dropdown.types.js';
+export * from './column-with-search.component.js';

@@ -1,5 +1,5 @@
 import { type Concept, type EgenResource } from '@egen-civitas/esm-api';
-import { type CatalogItem } from './catalog-item-resource';
+import { type CatalogItem } from './catalog-item-resource.js';
 
 export type TaskFulfillmentStatus =
   | 'COMPLETED'

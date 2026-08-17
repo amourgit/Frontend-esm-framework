@@ -2,8 +2,8 @@
 //  EGEN THEME ENGINE — Chargeur de fichiers JSON par priorité
 // ============================================================================
 
-import type { ThemeSchema, LoadedTheme } from './types';
-import { validateThemeSchema } from './schema';
+import type { ThemeSchema, LoadedTheme } from './types.js';
+import { validateThemeSchema } from './schema.js';
 
 interface FetchedFile {
   url: string;

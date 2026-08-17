@@ -1,7 +1,7 @@
-export * from './attachments';
-export * from './current-entity';
-export { subscribeEgenEvent, type EgenEvent, type EgenEventTypes } from './events';
-export * from './types';
-export * from './session-utils';
-export * from './session-type';
-export * from './location';
+export * from './attachments.js';
+export * from './current-entity.js';
+export { subscribeEgenEvent, type EgenEvent, type EgenEventTypes } from './events/index.js';
+export * from './types/index.js';
+export * from './session-utils.js';
+export * from './session-type.js';
+export * from './location.js';

@@ -16,10 +16,10 @@ export type {
   PanelLayer,
   PanelTokenSet,
   AppThemeOverride,
-} from './types';
+} from './types.js';
 
 // Moteur principal
-export { ThemeEngine } from './engine';
+export { ThemeEngine } from './engine.js';
 
 // Singleton global (utilisé par le shell et les apps)
 export {
@@ -33,10 +33,10 @@ export {
   removeAppThemeOverride,
   applyGlobalThemeOverride,
   removeGlobalThemeOverride,
-} from './singleton';
+} from './singleton.js';
 
 // Utilitaires bas niveau (utiles pour les outils de build, tests, storybook)
-export { flattenToCssVars } from './flatten';
+export { flattenToCssVars } from './flatten.js';
 export {
   buildCssString,
   buildThemeCssText,
@@ -45,8 +45,8 @@ export {
   injectScopedCssVars,
   removeScopedCssVars,
   applyModeAttribute,
-} from './inject';
-export { loadHighestPriorityTheme, loadHighestPriorityThemeIfChanged } from './loader';
-export { deepMerge, mergeBySortedPriority } from './deepMerge';
-export { validateThemeSchema } from './schema';
-export type { ThemeValidationResult } from './schema';
+} from './inject.js';
+export { loadHighestPriorityTheme, loadHighestPriorityThemeIfChanged } from './loader.js';
+export { deepMerge, mergeBySortedPriority } from './deepMerge.js';
+export { validateThemeSchema } from './schema.js';
+export type { ThemeValidationResult } from './schema.js';

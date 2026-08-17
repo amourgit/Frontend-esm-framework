@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import type { ImportMap } from '@egen-civitas/esm-globals';
 import { retry } from '@egen-civitas/esm-utils';
-import { absoluteWbManifestUrls, egenCacheName } from './constants';
-import { fetchUrlsToCacheFromImportMap } from './import-map-utils';
-import { ServiceWorkerDb } from './storage';
+import { absoluteWbManifestUrls, egenCacheName } from './constants.js';
+import { fetchUrlsToCacheFromImportMap } from './import-map-utils.js';
+import { ServiceWorkerDb } from './storage.js';
 
 /**
  * Attempts to resolve cacheable files from the specified import map (files are retrieved via convention)

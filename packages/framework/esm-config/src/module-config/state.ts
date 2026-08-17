@@ -1,7 +1,7 @@
 import { createGlobalStore, getGlobalStore } from '@egen-civitas/esm-state';
 import { shallowEqual } from '@egen-civitas/esm-utils';
 import { type StoreApi } from 'zustand';
-import type { Config, ConfigObject, ConfigSchema, ExtensionSlotConfig, ProvidedConfig } from '../types';
+import type { Config, ConfigObject, ConfigSchema, ExtensionSlotConfig, ProvidedConfig } from '../types.js';
 
 /**
  * Internal store

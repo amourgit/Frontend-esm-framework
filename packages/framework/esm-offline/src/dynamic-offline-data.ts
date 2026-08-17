@@ -1,7 +1,7 @@
 /** @module @category Offline */
 import { getLoggedInUser } from '@egen-civitas/esm-api';
 import Dexie from 'dexie';
-import { OfflineDb } from './offline-db';
+import { OfflineDb } from './offline-db.js';
 
 /**
  * A handler for synchronizing dynamically declared offline data.

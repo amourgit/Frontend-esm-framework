@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion, type PanInfo } from 'framer-motion';
 import classNames from 'classnames';
-import type { FolderGalleryProps } from './folder-gallery.types';
+import type { FolderGalleryProps } from './folder-gallery.types.js';
 import styles from './folder-gallery.module.scss';
 
 /**

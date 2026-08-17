@@ -6,9 +6,9 @@ export {
   detachAll,
   getAssignedExtensions,
   registerExtensionSlot,
-} from './extensions';
-export { type LeftNavStore, setLeftNav, unsetLeftNav, type SetLeftNavParams } from './left-nav';
-export { type CancelLoading, renderExtension } from './render';
+} from './extensions.js';
+export { type LeftNavStore, setLeftNav, unsetLeftNav, type SetLeftNavParams } from './left-nav.js';
+export { type CancelLoading, renderExtension } from './render.js';
 export {
   type ExtensionMeta,
   type ExtensionRegistration,
@@ -17,6 +17,6 @@ export {
   type ConnectedExtension,
   type ExtensionSlotState,
   getExtensionStore,
-} from './store';
-export { type WorkspaceRegistration } from './workspaces';
-export { type ExtensionData, type ComponentConfig } from './types';
+} from './store.js';
+export { type WorkspaceRegistration } from './workspaces.js';
+export { type ExtensionData, type ComponentConfig } from './types.js';

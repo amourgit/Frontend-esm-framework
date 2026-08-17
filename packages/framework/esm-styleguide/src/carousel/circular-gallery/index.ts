@@ -1,2 +1,2 @@
-export * from './circular-gallery.component';
-export * from './circular-gallery.types';
+export * from './circular-gallery.component.js';
+export * from './circular-gallery.types.js';

@@ -2,7 +2,7 @@
 import React, { forwardRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import classNames from 'classnames';
-import { useSheetContext } from './sheet.context';
+import { useSheetContext } from './sheet.context.js';
 import styles from './sheet.module.scss';
 
 export interface SheetOverlayProps

@@ -2,7 +2,7 @@
 'use strict';
 import { dispatchToastShown, type ImportMap } from '@egen-civitas/esm-globals';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
-import { getCurrentPageMap, getImportMapOverrideMap, resetImportMapOverrides } from './import-maps';
+import { getCurrentPageMap, getImportMapOverrideMap, resetImportMapOverrides } from './import-maps.js';
 
 /**
  * @internal

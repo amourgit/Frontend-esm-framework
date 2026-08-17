@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import * as AllIcons from './icons';
+import * as AllIcons from './icons.js';
 
 // Collect all exported icon components (named *Icon, excluding the base
 // Icon component and type-only exports).

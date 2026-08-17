@@ -14,15 +14,15 @@ import { navigate } from '@egen-civitas/esm-navigation';
 import { showNotification, showSnackbar, showModal } from '@egen-civitas/esm-styleguide';
 import { egenFetch } from '@egen-civitas/esm-api';
 import { inferRootDomain, buildTenantSubdomainUrl, getTenantStoreState } from '@egen-civitas/esm-tenant';
-import type { AIToolDefinition } from '../types';
-import { getRoutesCatalogForLLM } from '../routes';
-import { getVisibleUIActions, getUIActionElement, setNativeInputValue } from '../ui-actions';
-import { getObservablesCatalogForLLM, getObservableElement } from '../observables';
-import { describeCurrentScreen } from './describe-screen';
-import { inspectDOMElement, inspectFullInterface, waitForDomSettle } from './inspect-element';
+import type { AIToolDefinition } from '../types.js';
+import { getRoutesCatalogForLLM } from '../routes.js';
+import { getVisibleUIActions, getUIActionElement, setNativeInputValue } from '../ui-actions.js';
+import { getObservablesCatalogForLLM, getObservableElement } from '../observables.js';
+import { describeCurrentScreen } from './describe-screen.js';
+import { inspectDOMElement, inspectFullInterface, waitForDomSettle } from './inspect-element.js';
 
-export type { DescribedElement, DescribedHeading, ScreenDescription } from './describe-screen';
-export type { ElementInspectionReport, InterfaceNodeReport, FullInterfaceReport } from './inspect-element';
+export type { DescribedElement, DescribedHeading, ScreenDescription } from './describe-screen.js';
+export type { ElementInspectionReport, InterfaceNodeReport, FullInterfaceReport } from './inspect-element.js';
 
 // ─── navigate ─────────────────────────────────────────────────────────────────
 

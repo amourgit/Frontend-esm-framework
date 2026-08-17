@@ -1,6 +1,6 @@
 /** @module @category Navigation */
 import { navigateToUrl } from 'single-spa';
-import { interpolateUrl } from './interpolate-string';
+import { interpolateUrl } from './interpolate-string.js';
 import type {} from '@egen-civitas/esm-globals';
 
 function trimTrailingSlash(str: string) {

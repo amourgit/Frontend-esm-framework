@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { ActionableNotificationComponent } from './actionable-notification.component';
+import { ActionableNotificationComponent } from './actionable-notification.component.js';
 
 const meta: Meta<typeof ActionableNotificationComponent> = {
   title: 'Components/ActionableNotification',

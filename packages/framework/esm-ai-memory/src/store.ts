@@ -17,10 +17,10 @@
 import { createGlobalStore } from '@egen-civitas/esm-state';
 import { sessionStore } from '@egen-civitas/esm-api';
 import { AI_EVENTS, dispatchAIEvent } from '@egen-civitas/esm-ai-events';
-import { createIndexedDBAdapter } from './adapters/indexeddb-adapter';
-import { createBackendAdapter } from './adapters/backend-adapter';
-import { createSyncOrchestrator, type ConversationSyncOrchestrator } from './sync-orchestrator';
-import type { ConversationStorageAdapter, StoredConversation, StoredMessage, StoredToolCall, ConversationSummary } from './types';
+import { createIndexedDBAdapter } from './adapters/indexeddb-adapter.js';
+import { createBackendAdapter } from './adapters/backend-adapter.js';
+import { createSyncOrchestrator, type ConversationSyncOrchestrator } from './sync-orchestrator.js';
+import type { ConversationStorageAdapter, StoredConversation, StoredMessage, StoredToolCall, ConversationSummary } from './types.js';
 
 export function generateId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {

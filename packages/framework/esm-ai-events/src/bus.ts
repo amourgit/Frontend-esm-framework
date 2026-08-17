@@ -8,8 +8,8 @@
 
 import { Subject, type Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import type { AIEventName, AIEventPayload, AIEventPayloadMap, AIEventListener, AIEventUnsubscribe } from './types';
-import { AI_EVENTS } from './types';
+import type { AIEventName, AIEventPayload, AIEventPayloadMap, AIEventListener, AIEventUnsubscribe } from './types.js';
+import { AI_EVENTS } from './types.js';
 
 // ─── Préfixe des Custom Events DOM ────────────────────────────────────────────
 const DOM_EVENT_NS = 'egen:ai:';

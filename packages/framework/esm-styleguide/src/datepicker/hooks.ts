@@ -3,7 +3,7 @@ import { createCalendar, getLocalTimeZone, toCalendar, today, type Calendar } fr
 import { type AriaLabelingProps, type DOMProps } from '@react-types/shared';
 import { useConfig } from '@egen-civitas/esm-react-utils';
 import { getLocale, getDefaultCalendar } from '@egen-civitas/esm-utils';
-import { type StyleguideConfigObject } from '../config-schema';
+import { type StyleguideConfigObject } from '../config-schema.js';
 
 export const EgenIntlLocaleContext = createContext<Intl.Locale | null>(null);
 

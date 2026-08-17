@@ -21,8 +21,8 @@
 //  package ne connaît plus que l'ID brut capturé. Voir types.ts.
 // ============================================================================
 
-import type { TenantId } from '../types';
-import { tenantStore, getActiveTenantId, getTenantSystemMode, getTenantStoreState } from '../context/store';
+import type { TenantId } from '../types.js';
+import { tenantStore, getActiveTenantId, getTenantSystemMode, getTenantStoreState } from '../context/store.js';
 
 // ---------------------------------------------------------------------------
 // Accès synchrone (hors React — pour services, intercepteurs, etc.)

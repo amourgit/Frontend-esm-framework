@@ -12,15 +12,15 @@ import {
   Group,
 } from 'react-aria-components';
 import { type CalendarDate } from '@internationalized/date';
-import { DateSegment } from './date-segment.component';
+import { DateSegment } from './date-segment.component.js';
 import styles from './datepicker.module.scss';
-import { EgenIntlLocaleContext, useDatepickerContext } from './hooks';
-import { type DateInputValue, type DatePickerBaseProps } from './types';
-import { I18nWrapper } from './i18n-wrapper.component';
-import { DatePickerIcon } from './date-picker-icon.component';
-import { CalendarPopover } from './calendar-popover.component';
-import { dateToInternationalizedDate, internationalizedDateToDate } from './utils';
-import { DEFAULT_MIN_DATE_FLOOR } from './defaults';
+import { EgenIntlLocaleContext, useDatepickerContext } from './hooks.js';
+import { type DateInputValue, type DatePickerBaseProps } from './types.js';
+import { I18nWrapper } from './i18n-wrapper.component.js';
+import { DatePickerIcon } from './date-picker-icon.component.js';
+import { CalendarPopover } from './calendar-popover.component.js';
+import { dateToInternationalizedDate, internationalizedDateToDate } from './utils.js';
+import { DEFAULT_MIN_DATE_FLOOR } from './defaults.js';
 
 /** Properties for the EgenDateRangePicker */
 export interface EgenDateRangePickerProps

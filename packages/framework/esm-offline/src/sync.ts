@@ -2,7 +2,7 @@
 import Dexie from 'dexie';
 import { getLoggedInUser } from '@egen-civitas/esm-api';
 import { createGlobalStore } from '@egen-civitas/esm-state';
-import { OfflineDb } from './offline-db';
+import { OfflineDb } from './offline-db.js';
 
 /**
  * Defines an item queued up in the offline synchronization queue.

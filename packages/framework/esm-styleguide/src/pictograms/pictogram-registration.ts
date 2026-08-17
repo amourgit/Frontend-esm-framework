@@ -1,4 +1,4 @@
-import { addSvg } from '../svg-utils';
+import { addSvg } from '../svg-utils.js';
 import appointments from './svgs/appointments.svg';
 import assessment1 from './svgs/assessment-1.svg';
 import assessment2 from './svgs/assessment-2.svg';
@@ -25,7 +25,7 @@ import serviceQueues from './svgs/service-queues.svg';
 import transfer from './svgs/transfer.svg';
 import triage from './svgs/triage.svg';
 import xray from './svgs/x-ray.svg';
-import { type PictogramId } from './pictograms';
+import { type PictogramId } from './pictograms.js';
 
 export function setupPictograms() {
   addPictogramSvg('egen-pict-appointments', appointments);

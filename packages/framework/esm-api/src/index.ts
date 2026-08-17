@@ -1,9 +1,9 @@
-export * from './current-user';
-export * from './environment';
-export * from './egen-backend-dependencies';
-export * from './egen-fetch';
-export * from './setup';
-export * from './types';
+export * from './current-user.js';
+export * from './environment.js';
+export * from './egen-backend-dependencies.js';
+export * from './egen-fetch.js';
+export * from './setup.js';
+export * from './types/index.js';
 
 // Accès synchrone (non-React) au tenant actif — lit le store global "tenant"
 // sans dépendance runtime sur @egen-civitas/esm-tenant (voir src/tenant.ts pour le
@@ -11,6 +11,6 @@ export * from './types';
 // @egen-civitas/esm-ai-context (construction du contexte IA) — c'est le point
 // d'accès canonique pour tout code non-React ayant besoin du tenant actif.
 // Pour du code React, préférer les hooks de @egen-civitas/esm-tenant (useTenant...).
-export { getTenantId, tenantHeaders, isMultiTenant, subscribeTenant } from './tenant';
+export { getTenantId, tenantHeaders, isMultiTenant, subscribeTenant } from './tenant.js';
 
-export { isDevAuthBypassEnabled, initDevAuthBypass, applyDevAuthBypassForLogin, interceptSessionFetch } from './dev-auth-bypass';
+export { isDevAuthBypassEnabled, initDevAuthBypass, applyDevAuthBypassForLogin, interceptSessionFetch } from './dev-auth-bypass.js';

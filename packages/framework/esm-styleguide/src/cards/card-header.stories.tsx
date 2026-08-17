@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from '@carbon/react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { CardHeader } from './card-header.component';
-import { AddIcon } from '../icons';
+import { CardHeader } from './card-header.component.js';
+import { AddIcon } from '../icons/index.js';
 
 const meta: Meta<typeof CardHeader> = {
   title: 'Components/CardHeader',

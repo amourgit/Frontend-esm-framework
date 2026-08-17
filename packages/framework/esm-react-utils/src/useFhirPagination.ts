@@ -4,7 +4,7 @@ import {
   type ServerPaginationHandlers,
   useServerPagination,
   type UseServerPaginationOptions,
-} from './useEgenPagination';
+} from './useEgenPagination.js';
 
 /**
  * Fhir REST endpoints that return a list of objects, are server-side paginated.

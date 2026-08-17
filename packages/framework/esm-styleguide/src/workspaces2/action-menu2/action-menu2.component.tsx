@@ -4,8 +4,8 @@ import { IconButton } from '@carbon/react';
 import { ExtensionSlot, ComponentContext, isDesktop, useLayoutType } from '@egen-civitas/esm-react-utils';
 import { type WorkspaceGroupDefinition2 } from '@egen-civitas/esm-globals';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
-import { closeWorkspaceGroup2 } from '../workspace2';
-import { CloseIcon } from '../../icons';
+import { closeWorkspaceGroup2 } from '../workspace2.js';
+import { CloseIcon } from '../../icons/index.js';
 import styles from './action-menu2.module.scss';
 
 export interface ActionMenuProps {

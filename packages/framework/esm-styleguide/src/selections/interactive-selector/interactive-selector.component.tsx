@@ -1,7 +1,7 @@
 /** @category InteractiveSelector */
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import type { InteractiveSelectorProps } from './interactive-selector.types';
+import type { InteractiveSelectorProps } from './interactive-selector.types.js';
 import styles from './interactive-selector.module.scss';
 
 /**

@@ -1,5 +1,5 @@
 /** @module @category Extension */
-import { useExtensionSlotStore } from './useExtensionSlotStore';
+import { useExtensionSlotStore } from './useExtensionSlotStore.js';
 
 /**
  * Gets the assigned extensions for a given extension slot name.

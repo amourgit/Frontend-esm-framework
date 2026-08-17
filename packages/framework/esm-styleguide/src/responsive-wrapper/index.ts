@@ -1,1 +1,1 @@
-export * from './responsive-wrapper.component';
+export * from './responsive-wrapper.component.js';

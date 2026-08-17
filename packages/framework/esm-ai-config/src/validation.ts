@@ -2,7 +2,7 @@
 //  @egen-civitas/esm-ai-config — Validation de la configuration
 // =============================================================================
 
-import type { AIConfig, PartialAIConfig, DeepPartial } from './types';
+import type { AIConfig, PartialAIConfig, DeepPartial } from './types.js';
 
 export interface ValidationResult {
   valid: boolean;

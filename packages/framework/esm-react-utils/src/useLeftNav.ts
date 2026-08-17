@@ -1,7 +1,7 @@
 /** @module @category UI */
 import { useContext, useEffect } from 'react';
 import { type SetLeftNavParams, setLeftNav, unsetLeftNav } from '@egen-civitas/esm-extensions';
-import { ComponentContext } from './ComponentContext';
+import { ComponentContext } from './ComponentContext.js';
 
 /**
  * A React hook that registers a left navigation menu for the current component.

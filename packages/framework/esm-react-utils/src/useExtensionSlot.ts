@@ -4,8 +4,8 @@ import {
   registerExtensionSlot,
   updateExtensionSlotState,
 } from '@egen-civitas/esm-extensions';
-import { ComponentContext } from './ComponentContext';
-import { useAssignedExtensions } from './useAssignedExtensions';
+import { ComponentContext } from './ComponentContext.js';
+import { useAssignedExtensions } from './useAssignedExtensions.js';
 
 /** @internal */
 export function useExtensionSlot(slotName: string, state?: ExtensionSlotCustomState) {

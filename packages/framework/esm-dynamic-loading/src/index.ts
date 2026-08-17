@@ -1,3 +1,3 @@
-export * from './dynamic-loading';
-export * from './import-maps';
-export * from './route-maps';
+export * from './dynamic-loading.js';
+export * from './import-maps.js';
+export * from './route-maps.js';

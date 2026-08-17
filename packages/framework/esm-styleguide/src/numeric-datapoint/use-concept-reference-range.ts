@@ -1,7 +1,7 @@
 /** @module @category UI */
 import useSWRImmutable from 'swr/immutable';
 import { egenFetch, restBaseUrl } from '@egen-civitas/esm-api';
-import type { DataPointReferenceRanges } from './interpretation-utils';
+import type { DataPointReferenceRanges } from './interpretation-utils.js';
 
 export interface UseConceptReferenceRangeResult {
   referenceRange: DataPointReferenceRanges | undefined;

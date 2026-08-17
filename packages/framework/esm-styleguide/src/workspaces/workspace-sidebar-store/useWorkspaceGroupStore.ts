@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getWorkspaceGroupStore } from '../workspaces';
+import { getWorkspaceGroupStore } from '../workspaces.js';
 
 /**
  * This hook is used to interact with the store of a workspace store.

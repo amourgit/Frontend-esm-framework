@@ -6,7 +6,7 @@
 // =============================================================================
 
 import { dispatchAIEvent, AI_EVENTS } from '@egen-civitas/esm-ai-events';
-import type { AIToolDefinition, AIToolDecorator, AIToolRegistryEntry, AICapability } from './types';
+import type { AIToolDefinition, AIToolDecorator, AIToolRegistryEntry, AICapability } from './types.js';
 
 const _tools = new Map<string, AIToolRegistryEntry>();
 const _capabilities = new Map<string, AICapability>();

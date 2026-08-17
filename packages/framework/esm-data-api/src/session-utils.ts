@@ -2,7 +2,7 @@
 import { egenFetch, restBaseUrl, type FetchResponse } from '@egen-civitas/esm-api';
 import { getGlobalStore } from '@egen-civitas/esm-state';
 import { BehaviorSubject } from 'rxjs';
-import { type NewWorkSessionPayload, type UpdateWorkSessionPayload, type WorkSession } from './types';
+import { type NewWorkSessionPayload, type UpdateWorkSessionPayload, type WorkSession } from './types/index.js';
 
 export interface WorkSessionItem {
   mode: WorkSessionMode;

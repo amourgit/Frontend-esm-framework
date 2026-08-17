@@ -1,9 +1,9 @@
-import { getFhirServerPaginationHandlers } from './useFhirPagination';
+import { getFhirServerPaginationHandlers } from './useFhirPagination.js';
 import {
   useServerInfinite,
   type UseServerInfiniteOptions,
   type UseServerInfiniteReturnObject,
-} from './useEgenInfinite';
+} from './useEgenInfinite.js';
 
 /**
  * Fhir REST endpoints that return a list of objects, are server-side paginated.

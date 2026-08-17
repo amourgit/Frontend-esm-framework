@@ -2,9 +2,9 @@ import React, { forwardRef } from 'react';
 import classNames from 'classnames';
 import { Button, Calendar, CalendarCell, CalendarGrid, Popover, RangeCalendar } from 'react-aria-components';
 import { type CalendarDate, type DateValue } from '@internationalized/date';
-import { ChevronLeftIcon, ChevronRightIcon } from '../icons';
-import { MonthYear } from './month-year.component';
-import { AutoCloseDialog } from './auto-close-dialog.component';
+import { ChevronLeftIcon, ChevronRightIcon } from '../icons/index.js';
+import { MonthYear } from './month-year.component.js';
+import { AutoCloseDialog } from './auto-close-dialog.component.js';
 import styles from './datepicker.module.scss';
 
 type CalendarPopoverProps = {

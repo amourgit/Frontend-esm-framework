@@ -1,6 +1,6 @@
 /** @module @category UI */
 import { leftNavStore } from '@egen-civitas/esm-extensions';
-import { useStore } from './useStore';
+import { useStore } from './useStore.js';
 
 /**
  * A React hook that provides access to the left navigation store state.

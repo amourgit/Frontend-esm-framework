@@ -1,1 +1,1 @@
-export * from './data-table-batch-actions.component';
+export * from './data-table-batch-actions.component.js';

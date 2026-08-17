@@ -1,2 +1,2 @@
-export * from './icons';
-export * from './error-filled.icon';
+export * from './icons.js';
+export * from './error-filled.icon.js';

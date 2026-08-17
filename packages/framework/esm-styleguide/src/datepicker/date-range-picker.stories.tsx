@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { EgenDateRangePicker } from './egen-date-range-picker.component';
+import { EgenDateRangePicker } from './egen-date-range-picker.component.js';
 
 const meta: Meta<typeof EgenDateRangePicker> = {
   title: 'Components/DateRangePicker',

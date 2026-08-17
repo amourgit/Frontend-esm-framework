@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { EmptyCard } from './empty-card.component';
+import { EmptyCard } from './empty-card.component.js';
 
 const meta: Meta<typeof EmptyCard> = {
   title: 'Components/EmptyCard',

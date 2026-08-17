@@ -2,16 +2,16 @@
 //  EGEN THEME ENGINE — Orchestrateur principal
 // ============================================================================
 
-import { loadHighestPriorityTheme, loadHighestPriorityThemeIfChanged } from './loader';
-import { flattenToCssVars } from './flatten';
+import { loadHighestPriorityTheme, loadHighestPriorityThemeIfChanged } from './loader.js';
+import { flattenToCssVars } from './flatten.js';
 import {
   injectCssVarsToDocument,
   removeCssVarsFromDocument,
   injectScopedCssVars,
   removeScopedCssVars,
   applyModeAttribute,
-} from './inject';
-import { mergeBySortedPriority } from './deepMerge';
+} from './inject.js';
+import { mergeBySortedPriority } from './deepMerge.js';
 import type {
   ThemeEngineOptions,
   ThemeEngineState,
@@ -20,7 +20,7 @@ import type {
   ThemeSchema,
   AppThemeOverride,
   FlattenResult,
-} from './types';
+} from './types.js';
 
 /**
  * Clé de scope interne réservée pour les surcharges GLOBALES (non scopées à

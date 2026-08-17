@@ -1,8 +1,8 @@
 /** @category Carousel */
 import React from 'react';
 import classNames from 'classnames';
-import { useCarouselContext } from './slider.context';
-import type { SliderProps } from './slider.types';
+import { useCarouselContext } from './slider.context.js';
+import type { SliderProps } from './slider.types.js';
 import styles from './slider.module.scss';
 
 /**

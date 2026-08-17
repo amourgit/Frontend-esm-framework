@@ -2,7 +2,7 @@
 //  @egen-civitas/esm-ai-tools — Validation des arguments de tools
 // =============================================================================
 
-import type { AIToolParam, AIToolValidationResult } from './types';
+import type { AIToolParam, AIToolValidationResult } from './types.js';
 
 /**
  * Valide et coerce les arguments d'un tool selon son schéma.

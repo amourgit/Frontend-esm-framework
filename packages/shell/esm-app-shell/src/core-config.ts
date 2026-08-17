@@ -1,6 +1,6 @@
 import { defineConfigSchema, Type, getConfigStore } from '@egen-civitas/esm-framework';
 import { registerModuleLoad, featureFlagsStore } from '@egen-civitas/esm-framework/src/internal';
-import { appName } from './ui';
+import { appName } from './ui/index.js';
 
 /**
  * Sets up the app shell's configuration.

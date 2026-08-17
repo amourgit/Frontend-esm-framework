@@ -9,4 +9,4 @@
 //  qui repose sur l'enregistrement nommé de parcels single-spa — un
 //  mécanisme différent, pour des modales inter-applications.
 // ============================================================================
-export * from './card-modal';
+export * from './card-modal/index.js';

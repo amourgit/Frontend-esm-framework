@@ -1,8 +1,8 @@
 /** @category TestimonialCard */
 import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { TestimonialCard } from './testimonial-card.component';
-import type { TestimonialCardPosition, TestimonialCardStackProps } from './testimonial-card.types';
+import { TestimonialCard } from './testimonial-card.component.js';
+import type { TestimonialCardPosition, TestimonialCardStackProps } from './testimonial-card.types.js';
 import styles from './testimonial-card-stack.module.scss';
 
 /**

@@ -1,8 +1,8 @@
 import { setCacheNameDetails } from 'workbox-core';
-import { handleMessage } from './message';
-import { precacheAppShell } from './caching';
-import { registerAllEgenRoutes } from './routing';
-import { egenCachePrefix } from './constants';
+import { handleMessage } from './message.js';
+import { precacheAppShell } from './caching.js';
+import { registerAllEgenRoutes } from './routing.js';
+import { egenCachePrefix } from './constants.js';
 
 self.__WB_DISABLE_DEV_LOGS = true;
 

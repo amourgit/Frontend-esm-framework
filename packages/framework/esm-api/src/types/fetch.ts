@@ -1,4 +1,4 @@
-import type { Session } from './user-resource';
+import type { Session } from './user-resource.js';
 
 export interface FetchResponse<T = any> extends Response {
   data: T;

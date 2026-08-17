@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
-import type { LayoutGridItem, LayoutGridProps } from './layout-grid.types';
+import type { LayoutGridItem, LayoutGridProps } from './layout-grid.types.js';
 import styles from './layout-grid.module.scss';
 
 /**

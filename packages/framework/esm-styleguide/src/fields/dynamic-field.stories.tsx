@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { DynamicField } from './dynamic-field.component';
-import { UserIcon } from '../icons/icons';
+import { DynamicField } from './dynamic-field.component.js';
+import { UserIcon } from '../icons/icons.js';
 
 const meta: Meta<typeof DynamicField> = {
   title: 'Components/Fields/DynamicField',

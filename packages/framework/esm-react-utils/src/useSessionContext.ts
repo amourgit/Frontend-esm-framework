@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday.js';
 import { egenFetch, restBaseUrl } from '@egen-civitas/esm-api';
 import { defaultWorkSessionCustomRepresentation, type WorkSession } from '@egen-civitas/esm-data-api';
-import { useSessionContextStore } from './useSessionContextStore';
+import { useSessionContextStore } from './useSessionContextStore.js';
 
 dayjs.extend(isToday);
 

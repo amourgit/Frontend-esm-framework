@@ -1,2 +1,2 @@
-export { CardHeader, type CardHeaderProps } from './card-header.component';
-export * from './decorated-card';
+export { CardHeader, type CardHeaderProps } from './card-header.component.js';
+export * from './decorated-card/index.js';

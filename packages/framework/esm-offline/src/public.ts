@@ -1,8 +1,8 @@
-export { type OfflineMode, type OfflineModeResult, getCurrentOfflineMode } from './mode';
-export * from './offline-entity-data';
-export * from './service-worker-messaging';
-export * from './service-worker-http-headers';
-export * from './uuid-support';
+export { type OfflineMode, type OfflineModeResult, getCurrentOfflineMode } from './mode.js';
+export * from './offline-entity-data.js';
+export * from './service-worker-messaging.js';
+export * from './service-worker-http-headers.js';
+export * from './uuid-support.js';
 export {
   type QueueItemDescriptor,
   type SyncItem,
@@ -16,6 +16,6 @@ export {
   beginEditSynchronizationItem,
   deleteSynchronizationItem,
   setupOfflineSync,
-} from './sync';
-export * from './dynamic-offline-data';
-export { getOfflineDb } from './offline-db';
+} from './sync.js';
+export * from './dynamic-offline-data.js';
+export { getOfflineDb } from './offline-db.js';

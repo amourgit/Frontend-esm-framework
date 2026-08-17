@@ -1,2 +1,2 @@
-export * from './interactive-selector.component';
-export * from './interactive-selector.types';
+export * from './interactive-selector.component.js';
+export * from './interactive-selector.types.js';

@@ -48,18 +48,18 @@ export type {
   TenantResolutionStrategy,
   TenantPathConfig,
   TenantJwtConfig,
-} from './types';
+} from './types.js';
 
 // ── Setup (shell) ──────────────────────────────────────────────────────────
-export { setupTenantSystem, switchTenant, recaptureTenant, storeHeaderTenantId } from './setup';
+export { setupTenantSystem, switchTenant, recaptureTenant, storeHeaderTenantId } from './setup.js';
 
 // ── React Hooks ────────────────────────────────────────────────────────────
-export { useTenant, useTenantMode, useTenantStatus, useIsMultiTenant, useSwitchTenant } from './hooks/useTenant';
+export { useTenant, useTenantMode, useTenantStatus, useIsMultiTenant, useSwitchTenant } from './hooks/useTenant.js';
 
 // ── React Components ───────────────────────────────────────────────────────
-export { TenantProvider, useTenantContext } from './hooks/TenantProvider';
+export { TenantProvider, useTenantContext } from './hooks/TenantProvider.js';
 
-export type { TenantProviderProps } from './hooks/TenantProvider';
+export type { TenantProviderProps } from './hooks/TenantProvider.js';
 
 // ── API non-React (services, intercepteurs, utilitaires) ──────────────────
 export {
@@ -71,20 +71,20 @@ export {
   buildTenantUrl,
   getTenantHeaders,
   fetchWithTenant,
-} from './utils/tenant-utils';
+} from './utils/tenant-utils.js';
 
 // ── Store (accès direct via useStore(tenantStore) dans esm-react-utils) ─────
 // Usage: import { tenantStore } from '@egen-civitas/esm-tenant';
 //        import { useStore } from '@egen-civitas/esm-react-utils';
 //        const { tenantId, mode } = useStore(tenantStore);
-export { tenantStore, getTenantStoreState, getActiveTenantId, getTenantSystemMode, subscribeTenantStore } from './context/store';
+export { tenantStore, getTenantStoreState, getActiveTenantId, getTenantSystemMode, subscribeTenantStore } from './context/store.js';
 
 // ── Résolution d'environnement ─────────────────────────────────────────────
-export { resolveConfigFromEnv, isTenantModeEnabledFromEnv } from './config/env';
+export { resolveConfigFromEnv, isTenantModeEnabledFromEnv } from './config/env.js';
 
 // ── Utilitaires de domaine (hostname ↔ tenant) ─────────────────────────────
 // Source unique de vérité — voir utils/domain-utils.ts. À utiliser par toute
 // app qui doit construire ou analyser une URL de sous-domaine tenant (garde
 // de routage, sélecteur de tenant, etc.) plutôt que de réimplémenter la
 // même heuristique localement.
-export { isLocalhostOrIp, inferRootDomain, extractSubdomain, buildTenantSubdomainUrl } from './utils/domain-utils';
+export { isLocalhostOrIp, inferRootDomain, extractSubdomain, buildTenantSubdomainUrl } from './utils/domain-utils.js';

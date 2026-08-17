@@ -1,5 +1,5 @@
 /** @module @category Context */
-import { useDefineAppContext } from './useDefineAppContext';
+import { useDefineAppContext } from './useDefineAppContext.js';
 
 export interface EgenAppContextProps<T extends NonNullable<object> = NonNullable<object>> {
   /** the namespace that this component defines */

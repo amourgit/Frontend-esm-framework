@@ -1,1 +1,1 @@
-export * from './pictograms';
+export * from './pictograms.js';

@@ -1,7 +1,7 @@
 import type {} from '@egen-civitas/esm-globals';
 import { createGlobalStore } from '@egen-civitas/esm-state';
-import { type ComponentConfig } from './types';
-import { type ExtensionSlotState } from './store';
+import { type ComponentConfig } from './types.js';
+import { type ExtensionSlotState } from './store.js';
 
 type LeftNavMode = 'normal' | 'collapsed' | 'hidden';
 export interface LeftNavStore {

@@ -2,8 +2,8 @@
 //  EGEN THEME ENGINE — Instance singleton + API globale
 // ============================================================================
 
-import { ThemeEngine } from './engine';
-import type { ThemeEngineOptions, ThemeEngineState, ThemeMode, ThemeSchema } from './types';
+import { ThemeEngine } from './engine.js';
+import type { ThemeEngineOptions, ThemeEngineState, ThemeMode, ThemeSchema } from './types.js';
 
 /**
  * Instance singleton du moteur de thème.

@@ -89,8 +89,8 @@ import user from './svgs/user.svg';
 import viewOff from './svgs/view-off.svg';
 import view from './svgs/view.svg';
 import warning from './svgs/warning.svg';
-import { addSvg } from '../svg-utils';
-import { type IconId } from './icons';
+import { addSvg } from '../svg-utils.js';
+import { type IconId } from './icons.js';
 
 export function setupIcons() {
   addIconSvg('egen-icon-activity', activity);

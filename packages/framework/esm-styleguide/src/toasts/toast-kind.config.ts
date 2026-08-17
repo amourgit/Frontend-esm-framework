@@ -1,7 +1,7 @@
 /** @category Toast */
 import type React from 'react';
-import { CheckmarkFilledIcon, ErrorFilledIcon, InformationFilledIcon, InformationSquareIcon, WarningIcon } from '../icons';
-import type { ToastType } from './toast.types';
+import { CheckmarkFilledIcon, ErrorFilledIcon, InformationFilledIcon, InformationSquareIcon, WarningIcon } from '../icons/index.js';
+import type { ToastType } from './toast.types.js';
 
 export interface ToastKindConfig {
   icon: React.ComponentType<{ className?: string; size?: number }>;

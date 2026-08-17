@@ -2,8 +2,8 @@
 import { type ArrowExpression } from '@jsep-plugin/arrow';
 import { type NewExpression } from '@jsep-plugin/new';
 import { type TemplateElement, type TemplateLiteral } from '@jsep-plugin/template';
-import { jsep } from './evaluator';
-import { globalsAsync } from './globals';
+import { jsep } from './evaluator.js';
+import { globalsAsync } from './globals.js';
 
 /**
  * `extractVariableNames()` is a companion function for `evaluate()` and `evaluateAsync()` which extracts the

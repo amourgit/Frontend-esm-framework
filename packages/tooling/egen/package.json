@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "license": "MPL-2.0",
   "main": "dist/index.js",
+  "files": [
+    "dist",
+    "bin",
+    "default-rspack-config.cjs",
+    "default-webpack-config.cjs"
+  ],
   "bin": {
     "egen": "./dist/cli.js",
     "rspack": "./bin/rspack.cjs",

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { PageHeader } from './page-header.component';
-import { AppointmentsPictogram } from '../pictograms/pictograms';
+import { PageHeader } from './page-header.component.js';
+import { AppointmentsPictogram } from '../pictograms/pictograms.js';
 
 const meta: Meta<typeof PageHeader> = {
   title: 'Components/PageHeader',

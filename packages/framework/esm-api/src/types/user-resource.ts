@@ -1,5 +1,5 @@
-import { type EgenResource } from './egen-resource';
-import { type Person } from './person-resource';
+import { type EgenResource } from './egen-resource.js';
+import { type Person } from './person-resource.js';
 
 export interface Session {
   allowedLocales?: Array<string>;

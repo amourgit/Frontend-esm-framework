@@ -1,8 +1,8 @@
 /** @module @category UI */
 import React, { useEffect, useState, useCallback } from 'react';
 import type { Subject } from 'rxjs';
-import type { SnackbarMeta } from './snackbar.component';
-import { Snackbar } from './snackbar.component';
+import type { SnackbarMeta } from './snackbar.component.js';
+import { Snackbar } from './snackbar.component.js';
 
 interface ActiveSnackbarProps {
   subject: Subject<SnackbarMeta>;

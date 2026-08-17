@@ -7,9 +7,9 @@
 // =============================================================================
 
 import { createGlobalStore, subscribeTo } from '@egen-civitas/esm-state';
-import type { AIConfig, AIConfigStore, PartialAIConfig } from './types';
-import { DEFAULT_AI_CONFIG } from './defaults';
-import { validateAIConfig, mergeConfig } from './validation';
+import type { AIConfig, AIConfigStore, PartialAIConfig } from './types.js';
+import { DEFAULT_AI_CONFIG } from './defaults.js';
+import { validateAIConfig, mergeConfig } from './validation.js';
 
 /** Nom du store — doit être unique dans l'application EGEN */
 const STORE_NAME = 'egen:ai:config';

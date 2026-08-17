@@ -1,7 +1,7 @@
 /** @category CircularGallery */
 import React from 'react';
 import styles from './circular-gallery.module.scss';
-import type { CircularGalleryImage } from './circular-gallery.types';
+import type { CircularGalleryImage } from './circular-gallery.types.js';
 
 interface GalleryTabsProps {
   images: CircularGalleryImage[];

@@ -21,7 +21,7 @@
 //  vive pour la session (voir store.ts).
 // =============================================================================
 
-import type { ConversationStorageAdapter, ConversationSummary, StoredConversation } from '../types';
+import type { ConversationStorageAdapter, ConversationSummary, StoredConversation } from '../types.js';
 
 const DB_NAME = 'egen-ai-memory';
 const DB_VERSION = 1;

@@ -1,8 +1,8 @@
 /** @category DecoratedCard */
 import React, { forwardRef } from 'react';
 import classNames from 'classnames';
-import { CornerBrackets, DotsPattern, GradientLines, PlusIcons } from './card-decorations';
-import type { CardProps } from './decorated-card.types';
+import { CornerBrackets, DotsPattern, GradientLines, PlusIcons } from './card-decorations.js';
+import type { CardProps } from './decorated-card.types.js';
 import styles from './decorated-card.module.scss';
 
 /**

@@ -1,9 +1,9 @@
 /** @category Fields */
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { CheckmarkFilledIcon, WarningIcon } from '../icons/icons';
-import { ErrorFilledIcon } from '../icons/error-filled.icon';
-import type { ValidationRule, ValidationRuleType } from './dynamic-field.types';
+import { CheckmarkFilledIcon, WarningIcon } from '../icons/icons.js';
+import { ErrorFilledIcon } from '../icons/error-filled.icon.js';
+import type { ValidationRule, ValidationRuleType } from './dynamic-field.types.js';
 import styles from './dynamic-field.module.scss';
 
 const severityIcons: Record<ValidationRuleType, React.ComponentType<{ className?: string; size?: number }>> = {

@@ -4,8 +4,8 @@
 // =============================================================================
 
 import { useSyncExternalStore, useCallback } from 'react';
-import { aiConfigStore } from './store';
-import type { AIConfig, AIConfigStore } from './types';
+import { aiConfigStore } from './store.js';
+import type { AIConfig, AIConfigStore } from './types.js';
 
 /**
  * Hook React pour accéder à la configuration IA complète.

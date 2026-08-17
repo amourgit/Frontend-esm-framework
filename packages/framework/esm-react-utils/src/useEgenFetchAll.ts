@@ -4,12 +4,12 @@ import {
   useServerInfinite,
   type UseServerInfiniteOptions,
   type UseServerInfiniteReturnObject,
-} from './useEgenInfinite';
+} from './useEgenInfinite.js';
 import {
   type EgenPaginatedResponse,
   egenServerPaginationHandlers,
   type ServerPaginationHandlers,
-} from './useEgenPagination';
+} from './useEgenPagination.js';
 
 export interface UseServerFetchAllOptions<R> extends UseServerInfiniteOptions<R> {
   /**

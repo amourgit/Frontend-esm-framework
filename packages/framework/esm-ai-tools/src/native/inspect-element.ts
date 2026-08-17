@@ -29,8 +29,8 @@
 //  étendue ici à TOUTE valeur de champ potentiellement sensible.
 // =============================================================================
 
-import { getUIActionDefinition } from '../ui-actions';
-import { getObservableDefinition } from '../observables';
+import { getUIActionDefinition } from '../ui-actions.js';
+import { getObservableDefinition } from '../observables.js';
 
 // ---------------------------------------------------------------------------
 // Garde-fous (généreux, mais jamais littéralement illimités — voir principe

@@ -1,5 +1,5 @@
 /** @module @category Translation */
-import { coreTranslations } from './translations';
+import { coreTranslations } from './translations.js';
 import _i18n, { i18n, type TOptions } from 'i18next';
 
 const i18n: typeof _i18n = (_i18n as unknown as { default: typeof _i18n }).default || _i18n;

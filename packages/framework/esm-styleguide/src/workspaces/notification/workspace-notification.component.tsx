@@ -13,7 +13,7 @@ import {
   getWorkspaceStore,
   resetWorkspaceStore,
   useWorkspaces,
-} from '../workspaces';
+} from '../workspaces.js';
 import styles from './workspace-notification.module.scss';
 
 export interface WorkspaceNotificationProps {

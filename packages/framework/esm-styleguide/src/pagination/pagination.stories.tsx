@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { Pagination } from './pagination.component';
+import { Pagination } from './pagination.component.js';
 
 const meta: Meta<typeof Pagination> = {
   title: 'Components/Pagination',

@@ -14,9 +14,9 @@
 import { dispatchAIEvent, AI_EVENTS } from '@egen-civitas/esm-ai-events';
 import { getAIConfig } from '@egen-civitas/esm-ai-config';
 import { sessionStore } from '@egen-civitas/esm-api';
-import { getTool } from './registry';
-import { validateToolArgs, checkToolPermissions } from './validation';
-import type { AIToolRequest, AIToolResult, AIToolExecutionContext, AIToolDefinition, AIToolDecorator } from './types';
+import { getTool } from './registry.js';
+import { validateToolArgs, checkToolPermissions } from './validation.js';
+import type { AIToolRequest, AIToolResult, AIToolExecutionContext, AIToolDefinition, AIToolDecorator } from './types.js';
 
 // AIContext est importé dynamiquement pour éviter la dépendance circulaire
 // esm-ai-tools → esm-ai-context → esm-ai-tools

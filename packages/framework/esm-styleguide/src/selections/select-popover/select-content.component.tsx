@@ -2,10 +2,10 @@
 import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import classNames from 'classnames';
-import { CheckmarkOutlineIcon, SearchIcon } from '../../icons';
-import { useSelectContext } from './select-popover.types';
-import { SelectAvatar } from './select-avatar.component';
-import type { SelectContentProps, SelectOption } from './select-popover.types';
+import { CheckmarkOutlineIcon, SearchIcon } from '../../icons/index.js';
+import { useSelectContext } from './select-popover.types.js';
+import { SelectAvatar } from './select-avatar.component.js';
+import type { SelectContentProps, SelectOption } from './select-popover.types.js';
 import styles from './select-popover.module.scss';
 
 interface Anchor {

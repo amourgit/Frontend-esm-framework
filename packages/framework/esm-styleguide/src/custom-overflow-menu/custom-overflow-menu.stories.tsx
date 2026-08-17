@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { CustomOverflowMenu, CustomOverflowMenuItem } from './custom-overflow-menu.component';
+import { CustomOverflowMenu, CustomOverflowMenuItem } from './custom-overflow-menu.component.js';
 
 const meta: Meta<typeof CustomOverflowMenu> = {
   title: 'Components/CustomOverflowMenu',

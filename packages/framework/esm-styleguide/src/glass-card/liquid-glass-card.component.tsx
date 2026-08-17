@@ -2,7 +2,7 @@
 import React, { useId, useState } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import classNames from 'classnames';
-import type { LiquidGlassCardProps } from './liquid-glass-card.types';
+import type { LiquidGlassCardProps } from './liquid-glass-card.types.js';
 import styles from './liquid-glass-card.module.scss';
 
 /**

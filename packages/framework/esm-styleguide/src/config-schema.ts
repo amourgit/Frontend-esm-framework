@@ -1,5 +1,5 @@
 import { type ConfigSchema, Type, validators } from '@egen-civitas/esm-config';
-import { type CarbonTagColor, carbonTagColors } from './utils';
+import { type CarbonTagColor, carbonTagColors } from './utils.js';
 
 export interface StyleguideConfigObject {
   'Brand color #1': string;

@@ -1,5 +1,5 @@
 /** @module @category Feature Flags */
-import { useStore } from './useStore';
+import { useStore } from './useStore.js';
 import { featureFlagsStore } from '@egen-civitas/esm-feature-flags';
 
 /** Use this function to tell whether a feature flag is toggled on or off.

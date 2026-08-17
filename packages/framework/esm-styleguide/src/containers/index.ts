@@ -4,5 +4,5 @@
 //  contenu est entièrement fourni par le consommateur (aucune hypothèse sur
 //  ce qu'ils affichent) — dossiers, grilles, piles, etc.
 // ============================================================================
-export * from './folder-gallery';
-export * from './layout-grid';
+export * from './folder-gallery/index.js';
+export * from './layout-grid/index.js';

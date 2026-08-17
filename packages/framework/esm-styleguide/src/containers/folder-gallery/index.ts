@@ -1,2 +1,2 @@
-export * from './folder-gallery.component';
-export * from './folder-gallery.types';
+export * from './folder-gallery.component.js';
+export * from './folder-gallery.types.js';

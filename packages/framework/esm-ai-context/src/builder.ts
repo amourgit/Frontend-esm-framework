@@ -9,8 +9,8 @@
 import { sessionStore, getTenantId, isMultiTenant } from '@egen-civitas/esm-api';
 import { getAIConfig } from '@egen-civitas/esm-ai-config';
 import { AI_EVENTS, dispatchAIEvent } from '@egen-civitas/esm-ai-events';
-import { collectProviderData } from './provider-registry';
-import type { AIContext, AINavigationContext, AIPermissionsContext, AIExtensionContext } from './types';
+import { collectProviderData } from './provider-registry.js';
+import type { AIContext, AINavigationContext, AIPermissionsContext, AIExtensionContext } from './types.js';
 
 const SCHEMA_VERSION = '1.0.0';
 

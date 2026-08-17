@@ -2,7 +2,7 @@
 //  EGEN THEME ENGINE — Injection CSS dans le DOM
 // ============================================================================
 
-import type { FlattenResult, ThemeMode } from './types';
+import type { FlattenResult, ThemeMode } from './types.js';
 
 const BASE_STYLE_TAG_ID = 'egen-theme-vars';
 const OVERRIDE_STYLE_TAG_PREFIX = 'egen-theme-override-';

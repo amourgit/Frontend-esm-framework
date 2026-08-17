@@ -3,9 +3,9 @@ import { Observable } from 'rxjs';
 import { isPlainObject } from 'lodash-es';
 import { getConfig } from '@egen-civitas/esm-config';
 import { clearHistory, navigate } from '@egen-civitas/esm-navigation';
-import type { FetchResponse } from './types';
-import { getTenantId } from './tenant';
-import { defaultRedirectAuthFailureUrl, type EsmApiConfigObject } from './config-schema';
+import type { FetchResponse } from './types/index.js';
+import { getTenantId } from './tenant.js';
+import { defaultRedirectAuthFailureUrl, type EsmApiConfigObject } from './config-schema.js';
 
 /** The base URL for the Egen REST API (e.g., '/ws/rest/v1'). */
 export const restBaseUrl = '/ws/rest/v1';

@@ -9,7 +9,7 @@ import {
 } from '@carbon/react';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { useOnVisible } from '@egen-civitas/esm-react-utils';
-import { useLocationByUuid, useLocations } from './location-picker.resource';
+import { useLocationByUuid, useLocations } from './location-picker.resource.js';
 import styles from './location-picker.module.scss';
 
 interface LocationPickerProps {

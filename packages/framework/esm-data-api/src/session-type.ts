@@ -2,7 +2,7 @@
 import { egenObservableFetch, restBaseUrl } from '@egen-civitas/esm-api';
 import type { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators/index.js';
-import { type WorkSessionType } from './types';
+import { type WorkSessionType } from './types/index.js';
 
 export function toWorkSessionTypeObject(egenRestForm: any): WorkSessionType {
   return {

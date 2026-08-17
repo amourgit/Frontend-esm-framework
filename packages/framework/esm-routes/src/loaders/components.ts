@@ -19,7 +19,7 @@ import {
   type WorkspaceWindowDefinition2,
 } from '@egen-civitas/esm-globals';
 import { registerFeatureFlag } from '@egen-civitas/esm-feature-flags';
-import { loadLifeCycles } from './load-lifecycles';
+import { loadLifeCycles } from './load-lifecycles.js';
 
 /**
  * This function registers an extension definition with the framework and will

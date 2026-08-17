@@ -2,8 +2,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, useAnimation, type PanInfo } from 'framer-motion';
 import classNames from 'classnames';
-import { useSheetContext } from './sheet.context';
-import { SheetPortal } from './sheet-portal.component';
+import { useSheetContext } from './sheet.context.js';
+import { SheetPortal } from './sheet-portal.component.js';
 import styles from './sheet.module.scss';
 
 export interface SheetContentProps {

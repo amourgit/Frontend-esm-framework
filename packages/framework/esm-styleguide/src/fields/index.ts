@@ -1,2 +1,2 @@
-export * from './dynamic-field.component';
-export * from './dynamic-field.types';
+export * from './dynamic-field.component.js';
+export * from './dynamic-field.types.js';

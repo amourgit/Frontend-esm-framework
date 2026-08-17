@@ -2,9 +2,9 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import classNames from 'classnames';
-import { ChevronDownIcon } from '../icons/icons';
-import { ColumnWithSearch } from './column-with-search.component';
-import type { CascadingNavDropdownProps, NavigationItem } from './cascading-nav-dropdown.types';
+import { ChevronDownIcon } from '../icons/icons.js';
+import { ColumnWithSearch } from './column-with-search.component.js';
+import type { CascadingNavDropdownProps, NavigationItem } from './cascading-nav-dropdown.types.js';
 import styles from './cascading-nav-dropdown.module.scss';
 
 interface Anchor {

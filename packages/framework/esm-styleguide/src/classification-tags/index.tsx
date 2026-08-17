@@ -1,1 +1,1 @@
-export * from './classification-tags.component';
+export * from './classification-tags.component.js';

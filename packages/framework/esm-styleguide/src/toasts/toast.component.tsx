@@ -2,14 +2,14 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import classNames from 'classnames';
-import { CloseIcon } from '../icons';
-import { LiquidGlassCard } from '../glass-card';
-import { toastKindConfig } from './toast-kind.config';
-import { ToastProgressBar } from './toast-progress-bar.component';
-import type { ToastAction, ToastProps } from './toast.types';
+import { CloseIcon } from '../icons/index.js';
+import { LiquidGlassCard } from '../glass-card/index.js';
+import { toastKindConfig } from './toast-kind.config.js';
+import { ToastProgressBar } from './toast-progress-bar.component.js';
+import type { ToastAction, ToastProps } from './toast.types.js';
 import styles from './toast.module.scss';
 
-export type { ToastAction, ToastVariant, ToastProps, ToastDescriptor, ToastNotificationMeta, ToastType } from './toast.types';
+export type { ToastAction, ToastVariant, ToastProps, ToastDescriptor, ToastNotificationMeta, ToastType } from './toast.types.js';
 
 /**
  * `Toast` — présentation d'une notification unique. Reçoit `{ toast, closeToast }`

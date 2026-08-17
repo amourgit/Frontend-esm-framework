@@ -5,8 +5,8 @@ import { DownToBottom, Maximize, Minimize } from '@carbon/react/icons';
 import { isDesktop, useLayoutType } from '@egen-civitas/esm-react-utils';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { getOpenedWindowIndexByWorkspace } from '@egen-civitas/esm-extensions';
-import { ArrowRightIcon, CloseIcon } from '../icons';
-import { useWorkspace2Store, useWorkspace2Context, closeWorkspaceGroup2 } from './workspace2';
+import { ArrowRightIcon, CloseIcon } from '../icons/index.js';
+import { useWorkspace2Store, useWorkspace2Context, closeWorkspaceGroup2 } from './workspace2.js';
 import styles from './workspace2.module.scss';
 
 interface Workspace2Props {

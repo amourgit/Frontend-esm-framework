@@ -11,7 +11,7 @@ import {
   getExtensionConfigFromStore,
 } from '@egen-civitas/esm-config';
 import { type ExtensionData } from '@egen-civitas/esm-extensions';
-import { ComponentContext } from './ComponentContext';
+import { ComponentContext } from './ComponentContext.js';
 
 const promises: Record<string, Promise<ConfigObject>> = {};
 const errorMessage = `No ComponentContext has been provided. This should come from "egenComponentDecorator".

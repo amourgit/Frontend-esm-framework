@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { ExtensionSlot } from '@egen-civitas/esm-react-utils';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { formatPartialDate } from '@egen-civitas/esm-utils';
-import EntityBannerEntityIdentifiers from './entity-banner-entity-identifiers.component';
+import EntityBannerEntityIdentifiers from './entity-banner-entity-identifiers.component.js';
 import styles from './entity-banner-entity-info.module.scss';
 
 interface EntityBannerEntityInfoProps {

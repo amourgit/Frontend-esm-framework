@@ -1,4 +1,4 @@
-import type { EgenAppRoutes, EgenRoutes } from './types';
+import type { EgenAppRoutes, EgenRoutes } from './types.js';
 
 /**
  * Simple type-predicate to ensure that the value can be treated as an EgenAppRoutes

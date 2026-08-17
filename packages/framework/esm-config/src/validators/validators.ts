@@ -1,5 +1,5 @@
 /** @module @category Config Validation */
-import { validator } from './validator';
+import { validator } from './validator.js';
 
 /**
  * Verifies that the value is between the provided minimum and maximum

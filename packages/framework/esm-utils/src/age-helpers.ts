@@ -1,6 +1,6 @@
 /** @module @category Utility */
 import dayjs from 'dayjs';
-import { formatDuration, parseDateInput } from './dates/date-util';
+import { formatDuration, parseDateInput } from './dates/date-util.js';
 
 /**
  * Gets the age of a person as a structured duration object, following NHS Digital guidelines

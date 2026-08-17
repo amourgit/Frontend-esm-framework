@@ -25,7 +25,7 @@ import { type FeatureFlagsStore, featureFlagsStore } from '@egen-civitas/esm-fea
 import { subscribeConnectivityChanged } from '@egen-civitas/esm-globals';
 import { isOnline as isOnlineFn } from '@egen-civitas/esm-utils';
 import { isEqual, merge } from 'lodash-es';
-import { checkStatusFor } from './helpers';
+import { checkStatusFor } from './helpers.js';
 import {
   type AssignedExtension,
   type ExtensionInternalStore,
@@ -36,7 +36,7 @@ import {
   getExtensionInternalStore,
   getExtensionStore,
   updateInternalExtensionStore,
-} from './store';
+} from './store.js';
 
 const extensionInternalStore = getExtensionInternalStore();
 const extensionStore = getExtensionStore();

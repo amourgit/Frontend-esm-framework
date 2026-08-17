@@ -48,11 +48,11 @@ import {
   type StyleguideConfigObject,
 } from '@egen-civitas/esm-framework/src/internal';
 import { initDevAuthBypass } from '@egen-civitas/esm-api';
-import { setupI18n } from './locale';
-import './routing-events';
-import './events';
-import { appName, getCoreExtensions } from './ui';
-import { setupCoreConfig } from './core-config';
+import { setupI18n } from './locale.js';
+import './routing-events.js';
+import './events.js';
+import { appName, getCoreExtensions } from './ui/index.js';
+import { setupCoreConfig } from './core-config.js';
 
 // =============================================================================
 //  EGEN_DEV_NO_AUTH — Bypass d'authentification pour tests sans backend

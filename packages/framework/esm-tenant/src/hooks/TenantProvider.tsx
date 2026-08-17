@@ -17,8 +17,8 @@
 // ============================================================================
 
 import React, { createContext, useContext, type ReactNode, type FC } from 'react';
-import type { TenantId } from '../types';
-import { useTenant } from './useTenant';
+import type { TenantId } from '../types.js';
+import { useTenant } from './useTenant.js';
 
 // ---------------------------------------------------------------------------
 // Context

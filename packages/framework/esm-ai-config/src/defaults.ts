@@ -10,7 +10,7 @@
 //  AUCUNE valeur ne doit être codée en dur dans le code applicatif.
 // =============================================================================
 
-import type { AIConfig } from './types';
+import type { AIConfig } from './types.js';
 
 /** Lit une variable d'env depuis toutes les sources disponibles */
 function readEnv(key: string, fallback: string): string {

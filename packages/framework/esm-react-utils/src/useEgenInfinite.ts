@@ -6,7 +6,7 @@ import {
   egenServerPaginationHandlers,
   type ServerPaginationHandlers,
   type EgenPaginatedResponse,
-} from './useEgenPagination';
+} from './useEgenPagination.js';
 
 // "swr/infinite" doesn't export InfiniteKeyedMutator directly
 type InfiniteKeyedMutator<T> = SWRInfiniteResponse<T extends (infer I)[] ? I : T>['mutate'];

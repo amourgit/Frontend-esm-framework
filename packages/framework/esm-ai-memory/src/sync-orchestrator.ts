@@ -34,7 +34,7 @@
 // =============================================================================
 
 import { AI_EVENTS, dispatchAIEvent } from '@egen-civitas/esm-ai-events';
-import type { ConversationStorageAdapter } from './types';
+import type { ConversationStorageAdapter } from './types.js';
 
 const SYNC_DEBOUNCE_MS = 3 * 60 * 1000; // 3 minutes — voir en-tête de fichier
 const SYNC_CHECK_INTERVAL_MS = 20 * 1000; // fréquence de VÉRIFICATION, pas fréquence d'ENVOI

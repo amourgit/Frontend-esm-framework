@@ -1,9 +1,9 @@
-export * from './service-worker';
-export * from './service-worker-http-headers';
-export * from './service-worker-messaging';
-export * from './mode';
-export * from './sync';
-export * from './uuid-support';
-export * from './offline-entity-data';
-export * from './dynamic-offline-data';
-export { getOfflineDb } from './offline-db';
+export * from './service-worker.js';
+export * from './service-worker-http-headers.js';
+export * from './service-worker-messaging.js';
+export * from './mode.js';
+export * from './sync.js';
+export * from './uuid-support.js';
+export * from './offline-entity-data.js';
+export * from './dynamic-offline-data.js';
+export { getOfflineDb } from './offline-db.js';

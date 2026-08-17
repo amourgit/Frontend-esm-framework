@@ -4,8 +4,8 @@ import {
   type EventsWithoutPayload,
   type EventTypes,
   type PageChanged,
-} from './types';
-export { type EgenEvent, type EventTypes as EgenEventTypes } from './types';
+} from './types.js';
+export { type EgenEvent, type EventTypes as EgenEventTypes } from './types.js';
 
 export function fireEgenEvent<T extends EventsWithoutPayload>(event: T, payload?: never): boolean;
 export function fireEgenEvent<T extends EventsWithPayload>(event: T, payload: EventTypes[T]): boolean;

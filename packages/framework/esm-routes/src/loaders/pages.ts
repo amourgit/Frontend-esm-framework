@@ -11,7 +11,7 @@ import {
   type WorkspaceDefinition,
 } from '@egen-civitas/esm-globals';
 import { getFeatureFlag } from '@egen-civitas/esm-feature-flags';
-import { routeRegex } from './helpers';
+import { routeRegex } from './helpers.js';
 import {
   tryRegisterExtension,
   tryRegisterFeatureFlag,
@@ -21,8 +21,8 @@ import {
   tryRegisterWorkspaceGroup,
   tryRegisterWorkspaceGroups2,
   tryRegisterWorkspaceWindows2,
-} from './components';
-import { loadLifeCycles } from './load-lifecycles';
+} from './components.js';
+import { loadLifeCycles } from './load-lifecycles.js';
 
 // this is the global holder of all pages registered in the app
 const pages: Array<RegisteredPageDefinition> = [];

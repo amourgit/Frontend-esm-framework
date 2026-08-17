@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Layer, Tile } from '@carbon/react';
 import { useLayoutType } from '@egen-civitas/esm-react-utils';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
-import { CardHeader } from '../cards';
+import { CardHeader } from '../cards/index.js';
 import styles from './empty-card.module.scss';
 
 export interface EmptyCardProps {

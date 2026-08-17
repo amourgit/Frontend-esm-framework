@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { Toast } from './toast.component';
+import { Toast } from './toast.component.js';
 
 const meta: Meta<typeof Toast> = {
   title: 'Components/Toast',

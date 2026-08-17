@@ -1,10 +1,10 @@
 /** @module @category Config */
 import { cloneDeep, isEqual, mergeWith, omit as lodashOmit } from 'lodash-es';
-import type { Config, ConfigObject, ConfigSchema, ExtensionSlotConfig } from '../types';
-import { Type } from '../types';
-import { isArray, isBoolean, isUuid, isNumber, isObject, isString } from '../validators/type-validators';
-import { validator } from '../validators/validator';
-import { type ConfigExtensionStore, type ConfigInternalStore, type ConfigStore } from './state';
+import type { Config, ConfigObject, ConfigSchema, ExtensionSlotConfig } from '../types.js';
+import { Type } from '../types.js';
+import { isArray, isBoolean, isUuid, isNumber, isObject, isString } from '../validators/type-validators.js';
+import { validator } from '../validators/validator.js';
+import { type ConfigExtensionStore, type ConfigInternalStore, type ConfigStore } from './state.js';
 import {
   configExtensionStore,
   configInternalStore,
@@ -14,7 +14,7 @@ import {
   getExtensionsConfigStore,
   implementerToolsConfigStore,
   temporaryConfigStore,
-} from './state';
+} from './state.js';
 import { type TemporaryConfigStore } from '..';
 
 /**

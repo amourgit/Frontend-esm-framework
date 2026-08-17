@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 import { BrowserRouter, useLocation } from 'react-router-dom';
 import { ConfigurableLink } from '@egen-civitas/esm-react-utils';
-import { MaybeIcon } from '../icons/icons';
-import { type IconId } from '../icons';
+import { MaybeIcon } from '../icons/icons.js';
+import { type IconId } from '../icons/index.js';
 import styles from './dashboard.module.scss';
 
 export interface DashboardExtensionProps {

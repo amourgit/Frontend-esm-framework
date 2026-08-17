@@ -1,6 +1,6 @@
 import { type Concept, type EgenResource, type Person } from '@egen-civitas/esm-api';
-import { type Interaction } from './interaction-resource';
-import { type Location } from './location-resource';
+import { type Interaction } from './interaction-resource.js';
+import { type Location } from './location-resource.js';
 
 /**
  * Represents a generic data point — a single recorded observation or measurement

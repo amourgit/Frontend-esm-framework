@@ -2,7 +2,7 @@
 import React, { type MouseEvent } from 'react';
 import { Button } from '@carbon/react';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
-import { ChevronDownIcon, ChevronUpIcon } from '../../public';
+import { ChevronDownIcon, ChevronUpIcon } from '../../public.js';
 
 export interface EntityBannerToggleContactDetailsButtonProps {
   /** Whether the contact details are currently being displayed */

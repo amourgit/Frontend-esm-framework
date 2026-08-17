@@ -19,7 +19,7 @@
 // ============================================================================
 
 import { createGlobalStore } from '@egen-civitas/esm-state';
-import type { TenantStore, TenantId, TenantMode, TenantResolutionStrategy, TenantSystemConfig } from '../types';
+import type { TenantStore, TenantId, TenantMode, TenantResolutionStrategy, TenantSystemConfig } from '../types.js';
 
 const DEFAULT_CONFIG: TenantSystemConfig = {
   mode: 'off',

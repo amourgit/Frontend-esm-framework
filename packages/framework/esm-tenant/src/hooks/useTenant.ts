@@ -25,9 +25,9 @@
 /** @module @category Tenant */
 
 import { useState, useEffect, useCallback } from 'react';
-import type { TenantMode, TenantStatus, TenantStore, TenantId } from '../types';
-import { tenantStore } from '../context/store';
-import { switchTenant } from '../setup';
+import type { TenantMode, TenantStatus, TenantStore, TenantId } from '../types.js';
+import { tenantStore } from '../context/store.js';
+import { switchTenant } from '../setup.js';
 
 // ---------------------------------------------------------------------------
 // Hook bas niveau : abonnement direct au store (sans dépendance circulaire

@@ -1,4 +1,4 @@
-import { validator } from './validator';
+import { validator } from './validator.js';
 
 export const isArray = validator((val) => Array.isArray(val), 'must be an array');
 

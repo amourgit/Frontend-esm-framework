@@ -5,11 +5,11 @@ import { Header, HeaderGlobalAction, HeaderGlobalBar, HeaderMenuButton, HeaderNa
 import { DownToBottom, Maximize, Minimize } from '@carbon/react/icons';
 import { ComponentContext, ExtensionSlot, isDesktop, useBodyScrollLock, useLayoutType } from '@egen-civitas/esm-react-utils';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
-import { ArrowLeftIcon, ArrowRightIcon, CloseIcon } from '../../icons';
-import { WorkspaceNotification } from '../notification/workspace-notification.component';
-import { type OpenWorkspace, updateWorkspaceWindowState, useWorkspaces } from '../workspaces';
-import { WorkspaceRenderer } from './workspace-renderer.component';
-import ActionMenu from './action-menu.component';
+import { ArrowLeftIcon, ArrowRightIcon, CloseIcon } from '../../icons/index.js';
+import { WorkspaceNotification } from '../notification/workspace-notification.component.js';
+import { type OpenWorkspace, updateWorkspaceWindowState, useWorkspaces } from '../workspaces.js';
+import { WorkspaceRenderer } from './workspace-renderer.component.js';
+import ActionMenu from './action-menu.component.js';
 import styles from './workspace.module.scss';
 
 /**

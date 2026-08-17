@@ -4,7 +4,7 @@ import { shallowEqual } from '@egen-civitas/esm-utils';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import type { StoreApi } from 'zustand/vanilla';
 import { createStore } from 'zustand/vanilla';
-import { isTestEnvironment } from './utils';
+import { isTestEnvironment } from './utils.js';
 
 interface StoreEntity {
   value: StoreApi<unknown>;

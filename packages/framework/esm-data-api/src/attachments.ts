@@ -1,6 +1,6 @@
 /** @module @category API */
 import { egenFetch, restBaseUrl } from '@egen-civitas/esm-api';
-import type { UploadedFile } from './types';
+import type { UploadedFile } from './types/index.js';
 
 /** Base URL for the attachment REST API endpoint. */
 export const attachmentUrl = `${restBaseUrl}/attachment`;

@@ -3,8 +3,8 @@
 // =============================================================================
 
 import { useState, useEffect } from 'react';
-import { conversationMemoryStore, type ConversationMemoryState } from './store';
-import type { StoredMessage, ConversationSummary } from './types';
+import { conversationMemoryStore, type ConversationMemoryState } from './store.js';
+import type { StoredMessage, ConversationSummary } from './types.js';
 
 function useMemoryStoreSelector<T>(select: (state: ConversationMemoryState) => T): T {
   const [value, setValue] = useState<T>(() => select(conversationMemoryStore.getState()));

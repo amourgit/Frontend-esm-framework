@@ -3,10 +3,10 @@ import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import classNames from 'classnames';
-import { CloseIcon, MaximizeIcon } from '../../icons';
-import { DecoratedCard } from '../../cards/decorated-card';
-import { cardModalAnimationPresets } from './card-modal.animations';
-import type { CardModalAnimationConfig, CardModalProps } from './card-modal.types';
+import { CloseIcon, MaximizeIcon } from '../../icons/index.js';
+import { DecoratedCard } from '../../cards/decorated-card/index.js';
+import { cardModalAnimationPresets } from './card-modal.animations.js';
+import type { CardModalAnimationConfig, CardModalProps } from './card-modal.types.js';
 import styles from './card-modal.module.scss';
 
 interface DockState {

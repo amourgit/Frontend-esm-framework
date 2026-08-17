@@ -2,7 +2,7 @@
 //  EGEN THEME ENGINE — Flatten JSON → variables CSS (résolution light/dark)
 // ============================================================================
 
-import type { FlattenResult } from './types';
+import type { FlattenResult } from './types.js';
 
 const DEFAULT_IGNORE_KEYS = ['priority', 'meta'];
 const DEFAULT_SEPARATOR = '-';

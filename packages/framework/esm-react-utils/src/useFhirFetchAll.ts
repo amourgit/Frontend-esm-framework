@@ -1,6 +1,6 @@
-import { type UseServerInfiniteReturnObject } from './useEgenInfinite';
-import { getFhirServerPaginationHandlers } from './useFhirPagination';
-import { useServerFetchAll, type UseServerFetchAllOptions } from './useEgenFetchAll';
+import { type UseServerInfiniteReturnObject } from './useEgenInfinite.js';
+import { getFhirServerPaginationHandlers } from './useFhirPagination.js';
+import { useServerFetchAll, type UseServerFetchAllOptions } from './useEgenFetchAll.js';
 
 /**
  * This hook handles fetching results from *all* pages of a paginated FHIR REST endpoint, making multiple requests

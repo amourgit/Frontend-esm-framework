@@ -3,8 +3,8 @@ import { reportError } from '@egen-civitas/esm-error-handling';
 import { createGlobalStore } from '@egen-civitas/esm-state';
 import { isUndefined } from 'lodash-es';
 import { Observable } from 'rxjs';
-import { egenFetch, restBaseUrl, sessionEndpoint } from './egen-fetch';
-import type { LoggedInUser, SessionLocation, Privilege, Role, Session, FetchResponse } from './types';
+import { egenFetch, restBaseUrl, sessionEndpoint } from './egen-fetch.js';
+import type { LoggedInUser, SessionLocation, Privilege, Role, Session, FetchResponse } from './types/index.js';
 
 export type SessionStore = LoadedSessionStore | UnloadedSessionStore;
 

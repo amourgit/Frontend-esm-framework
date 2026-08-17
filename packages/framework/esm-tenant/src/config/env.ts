@@ -46,7 +46,7 @@
 //  (voir types.ts pour la philosophie de cette refonte).
 // ============================================================================
 
-import type { TenantMode, TenantResolutionStrategy, TenantSystemConfig } from '../types';
+import type { TenantMode, TenantResolutionStrategy, TenantSystemConfig } from '../types.js';
 
 /** Lit une valeur de config depuis `window.<key>`, ou `undefined` si absente/vide. */
 function win(key: string): string | undefined {

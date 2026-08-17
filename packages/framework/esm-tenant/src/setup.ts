@@ -8,10 +8,10 @@
 //  de thème/permissions locale — voir types.ts pour la philosophie.
 // ============================================================================
 
-import type { TenantSystemConfig, TenantId, TenantResolutionStrategy } from './types';
-import { resolveConfigFromEnv } from './config/env';
-import { resolveActiveTenantId, persistActiveTenant, clearPersistedTenant } from './context/resolver';
-import { setTenantConfig, setActiveTenantIdInStore, getTenantStoreState } from './context/store';
+import type { TenantSystemConfig, TenantId, TenantResolutionStrategy } from './types.js';
+import { resolveConfigFromEnv } from './config/env.js';
+import { resolveActiveTenantId, persistActiveTenant, clearPersistedTenant } from './context/resolver.js';
+import { setTenantConfig, setActiveTenantIdInStore, getTenantStoreState } from './context/store.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -143,4 +143,4 @@ export function recaptureTenant(): void {
 }
 
 // Re-export pratique
-export { storeHeaderTenantId } from './context/resolver';
+export { storeHeaderTenantId } from './context/resolver.js';

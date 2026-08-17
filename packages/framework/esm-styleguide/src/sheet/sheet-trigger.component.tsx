@@ -1,7 +1,7 @@
 /** @category Sheet */
 import React from 'react';
 import classNames from 'classnames';
-import { useSheetContext } from './sheet.context';
+import { useSheetContext } from './sheet.context.js';
 import styles from './sheet.module.scss';
 
 export interface SheetTriggerProps {

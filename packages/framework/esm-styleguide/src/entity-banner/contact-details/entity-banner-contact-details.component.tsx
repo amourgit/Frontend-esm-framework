@@ -5,9 +5,9 @@ import { InlineLoading } from '@carbon/react';
 import { type CoreTranslationKey, getCoreTranslation } from '@egen-civitas/esm-translations';
 import { ConfigurableLink, useEntity } from '@egen-civitas/esm-react-utils';
 import { parseDate } from '@egen-civitas/esm-utils';
-import { useEntityContactAttributes } from './useEntityAttributes';
-import { useEntityGroupsForEntity } from './useEntityGroupsForEntity';
-import { useRelationships } from './useRelationships';
+import { useEntityContactAttributes } from './useEntityAttributes.js';
+import { useEntityGroupsForEntity } from './useEntityGroupsForEntity.js';
+import { useRelationships } from './useRelationships.js';
 import styles from './entity-banner-contact-details.module.scss';
 
 interface ContactDetailsProps {

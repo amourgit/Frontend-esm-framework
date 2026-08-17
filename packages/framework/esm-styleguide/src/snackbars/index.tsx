@@ -3,10 +3,10 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Subject } from 'rxjs';
 
-import type { SnackbarDescriptor, SnackbarMeta } from './snackbar.component';
-import ActiveSnackbars from './active-snackbar.component';
+import type { SnackbarDescriptor, SnackbarMeta } from './snackbar.component.js';
+import ActiveSnackbars from './active-snackbar.component.js';
 
-export { type SnackbarDescriptor, type SnackbarType, type SnackbarMeta } from './snackbar.component';
+export { type SnackbarDescriptor, type SnackbarType, type SnackbarMeta } from './snackbar.component.js';
 
 const snackbarsSubject = new Subject<SnackbarMeta>();
 let snackbarId = 0;

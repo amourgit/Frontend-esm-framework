@@ -21,7 +21,7 @@
 // =============================================================================
 
 // ─── Orchestrateur ────────────────────────────────────────────────────────────
-export { initAIFramework, cleanupAIFramework, isAIFrameworkInitialized } from './orchestrator';
+export { initAIFramework, cleanupAIFramework, isAIFrameworkInitialized } from './orchestrator.js';
 
 // ─── Configuration ────────────────────────────────────────────────────────────
 export {
@@ -135,4 +135,4 @@ export {
   useAIActionable,
   useAIObservable,
   type UseExecuteToolResult,
-} from './hooks';
+} from './hooks.js';

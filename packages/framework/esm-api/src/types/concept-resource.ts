@@ -1,4 +1,4 @@
-import { type EgenResource } from './egen-resource';
+import { type EgenResource } from './egen-resource.js';
 
 // TODO: make this extends EgenResourceStrict
 export interface Concept extends EgenResource {

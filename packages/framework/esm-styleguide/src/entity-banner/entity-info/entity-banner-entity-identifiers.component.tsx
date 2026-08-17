@@ -2,7 +2,7 @@
 import React from 'react';
 import { FormLabel, Tag } from '@carbon/react';
 import { useConfig, usePrimaryIdentifierCode } from '@egen-civitas/esm-react-utils';
-import { type StyleguideConfigObject } from '../../config-schema';
+import { type StyleguideConfigObject } from '../../config-schema.js';
 import styles from './entity-banner-entity-info.module.scss';
 
 interface IdentifiersProps {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Layer, Tile } from '@carbon/react';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import styles from './error-state.module.scss';
-import { CardHeader } from '../cards';
+import { CardHeader } from '../cards/index.js';
 
 export interface ErrorStateProps {
   /** The error that caused this error card to be rendered. Expected to be a failed fetch result. */

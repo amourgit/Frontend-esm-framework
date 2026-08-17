@@ -354,6 +354,9 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
     ].filter(Boolean),
     resolve: {
       extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.json'],
+      extensionAlias: {
+        '.js': ['.ts', '.tsx', '.js'],
+      },
       alias: {
         '@egen-civitas/esm-framework': '@egen-civitas/esm-framework/src/internal',
         'lodash.debounce': 'lodash-es/debounce',

@@ -1,1 +1,1 @@
-export { createGlobalStore, getGlobalStore, subscribeTo } from './state';
+export { createGlobalStore, getGlobalStore, subscribeTo } from './state.js';

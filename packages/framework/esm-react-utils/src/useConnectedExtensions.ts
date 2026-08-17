@@ -1,6 +1,6 @@
 /** @module @category Extension */
 import { type ConnectedExtension } from '@egen-civitas/esm-extensions';
-import { useAssignedExtensions } from './useAssignedExtensions';
+import { useAssignedExtensions } from './useAssignedExtensions.js';
 
 /**
  * Gets the assigned extension for a given extension slot name.

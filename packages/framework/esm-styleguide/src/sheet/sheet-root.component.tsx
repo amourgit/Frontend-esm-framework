@@ -1,7 +1,7 @@
 /** @category Sheet */
 import React, { useCallback, useState } from 'react';
-import { SheetContext } from './sheet.context';
-import type { SheetSide } from './sheet.context';
+import { SheetContext } from './sheet.context.js';
+import type { SheetSide } from './sheet.context.js';
 
 export interface SheetRootProps {
   children: React.ReactNode;

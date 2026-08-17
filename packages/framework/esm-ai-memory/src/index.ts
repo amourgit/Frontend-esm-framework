@@ -15,10 +15,10 @@ export type {
   ConversationSummary,
   SyncStatus,
   ConversationStorageAdapter,
-} from './types';
+} from './types.js';
 
 // ── Setup (app assistant, une seule fois au boot) ──────────────────────────
-export { initConversationMemory, _resetConversationMemory, _configureAdapters } from './store';
+export { initConversationMemory, _resetConversationMemory, _configureAdapters } from './store.js';
 
 // ── Mutations ───────────────────────────────────────────────────────────────
 export {
@@ -31,9 +31,9 @@ export {
   deleteConversation,
   getConversationMemoryState,
   generateId,
-} from './store';
+} from './store.js';
 
-export type { ConversationMemoryState } from './store';
+export type { ConversationMemoryState } from './store.js';
 
 // ── React Hooks ─────────────────────────────────────────────────────────────
 export {
@@ -41,10 +41,10 @@ export {
   useConversationMemoryStatus,
   useActiveConversationId,
   useConversationSummaries,
-} from './hooks';
+} from './hooks.js';
 
 // ── Adaptateurs (pour composition avancée / tests) ─────────────────────────
-export { createIndexedDBAdapter } from './adapters/indexeddb-adapter';
-export { createBackendAdapter } from './adapters/backend-adapter';
-export { createSyncOrchestrator } from './sync-orchestrator';
-export type { ConversationSyncOrchestrator, SyncOrchestratorOptions } from './sync-orchestrator';
+export { createIndexedDBAdapter } from './adapters/indexeddb-adapter.js';
+export { createBackendAdapter } from './adapters/backend-adapter.js';
+export { createSyncOrchestrator } from './sync-orchestrator.js';
+export type { ConversationSyncOrchestrator, SyncOrchestratorOptions } from './sync-orchestrator.js';

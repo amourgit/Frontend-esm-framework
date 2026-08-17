@@ -2,7 +2,7 @@ import fullLogo from './egen-logo-full.svg';
 import partialLogo from './egen-logo-partial.svg';
 import iconLogo from './egen-logo-icon.svg';
 import whiteLogo from './egen-logo-white.svg';
-import { addSvg } from '../svg-utils';
+import { addSvg } from '../svg-utils.js';
 
 /**
  * Registers the default Egen logo SVGs into the SVG sprite container.

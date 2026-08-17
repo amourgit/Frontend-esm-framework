@@ -1,5 +1,5 @@
 /** @module @category Navigation */
-import { navigate } from '../navigation/navigate';
+import { navigate } from '../navigation/navigate.js';
 
 const historyKey = 'egen:history';
 

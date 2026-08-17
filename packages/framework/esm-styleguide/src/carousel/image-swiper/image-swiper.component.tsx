@@ -1,7 +1,7 @@
 /** @category ImageSwiper */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import type { ImageSwiperProps } from './image-swiper.types';
+import type { ImageSwiperProps } from './image-swiper.types.js';
 import styles from './image-swiper.module.scss';
 
 /**

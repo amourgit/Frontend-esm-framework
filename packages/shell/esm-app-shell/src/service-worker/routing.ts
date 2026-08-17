@@ -3,13 +3,13 @@ import { registerRoute } from 'workbox-routing';
 import { getOrCreateDefaultRouter } from 'workbox-routing/utils/getOrCreateDefaultRouter';
 import { validMethods } from 'workbox-routing/utils/constants';
 import { CacheOnly, NetworkFirst, NetworkOnly } from 'workbox-strategies';
-import { indexUrl, egenCacheName, egenOfflineCachingStrategyHttpHeaderName } from './constants';
-import { ServiceWorkerDb } from './storage';
+import { indexUrl, egenCacheName, egenOfflineCachingStrategyHttpHeaderName } from './constants.js';
+import { ServiceWorkerDb } from './storage.js';
 import {
   getEgenHeader,
   parseEgenOfflineResponseBodyHeader,
   parseEgenOfflineResponseStatusHeader,
-} from './http-header-utils';
+} from './http-header-utils.js';
 import type { EgenOfflineCachingStrategy } from '@egen-civitas/esm-offline';
 import uniq from 'lodash-es/uniq';
 

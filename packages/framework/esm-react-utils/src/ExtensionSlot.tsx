@@ -1,9 +1,9 @@
 /** @module @category Extension */
 import React, { useRef, useMemo, useEffect } from 'react';
 import { updateInternalExtensionStore, type AssignedExtension } from '@egen-civitas/esm-extensions';
-import { ComponentContext } from './ComponentContext';
-import { Extension } from './Extension';
-import { useExtensionSlot } from './useExtensionSlot';
+import { ComponentContext } from './ComponentContext.js';
+import { Extension } from './Extension.js';
+import { useExtensionSlot } from './useExtensionSlot.js';
 
 export interface ExtensionSlotBaseProps {
   /** The name of the extension slot */

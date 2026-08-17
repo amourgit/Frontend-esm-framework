@@ -1,6 +1,6 @@
 import React, { forwardRef, useContext } from 'react';
 import { DatePickerStateContext, DateRangePickerStateContext } from 'react-aria-components';
-import { CalendarIcon, WarningIcon } from '../icons';
+import { CalendarIcon, WarningIcon } from '../icons/index.js';
 
 /**
  * Renders a calendar or warning icon depending on the validation state

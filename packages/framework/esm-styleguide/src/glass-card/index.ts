@@ -1,2 +1,2 @@
-export * from './liquid-glass-card.component';
-export * from './liquid-glass-card.types';
+export * from './liquid-glass-card.component.js';
+export * from './liquid-glass-card.types.js';

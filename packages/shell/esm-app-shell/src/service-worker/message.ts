@@ -4,9 +4,9 @@ import type {
   RegisterDynamicRouteMessage,
 } from '@egen-civitas/esm-offline';
 import escapeRegExp from 'lodash-es/escapeRegExp';
-import { cacheImportMapReferences } from './caching';
-import type { DynamicRouteRegistration } from './storage';
-import { ServiceWorkerDb } from './storage';
+import { cacheImportMapReferences } from './caching.js';
+import type { DynamicRouteRegistration } from './storage.js';
+import { ServiceWorkerDb } from './storage.js';
 
 const messageHandlers = {
   onImportMapChanged,

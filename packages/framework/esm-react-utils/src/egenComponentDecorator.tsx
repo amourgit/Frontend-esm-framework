@@ -4,7 +4,7 @@ import { type Cache, SWRConfig, type SWRConfiguration } from 'swr';
 import type {} from '@egen-civitas/esm-globals';
 import { egenFetch, EgenFetchError } from '@egen-civitas/esm-api';
 import { type ComponentConfig, type ExtensionData } from '@egen-civitas/esm-extensions';
-import { ComponentContext } from './ComponentContext';
+import { ComponentContext } from './ComponentContext.js';
 
 const defaultOpts = {
   strictMode: true,

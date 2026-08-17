@@ -521,6 +521,9 @@ module.exports = (env, argv = []) => {
     resolve: {
       mainFields: ['module', 'main'],
       extensions: ['.ts', '.tsx', '.js', '.jsx', '.css', '.scss'],
+      extensionAlias: {
+        '.js': ['.ts', '.tsx', '.js'],
+      },
       fallback: {
         http: false,
         stream: false,

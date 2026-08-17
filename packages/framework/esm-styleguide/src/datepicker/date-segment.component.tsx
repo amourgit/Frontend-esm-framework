@@ -8,7 +8,7 @@ import React, {
 import { mergeProps, useDateSegment, useFocusRing, useHover, useObjectRef } from 'react-aria';
 import { DateFieldStateContext, type DateSegmentProps } from 'react-aria-components';
 import { filterDOMProps } from '@react-aria/utils';
-import { useRenderProps } from './hooks';
+import { useRenderProps } from './hooks.js';
 
 /**
  * This component represents a part of the displayed date in the date picker.

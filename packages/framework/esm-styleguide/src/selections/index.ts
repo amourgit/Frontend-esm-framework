@@ -4,5 +4,5 @@
 //  déclencheur, recherche optionnelle, rendu personnalisable) — tenants,
 //  langues, utilisateurs, rôles, etc.
 // ============================================================================
-export * from './select-popover';
-export * from './interactive-selector';
+export * from './select-popover/index.js';
+export * from './interactive-selector/index.js';

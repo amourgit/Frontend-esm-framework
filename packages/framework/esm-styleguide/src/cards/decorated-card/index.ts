@@ -1,2 +1,2 @@
-export * from './decorated-card.component';
-export * from './decorated-card.types';
+export * from './decorated-card.component.js';
+export * from './decorated-card.types.js';

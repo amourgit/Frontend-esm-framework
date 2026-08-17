@@ -3,7 +3,7 @@ import React from 'react';
 import { Tag } from '@carbon/react';
 import { useConfig } from '@egen-civitas/esm-react-utils';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
-import { type StyleguideConfigObject } from '../config-schema';
+import { type StyleguideConfigObject } from '../config-schema.js';
 
 export interface ClassificationTag {
   display: string;

@@ -2,8 +2,8 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Subject } from 'rxjs';
-import type { ToastDescriptor, ToastNotificationMeta } from './toast.component';
-import ActiveToasts from './active-toasts.component';
+import type { ToastDescriptor, ToastNotificationMeta } from './toast.component.js';
+import ActiveToasts from './active-toasts.component.js';
 import isEmpty from 'lodash-es/isEmpty';
 
 export {
@@ -12,7 +12,7 @@ export {
   type ToastType,
   type ToastVariant,
   type ToastNotificationMeta,
-} from './toast.component';
+} from './toast.component.js';
 
 const toastsSubject = new Subject<ToastNotificationMeta>();
 let toastId = 0;

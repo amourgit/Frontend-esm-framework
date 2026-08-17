@@ -4,8 +4,8 @@ import React from 'react';
 import ReactDOMClient from 'react-dom/client';
 import type { AppProps } from 'single-spa';
 import singleSpaReact, { type ReactAppOrParcel } from 'single-spa-react';
-import type { ComponentDecoratorOptions } from './egenComponentDecorator';
-import { egenComponentDecorator } from './egenComponentDecorator';
+import type { ComponentDecoratorOptions } from './egenComponentDecorator.js';
+import { egenComponentDecorator } from './egenComponentDecorator.js';
 
 /**
  * Creates a single-spa lifecycle object for a React component. The component is

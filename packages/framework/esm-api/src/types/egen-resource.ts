@@ -1,4 +1,4 @@
-import { type User } from './user-resource';
+import { type User } from './user-resource.js';
 
 export interface EgenResource extends EgenResourceStrict {
   [anythingElse: string]: any;

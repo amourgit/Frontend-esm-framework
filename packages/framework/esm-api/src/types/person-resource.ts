@@ -1,5 +1,5 @@
-import { type Concept } from './concept-resource';
-import { type EgenResourceStrict, type EgenResource } from './egen-resource';
+import { type Concept } from './concept-resource.js';
+import { type EgenResourceStrict, type EgenResource } from './egen-resource.js';
 
 export interface PersonAttribute extends EgenResourceStrict {
   attributeType?: EgenResource;

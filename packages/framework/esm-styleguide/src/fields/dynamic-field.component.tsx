@@ -1,11 +1,11 @@
 /** @category Fields */
 import React, { useEffect, useId, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { FieldIconComponent } from './field-icon.component';
-import { ValidationIcon } from './validation-icon.component';
-import { KineticLabel } from './kinetic-label.component';
-import { useFieldValidation } from './use-field-validation.hook';
-import { defaultValidation, type DynamicFieldProps } from './dynamic-field.types';
+import { FieldIconComponent } from './field-icon.component.js';
+import { ValidationIcon } from './validation-icon.component.js';
+import { KineticLabel } from './kinetic-label.component.js';
+import { useFieldValidation } from './use-field-validation.hook.js';
+import { defaultValidation, type DynamicFieldProps } from './dynamic-field.types.js';
 import styles from './dynamic-field.module.scss';
 
 /**

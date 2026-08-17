@@ -6,7 +6,7 @@ import jsepNumbers from '@jsep-plugin/numbers';
 import jsepRegex from '@jsep-plugin/regex';
 import jsepTernary from '@jsep-plugin/ternary';
 import jsepTemplate, { type TemplateElement, type TemplateLiteral } from '@jsep-plugin/template';
-import { globals, globalsAsync } from './globals';
+import { globals, globalsAsync } from './globals.js';
 
 jsep.plugins.register(jsepArrow);
 jsep.plugins.register(jsepNew);

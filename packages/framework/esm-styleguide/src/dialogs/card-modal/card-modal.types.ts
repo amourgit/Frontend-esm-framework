@@ -1,7 +1,7 @@
 /** @category CardModal */
 import type React from 'react';
 import type { Transition, Variants } from 'framer-motion';
-import type { CardProps, CardVariant } from '../../cards/decorated-card';
+import type { CardProps, CardVariant } from '../../cards/decorated-card/index.js';
 
 /** Préréglages d'animation d'ouverture/fermeture prêts à l'emploi. */
 export type CardModalAnimationPreset =

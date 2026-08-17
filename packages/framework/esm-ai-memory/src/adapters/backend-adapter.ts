@@ -21,7 +21,7 @@
 // =============================================================================
 
 import { egenFetch } from '@egen-civitas/esm-api';
-import type { ConversationStorageAdapter, ConversationSummary, StoredConversation } from '../types';
+import type { ConversationStorageAdapter, ConversationSummary, StoredConversation } from '../types.js';
 
 function warnOnce(message: string, err: unknown): void {
   if (typeof console !== 'undefined') {

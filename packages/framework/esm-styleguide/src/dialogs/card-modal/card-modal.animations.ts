@@ -1,6 +1,6 @@
 /** @category CardModal */
 import type { Variants } from 'framer-motion';
-import type { CardModalAnimationPreset } from './card-modal.types';
+import type { CardModalAnimationPreset } from './card-modal.types.js';
 
 export const cardModalAnimationPresets: Record<CardModalAnimationPreset, Variants> = {
   fade: {

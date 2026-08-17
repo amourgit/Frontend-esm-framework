@@ -1,6 +1,6 @@
 /** @category Fields */
 import { useEffect, useState } from 'react';
-import type { ValidationConfig, ValidationRule, ValidationRuleType } from './dynamic-field.types';
+import type { ValidationConfig, ValidationRule, ValidationRuleType } from './dynamic-field.types.js';
 
 const vibrationPatterns: Record<ValidationRuleType, number[]> = {
   error: [100, 50, 100],

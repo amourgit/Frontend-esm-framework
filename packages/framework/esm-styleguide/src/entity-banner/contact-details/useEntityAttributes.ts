@@ -1,7 +1,7 @@
 import { restBaseUrl } from '@egen-civitas/esm-api';
 import { useConfig } from '@egen-civitas/esm-react-utils';
 import useSWRImmutable from 'swr/immutable';
-import { type StyleguideConfigObject } from '../../config-schema';
+import { type StyleguideConfigObject } from '../../config-schema.js';
 
 interface AttributeType {
   display: string;

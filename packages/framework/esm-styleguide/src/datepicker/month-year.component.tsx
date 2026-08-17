@@ -9,8 +9,8 @@ import {
 } from 'react-aria-components';
 import { getLocalTimeZone } from '@internationalized/date';
 import { formatDate } from '@egen-civitas/esm-utils';
-import { useIntlLocale } from './hooks';
-import { CaretDownIcon, CaretUpIcon } from '../icons';
+import { useIntlLocale } from './hooks.js';
+import { CaretDownIcon, CaretUpIcon } from '../icons/index.js';
 
 function getYearAsNumber(date: Date, intlLocale: Intl.Locale) {
   return Number.parseInt(

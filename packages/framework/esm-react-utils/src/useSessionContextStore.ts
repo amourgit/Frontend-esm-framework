@@ -1,6 +1,6 @@
 import { useEffect, useId } from 'react';
 import { getWorkSessionStore, type WorkSession, type WorkSessionStoreState } from '@egen-civitas/esm-data-api';
-import { type Actions, useStoreWithActions } from './useStore';
+import { type Actions, useStoreWithActions } from './useStore.js';
 
 const sessionContextStoreActions = {
   setSessionContext(_: WorkSessionStoreState, newSelectedSession: WorkSession | null) {

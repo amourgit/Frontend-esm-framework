@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { Notification } from './notification.component';
+import { Notification } from './notification.component.js';
 
 const notificationMeta: Meta<typeof Notification> = {
   title: 'Components/Notification',

@@ -1,6 +1,6 @@
 import { type EgenResource } from '@egen-civitas/esm-api';
-import { type Interaction } from './interaction-resource';
-import { type Entity } from './entity-resource';
+import { type Interaction } from './interaction-resource.js';
+import { type Entity } from './entity-resource.js';
 
 /**
  * Payload to create a new session.

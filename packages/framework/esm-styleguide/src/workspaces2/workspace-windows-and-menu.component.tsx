@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { subscribeEgenEvent } from '@egen-civitas/esm-data-api';
 import classNames from 'classnames';
 import { createRoot } from 'react-dom/client';
-import { ActionMenu } from './action-menu2/action-menu2.component';
-import { closeWorkspaceGroup2, useWorkspace2Store } from './workspace2';
-import { shouldCloseOnUrlChange } from './scope-utils';
-import ActiveWorkspaceWindow from './active-workspace-window.component';
+import { ActionMenu } from './action-menu2/action-menu2.component.js';
+import { closeWorkspaceGroup2, useWorkspace2Store } from './workspace2.js';
+import { shouldCloseOnUrlChange } from './scope-utils.js';
+import ActiveWorkspaceWindow from './active-workspace-window.component.js';
 import styles from './workspace-windows-and-menu.module.scss';
 
 export function renderWorkspaceWindowsAndMenu(target: HTMLElement | null) {

@@ -3,7 +3,7 @@ import {
   getCurrentUser,
   subscribeEgenEvent,
 } from '@egen-civitas/esm-framework/src/internal';
-import { setupOptionalDependencies } from './optionaldeps';
+import { setupOptionalDependencies } from './optionaldeps.js';
 
 subscribeEgenEvent('started', () => cleanupObsoleteFeatureFlags());
 subscribeEgenEvent('started', () => {

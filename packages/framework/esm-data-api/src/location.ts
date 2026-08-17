@@ -2,7 +2,7 @@
 import { egenObservableFetch, restBaseUrl } from '@egen-civitas/esm-api';
 import type { Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators/index.js';
-import type { Location } from './types';
+import type { Location } from './types/index.js';
 
 export function toLocationObject(egenRestForm: any): Location {
   return {

@@ -1,8 +1,8 @@
 /** @category CascadingNavDropdown */
 import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { SearchIcon, ChevronRightIcon } from '../icons/icons';
-import type { NavigationItem } from './cascading-nav-dropdown.types';
+import { SearchIcon, ChevronRightIcon } from '../icons/icons.js';
+import type { NavigationItem } from './cascading-nav-dropdown.types.js';
 import styles from './cascading-nav-dropdown.module.scss';
 
 interface ColumnWithSearchProps {

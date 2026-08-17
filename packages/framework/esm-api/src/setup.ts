@@ -1,7 +1,7 @@
 import { defineConfigSchema } from '@egen-civitas/esm-config';
-import { refetchCurrentUser } from './current-user';
-import { configSchema } from './config-schema';
-import { isDevAuthBypassEnabled } from './dev-auth-bypass';
+import { refetchCurrentUser } from './current-user.js';
+import { configSchema } from './config-schema.js';
+import { isDevAuthBypassEnabled } from './dev-auth-bypass.js';
 
 /**
  * @internal

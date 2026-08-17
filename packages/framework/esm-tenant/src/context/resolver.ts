@@ -20,8 +20,8 @@
 //  7. static     — config globale window / env
 // ============================================================================
 
-import type { TenantId, TenantResolutionStrategy, TenantSystemConfig } from '../types';
-import { isLocalhostOrIp, inferRootDomain, extractSubdomain } from '../utils/domain-utils';
+import type { TenantId, TenantResolutionStrategy, TenantSystemConfig } from '../types.js';
+import { isLocalhostOrIp, inferRootDomain, extractSubdomain } from '../utils/domain-utils.js';
 
 // ---------------------------------------------------------------------------
 // Stratégies individuelles

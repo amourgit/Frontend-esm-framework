@@ -3,15 +3,15 @@ import classNames from 'classnames';
 import { type DateValue } from 'react-aria';
 import { Button, DatePicker, type DatePickerProps, FieldError, Group, Provider, Label } from 'react-aria-components';
 import { type CalendarDate } from '@internationalized/date';
-import { type DateInputValue, type DatePickerBaseProps } from './types';
-import { I18nWrapper } from './i18n-wrapper.component';
-import { dateToInternationalizedDate, internationalizedDateToDate } from './utils';
-import { EgenIntlLocaleContext, useDatepickerContext } from './hooks';
-import { DEFAULT_MIN_DATE_FLOOR } from './defaults';
-import { CalendarPopover } from './calendar-popover.component';
-import { DatePickerInput } from './date-picker-input.component';
-import { DatePickerIcon } from './date-picker-icon.component';
-import { DateSegment } from './date-segment.component';
+import { type DateInputValue, type DatePickerBaseProps } from './types.js';
+import { I18nWrapper } from './i18n-wrapper.component.js';
+import { dateToInternationalizedDate, internationalizedDateToDate } from './utils.js';
+import { EgenIntlLocaleContext, useDatepickerContext } from './hooks.js';
+import { DEFAULT_MIN_DATE_FLOOR } from './defaults.js';
+import { CalendarPopover } from './calendar-popover.component.js';
+import { DatePickerInput } from './date-picker-input.component.js';
+import { DatePickerIcon } from './date-picker-icon.component.js';
+import { DateSegment } from './date-segment.component.js';
 import styles from './datepicker.module.scss';
 
 /**

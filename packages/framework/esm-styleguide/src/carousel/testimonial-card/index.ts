@@ -1,3 +1,3 @@
-export * from './testimonial-card.component';
-export * from './testimonial-card-stack.component';
-export * from './testimonial-card.types';
+export * from './testimonial-card.component.js';
+export * from './testimonial-card-stack.component.js';
+export * from './testimonial-card.types.js';

@@ -2,7 +2,7 @@
 import useSWR from 'swr';
 import { egenFetch, restBaseUrl } from '@egen-civitas/esm-api';
 import { useConfig } from '@egen-civitas/esm-react-utils';
-import { type StyleguideConfigObject } from '../config-schema';
+import { type StyleguideConfigObject } from '../config-schema.js';
 
 export interface UseEntityPhotoResult {
   data: { dateTime: string; imageSrc: string } | null;

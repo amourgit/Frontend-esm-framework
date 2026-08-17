@@ -3,8 +3,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import GeoPattern from 'geopattern';
 import { SkeletonIcon } from '@carbon/react';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
-import { useEntityPhoto } from './useEntityPhoto';
-import PlaceholderIcon from './placeholder-icon.component';
+import { useEntityPhoto } from './useEntityPhoto.js';
+import PlaceholderIcon from './placeholder-icon.component.js';
 import styles from './entity-photo.module.scss';
 
 export interface EntityPhotoProps {

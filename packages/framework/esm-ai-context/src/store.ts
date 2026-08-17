@@ -8,9 +8,9 @@
 import { createGlobalStore, subscribeTo } from '@egen-civitas/esm-state';
 import { sessionStore, subscribeTenant } from '@egen-civitas/esm-api';
 import { AI_EVENTS, dispatchAIEvent } from '@egen-civitas/esm-ai-events';
-import { buildAIContext } from './builder';
-import { onProviderRegistryChange } from './provider-registry';
-import type { AIContextStore } from './types';
+import { buildAIContext } from './builder.js';
+import { onProviderRegistryChange } from './provider-registry.js';
+import type { AIContextStore } from './types.js';
 
 const STORE_NAME = 'egen:ai:context';
 

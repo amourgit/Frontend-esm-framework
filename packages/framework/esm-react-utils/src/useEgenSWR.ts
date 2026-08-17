@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react';
 import type { SWRConfiguration } from 'swr';
 import useSWR from 'swr';
 import { type FetchConfig, egenFetch, type FetchResponse } from '@egen-civitas/esm-api';
-import useAbortController from './useAbortController';
+import useAbortController from './useAbortController.js';
 
 export type ArgumentsTuple = [any, ...unknown[]];
 export type Key = string | ArgumentsTuple | undefined | null;

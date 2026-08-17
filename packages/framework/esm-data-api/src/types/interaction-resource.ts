@@ -1,9 +1,9 @@
 import { type EgenResource } from '@egen-civitas/esm-api';
-import { type Classification } from './classification-resource';
-import { type Location } from './location-resource';
-import { type DataPoint } from './datapoint-resource';
-import { type Entity } from './entity-resource';
-import { type WorkSession } from './session-resource';
+import { type Classification } from './classification-resource.js';
+import { type Location } from './location-resource.js';
+import { type DataPoint } from './datapoint-resource.js';
+import { type Entity } from './entity-resource.js';
+import { type WorkSession } from './session-resource.js';
 
 /**
  * Represents a generic interaction — a discrete event or transaction involving

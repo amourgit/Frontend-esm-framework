@@ -2,8 +2,8 @@
 //  @egen-civitas/esm-ai-config — Point d'entrée public
 // =============================================================================
 
-export * from './types';
-export * from './defaults';
-export * from './validation';
-export * from './store';
-export * from './hooks';
+export * from './types.js';
+export * from './defaults.js';
+export * from './validation.js';
+export * from './store.js';
+export * from './hooks.js';

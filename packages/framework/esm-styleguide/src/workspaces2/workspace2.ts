@@ -12,8 +12,8 @@ import {
 } from '@egen-civitas/esm-extensions';
 import { useStoreWithActions, type Actions } from '@egen-civitas/esm-react-utils';
 import { shallowEqual } from '@egen-civitas/esm-utils';
-import { showModal } from '../modals';
-import { type Workspace2DefinitionProps } from './workspace2.component';
+import { showModal } from '../modals/index.js';
+import { type Workspace2DefinitionProps } from './workspace2.component.js';
 
 /**
  * Attempts to launch the specified workspace group with the given group props. Note that only one workspace group

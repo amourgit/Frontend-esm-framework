@@ -20,10 +20,6 @@
     "./src/public": {
       "types": "./dist/public.d.ts",
       "default": "./dist/public.js"
-    },
-    "./mock": {
-      "import": "./mock.ts",
-      "require": "./mock-jest.ts"
     }
   },
   "sideEffects": false,

@@ -1,5 +1,5 @@
 import type { EgenOfflineHttpHeaderNames, EgenOfflineHttpHeaders } from '@egen-civitas/esm-offline';
-import { egenOfflineResponseBodyHttpHeaderName, egenOfflineResponseStatusHttpHeaderName } from './constants';
+import { egenOfflineResponseBodyHttpHeaderName, egenOfflineResponseStatusHttpHeaderName } from './constants.js';
 
 export function parseEgenOfflineResponseBodyHeader(headers: Headers) {
   // The ?? undefined here is important as getEgenHeader returns null by default when the header

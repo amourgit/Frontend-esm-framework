@@ -8,8 +8,8 @@ import {
   type DataPointInterpretation,
   type DATAPOINT_INTERPRETATION,
   type DataPointReferenceRanges,
-} from './interpretation-utils';
-import { useConceptReferenceRange } from './use-concept-reference-range';
+} from './interpretation-utils.js';
+import { useConceptReferenceRange } from './use-concept-reference-range.js';
 import styles from './numeric-datapoint.module.scss';
 
 export interface NumericDataPointProps {

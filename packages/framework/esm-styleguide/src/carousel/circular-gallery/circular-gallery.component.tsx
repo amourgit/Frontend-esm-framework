@@ -1,10 +1,10 @@
 /** @category CircularGallery */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { ChevronLeftIcon, ChevronRightIcon } from '../../icons';
-import { GalleryImage } from './gallery-image.component';
-import { GalleryTabs } from './gallery-tabs.component';
-import type { CircularGalleryProps } from './circular-gallery.types';
+import { ChevronLeftIcon, ChevronRightIcon } from '../../icons/index.js';
+import { GalleryImage } from './gallery-image.component.js';
+import { GalleryTabs } from './gallery-tabs.component.js';
+import type { CircularGalleryProps } from './circular-gallery.types.js';
 import styles from './circular-gallery.module.scss';
 
 /**

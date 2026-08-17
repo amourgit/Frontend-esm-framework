@@ -4,8 +4,8 @@ import Parcel from 'single-spa-react/parcel';
 import { InlineLoading } from '@carbon/react';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import styles from './workspace.module.scss';
-import { type OpenWorkspace } from '../workspaces';
-import { useWorkspaceGroupStore } from '../workspace-sidebar-store/useWorkspaceGroupStore';
+import { type OpenWorkspace } from '../workspaces.js';
+import { useWorkspaceGroupStore } from '../workspace-sidebar-store/useWorkspaceGroupStore.js';
 
 interface WorkspaceRendererProps {
   workspace: OpenWorkspace;

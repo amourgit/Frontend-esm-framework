@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { Snackbar } from './snackbar.component';
+import { Snackbar } from './snackbar.component.js';
 
 const meta: Meta<typeof Snackbar> = {
   title: 'Components/Snackbar',

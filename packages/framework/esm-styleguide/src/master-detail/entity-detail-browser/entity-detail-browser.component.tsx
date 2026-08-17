@@ -1,9 +1,9 @@
 /** @category EntityDetailBrowser */
 import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { AddIcon, OverflowMenuHorizontalIcon } from '../../icons';
-import { GradientBlur } from './gradient-blur.component';
-import type { EntityDetailBrowserItem, EntityDetailBrowserProps } from './entity-detail-browser.types';
+import { AddIcon, OverflowMenuHorizontalIcon } from '../../icons/index.js';
+import { GradientBlur } from './gradient-blur.component.js';
+import type { EntityDetailBrowserItem, EntityDetailBrowserProps } from './entity-detail-browser.types.js';
 import styles from './entity-detail-browser.module.scss';
 
 /**

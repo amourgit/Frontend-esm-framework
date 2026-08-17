@@ -1,13 +1,13 @@
 /** @category Sheet */
-export * from './sheet.context';
-export * from './sheet-root.component';
-export * from './sheet-portal.component';
-export * from './sheet-overlay.component';
-export * from './sheet-trigger.component';
-export * from './sheet-content.component';
-export * from './sheet-parts.component';
+export * from './sheet.context.js';
+export * from './sheet-root.component.js';
+export * from './sheet-portal.component.js';
+export * from './sheet-overlay.component.js';
+export * from './sheet-trigger.component.js';
+export * from './sheet-content.component.js';
+export * from './sheet-parts.component.js';
 
-import { SheetRoot } from './sheet-root.component';
+import { SheetRoot } from './sheet-root.component.js';
 
 /**
  * `Sheet` — alias de `SheetRoot`, pour un usage en compound component :

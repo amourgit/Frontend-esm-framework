@@ -21,7 +21,7 @@
 //  de troncature défensive que EGEN_AI_CONTEXT_MAX_SIZE dans esm-ai-context.
 // =============================================================================
 
-import { getObservablesCatalogForLLM } from '../observables';
+import { getObservablesCatalogForLLM } from '../observables.js';
 
 const MAX_INTERACTIVE_ELEMENTS = 60;
 

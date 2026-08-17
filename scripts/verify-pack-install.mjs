@@ -11,7 +11,10 @@
  * tarballs locaux (protocole file:) pour les packages @egen-civitas/*, et
  * via le vrai registre npm pour tout le reste (react, rxjs, etc). Si une
  * dépendance interne n'est pas déclarée, `npm install` échoue ou
- * l'import() plante — exactement les bugs trouvés le */
+ * l'import() plante — exactement les bugs trouvés (esm-framework /
+ * esm-ai-framework, esm-extensions / esm-globals+esm-translations,
+ * esm-app-shell / esm-globals+esm-offline+esm-utils, esm-navigation).
+ */
 import { spawnSync } from 'node:child_process';
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -30,6 +33,23 @@ const KEEP_TMP = process.argv.includes('--keep');
 // script pour un cas structurellement hors-scope de ce test précis.
 const BUNDLER_ONLY = new Set([
   '@egen-civitas/esm-styleguide',
+  '@egen-civitas/esm-offline',
+  '@egen-civitas/esm-data-api',
+  '@egen-civitas/esm-react-utils',
+  '@egen-civitas/esm-ai-events',
+  '@egen-civitas/esm-ai-context',
+  '@egen-civitas/esm-ai-extensions',
+  '@egen-civitas/esm-ai-framework',
+  '@egen-civitas/esm-ai-memory',
+  '@egen-civitas/esm-ai-tools',
+]);
+
+// esm-app-shell n'est pas une librairie : c'est un bundle applicatif navigateur
+// (sortie rspack avec noms de fichiers hashés), servi tel quel par le CLI egen,
+// jamais require()/import()é par du code. Il n'a délibérément aucun point
+// d'entrée JS ("main"/"exports") — inutile donc de tenter de l'importer ici.
+const NOT_A_LIBRARY = new Set([
+  '@egen-civitas/esm-app-shell',
 ]);
 
 function run(cmd, args, opts = {}) {
@@ -94,8 +114,14 @@ globalThis.localStorage = win.localStorage;
 
 const names = ${JSON.stringify(Object.keys(deps).filter((n) => n !== 'happy-dom'))};
 const bundlerOnly = new Set(${JSON.stringify([...BUNDLER_ONLY])});
+const notALibrary = new Set(${JSON.stringify([...NOT_A_LIBRARY])});
 let failed = 0, skipped = 0;
 for (const name of names) {
+  if (notALibrary.has(name)) {
+    skipped++;
+    console.log('SKIP  ' + name + '  (pas une librairie importable, voir NOT_A_LIBRARY)');
+    continue;
+  }
   try {
     await import(name);
     console.log('OK    ' + name);

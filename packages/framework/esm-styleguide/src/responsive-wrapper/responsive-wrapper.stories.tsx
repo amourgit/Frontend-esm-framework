@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 import { TextInput } from '@carbon/react';
-import { ResponsiveWrapper } from './responsive-wrapper.component';
+import { ResponsiveWrapper } from './responsive-wrapper.component.js';
 
 const meta: Meta<typeof ResponsiveWrapper> = {
   title: 'Components/ResponsiveWrapper',

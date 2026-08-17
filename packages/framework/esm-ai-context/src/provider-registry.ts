@@ -3,7 +3,7 @@
 // =============================================================================
 
 import { dispatchAIEvent, AI_EVENTS } from '@egen-civitas/esm-ai-events';
-import type { AIContextProvider } from './types';
+import type { AIContextProvider } from './types.js';
 
 interface ProviderEntry {
   provider: AIContextProvider;

@@ -1,3 +1,3 @@
-export * from './card-modal.component';
-export * from './card-modal.types';
-export * from './card-modal.animations';
+export * from './card-modal.component.js';
+export * from './card-modal.types.js';
+export * from './card-modal.animations.js';

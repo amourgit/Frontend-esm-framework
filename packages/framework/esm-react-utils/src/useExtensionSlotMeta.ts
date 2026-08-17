@@ -1,7 +1,7 @@
 /** @module @category Extension */
 import type { ExtensionMeta } from '@egen-civitas/esm-extensions';
 import { useMemo } from 'react';
-import { useAssignedExtensions } from './useAssignedExtensions';
+import { useAssignedExtensions } from './useAssignedExtensions.js';
 
 /**
  * Extract meta data from all extension for a given extension slot.

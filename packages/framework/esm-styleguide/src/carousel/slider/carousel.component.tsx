@@ -2,9 +2,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import useEmblaCarousel from 'embla-carousel-react';
-import { CarouselContext } from './slider.context';
-import { SliderContainer } from './slider-container.component';
-import type { CarouselProps, SliderContainerProps, SliderProps } from './slider.types';
+import { CarouselContext } from './slider.context.js';
+import { SliderContainer } from './slider-container.component.js';
+import type { CarouselProps, SliderContainerProps, SliderProps } from './slider.types.js';
 import styles from './slider.module.scss';
 
 /**

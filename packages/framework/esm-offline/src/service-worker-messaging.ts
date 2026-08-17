@@ -1,7 +1,7 @@
 /** @module @category Offline */
 import type { ImportMap } from '@egen-civitas/esm-globals';
-import type { EgenOfflineCachingStrategy } from './service-worker-http-headers';
-import { getEgenServiceWorker } from './service-worker';
+import type { EgenOfflineCachingStrategy } from './service-worker-http-headers.js';
+import { getEgenServiceWorker } from './service-worker.js';
 
 /**
  * Sends the specified message to the application's service worker.

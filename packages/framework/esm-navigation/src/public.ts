@@ -1,6 +1,6 @@
-export * from './breadcrumbs/db';
-export * from './breadcrumbs/filter';
-export { getHistory, goBackInHistory } from './history/history';
-export * from './navigation/interpolate-string';
-export * from './navigation/navigate';
-export * from './types';
+export * from './breadcrumbs/db.js';
+export * from './breadcrumbs/filter.js';
+export { getHistory, goBackInHistory } from './history/history.js';
+export * from './navigation/interpolate-string.js';
+export * from './navigation/navigate.js';
+export * from './types.js';

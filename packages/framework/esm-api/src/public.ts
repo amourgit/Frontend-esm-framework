@@ -12,9 +12,9 @@ export {
   type LoadedSessionStore,
   type SessionStore,
   type UnloadedSessionStore,
-} from './current-user';
-export { isDevAuthBypassEnabled, applyDevAuthBypassForLogin } from './dev-auth-bypass';
-export * from './environment';
-export * from './types';
-export * from './egen-fetch';
-export * from './egen-backend-dependencies';
+} from './current-user.js';
+export { isDevAuthBypassEnabled, applyDevAuthBypassForLogin } from './dev-auth-bypass.js';
+export * from './environment.js';
+export * from './types/index.js';
+export * from './egen-fetch.js';
+export * from './egen-backend-dependencies.js';

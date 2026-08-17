@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import * as AllPictograms from './pictograms';
+import * as AllPictograms from './pictograms.js';
 
 // Collect all exported pictogram components (named *Pictogram, excluding
 // the base Pictogram component and type-only exports).

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { ErrorState } from './error-state.component';
+import { ErrorState } from './error-state.component.js';
 
 const meta: Meta<typeof ErrorState> = {
   title: 'Components/ErrorState',

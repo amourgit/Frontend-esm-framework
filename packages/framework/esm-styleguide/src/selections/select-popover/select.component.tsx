@@ -1,7 +1,7 @@
 /** @category SelectPopover */
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { SelectContext } from './select-popover.types';
-import type { SelectOption, SelectProps } from './select-popover.types';
+import { SelectContext } from './select-popover.types.js';
+import type { SelectOption, SelectProps } from './select-popover.types.js';
 
 /**
  * `Select` — provider du compound component (`SelectTrigger` + `SelectContent`).

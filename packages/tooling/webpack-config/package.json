@@ -14,10 +14,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/egen-civitas/egen-esm-core.git"
+    "url": "git+https://github.com/amourgit/Frontend-esm-framework.git",
+    "directory": "packages/tooling/webpack-config"
   },
   "bugs": {
-    "url": "https://github.com/egen-civitas/egen-esm-core/issues"
+    "url": "https://github.com/amourgit/Frontend-esm-framework/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -28,7 +29,7 @@
     "webpack",
     "config"
   ],
-  "homepage": "https://github.com/egen-civitas/egen-esm-core#readme",
+  "homepage": "https://github.com/amourgit/Frontend-esm-framework/tree/main/packages/tooling/webpack-config#readme",
   "dependencies": {
     "@swc/core": "1.15.21",
     "clean-webpack-plugin": "4.0.0",

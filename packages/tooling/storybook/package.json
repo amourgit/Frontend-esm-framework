@@ -45,5 +45,14 @@
     "svgo-loader": "4.0.0",
     "swr": "2.2.5",
     "typescript": "^5.8.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amourgit/Frontend-esm-framework.git",
+    "directory": "packages/tooling/storybook"
+  },
+  "bugs": {
+    "url": "https://github.com/amourgit/Frontend-esm-framework/issues"
+  },
+  "homepage": "https://github.com/amourgit/Frontend-esm-framework/tree/main/packages/tooling/storybook#readme"
 }

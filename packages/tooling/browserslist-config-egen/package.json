@@ -11,6 +11,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amourgit/Frontend-esm-core.git"
-  }
+    "url": "git+https://github.com/amourgit/Frontend-esm-framework.git",
+    "directory": "packages/tooling/browserslist-config-egen"
+  },
+  "bugs": {
+    "url": "https://github.com/amourgit/Frontend-esm-framework/issues"
+  },
+  "homepage": "https://github.com/amourgit/Frontend-esm-framework/tree/main/packages/tooling/browserslist-config-egen#readme"
 }

@@ -39,12 +39,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/egen-civitas/egen-esm-core.git"
+    "url": "git+https://github.com/amourgit/Frontend-esm-framework.git",
+    "directory": "packages/framework/esm-error-handling"
   },
   "bugs": {
-    "url": "https://github.com/egen-civitas/egen-esm-core/issues"
+    "url": "https://github.com/amourgit/Frontend-esm-framework/issues"
   },
-  "homepage": "https://github.com/egen-civitas/egen-esm-core#readme",
+  "homepage": "https://github.com/amourgit/Frontend-esm-framework/tree/main/packages/framework/esm-error-handling#readme",
   "publishConfig": {
     "access": "public"
   },

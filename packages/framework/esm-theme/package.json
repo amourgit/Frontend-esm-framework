@@ -39,5 +39,14 @@
   },
   "peerDependencies": {
     "rxjs": "^6.5.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amourgit/Frontend-esm-framework.git",
+    "directory": "packages/framework/esm-theme"
+  },
+  "bugs": {
+    "url": "https://github.com/amourgit/Frontend-esm-framework/issues"
+  },
+  "homepage": "https://github.com/amourgit/Frontend-esm-framework/tree/main/packages/framework/esm-theme#readme"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-ai-tools",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MPL-2.0",
   "description": "Registry de tools IA EGEN — tools natifs, pipeline de validation, vérification des permissions, exécution contrôlée.",
   "main": "dist/index.js",
@@ -55,7 +55,7 @@
   "peerDependencies": {
     "@egen-civitas/esm-api": "^1.0.0",
     "@egen-civitas/esm-state": "^1.0.0",
-    "rxjs": "^6.5.3"
+    "rxjs": "7.x"
   },
   "devDependencies": {
     "@egen-civitas/esm-ai-config": "^1.0.0",
@@ -69,7 +69,7 @@
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "rimraf": "^6.1.3",
-    "rxjs": "^6.5.3",
+    "rxjs": "^7.8.0",
     "vitest": "^4.1.2"
   },
   "bugs": {

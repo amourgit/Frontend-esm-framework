@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-app-shell",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MPL-2.0",
   "files": [
     "dist"
@@ -61,7 +61,7 @@
     "react-dom": "^18.3.1",
     "react-i18next": "^16.0.0",
     "react-router-dom": "^6.3.0",
-    "rxjs": "^6.5.3",
+    "rxjs": "^7.8.0",
     "semver": "^7.7.3",
     "single-spa": "^6.0.3",
     "swc-loader": "0.2.7",

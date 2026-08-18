@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-tenant",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MPL-2.0",
   "description": "Tenant capture system for EGEN SPA — resolves the active tenant from the URL (subdomain/path/query/JWT) and exposes it globally (store + window). No local tenant registry, no frontend validation — see src/types.ts.",
   "main": "dist/index.js",
@@ -33,7 +33,7 @@
   "peerDependencies": {
     "@egen-civitas/esm-state": "^1.0.0",
     "react": "^18.0.0",
-    "rxjs": "^6.5.3"
+    "rxjs": "7.x"
   },
   "devDependencies": {
     "@swc/cli": "0.8.1",

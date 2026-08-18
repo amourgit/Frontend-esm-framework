@@ -36,12 +36,6 @@ const BUNDLER_ONLY = new Set([
   '@egen-civitas/esm-offline',
   '@egen-civitas/esm-data-api',
   '@egen-civitas/esm-react-utils',
-  '@egen-civitas/esm-ai-events',
-  '@egen-civitas/esm-ai-context',
-  '@egen-civitas/esm-ai-extensions',
-  '@egen-civitas/esm-ai-framework',
-  '@egen-civitas/esm-ai-memory',
-  '@egen-civitas/esm-ai-tools',
 ]);
 
 // esm-app-shell n'est pas une librairie : c'est un bundle applicatif navigateur

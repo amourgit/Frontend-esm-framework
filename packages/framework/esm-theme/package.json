@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-theme",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MPL-2.0",
   "description": "Dynamic, schema-agnostic theme engine with priority-based JSON loading, light/dark resolution and per-app scoped overrides for EGEN SPA",
   "main": "dist/index.js",
@@ -38,7 +38,7 @@
     "vitest": "^4.1.2"
   },
   "peerDependencies": {
-    "rxjs": "^6.5.3"
+    "rxjs": "7.x"
   },
   "repository": {
     "type": "git",

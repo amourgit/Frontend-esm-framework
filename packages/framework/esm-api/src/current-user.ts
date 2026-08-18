@@ -81,7 +81,7 @@ function getCurrentUser(opts: { includeAuthStatus: true }): Observable<Session>;
  * @returns An Observable that produces {@link LoggedInUser} objects.
  */
 function getCurrentUser(opts: { includeAuthStatus: false }): Observable<LoggedInUser>;
-function getCurrentUser(opts = { includeAuthStatus: true }): Observable<Session | LoggedInUser> {
+function getCurrentUser(opts = { includeAuthStatus: true }): Observable<Session | LoggedInUser | undefined> {
   // Only fetch if: data is stale (>1min old) AND we have not hit max failures
   // The consecutiveSessionFetchFailures guard prevents an infinite retry loop
   // when the backend is unreachable (e.g. 504 Gateway Timeout).

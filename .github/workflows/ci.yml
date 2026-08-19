@@ -52,15 +52,23 @@ jobs:
       - name: Build all packages
         run: yarn build
 
-      # Vérifie la forme réelle de chaque tarball publiable (exports, main,
+      # Verifie la forme reelle de chaque tarball publiable (exports, main,
       # types, files) contre ce que `npm pack` publierait vraiment.
       - name: publint
-        run: node scripts/verify-publint.mjs
+        run: npm run verify:publint
 
-      # Le test décisif : pack chaque package publiable, l'installe dans un
-      # projet neuf totalement isolé du monorepo (aucun hoisting Yarn), puis
-      # importe réellement chacun d'eux. C'est ce test précis qui aurait
-      # détecté les dépendances internes non déclarées avant toute
-      # publication, plutôt que de les découvrir chez un consommateur externe.
+      # Verifie que les types de chaque package se resolvent correctement
+      # selon le mode de resolution du consommateur (node10, node16
+      # CJS/ESM, bundler). Necessite que les dependances internes soient
+      # reellement publiees sur le registre pour donner un signal fiable
+      # (c'est le cas depuis la publication complete des 34 packages).
+      - name: arethetypeswrong
+        run: npm run verify:attw
+
+      # Le test decisif : pack chaque package publiable, l'installe dans un
+      # projet neuf totalement isole du monorepo (aucun hoisting Yarn), puis
+      # importe reellement chacun d'eux. C'est ce test precis qui aurait
+      # detecte les dependances internes non declarees avant toute
+      # publication, plutot que de les decouvrir chez un consommateur externe.
       - name: Pack + install isolé + smoke-import
         run: node scripts/verify-pack-install.mjs

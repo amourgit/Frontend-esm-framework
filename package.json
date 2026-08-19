@@ -25,6 +25,7 @@
     "ci:publish": "yarn workspaces foreach --all --topological --exclude @egen-civitas/esm-framework-core --exclude @egen-civitas/storybook exec npm publish --access public --tag latest",
     "release": "yarn workspaces foreach --all --topological version",
     "verify:publint": "node scripts/verify-publint.mjs",
+    "verify:attw": "node scripts/verify-attw.mjs",
     "verify:pack": "node scripts/verify-pack-install.mjs"
   },
   "devDependencies": {

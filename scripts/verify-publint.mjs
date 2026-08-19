@@ -25,6 +25,16 @@ import { listPublishablePackages } from './shared/packages.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, '..');
+// Chemin absolu plutôt qu'un nom de commande nu : ne dépend d'aucun PATH
+// ambiant (npm run l'augmente avec node_modules/.bin, mais un `run: node
+// script.mjs` brut dans un step GitHub Actions ne le fait pas — vécu en
+// direct, ce script échouait silencieusement partout jusqu'à ce commit).
+const publintBin = join(rootDir, 'node_modules', '.bin', 'publint');
+
+if (!existsSync(publintBin)) {
+  console.error(`publint introuvable à ${publintBin} — as-tu lancé "yarn install" (ou npm install) à la racine ?`);
+  process.exit(1);
+}
 
 const packages = listPublishablePackages(rootDir);
 let hadError = false;
@@ -38,7 +48,7 @@ for (const { dir, name } of packages) {
 
   console.log(`\n=== publint: ${name} ===`);
   const result = spawnSync(
-    'publint',
+    publintBin,
     ['.', '--pack', 'npm'],
     { cwd: dir, stdio: 'inherit', shell: true },
   );

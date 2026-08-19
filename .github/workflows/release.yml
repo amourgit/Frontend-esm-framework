@@ -35,7 +35,10 @@ jobs:
       # a une dépendance interne non déclarée ou un pointeur main/exports
       # cassé. Voir scripts/verify-pack-install.mjs pour le détail du test.
       - name: publint
-        run: node scripts/verify-publint.mjs
+        run: npm run verify:publint
+
+      - name: arethetypeswrong
+        run: npm run verify:attw
 
       - name: Pack + install isolé + smoke-import
         run: node scripts/verify-pack-install.mjs

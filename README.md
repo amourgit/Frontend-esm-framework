@@ -142,33 +142,39 @@ pour n'importe quel consommateur externe. Ces deux commandes le détectent,
 **après un `yarn build`** :
 
 ```bash
-yarn build              # nécessaire avant les deux commandes suivantes
+yarn build              # nécessaire avant les trois commandes suivantes
 
 yarn verify:publint     # forme du package publié : exports, main, types, files
+yarn verify:attw        # résolution des types selon le mode du consommateur
 yarn verify:pack        # test décisif : pack + install isolé (hors monorepo,
                          # sans hoisting) + import réel de chaque package
 ```
 
-`verify:pack` est le plus important des deux : il construit un projet
+`verify:pack` est le plus important des trois : il construit un projet
 consommateur neuf dans `/tmp`, y installe chaque package via son tarball
 `npm pack` local (uniquement les vraies dépendances déclarées sont
 résolues — aucun accès au reste du monorepo), puis importe réellement
 chaque package. C'est ce test qui aurait détecté, avant toute publication,
 n'importe quelle dépendance interne non déclarée.
 
-Les deux commandes tournent aussi en CI (`.github/workflows/ci.yml`,
+Les trois commandes tournent aussi en CI (`.github/workflows/ci.yml`,
 job `verify-publish`) et bloquent la release (`release.yml`) si elles
 échouent.
 
-`@arethetypeswrong/cli` (`attw`) est aussi disponible en devDependency
-pour une vérification plus fine de la résolution des types selon le mode
-de résolution du consommateur (`npx attw --pack .` dans un package). Il
-n'est volontairement pas branché en CI pour l'instant : tant qu'aucun
-package `@egen-civitas/*` n'est publié sur un registre, `attw --pack`
-essaie de récupérer les dépendances internes du package testé depuis le
-vrai registre npm et échoue systématiquement dessus — un faux négatif
-plutôt qu'un vrai signal. À rebrancher une fois le premier `npm publish`
-réel effectué (ou via un registre local type Verdaccio en CI).
+`@arethetypeswrong/cli` (`attw`) vérifie que les types de chaque package
+se résolvent correctement selon le mode de résolution du consommateur
+(node10, node16 CJS/ESM, bundler). Contrairement à publint, il a besoin
+de résoudre les dépendances internes `@egen-civitas/*` du package testé
+depuis un vrai registre — resté volontairement débranché de la CI tant
+que ce n'était pas le cas (voir historique git). Branché depuis que les
+34 packages sont publiés : **état actuel, 19 packages ont une vraie
+erreur de résolution 💀/🥴, pas encore triée ni corrigée** — voir
+`yarn verify:attw` pour le détail. Le plus fréquent, sur au moins 11
+packages, est un sous-chemin `./mock` qui pointe directement vers un
+fichier `.ts`/`.tsx` source sans condition `types` explicite (fonctionne
+avec les outils de test du monorepo qui compilent le TS à la volée, mais
+casse la résolution de types formelle pour un consommateur externe) — à
+traiter dans un passage dédié.
 
 ### Publier une nouvelle version
 

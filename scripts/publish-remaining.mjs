@@ -68,8 +68,16 @@ function toposort(packages) {
 }
 
 async function isAlreadyPublished(name, version) {
-  const res = await fetch(`https://registry.npmjs.org/${encodeURIComponent(name)}/${version}`);
-  return res.status === 200;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(`https://registry.npmjs.org/${encodeURIComponent(name)}/${version}`);
+      return res.status === 200;
+    } catch (err) {
+      if (attempt === 3) throw err;
+      console.log(`Erreur réseau en vérifiant ${name}@${version} (essai ${attempt}/3) — nouvelle tentative dans 5s...`);
+      await sleep(5000);
+    }
+  }
 }
 
 async function publishOne(dir, name) {
@@ -89,6 +97,13 @@ async function publishOne(dir, name) {
     if (/E429|Too Many Requests|rate limit/i.test(output)) {
       const wait = Math.min(60_000 * 2 ** (attempt - 1), 15 * 60_000); // 1min, 2min, 4min, 8min, plafonné à 15min
       console.log(`\n429 reçu pour ${name} (essai ${attempt}/${MAX_RETRIES}) — attente ${Math.round(wait / 1000)}s avant nouvelle tentative...\n`);
+      await sleep(wait);
+      continue;
+    }
+
+    if (/ETIMEDOUT|ECONNRESET|ECONNREFUSED|EAI_AGAIN|socket hang up|network timeout|ENOTFOUND/i.test(output)) {
+      const wait = Math.min(10_000 * 2 ** (attempt - 1), 2 * 60_000); // 10s, 20s, 40s, 80s, plafonné à 2min
+      console.log(`\nErreur réseau transitoire pour ${name} (essai ${attempt}/${MAX_RETRIES}) — attente ${Math.round(wait / 1000)}s avant nouvelle tentative...\n`);
       await sleep(wait);
       continue;
     }

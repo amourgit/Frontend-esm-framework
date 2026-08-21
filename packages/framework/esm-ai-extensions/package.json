@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-ai-extensions",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MPL-2.0",
   "description": "Points d'extension de la couche IA EGEN — hooks lifecycle, surcharges, décorateurs pour les microfrontends.",
   "main": "dist/index.js",

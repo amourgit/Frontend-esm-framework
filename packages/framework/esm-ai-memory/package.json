@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-ai-memory",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MPL-2.0",
   "description": "Persistance de conversation IA EGEN — historique par utilisateur, stockage local (IndexedDB) synchronisé avec un adaptateur backend interchangeable, sans réécriture au changement de stockage.",
   "main": "dist/index.js",
@@ -52,8 +52,8 @@
   },
   "peerDependencies": {
     "@egen-civitas/esm-ai-events": "1.x",
-    "@egen-civitas/esm-api": "9.x",
-    "@egen-civitas/esm-state": "9.x",
+    "@egen-civitas/esm-api": "^1.0.0",
+    "@egen-civitas/esm-state": "^1.0.0",
     "react": "^18.0.0",
     "rxjs": "7.x"
   },

@@ -196,10 +196,10 @@ yarn changeset
 Mon-Projet/
 ├── package.json
 │   └── dependencies:
-│       ├── "@egen-civitas/esm-framework": "^9.0.0"
-│       ├── "@egen-civitas/esm-theme": "^9.0.0"
-│       ├── "@egen-civitas/esm-styleguide": "^9.0.0"
-│       └── "@egen-civitas/egen": "^9.0.0"
+│       ├── "@egen-civitas/esm-framework": "^1.0.0"
+│       ├── "@egen-civitas/esm-theme": "^1.0.0"
+│       ├── "@egen-civitas/esm-styleguide": "^1.0.0"
+│       └── "@egen-civitas/egen": "^1.0.0"
 ├── packages/
 │   ├── shell/                   ← copié depuis packages/shell/esm-app-shell
 │   └── apps/

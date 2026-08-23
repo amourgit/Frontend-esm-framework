@@ -2,9 +2,16 @@ import { createServer } from 'node:net';
 
 const MAX_PORT = 65535;
 
+const IPV6_UNSUPPORTED_CODES = new Set(['EAFNOSUPPORT', 'EADDRNOTAVAIL']);
+
 /**
  * Checks if a port is available for use by attempting to bind to it.
  * Checks both IPv4 (0.0.0.0) and IPv6 (::) to ensure the port is truly available.
+ * If IPv6 itself isn't supported in the current environment (EAFNOSUPPORT /
+ * EADDRNOTAVAIL — common in minimal containers and some CI runners), the IPv6
+ * check is skipped rather than treated as "port unavailable": otherwise this
+ * function would always report every port as taken, and egen would never be
+ * able to start at all in such an environment.
  * @param port The port number to check
  * @returns A promise that resolves to true if the port is available, false otherwise
  */
@@ -21,8 +28,8 @@ export function isPortAvailable(port: number): Promise<boolean> {
       server.close(() => {
         const server6 = createServer();
 
-        server6.once('error', () => {
-          resolve(false);
+        server6.once('error', (err: NodeJS.ErrnoException) => {
+          resolve(IPV6_UNSUPPORTED_CODES.has(err.code ?? '') ? true : false);
         });
 
         server6.once('listening', () => {

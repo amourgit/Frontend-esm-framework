@@ -4,7 +4,7 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import { basename, resolve } from 'node:path';
 import { readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
-import { loadMonorepoEnv } from '@egen-civitas/rspack-config';
+import { resolvePublicEnv } from '@egen-civitas/rspack-config';
 import { type ImportmapDeclaration, type RoutesDeclaration, logInfo, logWarn, removeTrailingSlash } from '../utils';
 
 /**
@@ -83,14 +83,15 @@ export async function runDevelop(args: DevelopArgs, signal?: AbortSignal) {
   // RUNTIME_BRIDGED_DEV_VARS en tête de fichier pour la liste des variables
   // concernées et isDevAuthBypassEnabled() dans
   // @egen-civitas/esm-api/src/dev-auth-bypass.ts pour un exemple de lecture
-  // côté framework. Priorité : process.env (déjà positionné avant `yarn
-  // start`, ex. CI) > fichiers .env* de la racine du monorepo consommateur.
-  const monorepoEnv = loadMonorepoEnv(process.cwd(), 'development');
+  // côté framework. resolvePublicEnv() applique la hiérarchie complète :
+  // .env.defaults du framework < .env* du consommateur < process.env — donc
+  // le consommateur peut surcharger n'importe laquelle de ces variables, en
+  // totalité, simplement en la déclarant dans son propre .env.
+  const publicEnv = resolvePublicEnv(process.cwd(), 'development');
   const runtimeWindowOverrides: Record<string, boolean> = {};
   for (const { envKey, windowKey } of RUNTIME_BRIDGED_DEV_VARS) {
-    const raw = process.env[envKey] ?? monorepoEnv[envKey];
-    if (raw !== undefined) {
-      runtimeWindowOverrides[windowKey] = raw === 'true';
+    if (publicEnv[envKey] !== undefined) {
+      runtimeWindowOverrides[windowKey] = publicEnv[envKey] === 'true';
     }
   }
 

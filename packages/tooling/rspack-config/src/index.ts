@@ -194,35 +194,83 @@ export function isPublicEnvKey(key: string): boolean {
 }
 
 /**
- * Charge les variables `EGEN_AI_*` et `EGEN_DEV_*` (voir PUBLIC_ENV_PREFIXES
- * ci-dessus) depuis les fichiers `.env*` du monorepo (via loadMonorepoEnv) et
- * les prépare pour `DefinePlugin`, afin que le code qui lit
+ * Chemin du fichier de valeurs par défaut du framework, colocalisé avec ce
+ * package et publié avec lui (voir .env.defaults à la racine de
+ * @egen-civitas/rspack-config pour le détail de la hiérarchie et la
+ * justification). `__dirname` pointe vers `dist/` une fois compilé, donc on
+ * remonte d'un niveau pour retrouver la racine du package.
+ */
+const FRAMEWORK_DEFAULTS_PATH = resolve(__dirname, '..', '.env.defaults');
+
+/**
+ * Charge les valeurs par défaut du framework lui-même — voir .env.defaults.
+ * C'est la couche la PLUS BASSE de resolvePublicEnv() : tout ce qui s'y
+ * trouve peut être surchargé, en totalité, par le .env du consommateur ou
+ * par process.env.
+ */
+function loadFrameworkDefaults(): Record<string, string> {
+  if (!fileExistsSync(FRAMEWORK_DEFAULTS_PATH)) return {};
+  try {
+    return parseDotenv(readFileSync(FRAMEWORK_DEFAULTS_PATH, 'utf8'));
+  } catch {
+    // Fichier de défauts mal formé — ignoré silencieusement, comme pour les
+    // .env du consommateur (voir loadMonorepoEnv).
+    return {};
+  }
+}
+
+/**
+ * Résout la valeur EFFECTIVE de toutes les variables « publiques » (voir
+ * PUBLIC_ENV_PREFIXES ci-dessus), après application de la hiérarchie
+ * complète, de la moins à la plus prioritaire :
+ *
+ *   1. .env.defaults du FRAMEWORK (valeurs avec lesquelles il fonctionne
+ *      si le consommateur ne précise rien — voir loadFrameworkDefaults)
+ *   2. .env* du MONOREPO CONSOMMATEUR (voir loadMonorepoEnv)
+ *   3. process.env au lancement de la commande (CI/CD, secrets d'infra, ou
+ *      déjà positionné avant `yarn start`/`yarn build`)
+ *
+ * Le consommateur peut donc surcharger N'IMPORTE QUELLE variable du
+ * framework, EN TOTALITÉ, simplement en la déclarant dans son propre .env —
+ * aucune clé de .env.defaults n'est figée ou hors d'atteinte.
+ *
+ * SOURCE UNIQUE réutilisée par les deux canaux qui doivent rester
+ * cohérents : `loadPublicEnvDefines` ci-dessous (DefinePlugin, pour les
+ * apps compilées depuis les sources) et `egen develop`
+ * (packages/tooling/egen/src/commands/develop.ts, pour le pont runtime
+ * `window.*` des paquets déjà pré-compilés comme le shell).
+ */
+export function resolvePublicEnv(root: string, mode?: string): Record<string, string> {
+  const merged: Record<string, string> = {
+    ...loadFrameworkDefaults(),
+    ...loadMonorepoEnv(root, mode),
+  };
+
+  for (const key of Object.keys(process.env)) {
+    const value = process.env[key];
+    if (value !== undefined) merged[key] = value;
+  }
+
+  const result: Record<string, string> = {};
+  for (const [key, value] of Object.entries(merged)) {
+    if (isPublicEnvKey(key)) result[key] = value;
+  }
+  return result;
+}
+
+/**
+ * Prépare les variables `EGEN_AI_*`/`EGEN_DEV_*` (voir resolvePublicEnv
+ * ci-dessus) pour `DefinePlugin`, afin que le code qui lit
  * `process.env.EGEN_AI_*`/`EGEN_DEV_*` côté navigateur (ex.
  * `@egen-civitas/esm-ai-config`, `@egen-civitas/esm-api`) reçoive de vraies
  * valeurs au lieu de retomber systématiquement sur ses défauts internes.
- *
- * Priorité (la plus haute gagne) :
- *   1. Variables déjà présentes dans `process.env` au lancement de la build
- *      (utile en CI/CD, où les secrets sont injectés par l'environnement).
- *   2-4. Voir loadMonorepoEnv ci-dessus.
  */
 function loadPublicEnvDefines(root: string, mode: string | undefined): Record<string, string> {
-  const merged = loadMonorepoEnv(root, mode);
+  const publicEnv = resolvePublicEnv(root, mode);
 
   const defines: Record<string, string> = {};
-  for (const [key, value] of Object.entries(merged)) {
-    if (!isPublicEnvKey(key)) continue;
+  for (const [key, value] of Object.entries(publicEnv)) {
     defines[`process.env.${key}`] = JSON.stringify(value);
-  }
-
-  // Les variables déjà présentes dans le process courant (CI/CD, secrets
-  // d'infra) ont toujours le dernier mot sur celles lues depuis les fichiers.
-  for (const key of Object.keys(process.env)) {
-    if (!isPublicEnvKey(key)) continue;
-    const value = process.env[key];
-    if (value !== undefined) {
-      defines[`process.env.${key}`] = JSON.stringify(value);
-    }
   }
 
   return defines;

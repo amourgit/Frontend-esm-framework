@@ -11,6 +11,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const { basename, dirname, resolve } = require('path');
 const path = require('path');
+const { resolvePublicEnv } = require('@egen-civitas/rspack-config');
 
 // Load .env from the monorepo root (two levels up from packages/shell/esm-app-shell)
 try {
@@ -291,6 +292,15 @@ module.exports = (env, argv = []) => {
   const isProd = mode === 'production';
   const egenEnvironment = resolveEnvironment(mode);
   const appPatterns = [];
+
+  // Variables "publiques" (EGEN_AI_*/EGEN_DEV_*) résolues selon la même
+  // hiérarchie que partout ailleurs dans le framework — voir
+  // resolvePublicEnv() dans @egen-civitas/rspack-config : .env.defaults du
+  // framework < .env* trouvé en remontant depuis ce dossier (racine du
+  // repo framework, faute d'un .env consommateur ici) < process.env. Seule
+  // source de vérité pour EGEN_DEV_NO_AUTH plus bas (DefinePlugin) — plus
+  // de valeur par défaut dupliquée en dur dans ce fichier.
+  const publicEnv = resolvePublicEnv(__dirname, mode);
 
   const coreImportmap = {
     imports: {},
@@ -684,9 +694,12 @@ module.exports = (env, argv = []) => {
         'process.env.BUILD_VERSION': JSON.stringify(`${version}-${timestamp}`),
         'process.env.FRAMEWORK_VERSION': JSON.stringify(frameworkVersion),
         'process.env.NODE_ENV': JSON.stringify(mode),
-        // Flag de bypass auth pour les tests sans backend.
-        // Positionner EGEN_DEV_NO_AUTH=true dans le .env pour désactiver le login.
-        'process.env.EGEN_DEV_NO_AUTH': JSON.stringify(process.env.EGEN_DEV_NO_AUTH || 'false'),
+        // Flag de bypass auth pour les tests sans backend. Défaut et
+        // hiérarchie de surcharge définis dans .env.defaults — voir
+        // resolvePublicEnv() de @egen-civitas/rspack-config, calculé en
+        // tête de ce fichier dans `publicEnv`. Le "?? 'false'" est une
+        // sécurité si ce fichier de défauts venait à disparaître.
+        'process.env.EGEN_DEV_NO_AUTH': JSON.stringify(publicEnv.EGEN_DEV_NO_AUTH ?? 'false'),
       }),
       new BundleAnalyzerPlugin({
         analyzerMode: env?.analyze ? 'static' : 'disabled',

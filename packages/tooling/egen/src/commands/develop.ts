@@ -4,7 +4,30 @@ import { createProxyMiddleware } from 'http-proxy-middleware';
 import { basename, resolve } from 'node:path';
 import { readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
+import { loadMonorepoEnv } from '@egen-civitas/rspack-config';
 import { type ImportmapDeclaration, type RoutesDeclaration, logInfo, logWarn, removeTrailingSlash } from '../utils';
+
+/**
+ * Variables dev-only qui doivent atteindre @egen-civitas/esm-app-shell au
+ * RUNTIME plutôt qu'au build. Nécessaire uniquement parce que ce paquet est
+ * PRÉ-COMPILÉ (voir le commentaire détaillé plus bas, à l'endroit où cette
+ * liste est consommée) : `egen develop` ne le reconstruit jamais, donc rien
+ * de fixé par rspack DefinePlugin au moment du build du framework ne peut
+ * plus être changé par le .env du consommateur — seule une valeur posée sur
+ * `window` APRÈS coup, au moment où la page est servie, le peut encore.
+ *
+ * `windowKey` suit la même convention que window.egenTenantMode /
+ * window.egenAi* (voir esm-globals/src/types.ts). `envKey` doit rester dans
+ * la convention EGEN_DEV_* / EGEN_AI_* (voir PUBLIC_ENV_PREFIXES exporté par
+ * @egen-civitas/rspack-config) pour que build-time et runtime restent
+ * cohérents sur ce qui est considéré "public".
+ *
+ * Pour ajouter une nouvelle variable qui a besoin de ce pont : une ligne
+ * ici suffit, jamais besoin de toucher au reste du pipeline.
+ */
+const RUNTIME_BRIDGED_DEV_VARS: ReadonlyArray<{ envKey: string; windowKey: string }> = [
+  { envKey: 'EGEN_DEV_NO_AUTH', windowKey: 'egenDevNoAuth' },
+];
 
 export interface DevelopArgs {
   port: number;
@@ -46,10 +69,40 @@ export async function runDevelop(args: DevelopArgs, signal?: AbortSignal) {
   const require = createRequire(import.meta.url);
   const source = resolve(require.resolve('@egen-civitas/esm-app-shell/package.json'), '..', 'dist');
   const index = resolve(source, 'index.html');
+
+  // @egen-civitas/esm-app-shell est un paquet npm PRÉ-COMPILÉ : son bundle a
+  // déjà été construit (et process.env.EGEN_DEV_NO_AUTH/EGEN_AI_*/etc. figés
+  // par rspack DefinePlugin) au moment du build du repo framework, bien
+  // avant que `egen develop` ne tourne ici avec le .env de l'app
+  // consommatrice. Un DefinePlugin ne peut plus aider — il faudrait rebuild
+  // le shell à chaque session de dev de l'app consommatrice, ce qui n'arrive
+  // jamais : `egen develop` se contente de le SERVIR tel quel
+  // (express.static ci-dessous), jamais de le recompiler. Seule une valeur
+  // posée sur `window` APRÈS le build, au moment où la page est réellement
+  // servie, peut donc encore traverser cette frontière — voir
+  // RUNTIME_BRIDGED_DEV_VARS en tête de fichier pour la liste des variables
+  // concernées et isDevAuthBypassEnabled() dans
+  // @egen-civitas/esm-api/src/dev-auth-bypass.ts pour un exemple de lecture
+  // côté framework. Priorité : process.env (déjà positionné avant `yarn
+  // start`, ex. CI) > fichiers .env* de la racine du monorepo consommateur.
+  const monorepoEnv = loadMonorepoEnv(process.cwd(), 'development');
+  const runtimeWindowOverrides: Record<string, boolean> = {};
+  for (const { envKey, windowKey } of RUNTIME_BRIDGED_DEV_VARS) {
+    const raw = process.env[envKey] ?? monorepoEnv[envKey];
+    if (raw !== undefined) {
+      runtimeWindowOverrides[windowKey] = raw === 'true';
+    }
+  }
+
+  if (runtimeWindowOverrides.egenDevNoAuth) {
+    logInfo('EGEN_DEV_NO_AUTH=true — bypass d\'authentification actif (session admin fictive, sans backend).');
+  }
+
   const indexContent = readFileSync(index, 'utf8')
     .replace(
       /<script>initializeSpa\([\s\S\n]*<\/script>/m,
       `<script>
+      Object.assign(window, ${JSON.stringify(runtimeWindowOverrides)});
       initializeSpa({
         apiUrl: ${JSON.stringify(apiUrl)},
         spaPath: ${JSON.stringify(spaPath)},

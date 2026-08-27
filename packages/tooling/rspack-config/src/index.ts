@@ -102,7 +102,7 @@ function fileExistsSync(name: string) {
  * profondeur différente (packages/apps/X, packages/framework/Y, ...), donc
  * on ne peut pas supposer un nombre fixe de niveaux.
  */
-function findMonorepoRoot(startDir: string): string | null {
+export function findMonorepoRoot(startDir: string): string | null {
   let dir = startDir;
   for (let i = 0; i < 10; i++) {
     const candidate = resolve(dir, 'package.json');
@@ -124,21 +124,27 @@ function findMonorepoRoot(startDir: string): string | null {
 }
 
 /**
- * Charge les variables `EGEN_AI_*` (et quelques clés runtime ponctuelles,
- * voir ADDITIONAL_RUNTIME_KEYS ci-dessous — actuellement EGEN_DEV_NO_AUTH)
- * depuis les fichiers `.env*` du monorepo et
- * les prépare pour `DefinePlugin`, afin que `@egen-civitas/esm-ai-config` (qui lit
- * `process.env.EGEN_AI_*` côté navigateur) reçoive de vraies valeurs au lieu
- * de retomber systématiquement sur ses défauts internes.
- *
- * Priorité (la plus haute gagne) :
- *   1. Variables déjà présentes dans `process.env` au lancement de la build
- *      (utile en CI/CD, où les secrets sont injectés par l'environnement).
- *   2. `.env.<mode>.local` (non versionné, jamais committé — clés API perso)
- *   3. `.env.<mode>` (versionné, valeurs par défaut de dev/prod)
+ * Charge et fusionne les fichiers `.env*` trouvés à la racine du monorepo
+ * (celle détectée par findMonorepoRoot depuis `root`), selon la même
+ * priorité que Create React App / Vite (la plus haute gagne) :
+ *   1. `.env.<mode>.local` (non versionné, jamais committé — clés API perso)
+ *   2. `.env.<mode>` (versionné, valeurs par défaut de dev/prod)
+ *   3. `.env.local`
  *   4. `.env` (fallback commun à tous les modes)
+ *
+ * Ne lit PAS `process.env` — c'est à l'appelant de décider si les variables
+ * déjà présentes dans le process courant (CI/CD, secrets d'infra) doivent
+ * avoir le dernier mot (c'est le cas dans loadPublicEnvDefines ci-dessous,
+ * et c'est aussi ce que fait `egen develop` — voir
+ * packages/tooling/egen/src/commands/develop.ts — via PUBLIC_ENV_PREFIXES).
+ *
+ * Exporté pour être réutilisé en dehors de la config rspack elle-même,
+ * partout où le process qui a besoin de ces variables ne recompile pas
+ * lui-même les sources (ex. `egen develop`, qui sert des paquets déjà
+ * pré-compilés et doit donc lire le .env séparément pour les faire
+ * traverser au runtime via un pont `window.*`).
  */
-function loadEgenAiEnvDefines(root: string, mode: string | undefined): Record<string, string> {
+export function loadMonorepoEnv(root: string, mode?: string): Record<string, string> {
   const resolvedMode = mode ?? 'development';
   const monorepoRoot = findMonorepoRoot(root);
   if (!monorepoRoot) return {};
@@ -159,24 +165,60 @@ function loadEgenAiEnvDefines(root: string, mode: string | undefined): Record<st
     }
   }
 
-  // Variables transmises telles quelles au bundle navigateur (process.env.X)
-  // en plus de toutes les EGEN_AI_* : EGEN_DEV_NO_AUTH est lue par
-  // applyDevNoAuthBypass() dans esm-app-shell/src/run.ts, exactement de la
-  // même façon (process.env.EGEN_DEV_NO_AUTH), donc elle doit passer par le
-  // même canal DefinePlugin ou le bypass ne s'active jamais, même avec
-  // EGEN_DEV_NO_AUTH=true dans .env.development.
-  const ADDITIONAL_RUNTIME_KEYS = new Set(['EGEN_DEV_NO_AUTH']);
+  return merged;
+}
+
+/**
+ * Préfixes de variables d'environnement reconnus comme « config navigateur » :
+ * toute variable qui commence par l'un d'eux traverse automatiquement
+ * jusqu'au bundle client. C'est une LISTE DE PRÉFIXES, volontairement pas
+ * une liste de clés individuelles (contrairement à l'ancien
+ * ADDITIONAL_RUNTIME_KEYS qui ne connaissait qu'EGEN_DEV_NO_AUTH) : ajouter
+ * une nouvelle variable pour un futur besoin dev (ex. EGEN_DEV_MOCK_API) ne
+ * doit jamais nécessiter de modifier ce fichier — il suffit de la nommer
+ * avec le bon préfixe. Le framework impose une CONVENTION DE NOMMAGE, pas
+ * les valeurs ni la liste des clés qui existeront un jour ; c'est au
+ * consommateur (Frontend-esm-core, ou tout autre) de décider ce qu'il met
+ * dans ces espaces de noms et avec quelles valeurs.
+ *
+ * Exporté pour rester la SOURCE UNIQUE de cette règle : `egen develop`
+ * (packages/tooling/egen/src/commands/develop.ts) la réutilise telle quelle
+ * pour le pont runtime `window.*` des paquets déjà pré-compilés (le shell),
+ * afin que les deux canaux (DefinePlugin ici, window.* là-bas) ne puissent
+ * jamais diverger sur ce qui est considéré "public".
+ */
+export const PUBLIC_ENV_PREFIXES = ['EGEN_AI_', 'EGEN_DEV_'];
+
+export function isPublicEnvKey(key: string): boolean {
+  return PUBLIC_ENV_PREFIXES.some((prefix) => key.startsWith(prefix));
+}
+
+/**
+ * Charge les variables `EGEN_AI_*` et `EGEN_DEV_*` (voir PUBLIC_ENV_PREFIXES
+ * ci-dessus) depuis les fichiers `.env*` du monorepo (via loadMonorepoEnv) et
+ * les prépare pour `DefinePlugin`, afin que le code qui lit
+ * `process.env.EGEN_AI_*`/`EGEN_DEV_*` côté navigateur (ex.
+ * `@egen-civitas/esm-ai-config`, `@egen-civitas/esm-api`) reçoive de vraies
+ * valeurs au lieu de retomber systématiquement sur ses défauts internes.
+ *
+ * Priorité (la plus haute gagne) :
+ *   1. Variables déjà présentes dans `process.env` au lancement de la build
+ *      (utile en CI/CD, où les secrets sont injectés par l'environnement).
+ *   2-4. Voir loadMonorepoEnv ci-dessus.
+ */
+function loadPublicEnvDefines(root: string, mode: string | undefined): Record<string, string> {
+  const merged = loadMonorepoEnv(root, mode);
 
   const defines: Record<string, string> = {};
   for (const [key, value] of Object.entries(merged)) {
-    if (!key.startsWith('EGEN_AI_') && !ADDITIONAL_RUNTIME_KEYS.has(key)) continue;
+    if (!isPublicEnvKey(key)) continue;
     defines[`process.env.${key}`] = JSON.stringify(value);
   }
 
   // Les variables déjà présentes dans le process courant (CI/CD, secrets
   // d'infra) ont toujours le dernier mot sur celles lues depuis les fichiers.
   for (const key of Object.keys(process.env)) {
-    if (!key.startsWith('EGEN_AI_') && !ADDITIONAL_RUNTIME_KEYS.has(key)) continue;
+    if (!isPublicEnvKey(key)) continue;
     const value = process.env[key];
     if (value !== undefined) {
       defines[`process.env.${key}`] = JSON.stringify(value);
@@ -379,7 +421,7 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
       }),
       new DefinePlugin({
         'process.env.FRAMEWORK_VERSION': JSON.stringify(frameworkVersion),
-        ...loadEgenAiEnvDefines(root, mode || 'development'),
+        ...loadPublicEnvDefines(root, mode || 'development'),
       }),
       new ModuleFederationPlugin({
         // Look in the `esm-dynamic-loading` framework package for an explanation of how modules

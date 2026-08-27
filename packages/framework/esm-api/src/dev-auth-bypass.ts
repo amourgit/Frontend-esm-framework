@@ -1,7 +1,29 @@
 // =============================================================================
 //  @egen-civitas/esm-api — Bypass d'authentification pour développement
 //
-//  ACTIVÉ via EGEN_DEV_NO_AUTH=true dans l'environnement de build.
+//  ACTIVÉ via EGEN_DEV_NO_AUTH=true. DEUX CANAUX, vérifiés dans cet ordre :
+//
+//  1. window.egenDevNoAuth === true (RUNTIME, prioritaire) — posé par
+//     `egen develop` au moment où il sert index.html (voir
+//     esm-app-shell/src/run.ts et packages/tooling/egen/src/commands/develop.ts
+//     côté framework). Nécessaire depuis que @egen-civitas/esm-app-shell est
+//     un paquet npm PRÉ-COMPILÉ consommé par une app séparée
+//     (Frontend-esm-core) : son bundle est figé au build du framework, où
+//     `process.env.EGEN_DEV_NO_AUTH` n'a aucune chance de valoir "true" (le
+//     .env de l'app consommatrice n'existe pas encore à ce moment-là). Un
+//     DefinePlugin ne peut plus aider ici — il faudrait rebuild le shell à
+//     chaque session de dev de l'app consommatrice, ce qui n'arrive jamais.
+//     Seule une valeur posée sur `window` APRÈS le build, au moment où la
+//     page est réellement servie, peut encore traverser cette frontière.
+//
+//  2. process.env.EGEN_DEV_NO_AUTH === 'true' (BUILD-TIME, fallback) —
+//     injecté par rspack DefinePlugin. Fonctionne uniquement quand ce
+//     fichier est recompilé depuis les sources par le même build que celui
+//     qui définit la variable (ex. `rspack serve` sur une app individuelle
+//     via @egen-civitas/rspack-config, ou un build du shell directement
+//     depuis le repo framework). Ne fonctionne PAS pour un paquet consommé
+//     déjà compilé — voir le canal 1 ci-dessus.
+//
 //  Ne jamais utiliser en production.
 //
 //  PHILOSOPHIE : ce mode doit être un cas de connexion RÉEL du point de vue
@@ -47,10 +69,25 @@ import { sessionEndpoint } from './egen-fetch.js';
 // ─── Vérification d'activation ────────────────────────────────────────────────
 
 /**
- * Retourne true si EGEN_DEV_NO_AUTH=true dans l'environnement de build.
- * La variable est injectée par rspack DefinePlugin depuis process.env.EGEN_DEV_NO_AUTH.
+ * Retourne true si le bypass dev est activé, via l'un des deux canaux
+ * documentés en tête de fichier :
+ *   1. window.egenDevNoAuth === true (runtime, posé par `egen develop`)
+ *   2. process.env.EGEN_DEV_NO_AUTH === 'true' (build-time, DefinePlugin)
+ *
+ * Le canal 1 est vérifié en premier car c'est le seul qui fonctionne encore
+ * une fois esm-app-shell consommé comme paquet npm pré-compilé (voir le
+ * commentaire de tête de fichier). Le canal 2 reste utile pour les builds
+ * effectués directement depuis les sources.
  */
 export function isDevAuthBypassEnabled(): boolean {
+  try {
+    if (typeof window !== 'undefined' && window.egenDevNoAuth === true) {
+      return true;
+    }
+  } catch {
+    // pas de `window` (SSR, tests Node) — on retombe sur le canal build-time.
+  }
+
   try {
     return process.env.EGEN_DEV_NO_AUTH === 'true';
   } catch {

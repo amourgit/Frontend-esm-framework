@@ -17,6 +17,10 @@ describe('dev-auth-bypass', () => {
     // sans ceci, une interception installée par un test resterait active
     // (et pointerait vers un module déjà "reset") dans le test suivant.
     window.fetch = originalFetch;
+    // Idem pour le pont runtime : sans ce nettoyage, un test qui pose
+    // window.egenDevNoAuth = true ferait fuiter le bypass dans les tests
+    // suivants.
+    delete (window as { egenDevNoAuth?: boolean }).egenDevNoAuth;
   });
 
   describe('isDevAuthBypassEnabled', () => {
@@ -31,6 +35,20 @@ describe('dev-auth-bypass', () => {
       const { isDevAuthBypassEnabled } = await import('./dev-auth-bypass');
       expect(isDevAuthBypassEnabled()).toBe(true);
     });
+
+    it(
+      'retourne true via window.egenDevNoAuth même sans EGEN_DEV_NO_AUTH dans ' +
+        "l'environnement — cas d'esm-app-shell consommé comme paquet npm " +
+        'pré-compilé, où seul un pont runtime posé par `egen develop` peut ' +
+        'encore activer le bypass (voir packages/tooling/egen/src/commands/develop.ts ' +
+        'côté framework)',
+      async () => {
+        vi.unstubAllEnvs();
+        (window as { egenDevNoAuth?: boolean }).egenDevNoAuth = true;
+        const { isDevAuthBypassEnabled } = await import('./dev-auth-bypass');
+        expect(isDevAuthBypassEnabled()).toBe(true);
+      },
+    );
   });
 
   describe('initDevAuthBypass', () => {

@@ -47,7 +47,7 @@ import {
   type Config,
   type StyleguideConfigObject,
 } from '@egen-civitas/esm-framework/src/internal';
-import { initDevAuthBypass } from '@egen-civitas/esm-api';
+import { initDevAuthBypass, isDevAuthBypassEnabled } from '@egen-civitas/esm-api';
 import { setupI18n } from './locale.js';
 import './routing-events.js';
 import './events.js';
@@ -55,34 +55,33 @@ import { appName, getCoreExtensions } from './ui/index.js';
 import { setupCoreConfig } from './core-config.js';
 
 // =============================================================================
-//  EGEN_DEV_NO_AUTH — Bypass d'authentification pour tests sans backend
+//  Bypass d'authentification pour tests sans backend
 //
-//  Activé en positionnant EGEN_DEV_NO_AUTH=true dans l'environnement de build.
-//  En production réelle ce flag sera absent (false), donc ce bloc est inerte.
+//  Activé via window.egenDevNoAuth === true (posé au runtime par
+//  `egen develop`) OU process.env.EGEN_DEV_NO_AUTH === 'true' (build-time,
+//  DefinePlugin) — voir isDevAuthBypassEnabled() dans
+//  @egen-civitas/esm-api/src/dev-auth-bypass.ts pour le détail des deux
+//  canaux et pourquoi le premier existe (esm-app-shell est un paquet
+//  pré-compilé côté app consommatrice : le build-time seul n'y suffit plus).
+//  En production réelle aucun des deux canaux n'est actif, donc ce bloc est
+//  inerte.
 //
-//  Effets quand activé :
-//    1. Désactive la redirection 401 → /login dans egenFetch
-//       (via override config @egen-civitas/esm-api.redirectAuthFailure.enabled)
-//    2. Injecte une session admin fictive dans le sessionStore global
-//       pour que les composants qui appellent useSession() reçoivent un
-//       utilisateur authentifié sans appel réseau.
-// =============================================================================
-//  EGEN_DEV_NO_AUTH — Bypass d'authentification pour tests sans backend
-//
-//  Activé via EGEN_DEV_NO_AUTH=true dans le .env (injecté par rspack DefinePlugin).
-//
-//  La logique est centralisée dans @egen-civitas/esm-api → initDevAuthBypass() :
-//    1. Intercepte window.fetch pour /ws/rest/v1/session → retourne session fictive
-//       (empêche getSessionStore() de détruire la session via refetchCurrentUser)
-//    2. Injecte la session fictive dans sessionStore (composants React immédiats)
-//    3. Désactive la redirection 401→/login dans egenFetch
+//  La logique est centralisée dans @egen-civitas/esm-api :
+//    - initDevAuthBypass() :
+//        1. Intercepte window.fetch pour /ws/rest/v1/session → retourne
+//           session fictive (empêche getSessionStore() de détruire la
+//           session via refetchCurrentUser)
+//        2. Injecte la session fictive dans sessionStore (composants React
+//           immédiats)
+//    - isDevAuthBypassEnabled() : source de vérité unique, réutilisée
+//      ci-dessous pour décider aussi de désactiver la redirection 401→/login.
 // =============================================================================
 
 function applyDevNoAuthBypass() {
-  // initDevAuthBypass() est no-op si EGEN_DEV_NO_AUTH !== 'true'
+  // initDevAuthBypass() est no-op si le bypass n'est pas activé.
   initDevAuthBypass();
 
-  if (process.env.EGEN_DEV_NO_AUTH === 'true') {
+  if (isDevAuthBypassEnabled()) {
     // Désactiver la redirection 401 → /login dans egenFetch (couche réseau)
     provide(
       {

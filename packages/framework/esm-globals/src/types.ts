@@ -110,6 +110,30 @@ declare global {
      * @egen-civitas/esm-tenant utils/domain-utils.ts). Depuis EGEN_TENANT_ROOT_DOMAIN.
      */
     egenTenantRootDomain?: string;
+
+    // ── Bypass d'authentification dev ───────────────────────────────────────
+    // Injecté au RUNTIME (serve-time), pas au build-time.
+    //
+    // Contrairement à egenTenantMode/egenAi* ci-dessus (injectés dans le HTML
+    // au moment où esm-app-shell est COMPILÉ), ce flag est injecté par
+    // `egen develop` (voir packages/tooling/egen/src/commands/develop.ts)
+    // au moment où il SERT le fichier index.html — parce que, depuis la
+    // séparation Frontend-esm-framework / Frontend-esm-core,
+    // @egen-civitas/esm-app-shell est un paquet npm PRÉ-COMPILÉ : son bundle
+    // est figé une fois pour toutes au build du framework (rspack DefinePlugin
+    // y a déjà remplacé `process.env.EGEN_DEV_NO_AUTH` par la valeur qui
+    // existait À CE MOMENT-LÀ, presque toujours "false" puisque le repo
+    // framework n'a pas connaissance du .env de l'app consommatrice).
+    // `egen develop` ne rebuild jamais ce paquet — il sert son dist/ tel
+    // quel — donc aucune variable de build ne peut plus l'atteindre. Seule
+    // une valeur posée sur `window` APRÈS que la page soit servie (donc
+    // après coup, sans recompilation) peut encore changer son comportement.
+    //
+    // Lu par @egen-civitas/esm-api → isDevAuthBypassEnabled() (canal
+    // prioritaire ; le check historique `process.env.EGEN_DEV_NO_AUTH`
+    // reste en fallback pour les builds compilés directement depuis les
+    // sources, ex. `rspack serve` sur une app individuelle).
+    egenDevNoAuth?: boolean;
   }
 }
 

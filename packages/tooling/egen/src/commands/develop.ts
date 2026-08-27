@@ -8,8 +8,8 @@ import { resolvePublicEnv } from '@egen-civitas/rspack-config';
 import { type ImportmapDeclaration, type RoutesDeclaration, logInfo, logWarn, removeTrailingSlash } from '../utils';
 
 /**
- * Variables dev-only qui doivent atteindre @egen-civitas/esm-app-shell au
- * RUNTIME plutôt qu'au build. Nécessaire uniquement parce que ce paquet est
+ * Variables qui doivent atteindre @egen-civitas/esm-app-shell au RUNTIME
+ * plutôt qu'au build. Nécessaire uniquement parce que ce paquet est
  * PRÉ-COMPILÉ (voir le commentaire détaillé plus bas, à l'endroit où cette
  * liste est consommée) : `egen develop` ne le reconstruit jamais, donc rien
  * de fixé par rspack DefinePlugin au moment du build du framework ne peut
@@ -17,16 +17,33 @@ import { type ImportmapDeclaration, type RoutesDeclaration, logInfo, logWarn, re
  * `window` APRÈS coup, au moment où la page est servie, le peut encore.
  *
  * `windowKey` suit la même convention que window.egenTenantMode /
- * window.egenAi* (voir esm-globals/src/types.ts). `envKey` doit rester dans
- * la convention EGEN_DEV_* / EGEN_AI_* (voir PUBLIC_ENV_PREFIXES exporté par
- * @egen-civitas/rspack-config) pour que build-time et runtime restent
+ * window.egenAi* (voir esm-globals/src/types.ts) — la table EGEN_TENANT_*
+ * ci-dessous est recopiée à l'identique depuis EGEN_TENANT_ENV_TO_WINDOW_KEY
+ * dans esm-app-shell/rspack.config.js (même mapping, deux moments différents
+ * : build du framework là-bas, service par `egen develop` ici).
+ *
+ * `envKey` doit rester dans une convention reconnue par PUBLIC_ENV_PREFIXES
+ * (@egen-civitas/rspack-config) pour que build-time et runtime restent
  * cohérents sur ce qui est considéré "public".
+ *
+ * `type: 'boolean'` convertit la chaîne lue en vrai booléen JS (nécessaire
+ * quand le code consommateur fait un `=== true` strict, ex.
+ * isDevAuthBypassEnabled()) ; `type: 'string'` transmet la valeur telle
+ * quelle (convention déjà utilisée par esm-tenant, où le parsing — booléen
+ * ou autre — se fait côté esm-tenant/src/config/env.ts, pas à l'injection).
  *
  * Pour ajouter une nouvelle variable qui a besoin de ce pont : une ligne
  * ici suffit, jamais besoin de toucher au reste du pipeline.
  */
-const RUNTIME_BRIDGED_DEV_VARS: ReadonlyArray<{ envKey: string; windowKey: string }> = [
-  { envKey: 'EGEN_DEV_NO_AUTH', windowKey: 'egenDevNoAuth' },
+const RUNTIME_BRIDGED_VARS: ReadonlyArray<{ envKey: string; windowKey: string; type: 'boolean' | 'string' }> = [
+  { envKey: 'EGEN_DEV_NO_AUTH', windowKey: 'egenDevNoAuth', type: 'boolean' },
+  { envKey: 'EGEN_TENANT_MODE', windowKey: 'egenTenantMode', type: 'string' },
+  { envKey: 'EGEN_TENANT_ID', windowKey: 'egenTenantId', type: 'string' },
+  { envKey: 'EGEN_TENANT_PERSIST', windowKey: 'egenTenantPersist', type: 'string' },
+  { envKey: 'EGEN_TENANT_RESOLUTION_ORDER', windowKey: 'egenTenantResolutionOrder', type: 'string' },
+  { envKey: 'EGEN_TENANT_PATH_PREFIX', windowKey: 'egenTenantPathPrefix', type: 'string' },
+  { envKey: 'EGEN_TENANT_JWT_CLAIM', windowKey: 'egenTenantJwtClaim', type: 'string' },
+  { envKey: 'EGEN_TENANT_ROOT_DOMAIN', windowKey: 'egenTenantRootDomain', type: 'string' },
 ];
 
 export interface DevelopArgs {
@@ -80,7 +97,7 @@ export async function runDevelop(args: DevelopArgs, signal?: AbortSignal) {
   // (express.static ci-dessous), jamais de le recompiler. Seule une valeur
   // posée sur `window` APRÈS le build, au moment où la page est réellement
   // servie, peut donc encore traverser cette frontière — voir
-  // RUNTIME_BRIDGED_DEV_VARS en tête de fichier pour la liste des variables
+  // RUNTIME_BRIDGED_VARS en tête de fichier pour la liste des variables
   // concernées et isDevAuthBypassEnabled() dans
   // @egen-civitas/esm-api/src/dev-auth-bypass.ts pour un exemple de lecture
   // côté framework. resolvePublicEnv() applique la hiérarchie complète :
@@ -88,15 +105,19 @@ export async function runDevelop(args: DevelopArgs, signal?: AbortSignal) {
   // le consommateur peut surcharger n'importe laquelle de ces variables, en
   // totalité, simplement en la déclarant dans son propre .env.
   const publicEnv = resolvePublicEnv(process.cwd(), 'development');
-  const runtimeWindowOverrides: Record<string, boolean> = {};
-  for (const { envKey, windowKey } of RUNTIME_BRIDGED_DEV_VARS) {
-    if (publicEnv[envKey] !== undefined) {
-      runtimeWindowOverrides[windowKey] = publicEnv[envKey] === 'true';
+  const runtimeWindowOverrides: Record<string, boolean | string> = {};
+  for (const { envKey, windowKey, type } of RUNTIME_BRIDGED_VARS) {
+    const raw = publicEnv[envKey];
+    if (raw !== undefined) {
+      runtimeWindowOverrides[windowKey] = type === 'boolean' ? raw === 'true' : raw;
     }
   }
 
   if (runtimeWindowOverrides.egenDevNoAuth) {
     logInfo('EGEN_DEV_NO_AUTH=true — bypass d\'authentification actif (session admin fictive, sans backend).');
+  }
+  if (runtimeWindowOverrides.egenTenantMode && runtimeWindowOverrides.egenTenantMode !== 'off') {
+    logInfo(`EGEN_TENANT_MODE=${runtimeWindowOverrides.egenTenantMode} — système multi-tenant actif.`);
   }
 
   const indexContent = readFileSync(index, 'utf8')

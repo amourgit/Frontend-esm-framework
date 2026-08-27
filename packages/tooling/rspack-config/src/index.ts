@@ -187,7 +187,7 @@ export function loadMonorepoEnv(root: string, mode?: string): Record<string, str
  * afin que les deux canaux (DefinePlugin ici, window.* là-bas) ne puissent
  * jamais diverger sur ce qui est considéré "public".
  */
-export const PUBLIC_ENV_PREFIXES = ['EGEN_AI_', 'EGEN_DEV_'];
+export const PUBLIC_ENV_PREFIXES = ['EGEN_AI_', 'EGEN_DEV_', 'EGEN_TENANT_'];
 
 export function isPublicEnvKey(key: string): boolean {
   return PUBLIC_ENV_PREFIXES.some((prefix) => key.startsWith(prefix));

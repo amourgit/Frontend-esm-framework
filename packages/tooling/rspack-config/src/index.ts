@@ -36,7 +36,7 @@
  * Telling Webpack to use `/a/b/c`? If the Webpack config is symlinked
  * from `/d/e/`, then it *might* in *some cases* try to import `/d/e/c`.
  */
-import { existsSync, readFileSync, statSync } from 'fs';
+import { existsSync, readFileSync, realpathSync, statSync } from 'fs';
 import { basename, dirname, resolve } from 'path';
 import { parse as parseDotenv } from 'dotenv';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
@@ -90,6 +90,45 @@ function mergeFunction(objValue: any, srcValue: any) {
 
 function slugify(name: string) {
   return name.replace(/[\/\-@]/g, '_');
+}
+
+/**
+ * Détecte si `@egen-civitas/*` est consommé via un lien de workspace
+ * pointant vers un AUTRE dépôt (voir Frontend-esm-core/docs/dev-lien-local-framework.md),
+ * et retourne la racine réelle de ce dépôt framework si c'est le cas.
+ *
+ * Pourquoi c'est nécessaire : depuis Rspack 1.2, `node_modules` n'est plus
+ * surveillé par défaut (watchOptions.ignored = /[\/](?:\.git|node_modules)[\/]/,
+ * qui exige littéralement "node_modules" dans le CHEMIN RÉSOLU du fichier).
+ * Le changelog de Rspack 1.2 le dit explicitement : "This change will not
+ * affect symlinked resources in monorepo, as symlinked resources are
+ * resolved to their real path by default." Un paquet du framework consommé
+ * via un lien de workspace CROISÉ ENTRE DEUX DÉPÔTS (pas juste deux dossiers
+ * du même monorepo) résout vers un chemin réel qui ne contient JAMAIS
+ * "node_modules" (ex. `.../Frontend-esm-framework/packages/framework/esm-api/...`)
+ * — la regex par défaut ne matche donc jamais, et Rspack se met à
+ * surveiller l'intégralité des sources brutes des paquets du framework
+ * comme s'il s'agissait du code de l'app elle-même. C'est la cause du
+ * ralentissement sévère observé au démarrage une fois le pont de
+ * workspace activé.
+ *
+ * Se désactive silencieusement (retourne undefined) en consommation npm
+ * normale, où le chemin résolu contient bien "node_modules" — aucun risque
+ * de régression sur le fonctionnement historique.
+ */
+export function findWorkspaceLinkedFrameworkRoot(): string | undefined {
+  try {
+    const anyFrameworkPkg = require.resolve('@egen-civitas/esm-globals/package.json');
+    const realDir = dirname(realpathSync(anyFrameworkPkg));
+    if (realDir.includes('node_modules')) {
+      // Installation npm classique (ou lien de workspace interne au MÊME
+      // dépôt, ex. le framework qui se construit lui-même) — rien à faire.
+      return undefined;
+    }
+    return findMonorepoRoot(realDir) ?? undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 function fileExistsSync(name: string) {
@@ -347,6 +386,7 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
   const frameworkVersion = getFrameworkVersion();
   const routes = resolve(root, 'src', 'routes.json');
   const hasRoutesDefined = fileExistsSync(routes);
+  const workspaceLinkedFrameworkRoot = findWorkspaceLinkedFrameworkRoot();
 
   if (!hasRoutesDefined) {
     console.error(
@@ -440,9 +480,21 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
       },
       static: [resolve(root, outDir)],
     },
+    // ignored inclut historiquement '.git'/'test-results' (jamais
+    // 'node_modules' — inutile jusqu'ici, la plupart des dépendances n'y
+    // sont que sous forme de dist/ compilé, petit). On ajoute
+    // conditionnellement le chemin réel du framework quand il est consommé
+    // via un lien de workspace cross-repo (voir findWorkspaceLinkedFrameworkRoot
+    // ci-dessus) : sans ça, Rspack reste à surveiller l'intégralité des
+    // sources brutes des 35 paquets du framework comme s'il s'agissait du
+    // code de l'app elle-même — cause du ralentissement sévère observé au
+    // démarrage une fois le pont de workspace activé. Le comportement par
+    // défaut (npm) reste strictement inchangé.
     watchOptions: merge(
       {
-        ignored: ['.git', 'test-results'],
+        ignored: workspaceLinkedFrameworkRoot
+          ? ['.git', 'test-results', `${workspaceLinkedFrameworkRoot.replace(/\\/g, '/')}/**`]
+          : ['.git', 'test-results'],
       },
       watchConfig,
     ),

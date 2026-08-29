@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/egen",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MPL-2.0",
   "main": "dist/index.js",
   "files": [
@@ -56,8 +56,8 @@
   ],
   "homepage": "https://github.com/amourgit/Frontend-esm-framework/tree/main/packages/tooling/egen#readme",
   "dependencies": {
-    "@egen-civitas/esm-app-shell": "^1.0.0",
-    "@egen-civitas/rspack-config": "^1.0.0",
+    "@egen-civitas/esm-app-shell": "^1.0.3",
+    "@egen-civitas/rspack-config": "^1.0.1",
     "@egen-civitas/webpack-config": "^1.0.0",
     "@inquirer/prompts": "8.3.2",
     "@pnpm/npm-conf": "^3.0.2",

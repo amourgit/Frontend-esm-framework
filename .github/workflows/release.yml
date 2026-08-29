@@ -18,6 +18,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # actions/setup-node avec cache: 'yarn' invoque `yarn` pour resoudre le
+      # dossier de cache AVANT que le packageManager du repo (yarn@4.10.3) ne
+      # soit actif. Sans ceci, c'est le Yarn Classic 1.x pre-installe sur
+      # l'image ubuntu-latest qui repond, incompatible avec ce depot -> la
+      # detection de cache echoue et le job s'arrete des cette etape, avant
+      # meme l'installation des dependances.
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

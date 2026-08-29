@@ -13,6 +13,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Voir release.yml : sans ceci, le Yarn Classic pre-installe sur le
+      # runner repond a la detection de cache de setup-node a la place de
+      # Yarn Berry 4.10.3, et le job echoue avant l'installation.
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

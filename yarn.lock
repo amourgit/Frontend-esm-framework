@@ -794,8 +794,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@egen-civitas/egen@workspace:packages/tooling/egen"
   dependencies:
-    "@egen-civitas/esm-app-shell": "npm:^1.0.0"
-    "@egen-civitas/rspack-config": "npm:^1.0.0"
+    "@egen-civitas/esm-app-shell": "npm:^1.0.3"
+    "@egen-civitas/rspack-config": "npm:^1.0.1"
     "@egen-civitas/webpack-config": "npm:^1.0.0"
     "@inquirer/prompts": "npm:8.3.2"
     "@inquirer/testing": "npm:^3.3.2"
@@ -897,7 +897,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-ai-events@npm:1.x, @egen-civitas/esm-ai-events@npm:^1.0.0, @egen-civitas/esm-ai-events@workspace:packages/framework/esm-ai-events":
+"@egen-civitas/esm-ai-events@npm:^1.0.0, @egen-civitas/esm-ai-events@workspace:packages/framework/esm-ai-events":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-ai-events@workspace:packages/framework/esm-ai-events"
   dependencies:
@@ -1021,7 +1021,7 @@ __metadata:
   dependencies:
     "@egen-civitas/esm-config": "npm:^1.0.0"
     "@egen-civitas/esm-error-handling": "npm:^1.0.0"
-    "@egen-civitas/esm-globals": "npm:^1.0.0"
+    "@egen-civitas/esm-globals": "npm:^1.0.2"
     "@egen-civitas/esm-navigation": "npm:^1.0.0"
     "@egen-civitas/esm-tenant": "npm:^1.0.0"
     "@swc/cli": "npm:0.8.1"
@@ -1039,7 +1039,7 @@ __metadata:
   peerDependencies:
     "@egen-civitas/esm-config": ^1.0.0
     "@egen-civitas/esm-error-handling": ^1.0.0
-    "@egen-civitas/esm-globals": ^1.0.0
+    "@egen-civitas/esm-globals": ^1.0.2
     "@egen-civitas/esm-navigation": ^1.0.0
     "@egen-civitas/esm-state": ^1.0.0
   languageName: unknown
@@ -1050,10 +1050,10 @@ __metadata:
   resolution: "@egen-civitas/esm-app-shell@workspace:packages/shell/esm-app-shell"
   dependencies:
     "@carbon/react": "npm:^1.92.1"
-    "@egen-civitas/esm-api": "npm:^1.0.0"
+    "@egen-civitas/esm-api": "npm:^1.0.2"
     "@egen-civitas/esm-config": "npm:^1.0.0"
     "@egen-civitas/esm-framework": "npm:^1.0.0"
-    "@egen-civitas/esm-globals": "npm:^1.0.0"
+    "@egen-civitas/esm-globals": "npm:^1.0.2"
     "@egen-civitas/esm-offline": "npm:^1.0.0"
     "@egen-civitas/esm-react-utils": "npm:^1.0.0"
     "@egen-civitas/esm-state": "npm:^1.0.0"
@@ -1061,6 +1061,7 @@ __metadata:
     "@egen-civitas/esm-tenant": "npm:^1.0.0"
     "@egen-civitas/esm-theme": "npm:^1.0.0"
     "@egen-civitas/esm-utils": "npm:^1.0.0"
+    "@egen-civitas/rspack-config": "npm:^1.0.1"
     "@internationalized/date": "npm:^3.8.0"
     "@rspack/cli": "npm:1.7.9"
     "@rspack/core": "npm:1.7.9"
@@ -1770,13 +1771,13 @@ __metadata:
   dependencies:
     "@carbon/charts": "npm:^1.27.0"
     "@carbon/react": "npm:^1.92.1"
-    "@egen-civitas/esm-api": "npm:^1.0.0"
+    "@egen-civitas/esm-api": "npm:^1.0.2"
     "@egen-civitas/esm-config": "npm:^1.0.0"
     "@egen-civitas/esm-data-api": "npm:^1.0.0"
     "@egen-civitas/esm-error-handling": "npm:^1.0.0"
     "@egen-civitas/esm-expression-evaluator": "npm:^1.0.0"
     "@egen-civitas/esm-extensions": "npm:^1.0.0"
-    "@egen-civitas/esm-globals": "npm:^1.0.0"
+    "@egen-civitas/esm-globals": "npm:^1.0.2"
     "@egen-civitas/esm-navigation": "npm:^1.0.0"
     "@egen-civitas/esm-react-utils": "npm:^1.0.0"
     "@egen-civitas/esm-state": "npm:^1.0.0"

@@ -897,7 +897,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-ai-events@npm:^1.0.0, @egen-civitas/esm-ai-events@workspace:packages/framework/esm-ai-events":
+"@egen-civitas/esm-ai-events@npm:1.x, @egen-civitas/esm-ai-events@npm:^1.0.0, @egen-civitas/esm-ai-events@workspace:packages/framework/esm-ai-events":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-ai-events@workspace:packages/framework/esm-ai-events"
   dependencies:
@@ -1015,7 +1015,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-api@npm:^1.0.0, @egen-civitas/esm-api@workspace:packages/framework/esm-api":
+"@egen-civitas/esm-api@npm:^1.0.0, @egen-civitas/esm-api@npm:^1.0.2, @egen-civitas/esm-api@workspace:packages/framework/esm-api":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-api@workspace:packages/framework/esm-api"
   dependencies:
@@ -1045,7 +1045,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-app-shell@npm:^1.0.0, @egen-civitas/esm-app-shell@workspace:packages/shell/esm-app-shell":
+"@egen-civitas/esm-app-shell@npm:^1.0.3, @egen-civitas/esm-app-shell@workspace:packages/shell/esm-app-shell":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-app-shell@workspace:packages/shell/esm-app-shell"
   dependencies:
@@ -1389,7 +1389,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-globals@npm:^1.0.0, @egen-civitas/esm-globals@workspace:packages/framework/esm-globals":
+"@egen-civitas/esm-globals@npm:^1.0.0, @egen-civitas/esm-globals@npm:^1.0.2, @egen-civitas/esm-globals@workspace:packages/framework/esm-globals":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-globals@workspace:packages/framework/esm-globals"
   dependencies:
@@ -1738,7 +1738,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/rspack-config@npm:^1.0.0, @egen-civitas/rspack-config@workspace:packages/tooling/rspack-config":
+"@egen-civitas/rspack-config@npm:^1.0.1, @egen-civitas/rspack-config@workspace:packages/tooling/rspack-config":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/rspack-config@workspace:packages/tooling/rspack-config"
   dependencies:

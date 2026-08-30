@@ -35,4 +35,4 @@ jobs:
       - name: Publish canary packages
         run: yarn ci:publish-next
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

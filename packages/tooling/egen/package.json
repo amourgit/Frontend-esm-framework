@@ -7,7 +7,9 @@
     "dist",
     "bin",
     "default-rspack-config.cjs",
-    "default-webpack-config.cjs"
+    "default-rspack-config.d.cts",
+    "default-webpack-config.cjs",
+    "default-webpack-config.d.cts"
   ],
   "bin": {
     "egen": "./dist/cli.js",
@@ -18,10 +20,12 @@
   "types": "dist/index.d.ts",
   "exports": {
     "./default-rspack-config": {
+      "types": "./default-rspack-config.d.cts",
       "require": "./default-rspack-config.cjs",
       "default": "./default-rspack-config.cjs"
     },
     "./default-webpack-config": {
+      "types": "./default-webpack-config.d.cts",
       "require": "./default-webpack-config.cjs",
       "default": "./default-webpack-config.cjs"
     },

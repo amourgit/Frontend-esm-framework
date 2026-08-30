@@ -30,7 +30,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          # @changesets/cli@3.0.1 déclare "engines.node": "^22.11 || ^24 ||
+          # >=26" et son bin.js appelle process.getBuiltinModule('node:module')
+          # .enableCompileCache() sans filet - sur Node 20.x cette fonction
+          # n'existe pas dans ce module, l'étape de publication plante avec
+          # "enableCompileCache is not a function" avant même de lire les
+          # changesets. Node 20.x cassait aussi silencieusement @carbon/themes
+          # (warning EBADENGINE dans verify-pack-install.mjs, engines >=22).
+          node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
 

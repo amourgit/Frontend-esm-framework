@@ -36,6 +36,19 @@ const BUNDLER_ONLY = new Set([
   '@egen-civitas/esm-offline',
   '@egen-civitas/esm-data-api',
   '@egen-civitas/esm-react-utils',
+  // esm-ai-extensions réexporte esm-ai-tools, dont le point d'entrée fait
+  // `export * from './native/index.js'`, qui importe showNotification/
+  // showSnackbar/showModal depuis esm-styleguide (donc son .scss embarqué,
+  // cf ci-dessus). Détecté via un run réel : l'import échoue à chaque
+  // fois, mais le message précis n'est PAS déterministe (parfois un
+  // '.scss' remonté par la détection dynamique ci-dessous, parfois une
+  // autre importation non résolue de la même arborescence styleguide
+  // rapportée en premier selon l'ordre de résolution ESM) — sans entrée
+  // explicite ici, ce même test passe ou échoue au hasard d'un run à
+  // l'autre pour la même cause structurelle. Voir aussi esm-ai-tools,
+  // déjà exclu ci-dessous via la détection dynamique (son échec est lui
+  // toujours et uniquement le .scss, jamais ambigu).
+  '@egen-civitas/esm-ai-extensions',
 ]);
 
 // esm-app-shell n'est pas une librairie : c'est un bundle applicatif navigateur

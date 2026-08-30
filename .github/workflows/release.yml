@@ -40,17 +40,44 @@ jobs:
       - name: Build all packages
         run: yarn build
 
-      # Verrou bloquant : aucune publication ne doit avoir lieu si un package
-      # a une dépendance interne non déclarée ou un pointeur main/exports
-      # cassé. Voir scripts/verify-pack-install.mjs pour le détail du test.
       - name: publint
         run: npm run verify:publint
 
       - name: arethetypeswrong
         run: npm run verify:attw
 
+      # Verrou bloquant : aucune publication ne doit avoir lieu si un package
+      # a une dépendance interne non déclarée ou un pointeur main/exports
+      # cassé. Voir scripts/verify-pack-install.mjs pour le détail du test.
+      #
+      # Mesure de diagnostic TEMPORAIRE : le contenu de cette étape n'est
+      # accessible ni via `gh run view --log` (hôte de stockage hors
+      # allowlist réseau du sandbox utilisé pour déboguer ce dépôt), ni via
+      # l'API Checks (permissions insuffisantes du token utilisé). En cas
+      # d'échec, le log est donc commité tel quel dans le dépôt pour rester
+      # lisible via l'API Contents/raw.githubusercontent.com. A retirer une
+      # fois ce point de blocage résolu.
       - name: Pack + install isolé + smoke-import
-        run: node scripts/verify-pack-install.mjs
+        id: pack_install
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          node scripts/verify-pack-install.mjs 2>&1 | tee /tmp/pack-install.log
+
+      - name: Publie le log de diagnostic si l'étape précédente a échoué
+        if: steps.pack_install.outcome == 'failure'
+        run: |
+          mkdir -p .ci-debug
+          cp /tmp/pack-install.log .ci-debug/last-pack-install-failure.log
+          git config user.name "ci-debug-bot"
+          git config user.email "actions@github.com"
+          git add .ci-debug/last-pack-install-failure.log
+          git commit -m "ci-debug: capture le log de verify-pack-install en echec [skip ci]"
+          git push origin HEAD:main
+
+      - name: Bloque le job si le pack/install a échoué
+        if: steps.pack_install.outcome == 'failure'
+        run: exit 1
 
       - name: Create Release Pull Request or Publish
         uses: changesets/action@v1

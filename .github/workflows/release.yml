@@ -56,77 +56,16 @@ jobs:
       # Verrou bloquant : aucune publication ne doit avoir lieu si un package
       # a une dépendance interne non déclarée ou un pointeur main/exports
       # cassé. Voir scripts/verify-pack-install.mjs pour le détail du test.
-      #
-      # Mesure de diagnostic TEMPORAIRE : le contenu de cette étape n'est
-      # accessible ni via `gh run view --log` (hôte de stockage hors
-      # allowlist réseau du sandbox utilisé pour déboguer ce dépôt), ni via
-      # l'API Checks, ni via l'API Issues (le token utilisé pour lire
-      # depuis ce sandbox n'a la permission de lecture sur aucun des deux -
-      # tenté et confirmé). En cas d'échec, le log est donc poussé (git,
-      # historique indépendant, --force) vers une branche dédiée ci-debug,
-      # plutôt que main : un essai précédent de push direct sur main avec
-      # le GITHUB_TOKEN par défaut de l'étape a lui-même échoué, très
-      # probablement à cause d'une règle de protection de branche sur main
-      # qui ne s'applique pas à une branche annexe. A retirer une fois ce
-      # point de blocage résolu.
       - name: Pack + install isolé + smoke-import
-        id: pack_install
-        continue-on-error: true
-        run: |
-          set -o pipefail
-          node scripts/verify-pack-install.mjs 2>&1 | tee /tmp/pack-install.log
+        run: node scripts/verify-pack-install.mjs
 
-      - name: Publie le log de diagnostic si l'étape précédente a échoué
-        if: steps.pack_install.outcome == 'failure'
-        run: |
-          mkdir -p /tmp/ci-debug-worktree
-          cp /tmp/pack-install.log /tmp/ci-debug-worktree/last-pack-install-failure.log
-          cd /tmp/ci-debug-worktree
-          git init -q
-          git config user.name "ci-debug-bot"
-          git config user.email "actions@github.com"
-          git add last-pack-install-failure.log
-          git commit -q -m "ci-debug: log verify-pack-install (run ${{ github.run_id }}, tentative ${{ github.run_attempt }})"
-          git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/ci-debug
-
-      - name: Bloque le job si le pack/install a échoué
-        if: steps.pack_install.outcome == 'failure'
-        run: exit 1
-
-      # Remplace changesets/action par un appel direct et transparent : la
-      # sortie d'une action composite n'est pas récupérable par la
-      # technique de capture utilisée plus haut (seuls des outputs
-      # explicitement déclarés le seraient, pas le détail d'une erreur de
-      # publication). Comportement identique : tous les changesets ayant
-      # déjà été consommés localement (chore(release) plus haut dans
-      # l'historique), il ne reste rien à versionner ici — seule la
-      # publication effective (`changeset publish`, ce que fait
-      # changesets/action en interne quand aucun changeset n'est en
-      # attente) a un sens à ce stade.
-      - name: Publish (changeset publish)
-        id: publish
-        continue-on-error: true
+      - name: Create Release Pull Request or Publish
+        uses: changesets/action@v1
+        with:
+          publish: yarn ci:publish
+          version: yarn release
+          commit: 'chore: release packages'
+          title: 'chore: release packages'
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          set -o pipefail
-          yarn ci:publish 2>&1 | tee /tmp/publish.log
-
-      # Diagnostic temporaire, même mécanisme que l'étape pack/install plus
-      # haut (mêmes limites d'accès aux logs depuis mon sandbox).
-      - name: Publie le log de diagnostic si la publication a échoué
-        if: steps.publish.outcome == 'failure'
-        run: |
-          mkdir -p /tmp/ci-debug-worktree-2
-          cp /tmp/publish.log /tmp/ci-debug-worktree-2/last-publish-failure.log
-          cd /tmp/ci-debug-worktree-2
-          git init -q
-          git config user.name "ci-debug-bot"
-          git config user.email "actions@github.com"
-          git add last-publish-failure.log
-          git commit -q -m "ci-debug: log publish (run ${{ github.run_id }}, tentative ${{ github.run_attempt }})"
-          git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/ci-debug-2
-
-      - name: Bloque le job si la publication a échoué
-        if: steps.publish.outcome == 'failure'
-        run: exit 1

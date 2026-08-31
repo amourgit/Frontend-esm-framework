@@ -1,6 +1,19 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { sessionStore, clearCurrentUser } from './current-user';
+import { clearCurrentUser } from './current-user';
+
+// NOTE IMPORTANTE sur vi.resetModules() dans ce fichier : chaque test importe
+// dynamiquement `./dev-auth-bypass` (et souvent `./current-user`) APRÈS
+// vi.resetModules(), pour repartir d'un état de module frais. Une valeur
+// obtenue via un import STATIQUE en tête de fichier (comme `clearCurrentUser`
+// ci-dessus) reste liée à la génération de modules chargée avant tout reset —
+// donc jamais au même `sessionStore` que celui que `dev-auth-bypass` frais
+// écrit réellement. Tout test qui a besoin de lire ou d'écrire `sessionStore`
+// doit l'obtenir via `await import('./current-user')` DANS le test, à côté de
+// l'import de `dev-auth-bypass` — jamais via l'import statique du haut du
+// fichier, qui ne convient qu'à `beforeEach`/`afterEach` (nettoyage sur la
+// génération précédente, sans conséquence puisqu'une nouvelle génération
+// repart de toute façon d'un store vierge à chaque `vi.resetModules()`).
 
 describe('dev-auth-bypass', () => {
   const originalFetch = window.fetch;
@@ -55,18 +68,23 @@ describe('dev-auth-bypass', () => {
     it('ne fait rien si le bypass est désactivé', async () => {
       vi.unstubAllEnvs();
       const { initDevAuthBypass } = await import('./dev-auth-bypass');
+      // sessionStore doit venir du MÊME import dynamique (donc de la même
+      // génération de registre de modules post-vi.resetModules()) que le
+      // reste de ce test — voir la note en tête de fichier.
+      const { sessionStore: freshSessionStore } = await import('./current-user');
       initDevAuthBypass();
-      expect(sessionStore.getState().loaded).toBe(false);
+      expect(freshSessionStore.getState().loaded).toBe(false);
     });
 
     it("peuple IMMÉDIATEMENT le sessionStore au boot — pas besoin de soumettre le formulaire de login", async () => {
       vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
       const { initDevAuthBypass } = await import('./dev-auth-bypass');
+      const { sessionStore: freshSessionStore } = await import('./current-user');
 
       // Avant tout montage d'app, avant tout appel à getSessionStore()/useSession() :
       initDevAuthBypass();
 
-      const state = sessionStore.getState();
+      const state = freshSessionStore.getState();
       expect(state.loaded).toBe(true);
       expect(state.session?.authenticated).toBe(true);
       expect(state.session?.user?.display).toBeTruthy();
@@ -75,11 +93,12 @@ describe('dev-auth-bypass', () => {
     it('la session injectée est exploitable par tout code lisant sessionStore directement (simulation multi-app)', async () => {
       vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
       const { initDevAuthBypass } = await import('./dev-auth-bypass');
+      const { sessionStore: freshSessionStore } = await import('./current-user');
       initDevAuthBypass();
 
       // Simule un package qui n'a jamais touché à /login (ex: esm-ai-assistant-app) :
       // lit sessionStore comme le ferait useSession()/getSessionStore().
-      const state = sessionStore.getState();
+      const state = freshSessionStore.getState();
       expect(state.loaded).toBe(true);
       expect(state.session?.authenticated).toBe(true);
     });
@@ -95,10 +114,11 @@ describe('dev-auth-bypass', () => {
     it('reste fonctionnel pour le flux explicite de soumission du formulaire', async () => {
       vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
       const { applyDevAuthBypassForLogin } = await import('./dev-auth-bypass');
+      const { sessionStore: freshSessionStore } = await import('./current-user');
       const result = applyDevAuthBypassForLogin();
       expect(result?.loaded).toBe(true);
       expect(result?.session?.authenticated).toBe(true);
-      expect(sessionStore.getState().session?.authenticated).toBe(true);
+      expect(freshSessionStore.getState().session?.authenticated).toBe(true);
     });
   });
 
@@ -118,13 +138,15 @@ describe('dev-auth-bypass', () => {
     it('un DELETE /session (logout) déconnecte réellement — les GET suivants ne re-authentifient plus', async () => {
       vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
       const { initDevAuthBypass } = await import('./dev-auth-bypass');
+      const { sessionStore: freshSessionStore, clearCurrentUser: freshClearCurrentUser } =
+        await import('./current-user');
       initDevAuthBypass();
-      expect(sessionStore.getState().session?.authenticated).toBe(true);
+      expect(freshSessionStore.getState().session?.authenticated).toBe(true);
 
       // Simule exactement le flux réel de performLogout() :
       // esm-login-app/src/redirect-logout/logout.resource.ts
       await window.fetch('/openmrs/ws/rest/v1/session', { method: 'DELETE' });
-      clearCurrentUser();
+      freshClearCurrentUser();
 
       // refetchCurrentUser() est appelé juste après dans performLogout() —
       // avant le correctif, ce GET ré-authentifiait silencieusement

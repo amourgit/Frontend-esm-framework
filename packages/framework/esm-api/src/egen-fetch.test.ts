@@ -24,7 +24,7 @@ describe('egenFetch', () => {
         },
       }),
     );
-    window.egenBase = '/egen';
+    window.egenBase = '/egen-civitas';
     window.getEgenSpaBase = () => '/egen-civitas/spa/';
     window.fetch = vi.fn();
     Object.defineProperty(window, 'location', {
@@ -302,7 +302,7 @@ describe('egenFetch', () => {
 
 describe('egenObservableFetch', () => {
   beforeEach(() => {
-    window.egenBase = '/egen';
+    window.egenBase = '/egen-civitas';
     window.fetch = vi.fn();
   });
 

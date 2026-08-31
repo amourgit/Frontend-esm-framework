@@ -6,6 +6,7 @@ import { clearHistory, navigate } from '@egen-civitas/esm-navigation';
 import type { FetchResponse } from './types/index.js';
 import { getTenantId } from './tenant.js';
 import { defaultRedirectAuthFailureUrl, type EsmApiConfigObject } from './config-schema.js';
+import { isProblemDetails, type ProblemDetails } from './problem-details.js';
 
 /** The base URL for the Egen REST API (e.g., '/ws/rest/v1'). */
 export const restBaseUrl = '/ws/rest/v1';
@@ -330,10 +331,24 @@ export class EgenFetchError extends Error implements FetchError {
     requestStacktrace.message = this.message;
     this.responseBody = responseBody;
     this.response = response;
+    // RFC 9457 (Problem Details) support: when the server sends a structured
+    // error body, expose it as `problem` in addition to the raw
+    // `responseBody`, so callers that understand the standard can branch on
+    // `err.problem.type`/`title`/`detail` instead of parsing `responseBody`
+    // themselves. `responseBody` is untouched either way — this is purely
+    // additive. See ./problem-details.ts for the exact detection rule.
+    this.problem = isProblemDetails(responseBody) ? { type: 'about:blank', ...responseBody } : undefined;
     this.stack = `Stacktrace for outgoing request:\n${requestStacktrace.stack}\nStacktrace for incoming response:\n${this.stack}`;
   }
   response: Response;
   responseBody: string | FetchResponseJson | null;
+  /**
+   * The response body, structured as an RFC 9457 Problem Details object, if
+   * (and only if) the server sent one — see {@link isProblemDetails} for the
+   * exact detection rule. `undefined` otherwise; always check this before
+   * relying on its shape.
+   */
+  problem?: ProblemDetails;
 }
 
 export interface FetchConfig extends Omit<RequestInit, 'body' | 'headers'> {
@@ -358,4 +373,5 @@ export interface FetchResponseJson {
 export interface FetchError {
   response: Response;
   responseBody: ResponseBody | null;
+  problem?: ProblemDetails;
 }

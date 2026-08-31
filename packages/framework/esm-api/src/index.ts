@@ -14,3 +14,7 @@ export * from './types/index.js';
 export { getTenantId, tenantHeaders, isMultiTenant, subscribeTenant } from './tenant.js';
 
 export { isDevAuthBypassEnabled, initDevAuthBypass, applyDevAuthBypassForLogin, interceptSessionFetch } from './dev-auth-bypass.js';
+
+export * from './middleware.js';
+export * from './retry-middleware.js';
+export * from './problem-details.js';

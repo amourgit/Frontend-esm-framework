@@ -210,6 +210,139 @@ describe('egenFetch', () => {
     }
   });
 
+  describe('EgenFetchError.problem (RFC 9457)', () => {
+    it('is populated when the server responds with a Problem Details body', async () => {
+      // @ts-expect-error
+      window.fetch.mockReturnValue(
+        Promise.resolve({
+          ok: false,
+          status: 403,
+          statusText: 'Forbidden',
+          clone: () => ({
+            text: () =>
+              Promise.resolve(
+                JSON.stringify({
+                  type: 'https://example.com/probs/out-of-credit',
+                  title: 'You do not have enough credit.',
+                  status: 403,
+                  detail: 'Your current balance is 30, but that costs 50.',
+                  instance: '/account/12345/msgs/abc',
+                }),
+              ),
+          }),
+        }),
+      );
+
+      try {
+        await egenFetch('/ws/rest/v1/concept');
+        fail("Promise shouldn't resolve when server responds with 403");
+      } catch (err) {
+        expect(err.problem).toEqual({
+          type: 'https://example.com/probs/out-of-credit',
+          title: 'You do not have enough credit.',
+          status: 403,
+          detail: 'Your current balance is 30, but that costs 50.',
+          instance: '/account/12345/msgs/abc',
+        });
+        // Purely additive: responseBody keeps working exactly as before.
+        expect(err.responseBody).toEqual({
+          type: 'https://example.com/probs/out-of-credit',
+          title: 'You do not have enough credit.',
+          status: 403,
+          detail: 'Your current balance is 30, but that costs 50.',
+          instance: '/account/12345/msgs/abc',
+        });
+      }
+    });
+
+    it("defaults problem.type to 'about:blank' when the server omits it", async () => {
+      // @ts-expect-error
+      window.fetch.mockReturnValue(
+        Promise.resolve({
+          ok: false,
+          status: 404,
+          statusText: 'Not Found',
+          clone: () => ({
+            text: () => Promise.resolve(JSON.stringify({ title: 'Concept not found' })),
+          }),
+        }),
+      );
+
+      try {
+        await egenFetch('/ws/rest/v1/session');
+        fail("Promise shouldn't resolve when server responds with 404");
+      } catch (err) {
+        expect(err.problem).toEqual({ type: 'about:blank', title: 'Concept not found' });
+      }
+    });
+
+    it('is undefined when the response body is a JSON object without a title', async () => {
+      // @ts-expect-error
+      window.fetch.mockReturnValue(
+        Promise.resolve({
+          ok: false,
+          status: 500,
+          statusText: 'Internal Server Error',
+          clone: () => ({
+            text: () => Promise.resolve(JSON.stringify({ error: 'The server is dead' })),
+          }),
+        }),
+      );
+
+      try {
+        await egenFetch('/ws/rest/v1/session');
+        fail("Promise shouldn't resolve when server responds with 500");
+      } catch (err) {
+        expect(err.problem).toBeUndefined();
+        // responseBody is still there, untouched, for callers that don't use RFC 9457.
+        expect(err.responseBody).toEqual({ error: 'The server is dead' });
+      }
+    });
+
+    it('is undefined when the response body is a plain string, not JSON', async () => {
+      // @ts-expect-error
+      window.fetch.mockReturnValue(
+        Promise.resolve({
+          ok: false,
+          status: 400,
+          statusText: 'You goofed up',
+          clone: () => ({
+            text: () => Promise.resolve('a string response body'),
+          }),
+        }),
+      );
+
+      try {
+        await egenFetch('/ws/rest/v1/session');
+        fail("Promise shouldn't resolve when server responds with 400");
+      } catch (err) {
+        expect(err.problem).toBeUndefined();
+      }
+    });
+
+    it('is undefined when the server sends no body at all', async () => {
+      // @ts-expect-error
+      window.fetch.mockReturnValue(
+        Promise.resolve({
+          ok: false,
+          status: 502,
+          statusText: 'Bad Gateway',
+          clone: () => ({
+            text: () => Promise.reject(new Error('no body')),
+          }),
+        }),
+      );
+
+      try {
+        await egenFetch('/ws/rest/v1/session');
+        fail("Promise shouldn't resolve when server responds with 502");
+      } catch (err) {
+        expect(err.problem).toBeUndefined();
+        expect(err.responseBody).toBeNull();
+      }
+    });
+  });
+
   it('redirects to the Location header URL when a 401 response contains a Location header (auth-module challenge)', async () => {
     mockGetConfig.mockResolvedValueOnce({
       redirectAuthFailure: {

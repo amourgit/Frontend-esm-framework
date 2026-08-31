@@ -78,11 +78,11 @@ describe('dynamic-loading', () => {
     });
 
     it('replaces @ with underscores', () => {
-      expect(slugify('@egen-civitas/esm-foo')).toBe('_egen_esm_foo');
+      expect(slugify('@egen-civitas/esm-foo')).toBe('_egen_civitas_esm_foo');
     });
 
     it('handles a typical module name', () => {
-      expect(slugify('@egen-civitas/esm-patient-chart-app')).toBe('_egen_esm_patient_chart_app');
+      expect(slugify('@egen-civitas/esm-patient-chart-app')).toBe('_egen_civitas_esm_patient_chart_app');
     });
 
     it('returns the input unchanged when there are no special characters', () => {
@@ -105,7 +105,7 @@ describe('dynamic-loading', () => {
     });
 
     it('resolves immediately if the package is already loaded on window', async () => {
-      const slug = '_egen_esm_foo';
+      const slug = '_egen_civitas_esm_foo';
       (window as any)[slug] = { init: vi.fn(), get: vi.fn() };
 
       await expect(preloadImport('@egen-civitas/esm-foo')).resolves.toBeUndefined();
@@ -308,12 +308,12 @@ describe('dynamic-loading', () => {
     }
 
     afterEach(() => {
-      delete (window as any)['_egen_esm_foo'];
+      delete (window as any)['_egen_civitas_esm_foo'];
     });
 
     it('returns the module exports from a federated module', async () => {
       const moduleExports = { default: 'hello', namedExport: 42 };
-      setupFederatedModule('_egen_esm_foo', moduleExports);
+      setupFederatedModule('_egen_civitas_esm_foo', moduleExports);
 
       const result = await importDynamic('@egen-civitas/esm-foo');
       expect(result).toEqual(moduleExports);
@@ -321,7 +321,7 @@ describe('dynamic-loading', () => {
 
     it('calls container.init with the default webpack share scope', async () => {
       const initFn = vi.fn();
-      (window as any)['_egen_esm_foo'] = {
+      (window as any)['_egen_civitas_esm_foo'] = {
         init: initFn,
         get: vi.fn().mockResolvedValue(() => ({ default: true })),
       };
@@ -332,7 +332,7 @@ describe('dynamic-loading', () => {
 
     it('calls container.get with the specified share', async () => {
       const getFn = vi.fn().mockResolvedValue(() => ({ default: true }));
-      (window as any)['_egen_esm_foo'] = { init: vi.fn(), get: getFn };
+      (window as any)['_egen_civitas_esm_foo'] = { init: vi.fn(), get: getFn };
 
       await importDynamic('@egen-civitas/esm-foo', './custom-share');
       expect(getFn).toHaveBeenCalledWith('./custom-share');
@@ -340,20 +340,20 @@ describe('dynamic-loading', () => {
 
     it('uses ./start as the default share', async () => {
       const getFn = vi.fn().mockResolvedValue(() => ({ default: true }));
-      (window as any)['_egen_esm_foo'] = { init: vi.fn(), get: getFn };
+      (window as any)['_egen_civitas_esm_foo'] = { init: vi.fn(), get: getFn };
 
       await importDynamic('@egen-civitas/esm-foo');
       expect(getFn).toHaveBeenCalledWith('./start');
     });
 
     it('throws when the global is not a federated module', async () => {
-      (window as any)['_egen_esm_foo'] = 'not a module';
+      (window as any)['_egen_civitas_esm_foo'] = 'not a module';
 
       await expect(importDynamic('@egen-civitas/esm-foo')).rejects.toThrow('does not refer to a federated module');
     });
 
     it('throws when the factory returns null', async () => {
-      (window as any)['_egen_esm_foo'] = {
+      (window as any)['_egen_civitas_esm_foo'] = {
         init: vi.fn(),
         get: vi.fn().mockResolvedValue(() => null),
       };
@@ -362,7 +362,7 @@ describe('dynamic-loading', () => {
     });
 
     it('throws when the factory returns a string', async () => {
-      (window as any)['_egen_esm_foo'] = {
+      (window as any)['_egen_civitas_esm_foo'] = {
         init: vi.fn(),
         get: vi.fn().mockResolvedValue(() => 'not a module'),
       };

@@ -202,15 +202,27 @@ describe('Egen Dates', () => {
     expect(formatDate(testDate, { noToday: true }).replaceAll(/[\u202F]/g, ' ')).toEqual(expected);
   });
 
-  it('formats duration with respect to the locale', () => {
-    window.i18next.language = 'en';
-    const dur = { hours: 1, minutes: 1, seconds: 1, days: 1, months: 1, years: 1 };
-    expect(formatDuration(dur, { style: 'narrow' })).toMatch(/1y.*1m.*1d.*1h.*1m.*1s/);
-    expect(formatDuration(dur, { style: 'short' })).toMatch(/1\s+yr,.*1\s+mth,.*1\s+day,.*1\s+hr,.*1\s+min,.*1\s+sec/);
-    expect(formatDuration(dur, { style: 'long' })).toMatch(
-      /1\s+year,.*1\s+month,.*1\s+day,.*1\s+hour,.*1\s+minute,.*1\s+second/,
-    );
-  });
+  it(
+    'formats duration with respect to the locale',
+    () => {
+      window.i18next.language = 'en';
+      const dur = { hours: 1, minutes: 1, seconds: 1, days: 1, months: 1, years: 1 };
+      expect(formatDuration(dur, { style: 'narrow' })).toMatch(/1y.*1m.*1d.*1h.*1m.*1s/);
+      expect(formatDuration(dur, { style: 'short' })).toMatch(/1\s+yr,.*1\s+mth,.*1\s+day,.*1\s+hr,.*1\s+min,.*1\s+sec/);
+      expect(formatDuration(dur, { style: 'long' })).toMatch(
+        /1\s+year,.*1\s+month,.*1\s+day,.*1\s+hour,.*1\s+minute,.*1\s+second/,
+      );
+    },
+    // Le timeout par defaut de vitest (5000ms) est parfois trop juste pour ce
+    // test sur un runner CI charge : les 3 appels a `new Intl.DurationFormat`
+    // (un par style) peuvent payer un cout de demarrage a froid ICU non
+    // negligeable la premiere fois que cette API est utilisee dans le
+    // processus - mesure : 566ms en local, 6819ms sur un run CI reel (le
+    // meme test, la meme logique, un environnement plus lent). Ce n'est pas
+    // un bug de formatDuration() - aucune assertion n'echoue jamais, seul le
+    // delai est en cause.
+    15_000,
+  );
 });
 
 describe('duration', () => {

@@ -4,6 +4,7 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     mockReset: true,
+    exclude: ['**/node_modules/**', '**/dist/**'],
     globals: true,
     setupFiles: ['./src/test-setup.ts'],
     alias: {

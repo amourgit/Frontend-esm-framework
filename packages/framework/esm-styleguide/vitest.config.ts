@@ -12,6 +12,7 @@ export default defineConfig({
       },
     },
     mockReset: true,
+    exclude: ['**/node_modules/**', '**/dist/**'],
     setupFiles: ['./setup-tests.ts'],
   },
 });

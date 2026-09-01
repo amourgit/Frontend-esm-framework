@@ -15,5 +15,6 @@ export default defineConfig({
       },
     },
     mockReset: true,
+    exclude: ['**/node_modules/**', '**/dist/**'],
   },
 });

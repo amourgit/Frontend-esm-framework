@@ -4,6 +4,7 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     mockReset: true,
+    exclude: ['**/node_modules/**', '**/dist/**'],
     globals: true,
     alias: {
       '@egen-civitas/esm-framework/src/internal': '@egen-civitas/esm-framework/mock',

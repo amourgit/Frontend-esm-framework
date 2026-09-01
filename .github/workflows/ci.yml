@@ -6,9 +6,6 @@ on:
   pull_request:
     branches: [main, develop]
 
-permissions:
-  contents: write
-
 jobs:
   build-and-test:
     name: Build & Test
@@ -39,31 +36,7 @@ jobs:
         run: yarn build
 
       - name: Run tests
-        id: run_tests
-        continue-on-error: true
-        run: |
-          set -o pipefail
-          yarn test 2>&1 | tee /tmp/ci-tests.log
-
-      # Mesure de diagnostic TEMPORAIRE, meme raison et meme mecanisme que
-      # celui deja utilise (puis retire) sur release.yml : logs de job
-      # inaccessibles depuis le sandbox utilise pour deboguer ce depot.
-      - name: Publie le log de diagnostic si les tests ont echoue
-        if: steps.run_tests.outcome == 'failure'
-        run: |
-          mkdir -p /tmp/ci-debug-worktree-3
-          cp /tmp/ci-tests.log /tmp/ci-debug-worktree-3/last-test-failure.log
-          cd /tmp/ci-debug-worktree-3
-          git init -q
-          git config user.name "ci-debug-bot"
-          git config user.email "actions@github.com"
-          git add last-test-failure.log
-          git commit -q -m "ci-debug: log yarn test (run ${{ github.run_id }}, tentative ${{ github.run_attempt }})"
-          git push -q --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:refs/heads/ci-debug-3
-
-      - name: Bloque le job si les tests ont échoué
-        if: steps.run_tests.outcome == 'failure'
-        run: exit 1
+        run: yarn test
 
       - name: TypeScript check
         run: yarn workspaces foreach --all run typescript --if-present

@@ -107,19 +107,19 @@ describe('import-maps', () => {
 
     it('getCurrentPageMap merges base map with overrides', async () => {
       setDomImportMaps([{ imports: { '@egen-civitas/esm-foo': '/foo.js', '@egen-civitas/esm-bar': '/bar.js' } }]);
-      localStorage.setItem('import-map-override:@egen-civitas/esm-foo', 'http://localhost:8081/foo.js');
+      localStorage.setItem('import-map-override:@egen-civitas/esm-foo', 'http://localhost:8082/foo.js');
 
       const { setupImportMapOverrides, getCurrentPageMap } = await import('./import-maps');
       setupImportMapOverrides();
 
       const map = await getCurrentPageMap();
-      expect(map.imports['@egen-civitas/esm-foo']).toBe('http://localhost:8081/foo.js');
+      expect(map.imports['@egen-civitas/esm-foo']).toBe('http://localhost:8082/foo.js');
       expect(map.imports['@egen-civitas/esm-bar']).toBe('/bar.js');
     });
 
     it('getImportMapDefaultMap returns only the base map', async () => {
       setDomImportMaps([{ imports: { '@egen-civitas/esm-foo': '/foo.js' } }]);
-      localStorage.setItem('import-map-override:@egen-civitas/esm-foo', 'http://localhost:8081/foo.js');
+      localStorage.setItem('import-map-override:@egen-civitas/esm-foo', 'http://localhost:8082/foo.js');
 
       const { setupImportMapOverrides, getImportMapDefaultMap } = await import('./import-maps');
       setupImportMapOverrides();
@@ -132,12 +132,12 @@ describe('import-maps', () => {
       const { setupImportMapOverrides, addImportMapOverride } = await import('./import-maps');
       setupImportMapOverrides();
 
-      addImportMapOverride('@egen-civitas/esm-foo', 'http://localhost:8081/foo.js');
-      expect(localStorage.getItem('import-map-override:@egen-civitas/esm-foo')).toBe('http://localhost:8081/foo.js');
+      addImportMapOverride('@egen-civitas/esm-foo', 'http://localhost:8082/foo.js');
+      expect(localStorage.getItem('import-map-override:@egen-civitas/esm-foo')).toBe('http://localhost:8082/foo.js');
     });
 
     it('removeImportMapOverride removes from localStorage', async () => {
-      localStorage.setItem('import-map-override:@egen-civitas/esm-foo', 'http://localhost:8081/foo.js');
+      localStorage.setItem('import-map-override:@egen-civitas/esm-foo', 'http://localhost:8082/foo.js');
 
       const { setupImportMapOverrides, removeImportMapOverride } = await import('./import-maps');
       setupImportMapOverrides();
@@ -199,17 +199,17 @@ describe('import-maps', () => {
 
     it('getImportMapNextPageMap merges base map with current overrides', async () => {
       setDomImportMaps([{ imports: { '@egen-civitas/esm-foo': '/foo.js', '@egen-civitas/esm-bar': '/bar.js' } }]);
-      localStorage.setItem('import-map-override:@egen-civitas/esm-foo', 'http://localhost:8081/foo.js');
+      localStorage.setItem('import-map-override:@egen-civitas/esm-foo', 'http://localhost:8082/foo.js');
 
       const { setupImportMapOverrides, addImportMapOverride, getImportMapNextPageMap } = await import('./import-maps');
       setupImportMapOverrides();
 
       // Add a new override after setup — should appear in the next-page map but not the current-page snapshot
-      addImportMapOverride('@egen-civitas/esm-bar', 'http://localhost:8081/bar.js');
+      addImportMapOverride('@egen-civitas/esm-bar', 'http://localhost:8082/bar.js');
 
       const map = await getImportMapNextPageMap();
-      expect(map.imports['@egen-civitas/esm-foo']).toBe('http://localhost:8081/foo.js');
-      expect(map.imports['@egen-civitas/esm-bar']).toBe('http://localhost:8081/bar.js');
+      expect(map.imports['@egen-civitas/esm-foo']).toBe('http://localhost:8082/foo.js');
+      expect(map.imports['@egen-civitas/esm-bar']).toBe('http://localhost:8082/bar.js');
     });
 
     it('isImportMapOverrideDisabled returns true for a disabled override', async () => {
@@ -301,7 +301,7 @@ describe('import-maps', () => {
       setupImportMapOverrides();
 
       // Add an override after setup
-      addImportMapOverride('@egen-civitas/esm-foo', 'http://localhost:8081/foo.js');
+      addImportMapOverride('@egen-civitas/esm-foo', 'http://localhost:8082/foo.js');
 
       // getCurrentPageMap uses the snapshot from setup time — override not reflected
       const currentMap = await getCurrentPageMap();
@@ -309,7 +309,7 @@ describe('import-maps', () => {
 
       // getImportMapNextPageMap reads the live overrides — reflects the new one
       const nextMap = await getImportMapNextPageMap();
-      expect(nextMap.imports['@egen-civitas/esm-foo']).toBe('http://localhost:8081/foo.js');
+      expect(nextMap.imports['@egen-civitas/esm-foo']).toBe('http://localhost:8082/foo.js');
     });
   });
 

@@ -248,14 +248,14 @@ describe('mergeImportmapAndRoutes', () => {
     };
 
     const result = await mergeImportmapAndRoutes(original, {
-      importMap: { local: 'http://localhost:8081/local.js' },
+      importMap: { local: 'http://localhost:8082/local.js' },
       routes: {},
       watchedRoutesPaths: {},
     });
 
     expect(result.importMap.type).toBe('inline');
     const merged = JSON.parse(result.importMap.value);
-    expect(merged.imports.local).toBe('http://localhost:8081/local.js');
+    expect(merged.imports.local).toBe('http://localhost:8082/local.js');
     // The remote import URL should have been resolved against the fetch URL
     expect(merged.imports.remote).toBeDefined();
 
@@ -312,7 +312,7 @@ describe('proxyImportmapAndRoutes', () => {
         type: 'inline',
         value: JSON.stringify({
           imports: {
-            '@egen-civitas/local': 'http://localhost:8081/main.js',
+            '@egen-civitas/local': 'http://localhost:8082/main.js',
             '@egen-civitas/remote': 'https://dev.egen.alpha.vercel.com/egen-civitas/spa/remote.js',
           },
         }),
@@ -324,7 +324,7 @@ describe('proxyImportmapAndRoutes', () => {
     const result = proxyImportmapAndRoutes(input, backend, spaPath);
 
     const map = JSON.parse(result.importmap.value);
-    expect(map.imports['@egen-civitas/local']).toBe('http://localhost:8081/main.js');
+    expect(map.imports['@egen-civitas/local']).toBe('http://localhost:8082/main.js');
     expect(map.imports['@egen-civitas/remote']).toBe('./remote.js');
   });
 

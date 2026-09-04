@@ -50,7 +50,7 @@ export function buildCli(y: Argv) {
           type: 'string',
         })
         .option('backend', {
-          default: 'http://localhost:8081',
+          default: 'http://localhost:8082',
           describe: 'The backend to proxy API requests to.',
           type: 'string',
           coerce: (arg) => (arg.endsWith('/') ? arg.slice(0, -1) : arg),
@@ -358,7 +358,7 @@ export function buildCli(y: Argv) {
         .default('host', 'localhost')
         .describe('host', 'The host name or IP for the server to use.')
         .string('backend')
-        .default('backend', 'http://localhost:8081/')
+        .default('backend', 'http://localhost:8082/')
         .describe('backend', 'The backend to proxy API requests to.')
         .string('add-cookie')
         .default('add-cookie', '')

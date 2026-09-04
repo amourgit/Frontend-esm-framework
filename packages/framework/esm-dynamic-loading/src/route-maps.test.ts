@@ -112,7 +112,7 @@ describe('route-maps', () => {
 
     it('getCurrentRouteMap merges base map with URL-fetched overrides', async () => {
       setDomRouteMaps([{ '@egen-civitas/esm-foo': { pages: [] } }]);
-      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify('http://localhost:8081/routes.json'));
+      localStorage.setItem('egen-routes:@egen-civitas/esm-foo', JSON.stringify('http://localhost:8082/routes.json'));
       fetchMock.mockResponseOnce(JSON.stringify({ pages: [{ component: 'root', route: '/fetched' }] }));
 
       const { setupRouteMapOverrides, getCurrentRouteMap } = await import('./route-maps');

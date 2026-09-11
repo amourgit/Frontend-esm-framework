@@ -1,0 +1,84 @@
+/* ============================================================================
+ *  @egen-civitas/tailwind-preset — point d'entrée Tailwind partagé (EGEN)
+ * ============================================================================
+ *  Usage (une fois par app, tout en haut de root.component.tsx, avant tout
+ *  autre import de style) :
+ *
+ *    import '@egen-civitas/tailwind-preset/tailwind.tw.css';
+ *
+ *  Nécessite la règle rspack *.tw.css fournie par @egen-civitas/rspack-config
+ *  (postcss-loader + @tailwindcss/postcss, sans CSS Modules — voir ce
+ *  package pour le détail).
+ *
+ *  Preflight désactivé volontairement : plusieurs micro-frontends (single-
+ *  spa) partagent la même page, un reset global casserait les composants
+ *  Carbon montés par d'AUTRES apps.
+ * ----------------------------------------------------------------------------
+ *  SURCHARGER UN COMPOSANT DU FRAMEWORK (esm-styleguide / Carbon) AVEC DU
+ *  TAILWIND :
+ *
+ *  Le SCSS existant du framework n'est dans aucun @layer CSS ("non-layered").
+ *  Par spec CSS, une déclaration non-layered NORMALE bat toujours une
+ *  déclaration LAYERED normale (Tailwind sort tout dans des @layer) — donc
+ *  `<Card className="bg-primary-500" />` sur un <Card> du framework ne
+ *  changera RIEN à son fond si Card fixe déjà `background-color` en SCSS.
+ *
+ *  Solution : le modificateur "important" de Tailwind v4 (suffixe `!`) :
+ *
+ *    <Card className="bg-primary-500! rounded-xl!" />
+ *
+ *  Une déclaration important bat TOUJOURS une déclaration normale, quel que
+ *  soit le layer (confirmé : MDN, spec CSS Cascade Layers L1). C'est le
+ *  seul cas où `!` est nécessaire : pour du CSS qui ne partage pas de
+ *  sélecteur avec un composant du framework (tes propres composants codés
+ *  à part), les classes Tailwind normales suffisent, pas besoin de `!`.
+ * ==========================================================================*/
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/* ----------------------------------------------------------------------------
+ *  Pont vers le moteur de thème EGEN (@egen-civitas/esm-theme)
+ * ----------------------------------------------------------------------------
+ *  esm-theme injecte déjà des variables --colors-*, --border-radius-*,
+ *  --shadows-* etc. sur :root (voir theme.default.json + flatten.ts),
+ *  avec résolution light/dark et overrides par tenant déjà gérés.
+ *
+ *  Ci-dessous : un DÉPART couvrant les familles les plus utiles en usage
+ *  utilitaire (couleurs, radius). Le thème complet a bien plus de familles
+ *  (typography.*, layout.*, animation.*, effects.glass.*, panel.*...) —
+ *  volontairement non reprises ici : beaucoup sont des tokens très
+ *  spécifiques au glassmorphism (cos/sin/rimIntensity...) qui n'ont pas
+ *  vocation à devenir des utilitaires Tailwind et restent mieux exprimés en
+ *  SCSS. Étends ce bloc au cas par cas si un besoin Tailwind précis émerge
+ *  (ex. --spacing pour les tokens de layout, --shadow-* pour les shadows).
+ *
+ *  Un fallback statique (valeur de theme.default.json) est fourni après
+ *  chaque var() pour rester utilisable même avant le premier paint du
+ *  moteur de thème (qui injecte de façon asynchrone).
+ * --------------------------------------------------------------------------*/
+@theme {
+  --color-primary-50: var(--colors-primary-50, #eef2ff);
+  --color-primary-100: var(--colors-primary-100, #e0e7ff);
+  --color-primary-200: var(--colors-primary-200, #c7d2fe);
+  --color-primary-300: var(--colors-primary-300, #a5b4fc);
+  --color-primary-400: var(--colors-primary-400, #818cf8);
+  --color-primary-500: var(--colors-primary-500, #6366f1);
+  --color-primary-600: var(--colors-primary-600, #4f46e5);
+  --color-primary-700: var(--colors-primary-700, #4338ca);
+  --color-primary-800: var(--colors-primary-800, #3730a3);
+  --color-primary-900: var(--colors-primary-900, #312e81);
+  --color-primary-950: var(--colors-primary-950, #1e1b4b);
+
+  /* Même schéma pour secondary / neutral / success / warning / error / info
+     — répéter les 11 nuances (50→950) en changeant juste le préfixe, elles
+     existent déjà telles quelles dans theme.default.json. Omis ici pour la
+     lisibilité du template. */
+
+  --radius-none: var(--border-radius-none, 0px);
+  --radius-sm: var(--border-radius-sm, 0.25rem);
+  --radius-md: var(--border-radius-md, 0.5rem);
+  --radius-lg: var(--border-radius-lg, 0.75rem);
+  --radius-xl: var(--border-radius-xl, 1rem);
+  --radius-full: var(--border-radius-full, 9999px);
+}

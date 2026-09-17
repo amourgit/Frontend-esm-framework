@@ -10,7 +10,7 @@ import {
   startNewConversation,
   getConversationMemoryState,
 } from './store';
-import { createIndexedDBAdapter } from './adapters/indexeddb-adapter';
+import { createIndexedDBAdapter, _clearAllData } from './adapters/indexeddb-adapter';
 import { createBackendAdapter } from './adapters/backend-adapter';
 
 // =============================================================================
@@ -36,7 +36,8 @@ async function waitFor(predicate: () => boolean, timeout = 2000): Promise<boolea
   return false;
 }
 
-beforeEach(() => {
+beforeEach(async () => {
+  await _clearAllData();
   _resetConversationMemory();
   _configureAdapters(createIndexedDBAdapter(), createBackendAdapter());
   vi.spyOn(console, 'warn').mockImplementation(() => {});

@@ -11,7 +11,7 @@
   "devDependencies": {
     "@carbon/charts": "^1.27.0",
     "@carbon/react": "^1.92.1",
-    "@egen-civitas/esm-api": "^1.0.2",
+    "@egen-civitas/esm-api": "^1.1.0",
     "@egen-civitas/esm-config": "^1.0.0",
     "@egen-civitas/esm-data-api": "^1.0.0",
     "@egen-civitas/esm-error-handling": "^1.0.0",

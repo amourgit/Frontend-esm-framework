@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-app-shell",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "license": "MPL-2.0",
   "files": [
     "dist"
@@ -36,9 +36,9 @@
   },
   "dependencies": {
     "@carbon/react": "^1.92.1",
-    "@egen-civitas/esm-api": "^1.0.2",
+    "@egen-civitas/esm-api": "^1.1.0",
     "@egen-civitas/esm-config": "^1.0.0",
-    "@egen-civitas/esm-framework": "^1.0.0",
+    "@egen-civitas/esm-framework": "^1.0.2",
     "@egen-civitas/esm-globals": "^1.0.2",
     "@egen-civitas/esm-offline": "^1.0.0",
     "@egen-civitas/esm-react-utils": "^1.0.0",

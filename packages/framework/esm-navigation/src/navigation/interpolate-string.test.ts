@@ -4,7 +4,7 @@ import { interpolateString, interpolateUrl } from './interpolate-string';
 describe('interpolateUrl', () => {
   it('interpolates URL template elements', () => {
     const result = interpolateUrl('test ${egenBase} ${egenSpaBase} ok');
-    expect(result).toBe('test /egen /egen-civitas/spa ok');
+    expect(result).toBe('test /egen-civitas /egen-civitas/spa ok');
   });
 
   it('interpolates other URL template parameters', () => {

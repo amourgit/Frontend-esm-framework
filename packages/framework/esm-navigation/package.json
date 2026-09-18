@@ -57,7 +57,8 @@
     "path-to-regexp": "^8.3.0"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-state": "^1.0.0"
+    "@egen-civitas/esm-state": "^1.0.0",
+    "single-spa": "6.x"
   },
   "devDependencies": {
     "@egen-civitas/esm-globals": "^1.0.0",

@@ -3,9 +3,20 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { overrideAIConfig, resetAIConfig } from '@egen-civitas/esm-ai-config';
-import { _clearToolRegistry, registerTool } from '@egen-civitas/esm-ai-tools';
+import { _clearToolRegistry, registerTool, hasTool, getTool, overrideTool as realOverrideTool } from '@egen-civitas/esm-ai-tools';
 import { _clearProviderRegistry } from '@egen-civitas/esm-ai-context';
 import { initAIFramework, cleanupAIFramework, isAIFrameworkInitialized } from './orchestrator';
+
+// initAIFramework() enregistre les NATIVE_TOOLS d'esm-ai-tools, qui importent
+// pour de vrai @egen-civitas/esm-styleguide (showNotification/showSnackbar/
+// showModal). Sans ce mock, Node tente de charger les .module.scss compilés
+// de esm-styleguide comme du JS et échoue ("Unknown file extension .scss") —
+// même mock que celui déjà utilisé dans esm-ai-tools/src/native/native.test.ts.
+vi.mock('@egen-civitas/esm-styleguide', () => ({
+  showNotification: vi.fn(),
+  showSnackbar: vi.fn(),
+  showModal: vi.fn(),
+}));
 
 function setup() {
   _clearToolRegistry();
@@ -49,16 +60,12 @@ describe('initAIFramework', () => {
   it("n'enregistre pas les tools natifs quand AI est désactivé", () => {
     // enabled = false par défaut
     initAIFramework();
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { hasTool } = require('@egen-civitas/esm-ai-tools');
     expect(hasTool('navigate')).toBe(false);
   });
 
   it('enregistre les tools natifs quand AI est activé', () => {
     overrideAIConfig({ enabled: true }, 'runtime');
     initAIFramework();
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { hasTool } = require('@egen-civitas/esm-ai-tools');
     expect(hasTool('navigate')).toBe(true);
     expect(hasTool('show_notification')).toBe(true);
     expect(hasTool('fetch_data')).toBe(true);
@@ -77,8 +84,6 @@ describe('initAIFramework', () => {
     };
     overrideTool(customTool);
     initAIFramework({ force: true });
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { getTool } = require('@egen-civitas/esm-ai-tools');
     // Le tool custom doit être conservé car registerTool n'écrase pas
     expect(getTool('search')?.definition.name).toBe('Custom Search');
   });
@@ -93,7 +98,5 @@ describe('initAIFramework', () => {
 
 // Helper pour le dernier test
 function overrideTool(def: any) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { overrideTool: ot } = require('@egen-civitas/esm-ai-tools');
-  ot(def);
+  realOverrideTool(def);
 }

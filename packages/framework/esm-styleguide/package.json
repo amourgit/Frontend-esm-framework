@@ -108,6 +108,7 @@
     "react-dom": "18.x",
     "react-i18next": "16.x",
     "rxjs": "7.x",
+    "single-spa": "6.x",
     "swr": "2.x"
   },
   "devDependencies": {

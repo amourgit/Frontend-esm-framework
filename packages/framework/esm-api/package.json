@@ -70,7 +70,8 @@
     "@egen-civitas/esm-error-handling": "^1.0.0",
     "@egen-civitas/esm-globals": "^1.0.2",
     "@egen-civitas/esm-navigation": "^1.0.0",
-    "@egen-civitas/esm-state": "^1.0.0"
+    "@egen-civitas/esm-state": "^1.0.0",
+    "rxjs": "7.x"
   },
   "devDependencies": {
     "@egen-civitas/esm-config": "^1.0.0",

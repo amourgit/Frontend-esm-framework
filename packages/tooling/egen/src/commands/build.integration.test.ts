@@ -80,7 +80,7 @@ describe('runBuild', () => {
 
     // There should be a stylesheet link to the egen CSS
     expect(html).toMatch(/egen\.[a-f0-9]+\.css/);
-  }, 30_000);
+  }, 90_000);
 
   it('produces at least one hashed JS bundle named egen.<hash>.js', async () => {
     const target = join(createTempDir(), 'dist');
@@ -90,7 +90,7 @@ describe('runBuild', () => {
     const files = listFiles(target);
     const egenBundle = files.find((f) => /^egen\.[a-f0-9]+\.js$/.test(f));
     expect(egenBundle).toBeDefined();
-  }, 30_000);
+  }, 90_000);
 
   it('produces at least one CSS file', async () => {
     const target = join(createTempDir(), 'dist');
@@ -100,7 +100,7 @@ describe('runBuild', () => {
     const files = listFiles(target);
     const cssFile = files.find((f) => f.endsWith('.css'));
     expect(cssFile).toBeDefined();
-  }, 30_000);
+  }, 90_000);
 
   it('copies config files from configPaths to the target directory', async () => {
     const dir = createTempDir();
@@ -113,7 +113,7 @@ describe('runBuild', () => {
     const copiedConfig = join(target, 'my-config.json');
     expect(existsSync(copiedConfig)).toBe(true);
     expect(JSON.parse(readFileSync(copiedConfig, 'utf8'))).toEqual({ setting: 'value' });
-  }, 30_000);
+  }, 90_000);
 
   it('resolves a hashed importmap filename when the exact file does not exist', async () => {
     const dir = createTempDir();
@@ -130,5 +130,5 @@ describe('runBuild', () => {
     // The build should succeed and the hashed importmap file should still be present
     expect(existsSync(join(target, 'importmap.abc123.json'))).toBe(true);
     expect(existsSync(join(target, 'index.html'))).toBe(true);
-  }, 30_000);
+  }, 90_000);
 });

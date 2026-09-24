@@ -10,9 +10,6 @@ jobs:
   build-and-test:
     name: Build & Test
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -42,30 +39,7 @@ jobs:
         run: yarn test
 
       - name: TypeScript check
-        run: |
-          set -o pipefail
-          yarn workspaces foreach --all run typescript --if-present 2>&1 | tee /tmp/tsc-output.log
-
-      # DIAGNOSTIC TEMPORAIRE (à retirer une fois la vraie cause identifiée) :
-      # poste la fin des logs dans un commentaire de la PR, car les logs bruts
-      # d'Actions ne sont accessibles qu'via le stockage blob d'Azure,
-      # injoignable depuis l'environnement d'analyse utilisé ici.
-      - name: "[diagnostic temporaire] Poster les logs d'échec sur la PR"
-        if: failure() && github.event_name == 'pull_request'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          tail -c 55000 /tmp/tsc-output.log > /tmp/tsc-output-tail.txt || true
-          node -e "
-            const fs = require('fs');
-            const body = '## [diagnostic temporaire] Sortie de TypeScript check (fin du log)\n\n\`\`\`\n' + fs.readFileSync('/tmp/tsc-output-tail.txt', 'utf8') + '\n\`\`\`';
-            fs.writeFileSync('/tmp/comment-body.json', JSON.stringify({ body }));
-          "
-          curl -s -X POST \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -d @/tmp/comment-body.json \
-            "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
+        run: yarn workspaces foreach --all run typescript
 
   verify-publish:
     name: Vérification pré-publication (publint + pack/install isolé)

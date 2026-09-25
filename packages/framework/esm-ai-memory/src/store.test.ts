@@ -36,7 +36,29 @@ async function waitFor(predicate: () => boolean, timeout = 2000): Promise<boolea
   return false;
 }
 
-beforeEach(() => {
+// fake-indexeddb garde son contenu en mémoire pour toute la durée du process
+// de test (aucun reset automatique entre les `it()`). Sans purge explicite,
+// les messages écrits par un test précédent pour le même userId fuitent vers
+// le test suivant. On purge via les méthodes de l'adapter lui-même (pas de
+// manipulation IndexedDB brute) : un open() manuel avec sa propre gestion
+// d'onupgradeneeded court-circuiterait la création du schéma par
+// indexeddb-adapter.ts (dbPromise est mis en cache au niveau module — le
+// PREMIER open() qui déclenche la mise à niveau de version fixe le schéma
+// pour toute la suite du fichier de test).
+const KNOWN_TEST_USER_IDS = ['user-samuel', 'user-amina'];
+
+async function purgeMemoryDatabase(): Promise<void> {
+  const adapter = createIndexedDBAdapter();
+  for (const userId of KNOWN_TEST_USER_IDS) {
+    const summaries = await adapter.listConversations(userId);
+    for (const summary of summaries) {
+      await adapter.deleteConversation(userId, summary.id);
+    }
+  }
+}
+
+beforeEach(async () => {
+  await purgeMemoryDatabase();
   _resetConversationMemory();
   _configureAdapters(createIndexedDBAdapter(), createBackendAdapter());
   vi.spyOn(console, 'warn').mockImplementation(() => {});

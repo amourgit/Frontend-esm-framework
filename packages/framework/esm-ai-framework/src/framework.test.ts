@@ -3,9 +3,20 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { overrideAIConfig, resetAIConfig } from '@egen-civitas/esm-ai-config';
-import { _clearToolRegistry, registerTool } from '@egen-civitas/esm-ai-tools';
+import { _clearToolRegistry, registerTool, hasTool, getTool, overrideTool } from '@egen-civitas/esm-ai-tools';
 import { _clearProviderRegistry } from '@egen-civitas/esm-ai-context';
 import { initAIFramework, cleanupAIFramework, isAIFrameworkInitialized } from './orchestrator';
+
+// Les native tools (esm-ai-tools) importent de vrais composants esm-styleguide
+// (showNotification/showSnackbar/showModal), qui embarquent du .scss réel — non
+// transformable ici puisque le paquet est chargé comme dépendance externe. On
+// mock au même niveau que esm-ai-tools/src/native/native.test.ts pour continuer
+// à exercer le vrai enregistrement des tools sans charger les vrais composants.
+vi.mock('@egen-civitas/esm-styleguide', () => ({
+  showNotification: vi.fn(),
+  showSnackbar: vi.fn(),
+  showModal: vi.fn(),
+}));
 
 function setup() {
   _clearToolRegistry();
@@ -49,16 +60,12 @@ describe('initAIFramework', () => {
   it("n'enregistre pas les tools natifs quand AI est désactivé", () => {
     // enabled = false par défaut
     initAIFramework();
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { hasTool } = require('@egen-civitas/esm-ai-tools');
     expect(hasTool('navigate')).toBe(false);
   });
 
   it('enregistre les tools natifs quand AI est activé', () => {
     overrideAIConfig({ enabled: true }, 'runtime');
     initAIFramework();
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { hasTool } = require('@egen-civitas/esm-ai-tools');
     expect(hasTool('navigate')).toBe(true);
     expect(hasTool('show_notification')).toBe(true);
     expect(hasTool('fetch_data')).toBe(true);
@@ -77,8 +84,6 @@ describe('initAIFramework', () => {
     };
     overrideTool(customTool);
     initAIFramework({ force: true });
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { getTool } = require('@egen-civitas/esm-ai-tools');
     // Le tool custom doit être conservé car registerTool n'écrase pas
     expect(getTool('search')?.definition.name).toBe('Custom Search');
   });
@@ -90,10 +95,3 @@ describe('initAIFramework', () => {
     expect(isAIFrameworkInitialized()).toBe(false);
   });
 });
-
-// Helper pour le dernier test
-function overrideTool(def: any) {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { overrideTool: ot } = require('@egen-civitas/esm-ai-tools');
-  ot(def);
-}

@@ -9,6 +9,7 @@ import {
   collectProviderData,
   getProviderCount,
   _clearProviderRegistry,
+  onProviderRegistryChange,
   type AIContextProvider,
 } from '.';
 
@@ -84,7 +85,6 @@ describe('AIContextProvider Registry', () => {
       });
 
       // S'abonner aux changements du registre
-      const { onProviderRegistryChange } = require('./provider-registry');
       const unsub = onProviderRegistryChange(changeCallback);
 
       registerAIContextProvider(provider);

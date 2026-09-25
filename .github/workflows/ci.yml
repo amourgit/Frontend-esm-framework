@@ -39,7 +39,7 @@ jobs:
         run: yarn test
 
       - name: TypeScript check
-        run: yarn workspaces foreach --all run typescript --if-present
+        run: yarn workspaces foreach --all run typescript
 
   verify-publish:
     name: Vérification pré-publication (publint + pack/install isolé)

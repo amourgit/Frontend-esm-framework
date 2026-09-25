@@ -17,6 +17,7 @@ export * from './notifications/index.js';
 export * from './notifications/actionable-notification.component.js';
 export * from './notifications/notification.component.js';
 export * from './numeric-datapoint/numeric-datapoint.component.js';
+export * from './page-background/index.js';
 export * from './page-header/index.js';
 export * from './pagination/index.js';
 export * from './entity-banner/index.js';

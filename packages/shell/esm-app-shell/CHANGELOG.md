@@ -1,5 +1,19 @@
 # @egen-civitas/esm-app-shell
 
+## 2.0.0
+
+### Major Changes
+
+- 25b41d1: change-kim
+
+### Patch Changes
+
+- Updated dependencies [9eb32b2]
+- Updated dependencies [60eda59]
+  - @egen-civitas/esm-api@1.1.0
+  - @egen-civitas/esm-react-utils@1.0.2
+  - @egen-civitas/esm-framework@1.0.2
+
 ## 1.0.3
 
 ### Patch Changes

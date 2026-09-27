@@ -1,5 +1,16 @@
 # @egen-civitas/egen
 
+## 2.0.0
+
+### Major Changes
+
+- 25b41d1: change-kim
+
+### Patch Changes
+
+- Updated dependencies [25b41d1]
+  - @egen-civitas/esm-app-shell@2.0.0
+
 ## 1.0.2
 
 ### Patch Changes

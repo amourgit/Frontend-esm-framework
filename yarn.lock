@@ -794,7 +794,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@egen-civitas/egen@workspace:packages/tooling/egen"
   dependencies:
-    "@egen-civitas/esm-app-shell": "npm:^1.0.3"
+    "@egen-civitas/esm-app-shell": "npm:^2.0.0"
     "@egen-civitas/rspack-config": "npm:^1.0.1"
     "@egen-civitas/webpack-config": "npm:^1.0.0"
     "@inquirer/prompts": "npm:8.3.2"
@@ -1015,7 +1015,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-api@npm:^1.0.0, @egen-civitas/esm-api@npm:^1.0.2, @egen-civitas/esm-api@workspace:packages/framework/esm-api":
+"@egen-civitas/esm-api@npm:^1.0.0, @egen-civitas/esm-api@npm:^1.1.0, @egen-civitas/esm-api@workspace:packages/framework/esm-api":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-api@workspace:packages/framework/esm-api"
   dependencies:
@@ -1045,17 +1045,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-app-shell@npm:^1.0.3, @egen-civitas/esm-app-shell@workspace:packages/shell/esm-app-shell":
+"@egen-civitas/esm-app-shell@npm:^2.0.0, @egen-civitas/esm-app-shell@workspace:packages/shell/esm-app-shell":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-app-shell@workspace:packages/shell/esm-app-shell"
   dependencies:
     "@carbon/react": "npm:^1.92.1"
-    "@egen-civitas/esm-api": "npm:^1.0.2"
+    "@egen-civitas/esm-api": "npm:^1.1.0"
     "@egen-civitas/esm-config": "npm:^1.0.0"
-    "@egen-civitas/esm-framework": "npm:^1.0.0"
+    "@egen-civitas/esm-framework": "npm:^1.0.2"
     "@egen-civitas/esm-globals": "npm:^1.0.2"
     "@egen-civitas/esm-offline": "npm:^1.0.0"
-    "@egen-civitas/esm-react-utils": "npm:^1.0.0"
+    "@egen-civitas/esm-react-utils": "npm:^1.0.2"
     "@egen-civitas/esm-state": "npm:^1.0.0"
     "@egen-civitas/esm-styleguide": "npm:^1.0.0"
     "@egen-civitas/esm-tenant": "npm:^1.0.0"
@@ -1171,7 +1171,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-dynamic-loading@npm:^1.0.0, @egen-civitas/esm-dynamic-loading@workspace:packages/framework/esm-dynamic-loading":
+"@egen-civitas/esm-dynamic-loading@npm:^2.0.0, @egen-civitas/esm-dynamic-loading@workspace:packages/framework/esm-dynamic-loading":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-dynamic-loading@workspace:packages/framework/esm-dynamic-loading"
   dependencies:
@@ -1333,16 +1333,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-framework@npm:^1.0.0, @egen-civitas/esm-framework@workspace:packages/framework/esm-framework":
+"@egen-civitas/esm-framework@npm:^1.0.2, @egen-civitas/esm-framework@workspace:packages/framework/esm-framework":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-framework@workspace:packages/framework/esm-framework"
   dependencies:
     "@egen-civitas/esm-ai-framework": "npm:^1.0.0"
-    "@egen-civitas/esm-api": "npm:^1.0.0"
+    "@egen-civitas/esm-api": "npm:^1.1.0"
     "@egen-civitas/esm-config": "npm:^1.0.0"
     "@egen-civitas/esm-context": "npm:^1.0.0"
     "@egen-civitas/esm-data-api": "npm:^1.0.0"
-    "@egen-civitas/esm-dynamic-loading": "npm:^1.0.0"
+    "@egen-civitas/esm-dynamic-loading": "npm:^2.0.0"
     "@egen-civitas/esm-error-handling": "npm:^1.0.0"
     "@egen-civitas/esm-expression-evaluator": "npm:^1.0.0"
     "@egen-civitas/esm-extensions": "npm:^1.0.0"
@@ -1350,8 +1350,8 @@ __metadata:
     "@egen-civitas/esm-globals": "npm:^1.0.0"
     "@egen-civitas/esm-navigation": "npm:^1.0.0"
     "@egen-civitas/esm-offline": "npm:^1.0.0"
-    "@egen-civitas/esm-react-utils": "npm:^1.0.0"
-    "@egen-civitas/esm-routes": "npm:^1.0.0"
+    "@egen-civitas/esm-react-utils": "npm:^1.0.2"
+    "@egen-civitas/esm-routes": "npm:^1.0.2"
     "@egen-civitas/esm-state": "npm:^1.0.0"
     "@egen-civitas/esm-styleguide": "npm:^1.0.0"
     "@egen-civitas/esm-tenant": "npm:^1.0.0"
@@ -1463,11 +1463,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-react-utils@npm:^1.0.0, @egen-civitas/esm-react-utils@workspace:packages/framework/esm-react-utils":
+"@egen-civitas/esm-react-utils@npm:^1.0.0, @egen-civitas/esm-react-utils@npm:^1.0.2, @egen-civitas/esm-react-utils@workspace:packages/framework/esm-react-utils":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-react-utils@workspace:packages/framework/esm-react-utils"
   dependencies:
-    "@egen-civitas/esm-api": "npm:^1.0.0"
+    "@egen-civitas/esm-api": "npm:^1.1.0"
     "@egen-civitas/esm-config": "npm:^1.0.0"
     "@egen-civitas/esm-context": "npm:^1.0.0"
     "@egen-civitas/esm-data-api": "npm:^1.0.0"
@@ -1500,7 +1500,7 @@ __metadata:
     swr: "npm:2.2.5"
     vitest: "npm:^4.1.2"
   peerDependencies:
-    "@egen-civitas/esm-api": ^1.0.0
+    "@egen-civitas/esm-api": ^1.1.0
     "@egen-civitas/esm-config": ^1.0.0
     "@egen-civitas/esm-context": ^1.0.0
     "@egen-civitas/esm-data-api": ^1.0.0
@@ -1522,12 +1522,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-routes@npm:^1.0.0, @egen-civitas/esm-routes@workspace:packages/framework/esm-routes":
+"@egen-civitas/esm-routes@npm:^1.0.0, @egen-civitas/esm-routes@npm:^1.0.2, @egen-civitas/esm-routes@workspace:packages/framework/esm-routes":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-routes@workspace:packages/framework/esm-routes"
   dependencies:
     "@egen-civitas/esm-config": "npm:^1.0.0"
-    "@egen-civitas/esm-dynamic-loading": "npm:^1.0.0"
+    "@egen-civitas/esm-dynamic-loading": "npm:^2.0.0"
     "@egen-civitas/esm-extensions": "npm:^1.0.0"
     "@egen-civitas/esm-feature-flags": "npm:^1.0.0"
     "@egen-civitas/esm-globals": "npm:^1.0.0"
@@ -1547,7 +1547,7 @@ __metadata:
     vitest-fetch-mock: "npm:^0.4.5"
   peerDependencies:
     "@egen-civitas/esm-config": ^1.0.0
-    "@egen-civitas/esm-dynamic-loading": ^1.0.0
+    "@egen-civitas/esm-dynamic-loading": ^2.0.0
     "@egen-civitas/esm-extensions": ^1.0.0
     "@egen-civitas/esm-feature-flags": ^1.0.0
     "@egen-civitas/esm-globals": ^1.0.0
@@ -1771,7 +1771,7 @@ __metadata:
   dependencies:
     "@carbon/charts": "npm:^1.27.0"
     "@carbon/react": "npm:^1.92.1"
-    "@egen-civitas/esm-api": "npm:^1.0.2"
+    "@egen-civitas/esm-api": "npm:^1.1.0"
     "@egen-civitas/esm-config": "npm:^1.0.0"
     "@egen-civitas/esm-data-api": "npm:^1.0.0"
     "@egen-civitas/esm-error-handling": "npm:^1.0.0"
@@ -1779,7 +1779,7 @@ __metadata:
     "@egen-civitas/esm-extensions": "npm:^1.0.0"
     "@egen-civitas/esm-globals": "npm:^1.0.2"
     "@egen-civitas/esm-navigation": "npm:^1.0.0"
-    "@egen-civitas/esm-react-utils": "npm:^1.0.0"
+    "@egen-civitas/esm-react-utils": "npm:^1.0.2"
     "@egen-civitas/esm-state": "npm:^1.0.0"
     "@egen-civitas/esm-styleguide": "npm:^1.0.0"
     "@egen-civitas/esm-translations": "npm:^1.0.0"

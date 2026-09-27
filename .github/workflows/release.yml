@@ -72,16 +72,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: "[diagnostic temporaire] Poster l'erreur de publication dans une issue"
-        if: failure() && steps.changesets.outcome == 'failure'
+      - name: "[diagnostic temporaire] Poster la sortie de publication dans une issue"
+        if: always() && steps.changesets.outcome != 'skipped'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           tail -c 55000 /tmp/publish-output.log > /tmp/publish-output-tail.txt 2>/dev/null || echo "(pas de log capture)" > /tmp/publish-output-tail.txt
           node -e "
             const fs = require('fs');
-            const body = '## [diagnostic temporaire] Sortie de yarn ci:publish\n\n\`\`\`\n' + fs.readFileSync('/tmp/publish-output-tail.txt', 'utf8') + '\n\`\`\`';
-            fs.writeFileSync('/tmp/issue-body.json', JSON.stringify({ title: '[diagnostic temporaire] publication npm echoue', body }));
+            const body = '## [diagnostic temporaire] Sortie de yarn ci:publish (outcome: ${{ steps.changesets.outcome }}, published: ${{ steps.changesets.outputs.published }})\n\n\`\`\`\n' + fs.readFileSync('/tmp/publish-output-tail.txt', 'utf8') + '\n\`\`\`';
+            fs.writeFileSync('/tmp/issue-body.json', JSON.stringify({ title: '[diagnostic temporaire] sortie de publication npm', body }));
           "
           curl -s -X POST \
             -H "Authorization: Bearer $GH_TOKEN" \

@@ -9,6 +9,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   release:
@@ -60,12 +61,30 @@ jobs:
         run: node scripts/verify-pack-install.mjs
 
       - name: Create Release Pull Request or Publish
+        id: changesets
         uses: changesets/action@v1
         with:
-          publish: yarn ci:publish
+          publish: sh -c "yarn ci:publish 2>&1 | tee /tmp/publish-output.log"
           version: yarn release
           commit: 'chore: release packages'
           title: 'chore: release packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: "[diagnostic temporaire] Poster l'erreur de publication dans une issue"
+        if: failure() && steps.changesets.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tail -c 55000 /tmp/publish-output.log > /tmp/publish-output-tail.txt 2>/dev/null || echo "(pas de log capture)" > /tmp/publish-output-tail.txt
+          node -e "
+            const fs = require('fs');
+            const body = '## [diagnostic temporaire] Sortie de yarn ci:publish\n\n\`\`\`\n' + fs.readFileSync('/tmp/publish-output-tail.txt', 'utf8') + '\n\`\`\`';
+            fs.writeFileSync('/tmp/issue-body.json', JSON.stringify({ title: '[diagnostic temporaire] publication npm echoue', body }));
+          "
+          curl -s -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -d @/tmp/issue-body.json \
+            "https://api.github.com/repos/${{ github.repository }}/issues"

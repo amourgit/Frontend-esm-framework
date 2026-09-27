@@ -1,0 +1,37 @@
+name: "[temp] Fix lockfile"
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix-lockfile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'yarn'
+
+      - name: Refresh yarn.lock (non-immutable)
+        run: yarn install
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- yarn.lock; then
+            echo "yarn.lock déjà à jour, rien à committer."
+          else
+            git add yarn.lock
+            git commit -m "chore: resynchronise yarn.lock avec les package.json de la release"
+            git push origin HEAD:main
+          fi

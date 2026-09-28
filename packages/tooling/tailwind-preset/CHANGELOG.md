@@ -1,5 +1,11 @@
 # @egen-civitas/tailwind-preset
 
+## 1.2.0
+
+### Minor Changes
+
+- 321720c: feat(styleguide): ajoute `TopBar`, `TopBarIconButton`, `TopBarDivider`, `TopBarAvatar` (Tailwind, présentationnels, guide d'usage en commentaire). Le preset Tailwind scanne désormais le styleguide publié (`@source`) et expose l'échelle `error-*`.
+
 ## 1.1.0
 
 ### Minor Changes

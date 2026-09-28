@@ -71,6 +71,7 @@
     "@egen-civitas/esm-state": "^1.0.0",
     "@egen-civitas/esm-translations": "^1.0.0",
     "@egen-civitas/esm-utils": "^1.0.0",
+    "react": "18.x",
     "single-spa": "6.x"
   },
   "devDependencies": {

@@ -39,7 +39,7 @@ describe('navigate', () => {
 
   it('uses location.assign() to navigate to non-SPA interpolated path', () => {
     navigate({ to: '${egenBase}/some/path' });
-    expect(window.location.assign).toHaveBeenCalledWith('/egen/some/path');
+    expect(window.location.assign).toHaveBeenCalledWith('/egen-civitas/some/path');
     expect(navigateToUrl).not.toHaveBeenCalled();
   });
 

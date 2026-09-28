@@ -65,7 +65,8 @@
   "peerDependencies": {
     "@egen-civitas/esm-api": "^1.0.0",
     "@egen-civitas/esm-offline": "^1.0.0",
-    "@egen-civitas/esm-state": "^1.0.0"
+    "@egen-civitas/esm-state": "^1.0.0",
+    "rxjs": "7.x"
   },
   "devDependencies": {
     "@egen-civitas/esm-api": "^1.0.0",

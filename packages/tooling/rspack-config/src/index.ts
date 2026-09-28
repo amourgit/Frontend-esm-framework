@@ -352,6 +352,14 @@ export const scssRuleConfig: Partial<RuleSetRule> = {};
 
 /**
  * This object will be merged into the webpack rule governing
+ * the loading of Tailwind entry files (`*.tw.css` — see `tailwindLoader`
+ * below for why this dedicated extension exists instead of reusing `.css`).
+ * Make sure to modify this object and not reassign it.
+ */
+export const tailwindRuleConfig: Partial<RuleSetRule> = {};
+
+/**
+ * This object will be merged into the webpack rule governing
  * the loading of static asset files.
  * Make sure to modify this object and not reassign it.
  */
@@ -406,6 +414,43 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
     },
   };
 
+  /**
+   * TAILWIND — pourquoi une extension dédiée (`*.tw.css`) plutôt que de
+   * réutiliser `.css`/`.scss` :
+   *
+   * Dans TOUT le code consommateur existant (Frontend-esm-core), les
+   * fichiers `.scss`/`.css` sont importés en `import styles from './x.scss'`
+   * SANS le suffixe `.module.` — la convention de ce dépôt est de traiter
+   * `.scss`/`.css` comme des CSS Modules par défaut, quel que soit leur nom
+   * (voir `cssLoader` ci-dessus : `modules` est actif sans clé `auto`, donc
+   * appliqué à TOUT fichier matchant `/\.css$/` ou `/\.s[ac]ss$/i`).
+   *
+   * Un import Tailwind (`@import "tailwindcss";`) doit au contraire produire
+   * des noms de classes GLOBAUX et STABLES (`bg-primary-500`, pas
+   * `home__bg-primary-500__aB3xY`) pour matcher le `className="bg-primary-500"`
+   * écrit en dur dans le JSX. Réutiliser la règle `.css`/`.scss` existante
+   * casserait donc soit Tailwind (classes hashées), soit tous les imports
+   * `.scss` existants si on désactivait `modules` globalement.
+   *
+   * D'où une règle strictement séparée sur une extension distincte
+   * (`*.tw.css`), qui laisse `.css`/`.scss` inchangés pour 100% du code
+   * existant et n'active PostCSS/Tailwind que là où c'est demandé
+   * explicitement.
+   */
+  const cssLoaderNoModules = {
+    loader: require.resolve('css-loader'),
+  };
+
+  const postcssTailwindLoader = {
+    loader: require.resolve('postcss-loader'),
+    options: {
+      postcssOptions: {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        plugins: [require('@tailwindcss/postcss')],
+      },
+    },
+  };
+
   const baseConfig: EgenRspackConfig = {
     // The only `entry` in the application is the app shell. Everything else is
     // a Webpack Module Federation "remote." This ensures that there is always
@@ -437,9 +482,21 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
         merge(
           {
             test: /\.css$/,
+            exclude: /\.tw\.css$/,
             use: [require.resolve('style-loader'), cssLoader],
           },
           cssRuleConfig,
+        ),
+        merge(
+          {
+            // Voir le commentaire sur `cssLoaderNoModules`/`postcssTailwindLoader`
+            // ci-dessus : extension dédiée, volontairement exclue de la règle
+            // `.css` standard, pour ne jamais toucher au comportement CSS
+            // Modules existant.
+            test: /\.tw\.css$/,
+            use: [require.resolve('style-loader'), cssLoaderNoModules, postcssTailwindLoader],
+          },
+          tailwindRuleConfig,
         ),
         merge(
           {

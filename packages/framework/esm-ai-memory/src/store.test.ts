@@ -10,7 +10,7 @@ import {
   startNewConversation,
   getConversationMemoryState,
 } from './store';
-import { createIndexedDBAdapter } from './adapters/indexeddb-adapter';
+import { createIndexedDBAdapter, _clearAllData } from './adapters/indexeddb-adapter';
 import { createBackendAdapter } from './adapters/backend-adapter';
 
 // =============================================================================

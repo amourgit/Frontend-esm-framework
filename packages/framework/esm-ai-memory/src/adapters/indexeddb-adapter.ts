@@ -150,3 +150,15 @@ export function createIndexedDBAdapter(): ConversationStorageAdapter {
 export function _resetIndexedDBConnection(): void {
   dbPromise = null;
 }
+
+/** @internal Réservé aux tests — supprime TOUTES les conversations de la base (cleanup entre tests). */
+export async function _clearAllData(): Promise<void> {
+  if (!isIndexedDBAvailable()) return;
+  try {
+    const db = await openDatabase();
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    await promisifyRequest(tx.objectStore(STORE_NAME).clear());
+  } catch (err) {
+    console.warn('[egen-civitas/esm-ai-memory] _clearAllData() a échoué:', err);
+  }
+}

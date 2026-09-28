@@ -1070,12 +1070,12 @@ __metadata:
     "@carbon/react": "npm:^1.92.1"
     "@egen-civitas/esm-api": "npm:^1.1.0"
     "@egen-civitas/esm-config": "npm:^1.0.0"
-    "@egen-civitas/esm-framework": "npm:^1.0.2"
+    "@egen-civitas/esm-framework": "npm:^1.1.0"
     "@egen-civitas/esm-globals": "npm:^1.0.2"
     "@egen-civitas/esm-offline": "npm:^1.0.0"
     "@egen-civitas/esm-react-utils": "npm:^1.0.2"
     "@egen-civitas/esm-state": "npm:^1.0.0"
-    "@egen-civitas/esm-styleguide": "npm:^1.0.0"
+    "@egen-civitas/esm-styleguide": "npm:^1.2.0"
     "@egen-civitas/esm-tenant": "npm:^1.0.0"
     "@egen-civitas/esm-theme": "npm:^1.0.0"
     "@egen-civitas/esm-utils": "npm:^1.0.0"
@@ -1353,7 +1353,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-framework@npm:^1.0.2, @egen-civitas/esm-framework@workspace:packages/framework/esm-framework":
+"@egen-civitas/esm-framework@npm:^1.1.0, @egen-civitas/esm-framework@workspace:packages/framework/esm-framework":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-framework@workspace:packages/framework/esm-framework"
   dependencies:
@@ -1603,7 +1603,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-styleguide@npm:^1.0.0, @egen-civitas/esm-styleguide@npm:^1.1.0, @egen-civitas/esm-styleguide@npm:^1.2.0, @egen-civitas/esm-styleguide@workspace:packages/framework/esm-styleguide":
+"@egen-civitas/esm-styleguide@npm:^1.1.0, @egen-civitas/esm-styleguide@npm:^1.2.0, @egen-civitas/esm-styleguide@workspace:packages/framework/esm-styleguide":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-styleguide@workspace:packages/framework/esm-styleguide"
   dependencies:

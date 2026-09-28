@@ -10,7 +10,7 @@
  * la relancer à chaque re-render de React.
  */
 "use client";
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 function normalizeColor(hexCode: number): number[] {
   return [

@@ -60,7 +60,7 @@
   ],
   "homepage": "https://github.com/amourgit/Frontend-esm-framework/tree/main/packages/tooling/egen#readme",
   "dependencies": {
-    "@egen-civitas/esm-app-shell": "^2.0.0",
+    "@egen-civitas/esm-app-shell": "^2.0.1",
     "@egen-civitas/rspack-config": "^1.0.1",
     "@egen-civitas/webpack-config": "^1.0.0",
     "@inquirer/prompts": "8.3.2",

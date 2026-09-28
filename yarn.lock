@@ -809,7 +809,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@egen-civitas/egen@workspace:packages/tooling/egen"
   dependencies:
-    "@egen-civitas/esm-app-shell": "npm:^2.0.0"
+    "@egen-civitas/esm-app-shell": "npm:^2.0.1"
     "@egen-civitas/rspack-config": "npm:^1.0.1"
     "@egen-civitas/webpack-config": "npm:^1.0.0"
     "@inquirer/prompts": "npm:8.3.2"
@@ -1063,7 +1063,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-app-shell@npm:^2.0.0, @egen-civitas/esm-app-shell@workspace:packages/shell/esm-app-shell":
+"@egen-civitas/esm-app-shell@npm:^2.0.1, @egen-civitas/esm-app-shell@workspace:packages/shell/esm-app-shell":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-app-shell@workspace:packages/shell/esm-app-shell"
   dependencies:

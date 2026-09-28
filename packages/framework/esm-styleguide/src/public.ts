@@ -12,6 +12,7 @@ export * from './icons/icons.js';
 export * from './left-nav/index.js';
 export * from './location-picker/index.js';
 export * from './numeric-datapoint/index.js';
+export * from './page-background/index.js';
 export { showModal } from './modals/index.js';
 export { showNotification, showActionableNotification } from './notifications/index.js';
 export {

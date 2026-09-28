@@ -28,6 +28,10 @@ import { buildCli } from './cli';
 import yargsFactory from 'yargs/yargs';
 
 beforeEach(() => {
+  // Force locale to English to ensure yargs error messages are consistent
+  process.env.LC_ALL = 'en_US.UTF-8';
+  process.env.LANG = 'en_US.UTF-8';
+
   vi.mocked(fork).mockReturnValue({
     send: vi.fn(),
     on: vi.fn(),

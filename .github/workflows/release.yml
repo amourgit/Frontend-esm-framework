@@ -9,6 +9,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 jobs:
   release:
@@ -69,3 +70,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Diagnostic publication (temporaire)
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          {
+            echo "run ${{ github.run_id }} / ${{ github.sha }}"
+            echo "NPM_AUTH_TOKEN length: ${#NPM_AUTH_TOKEN}"
+            echo '--- yarn npm whoami'
+            yarn npm whoami 2>&1 | tail -5
+            echo '--- yarn ci:publish'
+            yarn ci:publish 2>&1 | tail -60
+          } > diag.txt 2>&1 || true
+          gh issue comment 6 --repo "${{ github.repository }}" --body "$(printf '```\n'; head -c 60000 diag.txt; printf '\n```')"

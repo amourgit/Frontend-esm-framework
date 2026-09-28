@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-extensions",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MPL-2.0",
   "description": "Coordinates extensions and extension points in the Egen Frontend",
   "type": "module",
@@ -63,7 +63,7 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-api": "^1.0.0",
+    "@egen-civitas/esm-api": "^1.1.1",
     "@egen-civitas/esm-config": "^1.0.0",
     "@egen-civitas/esm-expression-evaluator": "^1.0.0",
     "@egen-civitas/esm-feature-flags": "^1.0.0",
@@ -75,7 +75,7 @@
     "single-spa": "6.x"
   },
   "devDependencies": {
-    "@egen-civitas/esm-api": "^1.0.0",
+    "@egen-civitas/esm-api": "^1.1.1",
     "@egen-civitas/esm-config": "^1.0.0",
     "@egen-civitas/esm-expression-evaluator": "^1.0.0",
     "@egen-civitas/esm-feature-flags": "^1.0.0",

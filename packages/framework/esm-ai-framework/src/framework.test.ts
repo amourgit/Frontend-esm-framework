@@ -3,15 +3,15 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { overrideAIConfig, resetAIConfig } from '@egen-civitas/esm-ai-config';
-import { _clearToolRegistry, registerTool, hasTool, getTool, overrideTool as realOverrideTool } from '@egen-civitas/esm-ai-tools';
+import { _clearToolRegistry, registerTool, hasTool, getTool, overrideTool } from '@egen-civitas/esm-ai-tools';
 import { _clearProviderRegistry } from '@egen-civitas/esm-ai-context';
 import { initAIFramework, cleanupAIFramework, isAIFrameworkInitialized } from './orchestrator';
 
-// initAIFramework() enregistre les NATIVE_TOOLS d'esm-ai-tools, qui importent
-// pour de vrai @egen-civitas/esm-styleguide (showNotification/showSnackbar/
-// showModal). Sans ce mock, Node tente de charger les .module.scss compilés
-// de esm-styleguide comme du JS et échoue ("Unknown file extension .scss") —
-// même mock que celui déjà utilisé dans esm-ai-tools/src/native/native.test.ts.
+// Les native tools (esm-ai-tools) importent de vrais composants esm-styleguide
+// (showNotification/showSnackbar/showModal), qui embarquent du .scss réel — non
+// transformable ici puisque le paquet est chargé comme dépendance externe. On
+// mock au même niveau que esm-ai-tools/src/native/native.test.ts pour continuer
+// à exercer le vrai enregistrement des tools sans charger les vrais composants.
 vi.mock('@egen-civitas/esm-styleguide', () => ({
   showNotification: vi.fn(),
   showSnackbar: vi.fn(),
@@ -95,8 +95,3 @@ describe('initAIFramework', () => {
     expect(isAIFrameworkInitialized()).toBe(false);
   });
 });
-
-// Helper pour le dernier test
-function overrideTool(def: any) {
-  realOverrideTool(def);
-}

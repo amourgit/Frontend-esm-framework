@@ -10,7 +10,6 @@ import { useFhirPagination as realUseFhirPagination } from './src/useFhirPaginat
 import { useEgenFetchAll as realUseEgenFetchAll } from './src/useEgenFetchAll';
 import { useEgenInfinite as realUseEgenInfinite } from './src/useEgenInfinite';
 import { useEgenPagination as realUseEgenrPagination } from './src/useEgenPagination';
-import { useVisitContextStore as realUseVisitContextStore } from './src/useVisitContextStore';
 import { usePagination as realUsePagination } from './src/usePagination';
 import { usePaginationInfo as realUsePaginationInfo } from './src/usePaginationInfo';
 export { ConfigurableLink } from './src/ConfigurableLink';
@@ -92,8 +91,6 @@ export const useSessionContext = jest.fn().mockReturnValue({
   activeSession: null,
   currentSessionIsRetrospective: false,
 });
-
-export const useVisitContextStore = jest.fn(realUseVisitContextStore);
 
 export const useSessionTypes = jest.fn(() => []);
 

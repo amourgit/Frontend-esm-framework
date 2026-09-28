@@ -374,8 +374,8 @@ describe('runAssemble', () => {
       const writeCall = mockWriteFile.mock.calls.find(([path]) => String(path).endsWith('importmap.json'));
       expect(writeCall).toBeDefined();
       const importmap = JSON.parse(writeCall![1] as string);
-      // baseDirName = "egen-esm-test-app", dirName = "egen-esm-test-app-1.0.0"
-      expect(importmap.imports['@egen-civitas/esm-test-app']).toBe('./egen-esm-test-app-1.0.0/main.js');
+      // baseDirName = "egen-civitas-esm-test-app", dirName = "egen-civitas-esm-test-app-1.0.0"
+      expect(importmap.imports['@egen-civitas/esm-test-app']).toBe('./egen-civitas-esm-test-app-1.0.0/main.js');
     });
 
     it('generates routes registry when buildRoutes is enabled', async () => {

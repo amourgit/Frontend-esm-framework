@@ -23,7 +23,7 @@
     "storybook": "yarn workspace @egen-civitas/storybook storybook",
     "ci:publish-next": "changeset publish --tag next",
     "ci:publish": "changeset publish",
-    "release": "changeset version",
+    "release": "changeset version && YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install",
     "verify:publint": "node scripts/verify-publint.mjs",
     "verify:attw": "node scripts/verify-attw.mjs",
     "verify:pack": "node scripts/verify-pack-install.mjs"

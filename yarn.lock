@@ -1073,7 +1073,7 @@ __metadata:
     "@egen-civitas/esm-framework": "npm:^1.0.2"
     "@egen-civitas/esm-globals": "npm:^1.0.2"
     "@egen-civitas/esm-offline": "npm:^1.0.0"
-    "@egen-civitas/esm-react-utils": "npm:^1.0.0"
+    "@egen-civitas/esm-react-utils": "npm:^1.0.2"
     "@egen-civitas/esm-state": "npm:^1.0.0"
     "@egen-civitas/esm-styleguide": "npm:^1.0.0"
     "@egen-civitas/esm-tenant": "npm:^1.0.0"
@@ -1370,7 +1370,7 @@ __metadata:
     "@egen-civitas/esm-globals": "npm:^1.0.0"
     "@egen-civitas/esm-navigation": "npm:^1.0.0"
     "@egen-civitas/esm-offline": "npm:^1.0.0"
-    "@egen-civitas/esm-react-utils": "npm:^1.0.0"
+    "@egen-civitas/esm-react-utils": "npm:^1.0.2"
     "@egen-civitas/esm-routes": "npm:^1.0.2"
     "@egen-civitas/esm-state": "npm:^1.0.0"
     "@egen-civitas/esm-styleguide": "npm:^1.0.0"
@@ -1484,11 +1484,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-react-utils@npm:^1.0.0, @egen-civitas/esm-react-utils@workspace:packages/framework/esm-react-utils":
+"@egen-civitas/esm-react-utils@npm:^1.0.0, @egen-civitas/esm-react-utils@npm:^1.0.2, @egen-civitas/esm-react-utils@workspace:packages/framework/esm-react-utils":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-react-utils@workspace:packages/framework/esm-react-utils"
   dependencies:
-    "@egen-civitas/esm-api": "npm:^1.0.0"
+    "@egen-civitas/esm-api": "npm:^1.1.0"
     "@egen-civitas/esm-config": "npm:^1.0.0"
     "@egen-civitas/esm-context": "npm:^1.0.0"
     "@egen-civitas/esm-data-api": "npm:^1.0.0"
@@ -1521,7 +1521,7 @@ __metadata:
     swr: "npm:2.2.5"
     vitest: "npm:^4.1.2"
   peerDependencies:
-    "@egen-civitas/esm-api": ^1.0.0
+    "@egen-civitas/esm-api": ^1.1.0
     "@egen-civitas/esm-config": ^1.0.0
     "@egen-civitas/esm-context": ^1.0.0
     "@egen-civitas/esm-data-api": ^1.0.0
@@ -1807,7 +1807,7 @@ __metadata:
     "@egen-civitas/esm-extensions": "npm:^1.0.0"
     "@egen-civitas/esm-globals": "npm:^1.0.2"
     "@egen-civitas/esm-navigation": "npm:^1.0.0"
-    "@egen-civitas/esm-react-utils": "npm:^1.0.0"
+    "@egen-civitas/esm-react-utils": "npm:^1.0.2"
     "@egen-civitas/esm-state": "npm:^1.0.0"
     "@egen-civitas/esm-styleguide": "npm:^1.0.0"
     "@egen-civitas/esm-translations": "npm:^1.0.0"

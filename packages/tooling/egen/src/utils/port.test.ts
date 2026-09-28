@@ -7,16 +7,18 @@ import { isPortAvailable, getAvailablePort } from './port';
  * depending on the `shouldSucceed` parameter. The close() callback fires immediately.
  */
 function createMockServer(shouldSucceed: boolean): Server {
-  const handlers: Record<string, () => void> = {};
+  const handlers: Record<string, (err?: NodeJS.ErrnoException) => void> = {};
   return {
-    once: vi.fn((event: string, handler: () => void) => {
+    once: vi.fn((event: string, handler: (err?: NodeJS.ErrnoException) => void) => {
       handlers[event] = handler;
     }),
     listen: vi.fn(() => {
       if (shouldSucceed) {
         handlers['listening']?.();
       } else {
-        handlers['error']?.();
+        // Un vrai serveur net passe toujours une Error à l'event 'error' — ici un code
+        // volontairement hors de IPV6_UNSUPPORTED_CODES pour simuler un port réellement occupé.
+        handlers['error']?.({ code: 'EADDRINUSE' } as NodeJS.ErrnoException);
       }
     }),
     close: vi.fn((cb: () => void) => cb()),
@@ -73,13 +75,13 @@ describe('getAvailablePort', () => {
   it('skips occupied ports and returns the next available one', async () => {
     // Port 8081: IPv4 fails
     const occupied = createMockServer(false);
-    // Port 8081: both succeed
+    // Port 8082: both succeed
     const ipv4 = createMockServer(true);
     const ipv6 = createMockServer(true);
 
     mockCreateServer.mockReturnValueOnce(occupied).mockReturnValueOnce(ipv4).mockReturnValueOnce(ipv6);
 
-    await expect(getAvailablePort(8081)).resolves.toBe(8081);
+    await expect(getAvailablePort(8081)).resolves.toBe(8082);
   });
 
   it('throws when no port is available up to 65535', async () => {

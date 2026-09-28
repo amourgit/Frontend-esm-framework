@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-react-utils",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MPL-2.0",
   "description": "React utilities for Egen.",
   "type": "module",
@@ -69,7 +69,7 @@
     "single-spa-react": "^6.0.2"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-api": "^1.0.0",
+    "@egen-civitas/esm-api": "^1.1.0",
     "@egen-civitas/esm-config": "^1.0.0",
     "@egen-civitas/esm-context": "^1.0.0",
     "@egen-civitas/esm-data-api": "^1.0.0",
@@ -91,7 +91,7 @@
     "swr": "2.x"
   },
   "devDependencies": {
-    "@egen-civitas/esm-api": "^1.0.0",
+    "@egen-civitas/esm-api": "^1.1.0",
     "@egen-civitas/esm-config": "^1.0.0",
     "@egen-civitas/esm-context": "^1.0.0",
     "@egen-civitas/esm-data-api": "^1.0.0",

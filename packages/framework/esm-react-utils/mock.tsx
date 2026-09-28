@@ -11,7 +11,6 @@ import { useFhirPagination as realUseFhirPagination } from './src/useFhirPaginat
 import { useEgenFetchAll as realUseEgenFetchAll } from './src/useEgenFetchAll';
 import { useEgenInfinite as realUseEgenInfinite } from './src/useEgenInfinite';
 import { useEgenPagination as realUseEgenrPagination } from './src/useEgenPagination';
-import { useVisitContextStore as realUseVisitContextStore } from './src/useVisitContextStore';
 import { usePagination as realUsePagination } from './src/usePagination';
 import { usePaginationInfo as realUsePaginationInfo } from './src/usePaginationInfo';
 export { ConfigurableLink } from './src/ConfigurableLink';
@@ -97,8 +96,6 @@ export const useSessionContext = vi.fn(() => ({
   activeSession: null,
   currentSessionIsRetrospective: false,
 }));
-
-export const useVisitContextStore = vi.fn(realUseVisitContextStore);
 
 export const useSessionTypes = vi.fn(() => []);
 

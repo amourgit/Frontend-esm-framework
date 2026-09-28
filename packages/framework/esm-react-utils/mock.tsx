@@ -97,7 +97,6 @@ export const useSessionContext = vi.fn(() => ({
   currentSessionIsRetrospective: false,
 }));
 
-
 export const useSessionTypes = vi.fn(() => []);
 
 export const useAbortController = vi.fn(() => {

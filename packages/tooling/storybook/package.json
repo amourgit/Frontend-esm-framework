@@ -19,7 +19,7 @@
     "@egen-civitas/esm-extensions": "^1.0.0",
     "@egen-civitas/esm-globals": "^1.0.2",
     "@egen-civitas/esm-navigation": "^1.0.0",
-    "@egen-civitas/esm-react-utils": "^1.0.0",
+    "@egen-civitas/esm-react-utils": "^1.0.2",
     "@egen-civitas/esm-state": "^1.0.0",
     "@egen-civitas/esm-styleguide": "^1.0.0",
     "@egen-civitas/esm-translations": "^1.0.0",

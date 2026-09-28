@@ -92,7 +92,6 @@ export const useSessionContext = jest.fn().mockReturnValue({
   currentSessionIsRetrospective: false,
 });
 
-
 export const useSessionTypes = jest.fn(() => []);
 
 export const useAbortController = jest.fn(() => {

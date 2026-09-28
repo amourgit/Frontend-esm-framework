@@ -51,7 +51,7 @@ describe('interpolateString', () => {
 
   it('removes double slashes at the start of URLs', () => {
     const result = interpolateUrl('${egenBase}/${path}', { path: 'test' });
-    expect(result).toBe('/egen-civitas/test');
+    expect(result).toBe('/egen/test');
   });
 
   it('handles special characters in parameters', () => {

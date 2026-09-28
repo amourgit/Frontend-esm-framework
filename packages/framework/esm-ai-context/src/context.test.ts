@@ -84,6 +84,7 @@ describe('AIContextProvider Registry', () => {
         },
       });
 
+      // S'abonner aux changements du registre
       const unsub = onProviderRegistryChange(changeCallback);
 
       registerAIContextProvider(provider);

@@ -37,6 +37,12 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
 
+/* Tailwind n'analyse pas node_modules par défaut : on déclare explicitement le
+   styleguide publié (paquets frères dans node_modules/@egen-civitas/) pour que
+   les classes de ses composants Tailwind (TopBar, PageBackground...) soient
+   générées. Chemin absent (monorepo) = ignoré sans erreur. */
+@source "../esm-styleguide/dist";
+
 /* ----------------------------------------------------------------------------
  *  Pont vers le moteur de thème EGEN (@egen-civitas/esm-theme)
  * ----------------------------------------------------------------------------
@@ -69,6 +75,18 @@
   --color-primary-800: var(--colors-primary-800, #3730a3);
   --color-primary-900: var(--colors-primary-900, #312e81);
   --color-primary-950: var(--colors-primary-950, #1e1b4b);
+
+  --color-error-50: var(--colors-error-50, #fef2f2);
+  --color-error-100: var(--colors-error-100, #fee2e2);
+  --color-error-200: var(--colors-error-200, #fecaca);
+  --color-error-300: var(--colors-error-300, #fca5a5);
+  --color-error-400: var(--colors-error-400, #f87171);
+  --color-error-500: var(--colors-error-500, #ef4444);
+  --color-error-600: var(--colors-error-600, #dc2626);
+  --color-error-700: var(--colors-error-700, #b91c1c);
+  --color-error-800: var(--colors-error-800, #991b1b);
+  --color-error-900: var(--colors-error-900, #7f1d1d);
+  --color-error-950: var(--colors-error-950, #450a0a);
 
   /* Même schéma pour secondary / neutral / success / warning / error / info
      — répéter les 11 nuances (50→950) en changeant juste le préfixe, elles

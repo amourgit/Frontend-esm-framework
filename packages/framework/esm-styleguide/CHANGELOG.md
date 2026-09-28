@@ -1,10 +1,17 @@
-# @egen-civitas/esm-react-utils
+# @egen-civitas/esm-styleguide
 
-## 1.0.3
+## 1.1.0
+
+### Minor Changes
+
+- b90a6f6: Nouveau module `page-background` (100% Tailwind, sans SCSS ni CSS Modules) : système d'arrière-plan de page porté depuis Civitas-GED, où il habillait déjà toutes les pages de l'intranet — `<PageBackgroundProvider>` / `<GlobalPageBackground>` (à monter une fois dans le shell), `<PageBackground>` (déclaratif, par page) et `<GradientWave>` (fond animé WebGL, réutilisable seul).
+
+  Corrigé lors du portage : le listener `resize` de `GradientWave` n'était jamais désinscrit (une arrow function anonyme était attachée dans `init()`, différente de la référence `handleResize` retirée dans `destroy()`) — fuite mémoire à chaque montage/démontage. Le composant réutilise maintenant la même référence liée pour l'attachement et le retrait.
+
+  Guide d'utilisation complet en commentaire en bas de `page-background.component.tsx` et `gradient-wave.component.tsx`.
 
 ### Patch Changes
 
-- 4e5e0a1: Retire l'import mort de `useVisitContextStore` dans `mock.tsx`/`mock-jest.tsx`. Ce fichier n'existe plus dans `src/` depuis la purge des références OpenMRS, ce qui faisait échouer la résolution de module (Vite/Vitest) pour tout consommateur du mock — notamment `@egen-civitas/esm-framework` dont les tests importent ce mock en cascade.
 - c82f723: Corrige une série de dépendances manquantes/mal déclarées trouvées en débloquant la CI (l'installation était bloquée depuis fin août, masquant ces problèmes) :
 
   - `esm-tenant` : `happy-dom` manquait alors que ses tests l'utilisent (ni dep, ni peerDep) → ajouté en devDependency.
@@ -16,26 +23,10 @@
 
   Tous les fixes vérifiés par reproduction isolée réelle (installation + exécution effective des tests concernés), pas seulement par lecture de code.
 
+- Updated dependencies [4e5e0a1]
 - Updated dependencies [c82f723]
+  - @egen-civitas/esm-react-utils@1.0.3
   - @egen-civitas/esm-api@1.1.1
   - @egen-civitas/esm-data-api@1.0.2
   - @egen-civitas/esm-extensions@1.0.2
   - @egen-civitas/esm-navigation@1.0.2
-  - @egen-civitas/esm-tenant@1.0.2
-
-## 1.0.2
-
-### Patch Changes
-
-- 60eda59: Corrige `mock.tsx` et `mock-jest.tsx` : ces fichiers référençaient un hook
-  `useVisitContextStore` qui n'a jamais existé dans le code source du paquet
-  (aucune définition, aucun historique git, aucun usage réel ailleurs dans le
-  monorepo — du code mort orphelin). Tout import de `useVisitContextStore`
-  depuis `@egen-civitas/esm-react-utils/mock` ou `/mock-jest` échouait avec
-  une erreur de module introuvable. Supprimé proprement des deux fichiers.
-
-  Correctif sans risque de régression : puisque le module cible n'a jamais
-  existé, aucun code consommateur n'a jamais pu importer ce mock avec succès.
-
-- Updated dependencies [9eb32b2]
-  - @egen-civitas/esm-api@1.1.0

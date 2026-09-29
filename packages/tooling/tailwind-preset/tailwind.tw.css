@@ -10,9 +10,9 @@
  *  (postcss-loader + @tailwindcss/postcss, sans CSS Modules — voir ce
  *  package pour le détail).
  *
- *  Preflight désactivé volontairement : plusieurs micro-frontends (single-
- *  spa) partagent la même page, un reset global casserait les composants
- *  Carbon montés par d'AUTRES apps.
+ *  Preflight importé dans `@layer base` (priorité minimale) : il comble les
+ *  trous sans jamais écraser Carbon/SCSS des AUTRES micro-frontends (single-
+ *  spa), voir le bloc « utilitaires non layerés » plus bas.
  * ----------------------------------------------------------------------------
  *  SURCHARGER UN COMPOSANT DU FRAMEWORK (esm-styleguide / Carbon) AVEC DU
  *  TAILWIND :
@@ -33,9 +33,38 @@
  *  sélecteur avec un composant du framework (tes propres composants codés
  *  à part), les classes Tailwind normales suffisent, pas besoin de `!`.
  * ==========================================================================*/
-@layer theme, base, components, utilities;
+/* ----------------------------------------------------------------------------
+ *  POURQUOI LES UTILITAIRES NE SONT PAS DANS UN @layer (Tailwind = citoyen de
+ *  premier rang, pas second derrière le SCSS)
+ * ----------------------------------------------------------------------------
+ *  Le SCSS du framework embarque le reset de Carbon (`@forward '@carbon/styles'`
+ *  dans esm-styleguide), NON layeré :
+ *
+ *    div, span, a, p, h1..h6, label, form, header, nav, section, ul, li... {
+ *      padding: 0; margin: 0; border: 0; font: inherit; font-size: 100%; }
+ *
+ *  Par spec CSS (Cascade Layers), une déclaration non-layered bat TOUJOURS une
+ *  déclaration layered, quelle que soit la spécificité. Avec les utilitaires
+ *  dans `@layer utilities`, `px-4`, `m-2`, `border`, `text-sm`, `font-bold`...
+ *  perdaient donc contre ce reset sur tous ces éléments → paddings/marges/
+ *  bordures/tailles ignorés.
+ *
+ *  Solution : les utilitaires sont émis SANS layer. Une classe (0,1,0) bat alors
+ *  n'importe quel sélecteur d'élément du reset (0,0,1), sans `!`. Contre une
+ *  classe du framework (`.cds--btn`), c'est l'ordre/spécificité normale : là
+ *  seulement, le modificateur `!` reste nécessaire (voir plus haut).
+ *
+ *  Preflight (reset Tailwind) : importé dans `@layer base`, donc à la priorité
+ *  LA PLUS BASSE. Il ne fait que combler les trous (ex. `<button>` brut sans
+ *  fond/bordure, `<input>` sans `font: inherit`, `img { display:block }`) et ne
+ *  peut JAMAIS écraser Carbon ni le SCSS des autres micro-frontends, qui sont
+ *  non-layered. C'est ce qui rend les boutons/champs des composants Tailwind
+ *  identiques à ceux de leur projet d'origine, sans risque pour le reste.
+ * --------------------------------------------------------------------------*/
+@layer theme, base, components;
 @import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
 
 /* Tailwind n'analyse pas node_modules par défaut : on déclare explicitement le
    styleguide publié (paquets frères dans node_modules/@egen-civitas/) pour que
@@ -92,6 +121,10 @@
      — répéter les 11 nuances (50→950) en changeant juste le préfixe, elles
      existent déjà telles quelles dans theme.default.json. Omis ici pour la
      lisibilité du template. */
+
+  /* Polices : pont vers les tokens typographiques du moteur de thème. */
+  --font-sans: var(--typography-font-family-sans, ui-sans-serif), ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: var(--typography-font-family-mono, ui-monospace), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --radius-none: var(--border-radius-none, 0px);
   --radius-sm: var(--border-radius-sm, 0.25rem);

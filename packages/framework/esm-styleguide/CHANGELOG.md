@@ -1,5 +1,15 @@
 # @egen-civitas/esm-styleguide
 
+## 1.3.0
+
+### Minor Changes
+
+- 9bb7f95: Layout du shell : le contenu défile dans `#egen-scroll-region` (sous la TopBar) au lieu de la fenêtre, donc il est coupé net à la frontière TopBar/body et ne passe plus derrière la barre. La TopBar a une hauteur automatique (niveau 1 + niveau 2) mesurée en direct par le shell (`layout-sync.ts`) dans `--egen-navbar-height`, ce qui décale correctement le début du contenu. Le pied de page défile avec le contenu. Impression inchangée.
+
+### Patch Changes
+
+- 799d1a1: Le conteneur de la TopBar n'est plus redéfini dans `_panel-overrides.scss` (il écrasait le z-index/position du shell) ; le side-nav se cale sur `--egen-navbar-height` (hauteur mesurée, niveau 2 inclus).
+
 ## 1.2.0
 
 ### Minor Changes

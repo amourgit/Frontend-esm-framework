@@ -133,7 +133,7 @@ body[data-threeui-ready] > [data-threeui-role] { visibility: visible !important;
     .replace(/<\/body>/i, `${focusScript}</body>`);
 }
 
-function RecursiveErosionBackground({
+export function RecursiveErosionBackground({
   mode = RECURSIVE_EROSION_DEFAULTS.mode,
   hue = RECURSIVE_EROSION_DEFAULTS.hue,
   saturation = RECURSIVE_EROSION_DEFAULTS.saturation,

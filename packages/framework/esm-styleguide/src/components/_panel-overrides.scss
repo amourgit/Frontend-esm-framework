@@ -131,15 +131,13 @@
 }
 
 // ── Conteneurs spécifiques EGEN ───────────────────────────────────────────────
-#egen-top-nav-app-container {
-  position: sticky;
-  top: 0;
-  z-index: var(--z-index-sticky);
-}
+// NB : le positionnement de #egen-top-nav-app-container (hauteur auto, z-index)
+// est défini UNIQUEMENT dans _general.scss (zone de scroll du shell). Ne pas le
+// redéfinir ici : ce fichier est chargé après et écraserait le z-index.
 
 #egen-left-nav-container .cds--side-nav {
-  height: calc(100vh - var(--layout-header-height));
-  top: var(--layout-header-height);
+  height: calc(100dvh - var(--egen-navbar-height));
+  top: var(--egen-navbar-height);
   position: sticky;
 }
 

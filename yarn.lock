@@ -810,7 +810,7 @@ __metadata:
   resolution: "@egen-civitas/egen@workspace:packages/tooling/egen"
   dependencies:
     "@egen-civitas/esm-app-shell": "npm:^2.0.1"
-    "@egen-civitas/rspack-config": "npm:^1.0.1"
+    "@egen-civitas/rspack-config": "npm:^1.1.0"
     "@egen-civitas/webpack-config": "npm:^1.0.0"
     "@inquirer/prompts": "npm:8.3.2"
     "@inquirer/testing": "npm:^3.3.2"
@@ -1763,7 +1763,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/rspack-config@npm:^1.0.1, @egen-civitas/rspack-config@workspace:packages/tooling/rspack-config":
+"@egen-civitas/rspack-config@npm:^1.0.1, @egen-civitas/rspack-config@npm:^1.1.0, @egen-civitas/rspack-config@workspace:packages/tooling/rspack-config":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/rspack-config@workspace:packages/tooling/rspack-config"
   dependencies:

@@ -19,11 +19,12 @@ html {
 html[data-public-route='true'] {
   #egen-top-nav-app-container {
     height: 0 !important;
+    min-height: 0 !important;
     overflow: hidden;
   }
 
   #egen-apps-container {
-    min-height: 100vh;
+    min-height: 100%;
   }
 
   #egen-left-nav-container,
@@ -52,15 +53,30 @@ html[data-public-route='true'] {
   }
 }
 
+// Zone de scroll : le contenu des apps + le pied de page défilent ICI (et non
+// plus sur la fenêtre), dans la ligne de grille située SOUS la TopBar. Le
+// contenu est ainsi coupé net à la frontière TopBar / body : on ne le voit
+// jamais passer derrière la barre (même si celle-ci est transparente).
+#egen-scroll-region {
+  grid-area: appRoots;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  // La ligne de grille définit la hauteur : la région ne dépasse jamais.
+  height: 100%;
+}
+
 #egen-apps-container {
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: calc(100vh - var(--egen-navbar-height));
-  height: fit-content;
-  grid-area: appRoots;
-  overflow-x: auto;
+  flex: 1 0 auto;
   min-width: 0;
+  overflow-x: auto;
 }
 
 #egen-left-nav-container {
@@ -70,39 +86,59 @@ html[data-public-route='true'] {
 #egen-workspaces-container {
   grid-area: workspace;
   position: sticky;
-  height: calc(100vh - var(--egen-navbar-height));
-  top: var(--egen-navbar-height);
+  height: 100%;
+  min-height: 0;
+  top: 0;
   z-index: 1000;
   will-change: contents;
 }
 
+// TopBar : hauteur AUTOMATIQUE (niveau 1 + niveau 2 inclus). La hauteur réelle
+// est mesurée par le shell (layout-sync.ts) et publiée dans
+// --egen-navbar-height ; 3rem n'est qu'un minimum avant le montage de la barre.
+// Le contenu de la barre (menus déroulants) peut déborder vers le bas : elle
+// est donc au-dessus de la zone de scroll (z-index) et n'est pas rognée.
 #egen-top-nav-app-container {
   grid-area: topNav;
-  height: var(--egen-navbar-height);
+  position: relative;
+  z-index: 1100;
+  height: auto;
+  min-height: 3rem;
+  overflow: visible;
 }
 
-// Pied de page — même largeur que le contenu applicatif, sous les trois
-// colonnes (leftNav/appRoots/workspace). Vide (0 hauteur) sur les routes
-// publiques : la garde de routes de l'app footer y rend `null`.
+// Pied de page : défile avec le contenu (il vit dans #egen-scroll-region).
 #egen-footer-app-container {
-  grid-area: footer;
+  flex: 0 0 auto;
   width: 100%;
+}
+
+// Le corps occupe exactement la fenêtre : la page ne défile plus, c'est
+// #egen-scroll-region qui défile (voir plus haut).
+html {
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
   display: grid;
   grid-template-areas:
     'topNav topNav topNav'
-    'leftNav appRoots workspace'
-    'footer footer footer';
+    'leftNav appRoots workspace';
   grid-template-columns: min-content 1fr min-content;
-  grid-template-rows: min-content 1fr min-content;
+  grid-template-rows: auto minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   container-type: inline-size;
 }
 
 @media print {
+  html,
   body {
     display: block;
+    height: auto;
+    overflow: visible;
     container-type: normal;
   }
 
@@ -113,6 +149,7 @@ body {
     display: none;
   }
 
+  #egen-scroll-region,
   #egen-apps-container {
     height: auto;
     min-height: auto;

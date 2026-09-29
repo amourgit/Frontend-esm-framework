@@ -1,3 +1,4 @@
+import { setupNavbarHeightSync } from './layout-sync';
 import { start, triggerAppChange } from 'single-spa';
 import { setupThemeEngine } from '@egen-civitas/esm-theme';
 import { setupTenantSystem } from '@egen-civitas/esm-tenant';
@@ -456,6 +457,7 @@ export function run(configUrls: Array<string>) {
 
   return Promise.all([import('@egen-civitas/esm-styleguide/src/index'), themeReady]).then(([_styleguide]) => {
     integrateBreakpoints();
+    setupNavbarHeightSync();
     showToasts();
     showModals();
     showNotifications();

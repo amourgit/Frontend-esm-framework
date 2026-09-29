@@ -2,7 +2,7 @@
   "name": "@egen-civitas/tailwind-preset",
   "version": "1.2.0",
   "license": "MPL-2.0",
-  "description": "Point d'entrée Tailwind v4 partagé pour les apps EGEN : pont vers les tokens de @egen-civitas/esm-theme, preflight désactivé (contexte single-spa multi-apps). À utiliser avec la règle rspack *.tw.css fournie par @egen-civitas/rspack-config.",
+  "description": "Point d'entrée Tailwind v4 partagé pour les apps EGEN : pont vers les tokens de @egen-civitas/esm-theme, preflight en @layer base (priorité minimale) et utilitaires non layerés pour battre le reset Carbon. À utiliser avec la règle rspack *.tw.css fournie par @egen-civitas/rspack-config.",
   "main": "tailwind.tw.css",
   "files": [
     "tailwind.tw.css"

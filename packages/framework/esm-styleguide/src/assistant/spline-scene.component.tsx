@@ -1,7 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import Spline from '@splinetool/react-spline';
+import React, { Suspense, lazy, useState } from 'react';
+
+// Spline (runtime WebGL ~ plusieurs centaines de Ko) est chargé à la demande : importer le
+// styleguide ne doit JAMAIS déclencher de téléchargement ni d'effet de bord réseau.
+const Spline = lazy(() => import('@splinetool/react-spline'));
 
 interface SplineSceneProps {
   scene: string;
@@ -9,19 +12,21 @@ interface SplineSceneProps {
   onLoad?: (splineApp: unknown) => void;
 }
 
-// Global preload helper to pre-fetch the 1.3MB 3D scene immediately into browser cache
-if (typeof window !== 'undefined') {
-  const PRELOAD_URL = "https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode";
-  // Preload link tag
+const preloaded = new Set<string>();
+
+/**
+ * Préchauffe le cache navigateur avec une scène Spline (~1,3 Mo). À appeler explicitement
+ * (ouverture de l'assistant, idle…) — jamais au chargement du module.
+ */
+export function preloadSplineScene(url: string): void {
+  if (typeof document === 'undefined' || preloaded.has(url)) return;
+  preloaded.add(url);
   const link = document.createElement('link');
   link.rel = 'preload';
   link.as = 'fetch';
   link.crossOrigin = 'anonymous';
-  link.href = PRELOAD_URL;
+  link.href = url;
   document.head.appendChild(link);
-
-  // Background fetch to cache it in memory
-  fetch(PRELOAD_URL, { mode: 'cors' }).catch(() => {});
 }
 
 export function SplineScene({ scene, className = 'w-full h-full', onLoad }: SplineSceneProps) {
@@ -41,14 +46,16 @@ export function SplineScene({ scene, className = 'w-full h-full', onLoad }: Spli
 
       {/* Spline 3D canvas */}
       <div className={`w-full h-full transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
-        <Spline
-          scene={scene}
-          className="w-full h-full"
-          onLoad={(splineApp) => {
-            setIsLoaded(true);
-            if (onLoad) onLoad(splineApp);
-          }}
-        />
+        <Suspense fallback={null}>
+          <Spline
+            scene={scene}
+            className="w-full h-full"
+            onLoad={(splineApp) => {
+              setIsLoaded(true);
+              if (onLoad) onLoad(splineApp);
+            }}
+          />
+        </Suspense>
       </div>
     </div>
   );

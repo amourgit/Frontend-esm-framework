@@ -1,5 +1,17 @@
 # @egen-civitas/esm-styleguide
 
+## 1.6.0
+
+### Minor Changes
+
+- 15bfdee: Ajoute `AsyncSelect` (catégorie `selections`, Tailwind pur, sans Radix ni cmdk) : sélecteur à options asynchrones (recherche serveur débouncée ou liste `preload` filtrée localement), requêtes annulables (`AbortSignal`) et cache, pagination / défilement infini, multi-sélection (tags, `maxSelected`), groupes, options désactivées, résolution de la sélection (`initialOptions` / `resolveOption`), navigation clavier + ARIA, commandes impératives (`controllerRef`) et personnalisation complète (textes, rendus, `classNames` par zone, placement du panneau).
+- 7e1c686: Ajout du module `filters` au styleguide, porté de Civitas---GED : `FilterBar` (barre de filtres pilotée par schéma JSON, avec `useFilterSchema`, `matchesFilters`, `evaluateFilter`, `buildFilterFields`, `DEFAULT_OPERATORS`…) et `DocumentToolbar` (catégories, tri, mode d'affichage). Ajoute la dépendance `lucide-react` au styleguide. Le shell et `esm-framework` sont republiés pour que le singleton partagé embarque ces exports.
+- 5a84ebe: Shell : la frontière basse du body est traitée comme la frontière haute. Le footer a une hauteur automatique mesurée en direct (`layout-sync.ts` → `--egen-footer-height`, en plus de `--egen-navbar-height`) ; la zone de scroll occupe exactement l'espace entre la TopBar et le footer et coupe son contenu net à chaque frontière. Les éléments positionnés par rapport à la fenêtre (side-nav, workspaces, action-menu) tiennent compte de la hauteur du footer. `setupNavbarHeightSync` devient `setupLayoutHeightSync` (alias conservé).
+
+### Patch Changes
+
+- befb7ba: Footer fixe : `#egen-footer-app-container` sort de la grille du body (`position: fixed` en bas de la fenêtre) et ne défile plus. Il partage avec la TopBar le niveau d'empilement `--egen-shell-bar-z-index` (8100, au-dessus de la side-nav Carbon et des rails tablette, sous les modales). Le body réserve `--egen-footer-height` en `padding-bottom` : la zone de scroll s'arrête au bord haut du footer et y est coupée net. Les rails d'action tablette se posent au-dessus du footer.
+
 ## 1.5.1
 
 ### Patch Changes

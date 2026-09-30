@@ -1,5 +1,16 @@
 # @egen-civitas/esm-framework
 
+## 1.1.2
+
+### Patch Changes
+
+- 7e1c686: Ajout du module `filters` au styleguide, porté de Civitas---GED : `FilterBar` (barre de filtres pilotée par schéma JSON, avec `useFilterSchema`, `matchesFilters`, `evaluateFilter`, `buildFilterFields`, `DEFAULT_OPERATORS`…) et `DocumentToolbar` (catégories, tri, mode d'affichage). Ajoute la dépendance `lucide-react` au styleguide. Le shell et `esm-framework` sont republiés pour que le singleton partagé embarque ces exports.
+- Updated dependencies [15bfdee]
+- Updated dependencies [7e1c686]
+- Updated dependencies [5a84ebe]
+- Updated dependencies [befb7ba]
+  - @egen-civitas/esm-styleguide@1.6.0
+
 ## 1.1.1
 
 ### Patch Changes

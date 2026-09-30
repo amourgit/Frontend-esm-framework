@@ -4,6 +4,9 @@
   --egen-sidenav-width: 16rem;
   --egen-offline-banner-height: 0;
   --egen-navbar-height: #{layout.$spacing-09};
+  // Hauteur réelle du footer (0 tant qu'il n'est pas monté / sur routes publiques),
+  // mesurée en direct par le shell (layout-sync.ts).
+  --egen-footer-height: 0px;
   --egen-topnav-height: var(--egen-navbar-height);
 }
 

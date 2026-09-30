@@ -42,7 +42,7 @@ $extraWideWorkspaceWidth: 48.25rem;
       inset-inline-start: 0 !important;
       inset-inline-end: var(--actionPanelOffset) !important;
       width: calc(100vw - var(--actionPanelOffset)) !important;
-      bottom: 0 !important;
+      bottom: var(--egen-footer-height, 0px) !important;
       transform: none !important;
       will-change: auto !important;
       transition: none !important;

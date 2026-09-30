@@ -107,14 +107,19 @@ html[data-public-route='true'] {
   overflow: visible;
 }
 
-// Footer : hauteur AUTOMATIQUE. La hauteur réelle est mesurée par le shell
-// (layout-sync.ts) et publiée dans --egen-footer-height. Le contenu de la zone
-// de scroll est coupé net à la frontière Footer / body par la grille CSS.
+// Footer : hauteur AUTOMATIQUE (symétrique de la TopBar). La hauteur réelle est
+// mesurée par le shell (layout-sync.ts) et publiée dans --egen-footer-height.
+// Il est au-dessus de la zone de scroll (z-index) : celle-ci, bornée par la
+// grille, est coupée net à la frontière body / footer (overflow) et son contenu
+// ne passe jamais derrière le footer, même transparent.
 #egen-footer-app-container {
   grid-area: footer;
   position: relative;
-  z-index: 50;
+  z-index: 1100;
+  width: 100%;
+  min-width: 0;
   height: auto;
+  min-height: 0;
   overflow: visible;
 }
 

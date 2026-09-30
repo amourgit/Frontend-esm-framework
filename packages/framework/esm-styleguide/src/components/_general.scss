@@ -111,8 +111,8 @@ html[data-public-route='true'] {
 // défile pas avec le body et n'occupe plus de ligne de grille). Il est au-dessus
 // de tout (même niveau que la TopBar). Sa hauteur est AUTOMATIQUE : le shell la
 // mesure (layout-sync.ts) dans --egen-footer-height, et le body réserve cet
-// espace en bas (padding-bottom) : la zone de scroll s'arrête donc exactement au
-// bord haut du footer et son contenu y est coupé net (overflow).
+// espace par une ligne de grille vide (footerGap) : la zone de scroll s'arrête
+// donc exactement au bord haut du footer et son contenu y est coupé net (overflow).
 #egen-footer-app-container {
   position: fixed;
   left: 0;
@@ -135,16 +135,22 @@ html {
 
 body {
   display: grid;
+  // Trois bandes : TopBar (ligne auto = sa hauteur mesurée), zone de scroll
+  // (le reste) et « footerGap » : une ligne VIDE dont la hauteur est celle du
+  // footer fixe (--egen-footer-height, mesurée par le shell). C'est la symétrique
+  // exacte de la ligne de la TopBar : la zone de scroll commence au bord bas de
+  // la TopBar et se termine au bord haut du footer, et son contenu y est coupé.
+  // NB : on n'utilise PAS padding-bottom sur le body : des resets globaux
+  // chargés plus tard (`html, body { padding: 0 }`) l'écrasent.
   grid-template-areas:
     'topNav topNav topNav'
-    'leftNav appRoots workspace';
+    'leftNav appRoots workspace'
+    'footerGap footerGap footerGap';
   grid-template-columns: min-content 1fr min-content;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) var(--egen-footer-height, 0px);
   box-sizing: border-box;
   height: 100vh;
   height: 100dvh;
-  // Espace réservé au footer fixe (0 sur les routes publiques / avant montage).
-  padding-bottom: var(--egen-footer-height, 0px);
   overflow: hidden;
   container-type: inline-size;
 }
@@ -154,7 +160,6 @@ body {
   body {
     display: block;
     height: auto;
-    padding-bottom: 0;
     overflow: visible;
     container-type: normal;
   }

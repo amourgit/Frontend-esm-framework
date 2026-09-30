@@ -20,9 +20,10 @@ $actionPanelOffset: layout.$spacing-09;
     .container {
       position: fixed;
       top: var(--egen-navbar-height);
+      bottom: var(--egen-footer-height, 0px);
       right: 0;
       background: $ui-01;
-      height: 100%;
+      height: auto;
       z-index: 1000;
       width: $actionPanelOffset;
       border-left: 1px solid $text-03;

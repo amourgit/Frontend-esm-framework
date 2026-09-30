@@ -97,8 +97,8 @@ $brand-primary-100: var(--colors-primary-900, #081a1c);
   --brand-03: var(--colors-primary-500, #007d79);
   --bottom-nav-height: #{layout.$spacing-10};
   --workspace-header-height: #{layout.$spacing-09};
-  --tablet-workspace-window-height: calc(100vh - var(--egen-navbar-height) - var(--bottom-nav-height));
-  --desktop-workspace-window-height: calc(100vh - var(--egen-navbar-height) - var(--workspace-header-height));
+  --tablet-workspace-window-height: calc(100vh - var(--egen-navbar-height) - var(--egen-footer-height, 0px) - var(--bottom-nav-height));
+  --desktop-workspace-window-height: calc(100vh - var(--egen-navbar-height) - var(--egen-footer-height, 0px) - var(--workspace-header-height));
 }
 
 $breakpoint-phone-min: 0px;

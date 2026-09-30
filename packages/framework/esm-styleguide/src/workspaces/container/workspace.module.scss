@@ -96,7 +96,7 @@ $extraWideWorkspaceWidth: 48.25rem;
   .workspaceFixedContainer {
     position: fixed;
     top: var(--egen-navbar-height);
-    bottom: 0;
+    bottom: var(--egen-footer-height, 0px);
     border-left: 1px solid $text-03;
     z-index: 50;
     background-color: white;

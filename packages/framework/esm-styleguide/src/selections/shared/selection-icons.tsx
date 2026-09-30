@@ -2,7 +2,7 @@ import * as React from 'react';
 
 /**
  * Icônes SVG inline partagées par les composants Tailwind de la catégorie
- * « selections » (MorphSelect, Combobox…).
+ * « selections » (MorphSelect, Combobox, AsyncSelect…).
  *
  * Les tracés sont ceux de `lucide-react` (ChevronDown, Check, ChevronsUpDown,
  * Search) : le design d'origine des composants est ainsi conservé à
@@ -49,5 +49,19 @@ export const SelectionSearchIcon = (props: IconProps) => (
   <svg {...base(props)}>
     <circle cx="11" cy="11" r="8" />
     <path d="m21 21-4.3-4.3" />
+  </svg>
+);
+
+export const SelectionXIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M18 6 6 18" />
+    <path d="m6 6 12 12" />
+  </svg>
+);
+
+/** Tracé de `Loader2` (lucide) : à faire tourner avec `animate-spin`. */
+export const SelectionLoaderIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
   </svg>
 );

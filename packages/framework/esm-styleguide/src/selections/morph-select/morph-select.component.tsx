@@ -12,7 +12,7 @@ import {
   useReducedMotion,
   type Variants,
 } from "framer-motion";
-import {
+import React, {
   createContext,
   type ReactNode,
   useCallback,

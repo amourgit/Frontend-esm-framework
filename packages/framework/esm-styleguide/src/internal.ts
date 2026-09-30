@@ -45,3 +45,4 @@ export * from './content-section/index.js';
 export * from './hero-mosaic/index.js';
 export * from './top-bar/index.js';
 export * from './assistant/index.js';
+export * from './filters/index.js';

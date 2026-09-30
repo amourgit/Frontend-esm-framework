@@ -1642,6 +1642,7 @@ __metadata:
     happy-dom: "npm:^20.6.0"
     i18next: "npm:^25.5.3"
     lodash-es: "npm:^4.17.21"
+    lucide-react: "npm:^0.469.0"
     react: "npm:^18.3.1"
     react-aria-components: "npm:^1.7.1"
     react-dom: "npm:^18.3.1"
@@ -14089,6 +14090,15 @@ __metadata:
   dependencies:
     yallist: "npm:^3.0.2"
   checksum: 10/951d2673dcc64a7fb888bf3d13bc2fdf923faca97d89cdb405ba3dfff77e2b26e5798d405e78fcd7094c9e7b8b4dab2ddc5a4f8a11928af24a207b7c738ca3f8
+  languageName: node
+  linkType: hard
+
+"lucide-react@npm:^0.469.0":
+  version: 0.469.0
+  resolution: "lucide-react@npm:0.469.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10/8cf1f5b125354f1ac4304bb0eead52f369fd67866199bc37a63c856369c97003702b90522e257971670e75acaaf1e55c05c8e4960aaa7ba96dc084d3f0505102
   languageName: node
   linkType: hard
 

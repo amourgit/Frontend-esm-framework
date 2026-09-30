@@ -7,6 +7,10 @@
   // Hauteur réelle du footer (0 tant qu'il n'est pas monté / sur routes publiques),
   // mesurée en direct par le shell (layout-sync.ts).
   --egen-footer-height: 0px;
+  // Niveau d'empilement partagé par la TopBar et le Footer : au-dessus de tout le
+  // contenu applicatif, de la side-nav Carbon (8000) et des rails tablette
+  // (8003), sous les modales/toasts.
+  --egen-shell-bar-z-index: 8100;
   --egen-topnav-height: var(--egen-navbar-height);
 }
 

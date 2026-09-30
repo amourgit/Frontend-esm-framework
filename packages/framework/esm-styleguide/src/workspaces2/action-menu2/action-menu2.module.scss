@@ -49,7 +49,7 @@ $actionPanelOffset: layout.$spacing-09;
     background-color: $ui-02;
     position: fixed;
     left: 0;
-    bottom: 0;
+    bottom: var(--egen-footer-height, 0px);
     z-index: 8003;
     width: 100%;
     display: flex;

@@ -53,10 +53,10 @@ html[data-public-route='true'] {
   }
 }
 
-// Zone de scroll : le contenu des apps + le pied de page défilent ICI (et non
-// plus sur la fenêtre), dans la ligne de grille située SOUS la TopBar. Le
-// contenu est ainsi coupé net à la frontière TopBar / body : on ne le voit
-// jamais passer derrière la barre (même si celle-ci est transparente).
+// Zone de scroll : le contenu des apps défile ICI (et non plus sur la fenêtre),
+// dans la ligne de grille située SOUS la TopBar et AU-DESSUS du Footer. Le
+// contenu est ainsi coupé net aux deux frontières (TopBar / Footer) : on ne le
+// voit jamais passer derrière, même si ces zones sont transparentes.
 #egen-scroll-region {
   grid-area: appRoots;
   display: flex;
@@ -107,10 +107,15 @@ html[data-public-route='true'] {
   overflow: visible;
 }
 
-// Pied de page : défile avec le contenu (il vit dans #egen-scroll-region).
+// Footer : hauteur AUTOMATIQUE. La hauteur réelle est mesurée par le shell
+// (layout-sync.ts) et publiée dans --egen-footer-height. Le contenu de la zone
+// de scroll est coupé net à la frontière Footer / body par la grille CSS.
 #egen-footer-app-container {
-  flex: 0 0 auto;
-  width: 100%;
+  grid-area: footer;
+  position: relative;
+  z-index: 50;
+  height: auto;
+  overflow: visible;
 }
 
 // Le corps occupe exactement la fenêtre : la page ne défile plus, c'est
@@ -124,9 +129,10 @@ body {
   display: grid;
   grid-template-areas:
     'topNav topNav topNav'
-    'leftNav appRoots workspace';
+    'leftNav appRoots workspace'
+    'footer footer footer';
   grid-template-columns: min-content 1fr min-content;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;

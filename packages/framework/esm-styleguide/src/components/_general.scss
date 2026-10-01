@@ -79,8 +79,11 @@ html[data-public-route='true'] {
   overflow-x: auto;
 }
 
+// La navigation latérale n'est plus globale : la navigation d'app vit dans le
+// niveau 2 de la TopBar (slot `topbar-level2-nav`). Une app qui veut une
+// sidebar interne la fournit elle-même dans son propre contenu.
 #egen-left-nav-container {
-  grid-area: leftNav;
+  display: none;
 }
 
 #egen-workspaces-container {
@@ -143,10 +146,10 @@ body {
   // NB : on n'utilise PAS padding-bottom sur le body : des resets globaux
   // chargés plus tard (`html, body { padding: 0 }`) l'écrasent.
   grid-template-areas:
-    'topNav topNav topNav'
-    'leftNav appRoots workspace'
-    'footerGap footerGap footerGap';
-  grid-template-columns: min-content 1fr min-content;
+    'topNav topNav'
+    'appRoots workspace'
+    'footerGap footerGap';
+  grid-template-columns: 1fr min-content;
   grid-template-rows: auto minmax(0, 1fr) var(--egen-footer-height, 0px);
   box-sizing: border-box;
   height: 100vh;

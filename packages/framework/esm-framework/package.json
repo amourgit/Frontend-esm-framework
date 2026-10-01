@@ -74,7 +74,7 @@
     "@egen-civitas/esm-dynamic-loading": "^2.0.0",
     "@egen-civitas/esm-error-handling": "^1.0.0",
     "@egen-civitas/esm-expression-evaluator": "^1.0.0",
-    "@egen-civitas/esm-extensions": "^1.0.0",
+    "@egen-civitas/esm-extensions": "^1.1.0",
     "@egen-civitas/esm-feature-flags": "^1.0.0",
     "@egen-civitas/esm-globals": "^1.0.0",
     "@egen-civitas/esm-navigation": "^1.0.0",
@@ -82,7 +82,7 @@
     "@egen-civitas/esm-react-utils": "^1.0.2",
     "@egen-civitas/esm-routes": "^1.0.2",
     "@egen-civitas/esm-state": "^1.0.0",
-    "@egen-civitas/esm-styleguide": "^1.6.0",
+    "@egen-civitas/esm-styleguide": "^1.7.0",
     "@egen-civitas/esm-tenant": "^1.0.0",
     "@egen-civitas/esm-translations": "^1.0.0",
     "@egen-civitas/esm-utils": "^1.0.0"

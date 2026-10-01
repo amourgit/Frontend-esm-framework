@@ -1,5 +1,13 @@
 # @egen-civitas/esm-app-shell
 
+## 2.2.2
+
+### Patch Changes
+
+- 6cac063: Relève les plages de dépendances pour embarquer `esm-extensions` 1.1.0 (`NavEntryMeta`, `TOPBAR_LEVEL2_NAV_SLOT`, `isNavEntryMeta`) et `esm-styleguide` 1.7.0 (grille du shell sans colonne `leftNav`). Sans cela, `esm-framework` 1.1.2 continuait de résoudre `esm-extensions` 1.0.2 et n'exposait pas les nouveaux exports.
+- Updated dependencies [6cac063]
+  - @egen-civitas/esm-framework@1.1.3
+
 ## 2.2.1
 
 ### Patch Changes

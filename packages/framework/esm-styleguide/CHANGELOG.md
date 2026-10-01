@@ -1,5 +1,16 @@
 # @egen-civitas/esm-styleguide
 
+## 1.7.0
+
+### Minor Changes
+
+- 48e7980: Navigation de niveau 2 pilotée par les apps : nouveau type partagé `NavEntryMeta`, constante `TOPBAR_LEVEL2_NAV_SLOT` (`topbar-level2-nav`) et validateur `isNavEntryMeta` dans `esm-extensions`. La colonne de navigation latérale globale (`leftNav`) est retirée de la grille du shell : seuls la TopBar et le footer sont globaux ; une app qui veut une sidebar la fournit dans son propre contenu.
+
+### Patch Changes
+
+- Updated dependencies [48e7980]
+  - @egen-civitas/esm-extensions@1.1.0
+
 ## 1.6.1
 
 ### Patch Changes

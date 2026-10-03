@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-config",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MPL-2.0",
   "description": "A configuration library for the Egen Single-Spa framework.",
   "type": "module",
@@ -69,14 +69,14 @@
   },
   "peerDependencies": {
     "@egen-civitas/esm-globals": "^1.0.0",
-    "@egen-civitas/esm-state": "^1.0.0",
-    "@egen-civitas/esm-utils": "^1.0.0",
+    "@egen-civitas/esm-state": "^1.0.2",
+    "@egen-civitas/esm-utils": "^1.0.2",
     "single-spa": "6.x"
   },
   "devDependencies": {
     "@egen-civitas/esm-globals": "^1.0.0",
-    "@egen-civitas/esm-state": "^1.0.0",
-    "@egen-civitas/esm-utils": "^1.0.0",
+    "@egen-civitas/esm-state": "^1.0.2",
+    "@egen-civitas/esm-utils": "^1.0.2",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@types/lodash-es": "^4.17.12",

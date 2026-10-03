@@ -1,5 +1,14 @@
 # @egen-civitas/esm-api
 
+## 1.1.2
+
+### Patch Changes
+
+- d69a61c: Les fichiers `mock.ts` / `mock-jest.ts` de ces paquets importent `./src/...`, mais `src` n'était pas publié sur npm : tout test consommateur qui utilisait `@egen-civitas/esm-framework/mock` échouait avec « Failed to resolve import ./src/index ». `src` est désormais publié (sans les fichiers `*.test.*`). `esm-api` : les mocks exportent aussi `isDevAuthBypassEnabled` et `applyDevAuthBypassForLogin` (désactivés par défaut), absents jusqu'ici alors qu'ils font partie de l'API publique.
+- Updated dependencies [d69a61c]
+  - @egen-civitas/esm-config@1.0.2
+  - @egen-civitas/esm-state@1.0.2
+
 ## 1.1.1
 
 ### Patch Changes

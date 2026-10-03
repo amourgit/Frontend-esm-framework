@@ -20,3 +20,7 @@ export const refetchCurrentUser = jest.fn();
 export const setUserLanguage = jest.fn();
 export const setUserProperties = jest.fn();
 export const userHasAccess = jest.fn();
+// Contournement d'authentification de développement : désactivé par défaut dans les tests
+// (sinon le composant de login ne déclenche jamais refetchCurrentUser).
+export const isDevAuthBypassEnabled = jest.fn(() => false);
+export const applyDevAuthBypassForLogin = jest.fn(() => null);

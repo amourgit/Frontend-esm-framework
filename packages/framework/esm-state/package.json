@@ -7,9 +7,10 @@
   "main": "dist/index.js",
   "files": [
     "dist",
+    "src",
+    "!src/**/*.test.*",
     "mock.ts",
-    "mock-jest.ts",
-    "src/index.ts"
+    "mock-jest.ts"
   ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",

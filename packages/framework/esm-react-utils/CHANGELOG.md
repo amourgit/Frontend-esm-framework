@@ -1,5 +1,13 @@
 # @egen-civitas/esm-react-utils
 
+## 1.0.5
+
+### Patch Changes
+
+- b49f9e8: Suppression définitive de la barre latérale globale : le conteneur `#egen-left-nav-container` est retiré du shell (il n'était plus que masqué) ainsi que ses règles CSS. `LeftNavMenu`, `useLeftNav`, `setLeftNav` et `unsetLeftNav` sont marqués `@deprecated` : la navigation de niveau 2 est portée par la TopBar (slot `topbar-level2-nav`) ; une app qui veut une navigation interne affiche sa propre barre latérale.
+- Updated dependencies [b49f9e8]
+  - @egen-civitas/esm-extensions@1.1.1
+
 ## 1.0.4
 
 ### Patch Changes

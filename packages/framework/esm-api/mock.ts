@@ -21,3 +21,7 @@ export const refetchCurrentUser = vi.fn();
 export const setUserLanguage = vi.fn();
 export const setUserProperties = vi.fn();
 export const userHasAccess = vi.fn();
+// Contournement d'authentification de développement : désactivé par défaut dans les tests
+// (sinon le composant de login ne déclenche jamais refetchCurrentUser).
+export const isDevAuthBypassEnabled = vi.fn(() => false);
+export const applyDevAuthBypassForLogin = vi.fn(() => null);

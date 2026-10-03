@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-utils",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MPL-2.0",
   "description": "Helper utilities for Egen",
   "type": "module",

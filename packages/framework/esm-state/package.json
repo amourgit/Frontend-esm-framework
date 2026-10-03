@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-state",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MPL-2.0",
   "description": "Frontend stores & state management for Egen",
   "type": "module",
@@ -70,11 +70,11 @@
   },
   "peerDependencies": {
     "@egen-civitas/esm-globals": "^1.0.0",
-    "@egen-civitas/esm-utils": "^1.0.0"
+    "@egen-civitas/esm-utils": "^1.0.2"
   },
   "devDependencies": {
     "@egen-civitas/esm-globals": "^1.0.0",
-    "@egen-civitas/esm-utils": "^1.0.0",
+    "@egen-civitas/esm-utils": "^1.0.2",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

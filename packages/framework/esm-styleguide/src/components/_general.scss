@@ -27,7 +27,6 @@ html[data-public-route='true'] {
     min-height: 100%;
   }
 
-  #egen-left-nav-container,
   #egen-workspaces-container,
   #egen-footer-app-container {
     display: none;
@@ -77,13 +76,6 @@ html[data-public-route='true'] {
   flex: 1 0 auto;
   min-width: 0;
   overflow-x: auto;
-}
-
-// La navigation latérale n'est plus globale : la navigation d'app vit dans le
-// niveau 2 de la TopBar (slot `topbar-level2-nav`). Une app qui veut une
-// sidebar interne la fournit elle-même dans son propre contenu.
-#egen-left-nav-container {
-  display: none;
 }
 
 #egen-workspaces-container {
@@ -167,7 +159,6 @@ body {
     container-type: normal;
   }
 
-  #egen-left-nav-container,
   #egen-workspaces-container,
   #egen-top-nav-app-container,
   #egen-footer-app-container {

@@ -22,6 +22,8 @@ import { ComponentContext } from './ComponentContext.js';
  *   return <div>My Page</div>;
  * }
  * ```
+ *
+ * @deprecated Il n'existe plus de barre latérale globale : la navigation de niveau 2 est portée par la TopBar (slot `topbar-level2-nav`, type `NavEntryMeta`). Une app qui a besoin d'une navigation interne affiche sa propre barre latérale.
  */
 export function useLeftNav(params: Omit<SetLeftNavParams, 'module'>) {
   const componentContext = useContext(ComponentContext);

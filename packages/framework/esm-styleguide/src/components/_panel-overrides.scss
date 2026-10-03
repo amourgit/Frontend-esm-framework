@@ -135,12 +135,6 @@
 // est défini UNIQUEMENT dans _general.scss (zone de scroll du shell). Ne pas le
 // redéfinir ici : ce fichier est chargé après et écraserait le z-index.
 
-#egen-left-nav-container .cds--side-nav {
-  height: calc(100dvh - var(--egen-navbar-height) - var(--egen-footer-height, 0px));
-  top: var(--egen-navbar-height);
-  position: sticky;
-}
-
 // Panneau workspace
 #egen-workspaces-container {
   backdrop-filter: var(--panel-lg-backdrop-filter);

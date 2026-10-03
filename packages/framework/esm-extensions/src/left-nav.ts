@@ -35,7 +35,7 @@ export interface SetLeftNavParams {
 /**
  * Sets the current left nav context. Must be paired with {@link unsetLeftNav}.
  *
- * @deprecated Please use {@link useLeftNav} instead. This function will be made internal in a future release.
+ * @deprecated Il n'existe plus de barre latérale globale : la navigation de niveau 2 est portée par la TopBar (slot `topbar-level2-nav`, type `NavEntryMeta`). Une app qui a besoin d'une navigation interne affiche sa propre barre latérale.
  */
 export function setLeftNav({ name, basePath, mode, componentContext, state }: SetLeftNavParams) {
   leftNavStore.setState({ slotName: name, basePath, mode: mode ?? 'normal', componentContext, state });
@@ -44,7 +44,7 @@ export function setLeftNav({ name, basePath, mode, componentContext, state }: Se
 /**
  * Unsets the left nav context if the current context is for the supplied name.
  *
- * @deprecated Please use {@link useLeftNav} instead. This function will be made internal in a future release.
+ * @deprecated Il n'existe plus de barre latérale globale : la navigation de niveau 2 est portée par la TopBar (slot `topbar-level2-nav`, type `NavEntryMeta`). Une app qui a besoin d'une navigation interne affiche sa propre barre latérale.
  */
 export function unsetLeftNav(name: string) {
   if (leftNavStore.getState().slotName === name) {

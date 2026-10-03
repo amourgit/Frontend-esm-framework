@@ -30,6 +30,9 @@ interface LeftNavMenuProps extends SideNavProps {
  * Use of this component by anything other than <SideMenuPanel> (where isChildOfHeader == false)
  * is deprecated; it simply renders nothing.
  */
+/**
+ * @deprecated Il n'existe plus de barre latérale globale : la navigation de niveau 2 est portée par la TopBar (slot `topbar-level2-nav`, type `NavEntryMeta`). Une app qui a besoin d'une navigation interne affiche sa propre barre latérale.
+ */
 export const LeftNavMenu = React.forwardRef<HTMLElement, LeftNavMenuProps>((props, ref) => {
   const { slotName, basePath, componentContext, state } = useLeftNavStore();
   const currentPath = window.location ?? { pathname: '' };

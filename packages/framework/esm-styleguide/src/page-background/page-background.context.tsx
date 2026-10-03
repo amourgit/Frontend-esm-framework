@@ -1,42 +1,32 @@
 /** @category Page Background */
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, { useMemo, useSyncExternalStore } from 'react';
 import type { PageBackgroundProps } from './page-background.component.js';
+import { pageBackgroundStore, setGlobalPageBackground } from './page-background.store.js';
 
 interface PageBackgroundContextValue {
   config: PageBackgroundProps | null;
   setPageBackground: (config: PageBackgroundProps | null) => void;
 }
 
-const PageBackgroundContext = createContext<PageBackgroundContextValue>({
-  config: null,
-  setPageBackground: () => {},
-});
-
 /**
- * Fournisseur global du système d'arrière-plan de page. À monter une seule
- * fois, en haut de l'arbre de l'application (typiquement au même niveau que
- * `<GlobalPageBackground />`, voir `page-background.component.tsx`).
+ * @deprecated N'a plus aucun effet : l'état de l'arrière-plan est désormais un
+ * store global (`@egen-civitas/esm-state`), partagé entre toutes les racines
+ * React des apps. Le shell monte l'unique `<GlobalPageBackground>` ; une app
+ * n'a plus qu'à utiliser `<PageBackground>`. Conservé pour compatibilité :
+ * il se contente de rendre ses enfants.
  */
 export function PageBackgroundProvider({ children }: { children: React.ReactNode }) {
-  const [config, setConfig] = useState<PageBackgroundProps | null>(null);
-
-  const value = useMemo(
-    () => ({
-      config,
-      setPageBackground: setConfig,
-    }),
-    [config],
-  );
-
-  return <PageBackgroundContext.Provider value={value}>{children}</PageBackgroundContext.Provider>;
+  return <>{children}</>;
 }
+
+const selectConfig = () => pageBackgroundStore.getState().config;
 
 /**
  * Accès direct au gestionnaire d'arrière-plan global. Utilisé en interne par
- * `<PageBackground>` et `<GlobalPageBackground>` ; à réserver aux cas où le
- * composant déclaratif `<PageBackground>` ne suffit pas (ex. logique de
- * synchronisation plus complexe qu'un simple montage/démontage de page).
+ * `<GlobalPageBackground>` ; à réserver aux cas où le composant déclaratif
+ * `<PageBackground>` ne suffit pas.
  */
 export function usePageBackground(): PageBackgroundContextValue {
-  return useContext(PageBackgroundContext);
+  const config = useSyncExternalStore(pageBackgroundStore.subscribe, selectConfig, selectConfig);
+  return useMemo(() => ({ config, setPageBackground: setGlobalPageBackground }), [config]);
 }

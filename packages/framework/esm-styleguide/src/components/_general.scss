@@ -52,6 +52,19 @@ html[data-public-route='true'] {
   }
 }
 
+// Arrière-plan global de page : un seul hôte, rendu par le shell
+// (renderPageBackground). Il couvre la fenêtre, DERRIÈRE tout le contenu
+// (z-index négatif : au-dessus du fond de html, sous le body et les apps) et
+// n'intercepte aucun clic. Tant qu'aucune page n'a déclaré de fond
+// (<PageBackground>), il est vide : aucun changement d'apparence.
+// Prérequis : body n'a pas de fond opaque (voir _canvas.scss), sinon il le cacherait.
+#egen-page-background-container {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
 // Zone de scroll : le contenu des apps défile ICI (et non plus sur la fenêtre),
 // dans la ligne de grille située SOUS la TopBar et AU-DESSUS du Footer. Le
 // contenu est ainsi coupé net aux deux frontières (TopBar / Footer) : on ne le

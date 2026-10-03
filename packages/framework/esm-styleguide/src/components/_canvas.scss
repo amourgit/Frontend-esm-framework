@@ -1,8 +1,19 @@
 @use '../vars' as *;
 
+// La couleur de fond du canevas est portée par `html` seul. `body` reste
+// transparent : un fond opaque sur body cacherait l'arrière-plan global de page
+// (#egen-page-background-container, z-index négatif — voir _general.scss).
+// Le rendu est identique : body occupe toute la fenêtre.
+html {
+  background-color: $ui-01;
+}
+
 html,
 body {
-  background-color: $ui-01;
   margin: 0;
   padding: 0;
+}
+
+body {
+  background-color: transparent;
 }

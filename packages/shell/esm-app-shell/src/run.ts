@@ -25,6 +25,7 @@ import {
   renderActionableNotifications,
   renderInlineNotifications,
   renderLoadingSpinner,
+  renderPageBackground,
   renderSnackbars,
   renderToasts,
   renderWorkspaceWindowsAndMenu,
@@ -262,6 +263,10 @@ function showSnackbars() {
   renderSnackbars(document.querySelector('.egen-snackbars-container'));
 }
 
+function showPageBackground() {
+  renderPageBackground(document.querySelector('#egen-page-background-container'));
+}
+
 function showModals() {
   setupModals(document.querySelector('.egen-modals-container'));
 }
@@ -459,6 +464,7 @@ export function run(configUrls: Array<string>) {
     integrateBreakpoints();
     setupLayoutHeightSync();
     showToasts();
+    showPageBackground();
     showModals();
     showNotifications();
     showActionableNotifications();

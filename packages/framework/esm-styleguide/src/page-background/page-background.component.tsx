@@ -1,7 +1,8 @@
 /** @category Page Background */
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { GradientWave } from './gradient-wave.component.js';
 import { usePageBackground } from './page-background.context.js';
+import { claimPageBackground, releasePageBackground } from './page-background.store.js';
 import { cn } from './page-background.utils.js';
 
 /** Palette par défaut du fond animé de la page d'accueil. */
@@ -212,11 +213,20 @@ export interface PageBackgroundProps extends DefaultBackgroundProps {
   customComponent?: React.ReactNode;
 }
 
+export interface GlobalPageBackgroundProps {
+  /**
+   * Rendu quand aucune page n'a déclaré de fond : `'animated'` (défaut) affiche
+   * le dégradé animé d'accueil, `'none'` ne rend rien.
+   */
+  fallback?: 'animated' | 'none';
+}
+
 /**
- * Rendu de l'arrière-plan global unique de l'application. À monter une
- * seule fois (ex. dans le shell), à l'intérieur de `<PageBackgroundProvider>`.
+ * Rendu de l'arrière-plan global unique de l'application. À monter une seule
+ * fois — c'est le shell qui le fait (voir `renderPageBackground`). Il lit le
+ * store global renseigné par `<PageBackground>`, depuis n'importe quelle app.
  */
-export function GlobalPageBackground() {
+export function GlobalPageBackground({ fallback = 'animated' }: GlobalPageBackgroundProps = {}) {
   const { config } = usePageBackground();
 
   if (config?.customComponent) {
@@ -247,13 +257,15 @@ export function GlobalPageBackground() {
     );
   }
 
+  if (fallback === 'none') return null;
+
   return <AnimatedHomeBackground className={config?.className} />;
 }
 
 /**
  * Composant déclaratif d'arrière-plan pour une page : s'enregistre auprès du
- * `<PageBackgroundProvider>` global pendant sa durée de vie et restaure le
- * fond par défaut au démontage. Ne rend rien lui-même — le rendu effectif se
+ * store global pendant sa durée de vie et restaure le fond par défaut au
+ * démontage (sauf si une autre page a repris le fond entre-temps). Ne rend rien lui-même — le rendu effectif se
  * fait via `<GlobalPageBackground>`.
  *
  * @example
@@ -281,10 +293,13 @@ export function PageBackground({
   accent,
   children,
 }: PageBackgroundProps) {
-  const { setPageBackground } = usePageBackground();
+  // Identité de cette page : permet de ne libérer que SON fond au démontage.
+  const owner = useRef<object>({});
 
+  // Déclare / met à jour le fond. Pas de libération ici : un simple changement
+  // de props ne doit pas faire repasser par le fond par défaut (clignotement).
   useEffect(() => {
-    setPageBackground({
+    claimPageBackground(owner.current, {
       customComponent,
       imageSrc,
       imageAlt,
@@ -299,12 +314,7 @@ export function PageBackground({
       accent,
       children,
     });
-
-    return () => {
-      setPageBackground(null);
-    };
   }, [
-    setPageBackground,
     customComponent,
     imageSrc,
     imageAlt,
@@ -320,6 +330,12 @@ export function PageBackground({
     children,
   ]);
 
+  // Libère le fond au démontage de la page.
+  useEffect(() => {
+    const id = owner.current;
+    return () => releasePageBackground(id);
+  }, []);
+
   return null;
 }
 
@@ -330,32 +346,34 @@ export function PageBackground({
  *  ni de CSS Modules). Porté et durci depuis Civitas-GED, où il habillait
  *  déjà toutes les pages de l'intranet.
  *
- *  1. INSTALLATION (une fois, dans le shell de l'app)
+ *  1. INSTALLATION
  *  ----------------------------------------------------------------------
- *  S'assurer d'abord que le preset Tailwind du framework est bien importé
- *  (voir @egen-civitas/tailwind-preset) :
+ *  Rien à monter côté app : le shell héberge l'unique rendu global de
+ *  l'arrière-plan (`renderPageBackground`, conteneur `#egen-page-background-container`)
+ *  et l'état est un store global (@egen-civitas/esm-state) partagé entre toutes
+ *  les racines React des apps. S'assurer seulement que le preset Tailwind du
+ *  framework est importé (voir @egen-civitas/tailwind-preset) :
  *
  *    import '@egen-civitas/tailwind-preset/tailwind.tw.css';
  *
- *  Puis monter le Provider et le rendu global UNE SEULE FOIS, au sommet de
- *  l'app (le Provider doit englober tout ce qui utilisera <PageBackground>) :
+ *  `<PageBackgroundProvider>` est conservé pour compatibilité mais n'a plus
+ *  aucun effet (inutile de l'utiliser).
  *
- *    import {
- *      PageBackgroundProvider,
- *      GlobalPageBackground,
- *    } from '@egen-civitas/esm-styleguide';
+ *  Hors shell (storybook, tests), monter soi-même `<GlobalPageBackground />`
+ *  une fois : il lit le même store.
  *
  *    function Root() {
  *      return (
- *        <PageBackgroundProvider>
- *          <GlobalPageBackground />   // rendu réel de l'arrière-plan (z-0, fixed)
- *          <AppShell />               // reste de l'app, contenu au-dessus
- *        </PageBackgroundProvider>
+ *        <>
+ *          <GlobalPageBackground />   // rendu réel de l'arrière-plan (fixed, derrière le contenu)
+ *          <AppShell />
+ *        </>
  *      );
  *    }
  *
- *  Sans imageSrc déclaré par aucune page, <GlobalPageBackground> retombe
- *  automatiquement sur <AnimatedHomeBackground> (fond WebGL animé).
+ *  Sans imageSrc déclaré par aucune page, <GlobalPageBackground> retombe sur
+ *  <AnimatedHomeBackground> (fond WebGL animé) — sauf avec fallback="none" : c'est
+ *  le réglage du shell, pour que les pages sans fond gardent leur apparence.
  *
  *  2. USAGE DANS UNE PAGE (déclaratif, cas le plus courant)
  *  ----------------------------------------------------------------------
@@ -375,8 +393,8 @@ export function PageBackground({
  *      );
  *    }
  *
- *  <PageBackground> ne rend rien lui-même : il s'enregistre auprès du
- *  Provider au montage et restaure le fond par défaut au démontage — donc
+ *  <PageBackground> ne rend rien lui-même : il s'enregistre auprès du store
+ *  global au montage et restaure le fond par défaut au démontage — donc
  *  UNE SEULE instance active à la fois, celle de la page actuellement
  *  affichée.
  *

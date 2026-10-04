@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-styleguide",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "license": "MPL-2.0",
   "description": "The styleguide for Egen SPA",
   "main": "dist/internal.js",

@@ -9,7 +9,9 @@ import {
   recordToolCall,
   startNewConversation,
   getConversationMemoryState,
+  mergeActiveConversation,
 } from './store';
+import type { StoredConversation, StoredMessage } from './types';
 import { createIndexedDBAdapter, _clearAllData } from './adapters/indexeddb-adapter';
 import { createBackendAdapter } from './adapters/backend-adapter';
 
@@ -99,6 +101,48 @@ describe('conversation memory — cycle de vie complet', () => {
     expect((stored.toolCalls?.[0]?.result?.data as any)?.computedStyle?.allProperties?.color).toBe('red');
   });
 
+  it("le rafraîchissement d'arrière-plan n'efface pas les messages ajoutés pendant qu'il lit la base (course)", async () => {
+    // Scénario réel : juste après la connexion, l'hydratation backend se termine et relit la
+    // conversation dans IndexedDB… pendant que l'utilisateur envoie déjà un message. La lecture
+    // renvoie alors une copie « d'avant » (sans les nouveaux messages) qui ne doit PAS remplacer l'état.
+    const real = createIndexedDBAdapter();
+    let release!: () => void;
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    let refreshReadStarted = false;
+    _configureAdapters(
+      {
+        ...real,
+        getConversation: async (userId, conversationId) => {
+          const snapshot = await real.getConversation(userId, conversationId); // copie prise AVANT les ajouts
+          refreshReadStarted = true;
+          await gate; // la lecture « arrive » après les ajouts de l'utilisateur
+          return snapshot;
+        },
+      },
+      createBackendAdapter(),
+    );
+
+    initConversationMemory();
+    login('user-samuel', 'samuel');
+    await waitFor(() => getConversationMemoryState().status === 'ready');
+    expect(await waitFor(() => refreshReadStarted)).toBe(true);
+
+    await addUserMessage('Question posée pendant le rafraîchissement');
+    await addAssistantMessage('Réponse streamée', 'done');
+    expect(getConversationMemoryState().activeConversation!.messages).toHaveLength(2);
+
+    release(); // le rafraîchissement termine avec sa copie périmée
+    await new Promise((r) => setTimeout(r, 100));
+
+    const messages = getConversationMemoryState().activeConversation!.messages;
+    expect(messages.map((m) => m.content)).toEqual(['Question posée pendant le rafraîchissement', 'Réponse streamée']);
+    // le résumé de la liste suit aussi (pas de compteur périmé)
+    const summary = getConversationMemoryState().conversationSummaries.find((c) => c.id === getConversationMemoryState().activeConversation!.id);
+    expect(summary?.messageCount).toBe(2);
+  });
+
   it("survit à une 'actualisation de page' (reset du store réactif — IndexedDB doit conserver l'historique)", async () => {
     initConversationMemory();
     login('user-samuel', 'samuel');
@@ -175,5 +219,46 @@ describe('conversation memory — cycle de vie complet', () => {
     login('user-samuel', 'samuel');
     await waitFor(() => getConversationMemoryState().status === 'ready');
     expect(getConversationMemoryState().activeConversation?.messages[0].content).toBe('Ne doit pas être perdu');
+  });
+});
+
+describe('mergeActiveConversation', () => {
+  const msg = (id: string, content: string, status: StoredMessage['status'] = 'done'): StoredMessage => ({ id, role: 'user', content, createdAt: '2026-10-05T10:00:00Z', status });
+  const conv = (messages: StoredMessage[], updatedAt = '2026-10-05T10:00:00Z', id = 'c1'): StoredConversation => ({
+    id,
+    userId: 'u',
+    tenantId: null,
+    title: 'T',
+    createdAt: '2026-10-05T09:00:00Z',
+    updatedAt,
+    messages,
+    syncStatus: 'dirty',
+    lastSyncedAt: null,
+  });
+
+  it("garde les messages présents seulement en mémoire (pas encore écrits en base)", () => {
+    const merged = mergeActiveConversation(conv([msg('1', 'a'), msg('2', 'b')]), conv([msg('1', 'a')]));
+    expect(merged!.messages.map((m) => m.id)).toEqual(['1', '2']);
+  });
+
+  it('ajoute les messages rapatriés du backend (présents seulement en base)', () => {
+    const merged = mergeActiveConversation(conv([msg('1', 'a')]), conv([msg('0', 'ancien'), msg('1', 'a')]));
+    expect(merged!.messages.map((m) => m.id)).toEqual(['0', '1']);
+  });
+
+  it("la version en mémoire l'emporte pour un même message (streaming en cours)", () => {
+    const merged = mergeActiveConversation(conv([msg('1', 'texte complet', 'done')]), conv([msg('1', 'tex', 'streaming')]));
+    expect(merged!.messages[0]).toMatchObject({ content: 'texte complet', status: 'done' });
+  });
+
+  it("ne touche pas l'état si l'utilisateur est passé sur une autre conversation", () => {
+    const current = conv([msg('1', 'a')], '2026-10-05T10:00:00Z', 'c2');
+    expect(mergeActiveConversation(current, conv([msg('9', 'z')], '2026-10-05T10:00:00Z', 'c1'))).toBe(current);
+  });
+
+  it('retourne la copie de la base quand rien n\'est actif en mémoire, et rien si les deux sont absents', () => {
+    const stored = conv([msg('1', 'a')]);
+    expect(mergeActiveConversation(null, stored)).toBe(stored);
+    expect(mergeActiveConversation(null, null)).toBeNull();
   });
 });

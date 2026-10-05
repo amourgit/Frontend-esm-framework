@@ -125,18 +125,53 @@ async function loadForUser(userId: string, tenantId: string | null): Promise<voi
   // l'historique local, déjà disponible immédiatement. Une fois terminée,
   // recharge silencieusement si le backend avait quelque chose de plus récent.
   void orchestrator.hydrateFromBackend(userId).then(async () => {
-    const state = conversationMemoryStore.getState();
-    if (state.userId !== userId) return; // l'utilisateur a changé entre-temps, on n'écrase rien
+    if (conversationMemoryStore.getState().userId !== userId) return; // l'utilisateur a changé entre-temps, on n'écrase rien
     const refreshedSummaries = await localAdapter.listConversations(userId);
-    const refreshedActive = state.activeConversation
-      ? await localAdapter.getConversation(userId, state.activeConversation.id)
-      : null;
-    conversationMemoryStore.setState((s) => ({
-      ...s,
-      conversationSummaries: refreshedSummaries,
-      activeConversation: refreshedActive ?? s.activeConversation,
-    }));
+    const activeId = conversationMemoryStore.getState().activeConversation?.id;
+    const refreshedActive = activeId ? await localAdapter.getConversation(userId, activeId) : null;
+
+    // IMPORTANT : l'état est relu DANS le setState, après les lectures asynchrones ci-dessus.
+    // Les mutations (persistActive) mettent l'état à jour AVANT d'écrire en base : la copie lue
+    // dans IndexedDB peut donc être plus ancienne que l'état en mémoire (message envoyé pendant
+    // le rafraîchissement). On fusionne au lieu de remplacer, sinon ces messages disparaissent.
+    conversationMemoryStore.setState((s) => {
+      if (s.userId !== userId) return s;
+      const activeConversation = mergeActiveConversation(s.activeConversation, refreshedActive);
+      return {
+        ...s,
+        activeConversation,
+        conversationSummaries: reconcileSummaries(refreshedSummaries, activeConversation),
+      };
+    });
   });
+}
+
+/**
+ * Fusionne la conversation active en mémoire avec sa copie relue en base après une hydratation.
+ * - la version en mémoire l'emporte pour un même message (ex. message encore en streaming) ;
+ * - les messages présents seulement en mémoire (pas encore écrits en base) sont conservés, à la fin ;
+ * - les messages rapatriés du backend (présents seulement en base) sont ajoutés.
+ * Si l'utilisateur a changé de conversation entre-temps, l'état en mémoire n'est pas touché.
+ *
+ * @internal Exporté pour les tests.
+ */
+export function mergeActiveConversation(current: StoredConversation | null, stored: StoredConversation | null): StoredConversation | null {
+  if (!current) return stored;
+  if (!stored || stored.id !== current.id) return current;
+
+  const currentById = new Map(current.messages.map((m) => [m.id, m]));
+  const storedIds = new Set(stored.messages.map((m) => m.id));
+  const messages = [...stored.messages.map((m) => currentById.get(m.id) ?? m), ...current.messages.filter((m) => !storedIds.has(m.id))];
+  const newer = current.updatedAt >= stored.updatedAt ? current : stored;
+
+  return { ...stored, title: newer.title, updatedAt: newer.updatedAt, syncStatus: newer.syncStatus, messages };
+}
+
+/** Rend la liste des résumés cohérente avec la conversation active (compteur à jour, conversation présente). */
+function reconcileSummaries(summaries: ConversationSummary[], active: StoredConversation | null): ConversationSummary[] {
+  if (!active) return summaries;
+  const activeSummary = summarize(active);
+  return summaries.some((c) => c.id === active.id) ? summaries.map((c) => (c.id === active.id ? activeSummary : c)) : [activeSummary, ...summaries];
 }
 
 /**

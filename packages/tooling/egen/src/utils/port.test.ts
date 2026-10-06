@@ -84,6 +84,18 @@ describe('getAvailablePort', () => {
     await expect(getAvailablePort(8081)).resolves.toBe(8082);
   });
 
+  it('never returns a reserved port, even when it is free (e.g. a backend that is not running yet)', async () => {
+    // Port 8082 est réservé : il ne doit même pas être testé (aucun createServer consommé pour lui).
+    // Port 8083 : IPv4 et IPv6 libres.
+    const ipv4 = createMockServer(true);
+    const ipv6 = createMockServer(true);
+    mockCreateServer.mockReset();
+    mockCreateServer.mockReturnValueOnce(ipv4).mockReturnValueOnce(ipv6);
+
+    await expect(getAvailablePort(8082, [8082])).resolves.toBe(8083);
+    expect(mockCreateServer).toHaveBeenCalledTimes(2);
+  });
+
   it('throws when no port is available up to 65535', async () => {
     // All ports fail
     mockCreateServer.mockImplementation(() => createMockServer(false));

@@ -17,6 +17,21 @@ import {
 
 import type * as commands from './commands';
 
+/**
+ * Port explicite de l'URL du backend (ex. 8082 pour http://localhost:8082), à réserver : les serveurs de
+ * dev des apps sont alloués à partir de `port + 1` et ne doivent JAMAIS prendre le port du backend, même
+ * s'il n'est pas (encore) démarré. Sinon l'import map d'une app dont l'URL est « backend » est réécrite en
+ * chemin relatif par proxyImportmapAndRoutes et l'app est introuvable (404).
+ */
+function backendPorts(backend: string): number[] {
+  try {
+    const port = Number(new URL(backend).port);
+    return Number.isInteger(port) && port > 0 ? [port] : [];
+  } catch {
+    return [];
+  }
+}
+
 const runner = resolve(import.meta.dirname, `runner.js`);
 const root = resolve(import.meta.dirname, '..');
 
@@ -173,7 +188,7 @@ export function buildCli(y: Argv) {
         ...proxyImportmapAndRoutes(
           await mergeImportmapAndRoutes(
             await getImportmapAndRoutes(args.importmap, args.routes, port),
-            await runProject(port, sources, args['use-rspack']),
+            await runProject(port, sources, args['use-rspack'], backendPorts(args.backend)),
             args.backend,
             args.spaPath,
           ),

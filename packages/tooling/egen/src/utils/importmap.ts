@@ -169,6 +169,7 @@ export async function runProject(
   basePort: number,
   sourceDirectoryPatterns: Array<string>,
   useRspack?: boolean,
+  reservedPorts: Array<number> = [],
 ): Promise<{
   importMap: Record<string, string>;
   routes: Record<string, unknown>;
@@ -226,7 +227,7 @@ export async function runProject(
       logWarn(`No "webpack.config.js" found in directory "${sourceDirectory}". Trying to use default config ...`);
 
       // Find next available port
-      const port = await getAvailablePort(nextPortToCheck);
+      const port = await getAvailablePort(nextPortToCheck, reservedPorts);
       nextPortToCheck = port + 1;
 
       devServerReadyPromises.push(
@@ -234,7 +235,7 @@ export async function runProject(
       );
     } else {
       // Find next available port
-      const port = await getAvailablePort(nextPortToCheck);
+      const port = await getAvailablePort(nextPortToCheck, reservedPorts);
       nextPortToCheck = port + 1;
 
       if (hasConfig) {

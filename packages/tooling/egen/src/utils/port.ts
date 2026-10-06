@@ -49,11 +49,17 @@ export function isPortAvailable(port: number): Promise<boolean> {
 /**
  * Finds the next available port starting from the given port.
  * @param startPort The port number to start searching from
+ * @param reservedPorts Ports that must never be returned, even if they are currently free
+ *   (e.g. the port of the backend the dev server proxies to, which may simply not be running yet)
  * @returns A promise that resolves to an available port number
  * @throws Error if no available port is found up to port 65535
  */
-export async function getAvailablePort(startPort: number): Promise<number> {
+export async function getAvailablePort(startPort: number, reservedPorts: Iterable<number> = []): Promise<number> {
+  const reserved = new Set(reservedPorts);
   for (let port = startPort; port <= MAX_PORT; port++) {
+    if (reserved.has(port)) {
+      continue;
+    }
     if (await isPortAvailable(port)) {
       return port;
     }

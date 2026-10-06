@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-ai-memory",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MPL-2.0",
   "description": "Persistance de conversation IA EGEN — historique par utilisateur, stockage local (IndexedDB) synchronisé avec un adaptateur backend interchangeable, sans réécriture au changement de stockage.",
   "main": "dist/index.js",

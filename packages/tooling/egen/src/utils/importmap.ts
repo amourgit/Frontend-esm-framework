@@ -401,12 +401,17 @@ export async function getRoutes(routesPath: string): Promise<RoutesDeclaration> 
  * @param importmapAndRoutes An ImportmapAndRoutes object that holds the import map and routes registry
  * @param backend The URL for the backend
  * @param spaPath The spaPath for this instance
+ * @param localImportKeys Names of the imports served by dev servers started locally (see `runProject`). They are
+ *   never rewritten: their URL already points at the right dev server, even when it listens on the same host and
+ *   port as the backend (the first dev server gets port 8082, which is also the default backend). Rewriting such an
+ *   entry would make the shell request the bundle from the app shell server, which answers with an HTML 404.
  * @returns The same import map declaration but with all imports changed to the appropriate path
  */
 export function proxyImportmapAndRoutes(
   importmapAndRoutes: ImportmapAndRoutesWithWatches,
   backend: string,
   spaPath: string,
+  localImportKeys: Iterable<string> = [],
 ) {
   const { importMap: importMapDecl, routes: routesDecl, watchedRoutesPaths } = importmapAndRoutes;
   if (importMapDecl.type != 'inline') {
@@ -426,7 +431,12 @@ export function proxyImportmapAndRoutes(
   const importmap = JSON.parse(importMapDecl.value);
   const spaPathRegEx = new RegExp('^' + spaPath.replace(/[|\\{}()[\]^$+*?.]/g, '\\$&').replace(/-/g, '\\x2d'));
 
+  const localKeys = new Set(localImportKeys);
+
   Object.keys(importmap.imports).forEach((key) => {
+    if (localKeys.has(key)) {
+      return;
+    }
     const url = new URL(importmap.imports[key], backendUrl);
     if (url.protocol === backendUrl.protocol && url.host === backendUrl.host) {
       importmap.imports[key] = `./${url.pathname.replace(spaPathRegEx, '')}${url.search}${url.hash}`;

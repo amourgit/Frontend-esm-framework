@@ -328,6 +328,46 @@ describe('proxyImportmapAndRoutes', () => {
     expect(map.imports['@egen-civitas/remote']).toBe('./remote.js');
   });
 
+  it('does not rewrite imports served by local dev servers, even when they share the backend host and port', () => {
+    // The default backend is http://localhost:8082, which is also the first port given to a local dev server.
+    const localBackend = 'http://localhost:8082';
+    const input: ImportmapAndRoutesWithWatches = {
+      importMap: {
+        type: 'inline',
+        value: JSON.stringify({
+          imports: {
+            '@egen/esm-tenant-routing-app': 'http://localhost:8082/egen-esm-tenant-routing-app.js',
+            '@egen-civitas/remote': 'http://localhost:8082/egen-civitas/spa/remote.js',
+          },
+        }),
+      },
+      routes: { type: 'inline', value: '{}' },
+      watchedRoutesPaths: {},
+    };
+
+    const result = proxyImportmapAndRoutes(input, localBackend, spaPath, ['@egen/esm-tenant-routing-app']);
+
+    const map = JSON.parse(result.importmap.value);
+    expect(map.imports['@egen/esm-tenant-routing-app']).toBe('http://localhost:8082/egen-esm-tenant-routing-app.js');
+    expect(map.imports['@egen-civitas/remote']).toBe('./remote.js');
+  });
+
+  it('accepts any iterable of local import keys', () => {
+    const localBackend = 'http://localhost:8082';
+    const input: ImportmapAndRoutesWithWatches = {
+      importMap: {
+        type: 'inline',
+        value: JSON.stringify({ imports: { '@egen/local': 'http://localhost:8082/local.js' } }),
+      },
+      routes: { type: 'inline', value: '{}' },
+      watchedRoutesPaths: {},
+    };
+
+    const result = proxyImportmapAndRoutes(input, localBackend, spaPath, new Set(['@egen/local']));
+
+    expect(JSON.parse(result.importmap.value).imports['@egen/local']).toBe('http://localhost:8082/local.js');
+  });
+
   it('handles URLs with search params and hash fragments', () => {
     const input: ImportmapAndRoutesWithWatches = {
       importMap: {

@@ -180,20 +180,21 @@ export function buildCli(y: Argv) {
 
       const sources = deduplicated.length > 0 ? deduplicated : ['.'];
 
+      const importmapAndRoutes = await getImportmapAndRoutes(args.importmap, args.routes, port);
+      // Les ports du backend sont réservés : un serveur de dev d'app ne doit jamais s'y voir allouer.
+      const locallyRun = await runProject(port, sources, args['use-rspack'], backendPorts(args.backend));
+
       runCommand('runDevelop', {
         configUrls: args['config-url'],
         configFiles: args['config-file'],
         ...args,
         port,
         ...proxyImportmapAndRoutes(
-          await mergeImportmapAndRoutes(
-            await getImportmapAndRoutes(args.importmap, args.routes, port),
-            await runProject(port, sources, args['use-rspack'], backendPorts(args.backend)),
-            args.backend,
-            args.spaPath,
-          ),
+          await mergeImportmapAndRoutes(importmapAndRoutes, locallyRun, args.backend, args.spaPath),
           args.backend,
           args.spaPath,
+          // Apps started locally must never be rewritten as if they were served by the backend.
+          Object.keys(locallyRun.importMap),
         ),
       });
     },

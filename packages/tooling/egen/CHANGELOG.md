@@ -1,5 +1,11 @@
 # @egen-civitas/egen
 
+## 2.0.3
+
+### Patch Changes
+
+- f2b6ad6: `egen develop` n'alloue plus jamais à un serveur de dev d'app le port du backend : `getAvailablePort` accepte une liste de ports réservés (`reservedPorts`) transmise par `runProject`.
+
 ## 2.0.2
 
 ### Patch Changes

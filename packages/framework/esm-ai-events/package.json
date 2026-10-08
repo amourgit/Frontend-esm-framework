@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-ai-events",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "license": "MPL-2.0",
   "description": "Système d'événements IA EGEN — bus d'événements typé, observable et extensible.",
   "main": "dist/index.js",
@@ -43,15 +43,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@egen-civitas/esm-ai-config": "^1.0.0",
+    "@egen-civitas/esm-ai-config": "^1.1.0",
     "rxjs": "^7.8.0"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-ai-config": "^1.0.0",
+    "@egen-civitas/esm-ai-config": "^1.1.0",
     "rxjs": "7.x"
   },
   "devDependencies": {
-    "@egen-civitas/esm-ai-config": "^1.0.0",
+    "@egen-civitas/esm-ai-config": "^1.1.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

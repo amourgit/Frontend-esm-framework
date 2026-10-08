@@ -870,7 +870,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-ai-config@npm:^1.0.0, @egen-civitas/esm-ai-config@workspace:packages/framework/esm-ai-config":
+"@egen-civitas/esm-ai-config@npm:^1.0.0, @egen-civitas/esm-ai-config@npm:^1.1.0, @egen-civitas/esm-ai-config@workspace:packages/framework/esm-ai-config":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-ai-config@workspace:packages/framework/esm-ai-config"
   dependencies:
@@ -912,11 +912,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-ai-events@npm:^1.0.0, @egen-civitas/esm-ai-events@workspace:packages/framework/esm-ai-events":
+"@egen-civitas/esm-ai-events@npm:^1.0.0, @egen-civitas/esm-ai-events@npm:^1.1.0, @egen-civitas/esm-ai-events@workspace:packages/framework/esm-ai-events":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-ai-events@workspace:packages/framework/esm-ai-events"
   dependencies:
-    "@egen-civitas/esm-ai-config": "npm:^1.0.0"
+    "@egen-civitas/esm-ai-config": "npm:^1.1.0"
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.21"
     "@vitest/coverage-v8": "npm:^4.1.2"
@@ -926,7 +926,7 @@ __metadata:
     rxjs: "npm:^7.8.0"
     vitest: "npm:^4.1.2"
   peerDependencies:
-    "@egen-civitas/esm-ai-config": ^1.0.0
+    "@egen-civitas/esm-ai-config": ^1.1.0
     rxjs: 7.x
   languageName: unknown
   linkType: soft
@@ -953,9 +953,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-ai-framework@workspace:packages/framework/esm-ai-framework"
   dependencies:
-    "@egen-civitas/esm-ai-config": "npm:^1.0.0"
+    "@egen-civitas/esm-ai-config": "npm:^1.1.0"
     "@egen-civitas/esm-ai-context": "npm:^1.0.0"
-    "@egen-civitas/esm-ai-events": "npm:^1.0.0"
+    "@egen-civitas/esm-ai-events": "npm:^1.1.0"
     "@egen-civitas/esm-ai-extensions": "npm:^1.0.0"
     "@egen-civitas/esm-ai-tools": "npm:^1.0.2"
     "@egen-civitas/esm-api": "npm:^1.1.1"

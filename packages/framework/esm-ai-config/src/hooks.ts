@@ -13,7 +13,7 @@ import type { AIConfig, AIConfigStore } from './types.js';
  *
  * @example
  * ```tsx
- * const { enabled, provider } = useAIConfig();
+ * const { enabled, backend } = useAIConfig();
  * if (!enabled) return null;
  * ```
  */
@@ -48,7 +48,7 @@ export function useAIConfigStore(): AIConfigStore {
  * @example
  * ```tsx
  * const enabled = useAIConfigValue('enabled');
- * const model = useAIConfigValue('provider.model'); // Pas de chemin imbriqué — utiliser useAIConfig()
+ * const model = useAIConfigValue('enabled'); // Pas de chemin imbriqué — utiliser useAIConfig()
  * ```
  */
 export function useAIEnabled(): boolean {

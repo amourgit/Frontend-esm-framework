@@ -32,14 +32,17 @@ Ce repo contient **3 familles de packages** :
 | `@egen-civitas/esm-expression-evaluator` | Évaluateur d'expressions |
 | **`@egen-civitas/esm-framework`** | **Façade publique — point d'entrée unique** |
 
-### `packages/ai/` (dans `packages/framework/`) — Layer AI
+### `packages/framework/esm-ai-*` — Layer AI (interface frontend uniquement)
+
+Le moteur IA (LLM, prompt, mémoire, STT/TTS) vit dans le **backend**. Le frontend ne fait que :
+afficher, capturer/lire l'audio, et exécuter les *tools frontend* demandés par le backend (navigation, lecture d'écran…).
 
 | Package | Rôle |
 |---|---|
-| `@egen-civitas/esm-ai-config` | Configuration AI |
+| `@egen-civitas/esm-ai-config` | Adresse/transport du backend IA, sécurité d'exécution des tools |
 | `@egen-civitas/esm-ai-events` | Événements AI |
-| `@egen-civitas/esm-ai-context` | Contexte de conversation |
-| `@egen-civitas/esm-ai-tools` | Outils natifs (inspect-element, describe_screen...) |
+| `@egen-civitas/esm-ai-context` | Snapshot du contexte EGEN (utilisateur, tenant, navigation) envoyé au backend |
+| `@egen-civitas/esm-ai-tools` | Tools frontend exécutables à la demande du backend (navigate, inspect-element, describe_screen...) |
 | `@egen-civitas/esm-ai-extensions` | Bridge AI ↔ extensions |
 | **`@egen-civitas/esm-ai-framework`** | **Façade publique AI** |
 

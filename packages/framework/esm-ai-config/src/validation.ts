@@ -10,38 +10,12 @@ export interface ValidationResult {
   warnings: string[];
 }
 
-const VALID_PROVIDERS = ['gemini', 'claude', 'openai', 'ollama', 'custom'] as const;
 const VALID_LOG_LEVELS = ['error', 'warn', 'info', 'debug'] as const;
 
 /** Valide la configuration AI complète et retourne les erreurs/avertissements */
 export function validateAIConfig(config: AIConfig): ValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
-
-  // ── Provider ────────────────────────────────────────────────────────────────
-  if (!VALID_PROVIDERS.includes(config.provider.provider as any)) {
-    errors.push(
-      `provider.provider: valeur invalide "${config.provider.provider}". Valeurs acceptées : ${VALID_PROVIDERS.join(
-        ', ',
-      )}`,
-    );
-  }
-
-  if (!config.provider.model || config.provider.model.trim() === '') {
-    errors.push('provider.model: ne peut pas être vide');
-  }
-
-  if (config.provider.temperature < 0 || config.provider.temperature > 2) {
-    errors.push(`provider.temperature: doit être entre 0.0 et 2.0 (reçu: ${config.provider.temperature})`);
-  }
-
-  if (config.provider.topP < 0 || config.provider.topP > 1) {
-    errors.push(`provider.topP: doit être entre 0.0 et 1.0 (reçu: ${config.provider.topP})`);
-  }
-
-  if (config.provider.maxTokens < 1 || config.provider.maxTokens > 1000000) {
-    errors.push(`provider.maxTokens: doit être entre 1 et 1 000 000 (reçu: ${config.provider.maxTokens})`);
-  }
 
   // ── Backend ─────────────────────────────────────────────────────────────────
   if (!config.backend.baseUrl || config.backend.baseUrl.trim() === '') {
@@ -69,15 +43,6 @@ export function validateAIConfig(config: AIConfig): ValidationResult {
 
   if (config.context.serializationDepth < 1 || config.context.serializationDepth > 10) {
     errors.push(`context.serializationDepth: doit être entre 1 et 10 (reçu: ${config.context.serializationDepth})`);
-  }
-
-  // ── Memory ──────────────────────────────────────────────────────────────────
-  if (config.memory.enabled && config.memory.maxMessages < 1) {
-    errors.push(`memory.maxMessages: doit être ≥ 1 quand la mémoire est activée (reçu: ${config.memory.maxMessages})`);
-  }
-
-  if (config.memory.storageKey.trim() === '') {
-    errors.push('memory.storageKey: ne peut pas être vide');
   }
 
   // ── Security ────────────────────────────────────────────────────────────────

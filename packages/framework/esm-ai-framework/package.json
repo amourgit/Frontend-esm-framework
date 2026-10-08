@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-ai-framework",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "license": "MPL-2.0",
   "description": "Couche 1 IA EGEN — orchestrateur central, API publique unifiée, initialisation du système IA.",
   "main": "dist/index.js",
@@ -48,9 +48,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@egen-civitas/esm-ai-config": "^1.0.0",
+    "@egen-civitas/esm-ai-config": "^1.1.0",
     "@egen-civitas/esm-ai-context": "^1.0.0",
-    "@egen-civitas/esm-ai-events": "^1.0.0",
+    "@egen-civitas/esm-ai-events": "^1.1.0",
     "@egen-civitas/esm-ai-extensions": "^1.0.0",
     "@egen-civitas/esm-ai-tools": "^1.0.2",
     "@egen-civitas/esm-api": "^1.1.1",
@@ -64,9 +64,9 @@
     "rxjs": "7.x"
   },
   "devDependencies": {
-    "@egen-civitas/esm-ai-config": "^1.0.0",
+    "@egen-civitas/esm-ai-config": "^1.1.0",
     "@egen-civitas/esm-ai-context": "^1.0.0",
-    "@egen-civitas/esm-ai-events": "^1.0.0",
+    "@egen-civitas/esm-ai-events": "^1.1.0",
     "@egen-civitas/esm-ai-extensions": "^1.0.0",
     "@egen-civitas/esm-ai-tools": "^1.0.2",
     "@egen-civitas/esm-api": "^1.1.1",

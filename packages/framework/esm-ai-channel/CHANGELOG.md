@@ -1,8 +1,8 @@
-# @egen-civitas/esm-ai-config
+# @egen-civitas/esm-ai-channel
 
-## 1.2.0
+## 2.0.0
 
-### Minor Changes
+### Major Changes
 
 - cd1ccd2: Canal temps réel frontend ↔ backend IA (nouveau paquet `esm-ai-channel`, WebSocket `egen-ai.v1`) : provisionnement du catalogue de tools frontend au backend (`tools.sync` / `tools.delta`), exécution des `tool.call` du backend, synchronisation du contexte, conversation texte/voix et TTS.
 
@@ -10,13 +10,8 @@
   - `esm-ai-tools` : `getToolDescriptors()` / `AIToolDescriptor`.
   - `esm-ai-framework` : démarre/arrête le canal, ré-exporte l'API du canal (`useAIChannelState`, `getConversationClient`, `onToolActivity`…).
 
-## 1.1.0
+### Patch Changes
 
-### Minor Changes
-
-- e44019d: Le moteur IA est entièrement côté backend ; le frontend n'est plus qu'une interface.
-
-  - Suppression du paquet `@egen-civitas/esm-ai-memory` (la mémoire de conversation est gérée par le backend).
-  - `esm-ai-config` : suppression de `provider` (modèle, température, clé API, mode direct) et de `memory` ; `backend.stream` remplace `provider.stream`.
-  - `esm-ai-events` : suppression des évènements `MEMORY_*`.
-  - `esm-ai-framework` : ne ré-exporte plus `AIProviderConfig` ni `AIMemoryConfig`.
+- Updated dependencies [cd1ccd2]
+  - @egen-civitas/esm-ai-config@1.2.0
+  - @egen-civitas/esm-ai-tools@1.1.0

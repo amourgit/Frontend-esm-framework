@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-ai-tools",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "license": "MPL-2.0",
   "description": "Registry de tools IA EGEN — tools natifs, pipeline de validation, vérification des permissions, exécution contrôlée.",
   "main": "dist/index.js",
@@ -43,7 +43,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@egen-civitas/esm-ai-config": "^1.0.0",
+    "@egen-civitas/esm-ai-config": "^1.2.0",
     "@egen-civitas/esm-ai-context": "^1.0.0",
     "@egen-civitas/esm-ai-events": "^1.0.0",
     "@egen-civitas/esm-api": "^1.1.1",
@@ -59,7 +59,7 @@
     "swr": "2.x"
   },
   "devDependencies": {
-    "@egen-civitas/esm-ai-config": "^1.0.0",
+    "@egen-civitas/esm-ai-config": "^1.2.0",
     "@egen-civitas/esm-ai-context": "^1.0.0",
     "@egen-civitas/esm-ai-events": "^1.0.0",
     "@egen-civitas/esm-api": "^1.1.1",

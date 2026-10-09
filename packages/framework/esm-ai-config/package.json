@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-ai-config",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "license": "MPL-2.0",
   "description": "Configuration typée, validée et observable pour la couche IA EGEN. Zéro valeur codée en dur.",
   "main": "dist/index.js",

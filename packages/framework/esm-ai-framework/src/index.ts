@@ -41,6 +41,40 @@ export {
   type PartialAIConfig,
 } from '@egen-civitas/esm-ai-config';
 
+// ─── Canal temps réel frontend ↔ backend IA ──────────────────────────────────
+export {
+  startAIChannel,
+  stopAIChannel,
+  getAIChannel,
+  getConversationClient,
+  onToolActivity,
+  getChannelStore,
+  useAIChannelState,
+  useAIChannelReady,
+  createToolsProvisioning,
+  createToolDispatcher,
+  createContextSync,
+  createConversationClient,
+  resolveChannelUrl,
+  AIChannel,
+  ChannelNotReadyError,
+  ChannelClosedError,
+  ChannelTimeoutError,
+  ChannelRemoteError,
+  PROTOCOL_VERSION,
+  type ChannelModule,
+  type ChannelState,
+  type ChannelStatus,
+  type ConversationClient,
+  type ConversationResult,
+  type ConversationStreamHandlers,
+  type HistoryMessagePayload,
+  type ToolActivity,
+  type ToolActivityStatus,
+  type ToolDescriptorPayload,
+  type StartAIChannelOptions,
+} from '@egen-civitas/esm-ai-channel';
+
 // ─── Événements ───────────────────────────────────────────────────────────────
 export {
   dispatchAIEvent,

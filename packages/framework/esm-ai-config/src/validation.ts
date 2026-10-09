@@ -17,20 +17,24 @@ export function validateAIConfig(config: AIConfig): ValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
 
-  // ── Backend ─────────────────────────────────────────────────────────────────
-  if (!config.backend.baseUrl || config.backend.baseUrl.trim() === '') {
-    errors.push('backend.baseUrl: ne peut pas être vide');
+  // ── Backend (canal temps réel) ───────────────────────────────────────────────
+  if (!config.backend.channelUrl || config.backend.channelUrl.trim() === '') {
+    errors.push('backend.channelUrl: ne peut pas être vide');
+  }
+
+  if (config.backend.heartbeatMs < 1000) {
+    errors.push(`backend.heartbeatMs: doit être ≥ 1000ms (reçu: ${config.backend.heartbeatMs})`);
+  }
+
+  if (config.backend.reconnectMinMs < 50 || config.backend.reconnectMaxMs < config.backend.reconnectMinMs) {
+    errors.push(
+      `backend.reconnectMinMs/reconnectMaxMs: invalides (min=${config.backend.reconnectMinMs}, max=${config.backend.reconnectMaxMs})`,
+    );
   }
 
   if (config.backend.requestTimeoutMs < 1000) {
     warnings.push(
       `backend.requestTimeoutMs: valeur très basse (${config.backend.requestTimeoutMs}ms). Recommandé : ≥ 5000ms`,
-    );
-  }
-
-  if (config.backend.maxRetries > 10) {
-    warnings.push(
-      `backend.maxRetries: valeur élevée (${config.backend.maxRetries}). Peut ralentir l'UX en cas d'erreur.`,
     );
   }
 

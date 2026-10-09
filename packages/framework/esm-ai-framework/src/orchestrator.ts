@@ -8,14 +8,17 @@
 //    1. Valider la configuration
 //    2. Enregistrer les tools natifs
 //    3. Initialiser la réactivité du contexte
-//    4. Activer le logger de debug si nécessaire
-//    5. Émettre l'événement SESSION_STARTED
+//    4. Ouvrir le canal temps réel vers le backend IA (provisionnement des tools,
+//       appels de tools, contexte, conversation)
+//    5. Activer le logger de debug si nécessaire
+//    6. Émettre l'événement SESSION_STARTED
 // =============================================================================
 
 import { getAIConfig, subscribeToAIConfig } from '@egen-civitas/esm-ai-config';
 import { initAIContextReactivity, aiContextStore } from '@egen-civitas/esm-ai-context';
 import { dispatchAIEvent, AI_EVENTS, enableAIEventDebugLogger } from '@egen-civitas/esm-ai-events';
 import { registerTool, hasTool, NATIVE_TOOLS } from '@egen-civitas/esm-ai-tools';
+import { startAIChannel, stopAIChannel, type StartAIChannelOptions } from '@egen-civitas/esm-ai-channel';
 
 let _initialized = false;
 let _cleanupContext: (() => void) | null = null;
@@ -28,6 +31,8 @@ let _cleanupConfigSubscription: (() => void) | null = null;
 export interface AIFrameworkInitOptions {
   /** Forcer la réinitialisation même si déjà initialisé */
   force?: boolean;
+  /** Options du canal temps réel (fabrique de WebSocket pour les tests, modules additionnels…) */
+  channel?: StartAIChannelOptions;
 }
 
 /**
@@ -65,12 +70,16 @@ export function initAIFramework(options: AIFrameworkInitOptions = {}): () => voi
   // ── 2. Initialiser la réactivité du contexte ──────────────────────────────────
   _cleanupContext = initAIContextReactivity();
 
-  // ── 3. Activer le logger debug si configuré ───────────────────────────────────
+  // ── 3. Ouvrir le canal temps réel vers le backend IA ─────────────────────────
+  // Les tools et le contexte sont déjà prêts : le premier `tools.sync` est complet.
+  startAIChannel(options.channel);
+
+  // ── 4. Activer le logger debug si configuré ───────────────────────────────────
   if (config.observability.debug) {
     _debugLoggerCleanup = enableAIEventDebugLogger();
   }
 
-  // ── 4. Se réabonner si la config change (debug on/off à chaud) ───────────────
+  // ── 5. Se réabonner si la config change (debug on/off à chaud) ───────────────
   // Un seul abonnement vivant à la fois — cleanupAIFramework() le désinscrit.
   _cleanupConfigSubscription = subscribeToAIConfig((newConfig) => {
     if (newConfig.observability.debug && !_debugLoggerCleanup) {
@@ -81,7 +90,7 @@ export function initAIFramework(options: AIFrameworkInitOptions = {}): () => voi
     }
   });
 
-  // ── 5. Émettre l'événement de démarrage ──────────────────────────────────────
+  // ── 6. Émettre l'événement de démarrage ──────────────────────────────────────
   dispatchAIEvent(AI_EVENTS.SESSION_STARTED, {
     sessionId: `egen-ai-session-${Date.now()}`,
   });
@@ -92,6 +101,7 @@ export function initAIFramework(options: AIFrameworkInitOptions = {}): () => voi
 }
 
 export function cleanupAIFramework(): void {
+  stopAIChannel();
   _cleanupContext?.();
   _cleanupContext = null;
   _debugLoggerCleanup?.();

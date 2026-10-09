@@ -17,24 +17,21 @@
 
 export interface AIBackendConfig {
   /**
-   * URL du backend IA.
-   * Le backend reçoit le contexte sérialisé + le message utilisateur et
-   * détient tout le moteur (LLM, prompt, mémoire). Il peut demander au
-   * frontend d'exécuter des tools frontend (navigation, lecture d'écran…).
+   * URL du canal temps réel (WebSocket) vers le backend IA.
+   * Accepte `ws(s)://…`, `http(s)://…` (converti en ws(s)) ou un chemin relatif
+   * (`/api/ai/ws`, résolu sur l'origine courante). `${egenBase}` est substitué.
+   * C'est le SEUL point de contact avec le backend IA : conversation, audio,
+   * provisionnement des tools frontend, appels de tools et contexte y transitent.
    */
-  baseUrl: string;
-  /** Endpoint pour les completions (chat) */
-  chatEndpoint: string;
-  /** Endpoint pour les completions en streaming */
-  streamEndpoint: string;
-  /** Utiliser le streaming SSE (`streamEndpoint`) plutôt que `chatEndpoint` */
-  stream: boolean;
-  /** Timeout par requête en millisecondes */
+  channelUrl: string;
+  /** Intervalle de heartbeat applicatif (ms) — une coupure silencieuse est détectée après 2,5 intervalles */
+  heartbeatMs: number;
+  /** Délai minimal de reconnexion (ms), croissance exponentielle avec jitter */
+  reconnectMinMs: number;
+  /** Délai maximal de reconnexion (ms) */
+  reconnectMaxMs: number;
+  /** Timeout des requêtes sur le canal (ms) */
   requestTimeoutMs: number;
-  /** Nombre maximum de tentatives en cas d'erreur réseau */
-  maxRetries: number;
-  /** Délai entre les tentatives (ms) */
-  retryDelayMs: number;
 }
 
 export interface AIContextConfig {

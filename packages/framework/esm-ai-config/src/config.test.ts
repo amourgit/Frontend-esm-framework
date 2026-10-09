@@ -26,9 +26,9 @@ describe('buildDefaultConfig', () => {
     expect(config).toHaveProperty('observability');
   });
 
-  it('le stream est activé par défaut', () => {
+  it('le heartbeat du canal est défini par défaut', () => {
     const config = buildDefaultConfig();
-    expect(config.backend.stream).toBe(true);
+    expect(config.backend.heartbeatMs).toBe(20000);
   });
 
   it('le système IA est désactivé par défaut (sécurité)', () => {
@@ -45,13 +45,13 @@ describe('buildDefaultConfig', () => {
     else process.env.EGEN_AI_ENABLED = original;
   });
 
-  it('lit EGEN_AI_BACKEND_URL depuis process.env', () => {
-    const original = process.env.EGEN_AI_BACKEND_URL;
-    process.env.EGEN_AI_BACKEND_URL = 'http://localhost:9999/api/ai';
+  it('lit EGEN_AI_CHANNEL_URL depuis process.env', () => {
+    const original = process.env.EGEN_AI_CHANNEL_URL;
+    process.env.EGEN_AI_CHANNEL_URL = 'ws://localhost:9999/api/ai/ws';
     const config = buildDefaultConfig();
-    expect(config.backend.baseUrl).toBe('http://localhost:9999/api/ai');
-    if (original === undefined) delete process.env.EGEN_AI_BACKEND_URL;
-    else process.env.EGEN_AI_BACKEND_URL = original;
+    expect(config.backend.channelUrl).toBe('ws://localhost:9999/api/ai/ws');
+    if (original === undefined) delete process.env.EGEN_AI_CHANNEL_URL;
+    else process.env.EGEN_AI_CHANNEL_URL = original;
   });
 
   it("retourne la valeur par défaut si la variable d'env numérique est invalide", () => {
@@ -76,12 +76,12 @@ describe('validateAIConfig', () => {
     expect(result.errors).toHaveLength(0);
   });
 
-  it('rejette un backend.baseUrl vide', () => {
+  it('rejette un backend.channelUrl vide', () => {
     const config = makeValidConfig();
-    config.backend.baseUrl = '';
+    config.backend.channelUrl = '';
     const result = validateAIConfig(config);
     expect(result.valid).toBe(false);
-    expect(result.errors.some((e) => e.includes('baseUrl'))).toBe(true);
+    expect(result.errors.some((e) => e.includes('channelUrl'))).toBe(true);
   });
 
   it('rejette une profondeur de sérialisation invalide', () => {
@@ -113,37 +113,37 @@ describe('validateAIConfig', () => {
 describe('mergeConfig', () => {
   it('fusionne un override partiel sans écraser les autres valeurs', () => {
     const base = makeValidConfig();
-    const result = mergeConfig(base, { backend: { baseUrl: 'http://x/api/ai' } });
-    expect(result.backend.baseUrl).toBe('http://x/api/ai');
+    const result = mergeConfig(base, { backend: { channelUrl: 'ws://x/api/ai/ws' } });
+    expect(result.backend.channelUrl).toBe('ws://x/api/ai/ws');
     // Les autres propriétés sont conservées
-    expect(result.backend.chatEndpoint).toBe(base.backend.chatEndpoint);
+    expect(result.backend.heartbeatMs).toBe(base.backend.heartbeatMs);
     expect(result.enabled).toBe(base.enabled);
   });
 
   it('fusionne des overrides imbriqués profonds', () => {
     const base = makeValidConfig();
     const result = mergeConfig(base, {
-      backend: { stream: false },
+      backend: { heartbeatMs: 5000 },
       security: { auditLog: true },
     });
-    expect(result.backend.stream).toBe(false);
-    expect(result.backend.baseUrl).toBe(base.backend.baseUrl);
+    expect(result.backend.heartbeatMs).toBe(5000);
+    expect(result.backend.channelUrl).toBe(base.backend.channelUrl);
     expect(result.security.auditLog).toBe(true);
     expect(result.security.toolTimeoutMs).toBe(base.security.toolTimeoutMs);
   });
 
   it("ignore les valeurs undefined dans l'override", () => {
     const base = makeValidConfig();
-    const original = base.backend.baseUrl;
-    const result = mergeConfig(base, { backend: { baseUrl: undefined } });
-    expect(result.backend.baseUrl).toBe(original);
+    const original = base.backend.channelUrl;
+    const result = mergeConfig(base, { backend: { channelUrl: undefined } });
+    expect(result.backend.channelUrl).toBe(original);
   });
 
   it("ne mute pas l'objet de base", () => {
     const base = makeValidConfig();
-    const originalUrl = base.backend.baseUrl;
-    mergeConfig(base, { backend: { baseUrl: 'http://new' } });
-    expect(base.backend.baseUrl).toBe(originalUrl);
+    const originalUrl = base.backend.channelUrl;
+    mergeConfig(base, { backend: { channelUrl: 'ws://new' } });
+    expect(base.backend.channelUrl).toBe(originalUrl);
   });
 });
 
@@ -162,9 +162,9 @@ describe('aiConfigStore', () => {
   });
 
   it('overrideAIConfig applique un override valide', () => {
-    const success = overrideAIConfig({ backend: { baseUrl: 'http://x/api/ai' } });
+    const success = overrideAIConfig({ backend: { channelUrl: 'ws://x/api/ai/ws' } });
     expect(success).toBe(true);
-    expect(getAIConfig().backend.baseUrl).toBe('http://x/api/ai');
+    expect(getAIConfig().backend.channelUrl).toBe('ws://x/api/ai/ws');
   });
 
   it('overrideAIConfig rejette un override invalide', () => {
@@ -183,10 +183,10 @@ describe('aiConfigStore', () => {
   });
 
   it('resetAIConfig remet la configuration par défaut', () => {
-    overrideAIConfig({ backend: { baseUrl: 'http://custom/api/ai' } });
+    overrideAIConfig({ backend: { channelUrl: 'ws://custom/api/ai/ws' } });
     resetAIConfig();
     const config = getAIConfig();
-    expect(config.backend.baseUrl).toBe(buildDefaultConfig().backend.baseUrl);
+    expect(config.backend.channelUrl).toBe(buildDefaultConfig().backend.channelUrl);
     expect(aiConfigStore.getState().source).toBe('default');
   });
 

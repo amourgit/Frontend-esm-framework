@@ -9,22 +9,12 @@ export const isAIFrameworkInitialized = jest.fn ? jest.fn(() => false) : () => f
 export const getAIConfig = () => ({
   enabled: false,
   schemaVersion: '1.0.0',
-  provider: {
-    provider: 'gemini',
-    model: 'gemini-2.5-pro',
-    temperature: 0.7,
-    topP: 0.95,
-    topK: 40,
-    maxTokens: 8192,
-    stream: false,
-  },
   backend: {
-    baseUrl: '/api/ai',
-    chatEndpoint: '/chat',
-    streamEndpoint: '/chat/stream',
+    channelUrl: '/api/ai/ws',
+    heartbeatMs: 20000,
+    reconnectMinMs: 500,
+    reconnectMaxMs: 15000,
     requestTimeoutMs: 30000,
-    maxRetries: 3,
-    retryDelayMs: 1000,
   },
   context: {
     maxContextSize: 100000,
@@ -34,7 +24,6 @@ export const getAIConfig = () => ({
     includeFeatureFlags: true,
     serializationDepth: 4,
   },
-  memory: { enabled: false, maxMessages: 50, storageKey: 'egen:ai:memory', persist: false },
   security: { requiredPrivileges: [], validateToolsClient: true, toolTimeoutMs: 30000, auditLog: false },
   observability: { debug: false, eventsEnabled: false, analyticsEnabled: false, logLevel: 'warn' as const },
 });
@@ -50,6 +39,24 @@ export const useExecuteTool = () => ({
   lastError: null,
 });
 export const useAvailableToolsSchema = () => [];
+
+export const startAIChannel = () => null;
+export const stopAIChannel = () => {};
+export const getAIChannel = () => null;
+export const getConversationClient = () => null;
+export const onToolActivity = () => () => {};
+export const getChannelStore = () => ({
+  getState: () => ({ status: 'disabled', sessionId: null, attempt: 0, lastError: null, lastReadyAt: null }),
+  setState: () => {},
+  subscribe: () => () => {},
+});
+export const useAIChannelState = () => getChannelStore().getState();
+export const useAIChannelReady = () => false;
+export class ChannelNotReadyError extends Error {}
+export class ChannelClosedError extends Error {}
+export class ChannelTimeoutError extends Error {}
+export class ChannelRemoteError extends Error {}
+export const PROTOCOL_VERSION = 1;
 
 export const AI_EVENTS = {} as any;
 export const dispatchAIEvent = () => {};

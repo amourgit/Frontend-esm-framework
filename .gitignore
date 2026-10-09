@@ -91,3 +91,8 @@ package-lock.json
 /playwright-report/
 /playwright/.cache/
 e2e/storageState.json
+
+# Artefacts générés de esm-ai-framework (mock.ts est la source)
+packages/framework/esm-ai-framework/mock.js
+packages/framework/esm-ai-framework/mock.d.ts
+packages/framework/esm-ai-framework/mock.d.ts.map

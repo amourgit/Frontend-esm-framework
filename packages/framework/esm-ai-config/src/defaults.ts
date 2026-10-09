@@ -53,13 +53,11 @@ export function buildDefaultConfig(): AIConfig {
     schemaVersion: '1.0.0',
 
     backend: {
-      baseUrl: readEnv('EGEN_AI_BACKEND_URL', '${egenBase}/api/ai'),
-      stream: readEnvBool('EGEN_AI_STREAM', true),
-      chatEndpoint: readEnv('EGEN_AI_CHAT_ENDPOINT', '/chat'),
-      streamEndpoint: readEnv('EGEN_AI_STREAM_ENDPOINT', '/chat/stream'),
+      channelUrl: readEnv('EGEN_AI_CHANNEL_URL', '${egenBase}/api/ai/ws'),
+      heartbeatMs: readEnvNumber('EGEN_AI_HEARTBEAT_MS', 20000),
+      reconnectMinMs: readEnvNumber('EGEN_AI_RECONNECT_MIN_MS', 500),
+      reconnectMaxMs: readEnvNumber('EGEN_AI_RECONNECT_MAX_MS', 15000),
       requestTimeoutMs: readEnvNumber('EGEN_AI_REQUEST_TIMEOUT', 30000),
-      maxRetries: readEnvNumber('EGEN_AI_MAX_RETRIES', 3),
-      retryDelayMs: readEnvNumber('EGEN_AI_RETRY_DELAY', 1000),
     },
 
     context: {

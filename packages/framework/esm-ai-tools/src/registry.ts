@@ -148,38 +148,74 @@ export function getAllCapabilities(): AICapability[] {
   return Array.from(_capabilities.values());
 }
 
+/** Descripteur sérialisable d'un tool frontend — ce que le backend IA connaît de lui. */
+export interface AIToolDescriptor {
+  /** Identifiant d'appel (celui à passer dans `tool.call`) */
+  id: string;
+  name: string;
+  description: string;
+  /** JSON Schema standard des paramètres */
+  parameters: {
+    type: 'object';
+    properties: Record<string, unknown>;
+    required: string[];
+  };
+  requiredPrivileges: string[];
+  moduleName: string;
+  metadata?: Record<string, unknown>;
+}
+
+function isToolAllowed(tool: AIToolDefinition, privileges: Set<string>): boolean {
+  if (!tool.requiredPrivileges?.length) return true;
+  return tool.requiredPrivileges.every((p) => privileges.has(p));
+}
+
+function toJsonSchemaParameters(tool: AIToolDefinition): AIToolDescriptor['parameters'] {
+  return {
+    type: 'object',
+    // `tool.parameters` est le format INTERNE EGEN : chaque propriété y porte un
+    // champ `required: boolean` en plus de `type`/`description`/`enum`/`default`.
+    // Ce booléen n'existe dans AUCUN JSON Schema standard — seul un tableau
+    // `required: string[]` au niveau de l'objet parent y est valide. On ne garde
+    // donc de chaque propriété que les clés d'un JSON Schema standard.
+    properties: Object.fromEntries(
+      Object.entries(tool.parameters).map(([key, { required: _required, ...schema }]) => [key, schema]),
+    ),
+    required: Object.entries(tool.parameters)
+      .filter(([, p]) => p.required)
+      .map(([k]) => k),
+  };
+}
+
 /**
- * Génère la représentation des tools pour le prompt système du LLM.
- * Filtrée selon les privilèges de l'utilisateur.
+ * Catalogue des tools frontend à provisionner au backend IA, filtré selon les
+ * privilèges de l'utilisateur courant (le backend ne voit que ce que
+ * l'utilisateur a le droit d'exécuter — l'exécuteur revérifie de toute façon).
+ */
+export function getToolDescriptors(userPrivileges: string[]): AIToolDescriptor[] {
+  const privileges = new Set(userPrivileges);
+  return getAllTools()
+    .filter((tool) => isToolAllowed(tool, privileges))
+    .map((tool) => ({
+      id: tool.id,
+      name: tool.name,
+      description: tool.description,
+      parameters: toJsonSchemaParameters(tool),
+      requiredPrivileges: tool.requiredPrivileges ?? [],
+      moduleName: tool.moduleName ?? 'unknown',
+      ...(tool.metadata ? { metadata: tool.metadata } : {}),
+    }));
+}
+
+/**
+ * Représentation compacte des tools (nom d'appel = id), filtrée selon les privilèges.
  */
 export function getToolsSchemaForLLM(userPrivileges: string[]): object[] {
-  const userPrivsSet = new Set(userPrivileges);
-  return getAllTools()
-    .filter((tool) => {
-      if (!tool.requiredPrivileges?.length) return true;
-      return tool.requiredPrivileges.every((p) => userPrivsSet.has(p));
-    })
-    .map((tool) => ({
-      name: tool.id,
-      description: tool.description,
-      parameters: {
-        type: 'object',
-        // `tool.parameters` est le format INTERNE EGEN : chaque propriété y
-        // porte un champ `required: boolean` en plus de `type`/`description`/
-        // `enum`/`default`. Ce booléen n'existe dans AUCUN JSON Schema standard
-        // consommé par un LLM (OpenAI, Gemini, ...) — seul un tableau
-        // `required: string[]` au niveau de l'objet parent y est valide (voir
-        // ci-dessous). L'exposer tel quel dans le schéma public produirait un
-        // schéma non conforme pour tout consommateur, donc on ne garde de
-        // chaque propriété que les clés d'un JSON Schema standard.
-        properties: Object.fromEntries(
-          Object.entries(tool.parameters).map(([key, { required: _required, ...schema }]) => [key, schema]),
-        ),
-        required: Object.entries(tool.parameters)
-          .filter(([, p]) => p.required)
-          .map(([k]) => k),
-      },
-    }));
+  return getToolDescriptors(userPrivileges).map(({ id, description, parameters }) => ({
+    name: id,
+    description,
+    parameters,
+  }));
 }
 
 /** @internal — tests uniquement */

@@ -69,6 +69,8 @@ export interface ClientPayloadMap {
   'conversation.audio': { base64Audio: string; mimeType: string; mode?: string; transcriptHint?: string };
   /** Interrompt le flux en cours */
   'conversation.cancel': { streamId: string };
+  /** Efface la conversation courante côté backend (nouvelle conversation) */
+  'conversation.reset': Record<string, never>;
   /** Demande l'historique de la conversation courante */
   'conversation.history.request': Record<string, never>;
   /** Demande de synthèse vocale — réponse `speech.audio` */

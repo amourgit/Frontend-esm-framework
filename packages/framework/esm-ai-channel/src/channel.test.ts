@@ -226,6 +226,15 @@ describe('envoi, requêtes et flux', () => {
     expect(last().of('conversation.cancel')[0].payload.streamId).toBe(last().of('conversation.message')[0].id);
   });
 
+  it('conversation : reset est livré (même hors ligne, à la reconnexion)', async () => {
+    const ch = makeChannel();
+    const conv = createConversationClient();
+    ch.use(conv);
+    conv.reset();
+    await connect(ch);
+    expect(last().of('conversation.reset')).toHaveLength(1);
+  });
+
   it('conversation : historique demandé au backend', async () => {
     const ch = makeChannel();
     const conv = createConversationClient();

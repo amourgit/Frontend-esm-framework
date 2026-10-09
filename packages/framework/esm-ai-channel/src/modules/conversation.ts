@@ -37,7 +37,9 @@ export interface ConversationClient extends ChannelModule {
   /** Synthèse vocale complète (PCM base64) ; null si le backend n'en fournit pas. */
   requestSpeech(text: string, voice?: string): Promise<string | null>;
   /** Historique de la conversation courante tenu par le backend. */
-  fetchHistory(): Promise<HistoryMessagePayload[]>;
+  fetchHistory(timeoutMs?: number): Promise<HistoryMessagePayload[]>;
+  /** Efface la conversation côté backend (livré à la reconnexion si le canal est coupé). */
+  reset(): void;
   /** Historique poussé spontanément par le backend (reprise de session, autre onglet…). */
   onHistory(listener: (messages: HistoryMessagePayload[]) => void): () => void;
 }
@@ -117,12 +119,16 @@ export function createConversationClient(): ConversationClient {
       });
       return env.payload.audioBase64 ?? null;
     },
-    async fetchHistory() {
+    async fetchHistory(timeoutMs) {
       const env = await requireChannel().request<'conversation.history.request', ServerPayloadMap['conversation.history']>(
         'conversation.history.request',
         {},
+        { timeoutMs },
       );
       return env.payload.messages ?? [];
+    },
+    reset() {
+      requireChannel().send('conversation.reset', {}, { reliable: true });
     },
     onHistory(listener) {
       historyListeners.add(listener);

@@ -57,6 +57,7 @@ Le client envoie `ping` toutes les `heartbeatMs` ; le serveur répond `pong`. Sa
 | `conversation.message` | `{ text, mode? }` — ouvre un flux (`replyTo` = id de ce message) |
 | `conversation.audio` | `{ base64Audio, mimeType, mode?, transcriptHint? }` — idem |
 | `conversation.cancel` | `{ streamId }` |
+| `conversation.reset` | `{}` — efface la conversation côté backend |
 | `conversation.history.request` | `{}` → `conversation.history` |
 | `speech.request` | `{ text, voice? }` → `speech.audio` |
 

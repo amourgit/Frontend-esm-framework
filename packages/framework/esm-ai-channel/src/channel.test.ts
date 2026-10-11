@@ -203,6 +203,32 @@ describe('envoi, requêtes et flux', () => {
     expect(deltas).toEqual(['Bon', 'jour']);
   });
 
+  it('conversation : relaie les fragments audio dans l\'ordre, au fil de l\'eau', async () => {
+    const ch = makeChannel();
+    const conv = createConversationClient();
+    ch.use(conv);
+    await connect(ch);
+    const got: Array<[number, boolean | undefined]> = [];
+    let done = false;
+    const p = conv
+      .sendText('lis-moi ça', { onAudioChunk: (c) => got.push([c.seq, c.final]) })
+      .then((r) => {
+        done = true;
+        return r;
+      });
+    const id = last().of('conversation.message')[0].id;
+    last().push('conversation.audio_chunk', { base64: 'AAAA', seq: 0, sampleRate: 24000 }, id);
+    last().push('conversation.delta', { text: 'Bonjour' }, id);
+    last().push('conversation.audio_chunk', { base64: 'BBBB', seq: 1 }, id);
+    await tick();
+    expect(got).toEqual([[0, undefined], [1, undefined]]); // reçus AVANT la fin de la réponse
+    expect(done).toBe(false);
+    last().push('conversation.audio_chunk', { base64: 'CCCC', seq: 2, final: true }, id);
+    last().push('conversation.end', {}, id);
+    expect((await p).text).toBe('Bonjour');
+    expect(got.map((g) => g[0])).toEqual([0, 1, 2]);
+  });
+
   it('conversation : erreur distante → rejet explicite', async () => {
     const ch = makeChannel();
     const conv = createConversationClient();

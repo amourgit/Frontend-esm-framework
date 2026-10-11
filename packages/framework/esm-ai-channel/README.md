@@ -72,7 +72,7 @@ Le client envoie `ping` toutes les `heartbeatMs` ; le serveur répond `pong`. Sa
 | `tool.cancel` | `{ callId }` |
 | `conversation.transcript` | `{ text }` (replyTo = flux) |
 | `conversation.delta` | `{ text }` (replyTo = flux) |
-| `conversation.audio_chunk` | `{ base64, seq, sampleRate?, final? }` — PCM 16 bits LE mono (replyTo = flux) |
+| `conversation.audio_chunk` | `{ base64, seq, sampleRate?, final? }` — PCM 16 bits LE mono (replyTo = flux). **Lu en direct** : chaque fragment est planifié bout à bout dès réception, sans attendre la fin de la réponse. Envoyer le premier fragment au plus tard avec les premiers `conversation.delta`, `seq` croissant, `final: true` sur le dernier. |
 | `conversation.end` / `conversation.error` | `{ text? }` / `{ message, code? }` — terminent le flux |
 | `conversation.history` | `{ messages[] }` — réponse à la requête, ou poussé spontanément |
 | `speech.audio` | `{ audioBase64 \| null }` (replyTo = requête) |

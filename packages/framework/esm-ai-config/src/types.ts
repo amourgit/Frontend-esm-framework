@@ -35,14 +35,12 @@ export interface AIBackendConfig {
 }
 
 export interface AIContextConfig {
-  /** Taille maximale du contexte sérialisé envoyé au LLM (en caractères) */
+  /** Taille maximale du contexte sérialisé envoyé au backend IA (en caractères) */
   maxContextSize: number;
   /** Inclure les extensions actives dans le contexte */
   includeActiveExtensions: boolean;
   /** Inclure la navigation (route courante, breadcrumb) dans le contexte */
   includeNavigation: boolean;
-  /** Inclure la configuration du module courant dans le contexte */
-  includeModuleConfig: boolean;
   /** Inclure les feature flags dans le contexte */
   includeFeatureFlags: boolean;
   /** Profondeur maximale de sérialisation des objets imbriqués */
@@ -56,19 +54,11 @@ export interface AISecurityConfig {
   validateToolsClient: boolean;
   /** Timeout d'exécution des tools en millisecondes */
   toolTimeoutMs: number;
-  /** Activer le logging des actions IA */
-  auditLog: boolean;
 }
 
 export interface AIObservabilityConfig {
   /** Activer le mode debug (logs verbeux) */
   debug: boolean;
-  /** Activer le système d'événements IA */
-  eventsEnabled: boolean;
-  /** Activer les analytics IA */
-  analyticsEnabled: boolean;
-  /** Niveau de log ('error' | 'warn' | 'info' | 'debug') */
-  logLevel: 'error' | 'warn' | 'info' | 'debug';
 }
 
 /**

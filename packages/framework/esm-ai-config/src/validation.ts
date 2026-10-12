@@ -10,8 +10,6 @@ export interface ValidationResult {
   warnings: string[];
 }
 
-const VALID_LOG_LEVELS = ['error', 'warn', 'info', 'debug'] as const;
-
 /** Valide la configuration AI complète et retourne les erreurs/avertissements */
 export function validateAIConfig(config: AIConfig): ValidationResult {
   const errors: string[] = [];
@@ -53,15 +51,6 @@ export function validateAIConfig(config: AIConfig): ValidationResult {
   if (config.security.toolTimeoutMs < 500) {
     warnings.push(
       `security.toolTimeoutMs: valeur très basse (${config.security.toolTimeoutMs}ms). Des tools légitimes pourraient timeout.`,
-    );
-  }
-
-  // ── Observability ───────────────────────────────────────────────────────────
-  if (!VALID_LOG_LEVELS.includes(config.observability.logLevel as any)) {
-    errors.push(
-      `observability.logLevel: valeur invalide "${
-        config.observability.logLevel
-      }". Valeurs acceptées : ${VALID_LOG_LEVELS.join(', ')}`,
     );
   }
 

@@ -50,8 +50,8 @@ Le client envoie `ping` toutes les `heartbeatMs` ; le serveur répond `pong`. Sa
 
 | Type | Payload |
 |---|---|
-| `tools.sync` | `{ revision, tools: ToolDescriptor[] }` — catalogue complet, filtré par les privilèges de l'utilisateur |
-| `tools.delta` | `{ revision, upsert: ToolDescriptor[], removed: string[] }` |
+| `tools.sync` | `{ revision, tools: ToolDescriptor[], capabilities: CapabilityDescriptor[] }` — catalogue complet, filtré par les privilèges de l'utilisateur |
+| `tools.delta` | `{ revision, upsert, removed, capabilitiesUpsert, capabilitiesRemoved }` |
 | `tool.result` | `{ callId, success, data?, error?, durationMs }` |
 | `context.update` | `{ revision, context, truncated, size }` |
 | `conversation.message` | `{ text, mode? }` — ouvre un flux (`replyTo` = id de ce message) |
@@ -62,6 +62,7 @@ Le client envoie `ping` toutes les `heartbeatMs` ; le serveur répond `pong`. Sa
 | `speech.request` | `{ text, voice? }` → `speech.audio` |
 
 `ToolDescriptor` : `{ id, name, description, parameters (JSON Schema objet), requiredPrivileges[], moduleName, metadata? }`. `id` est la valeur à passer dans `tool.call.tool`.
+`CapabilityDescriptor` : `{ id, name, description, requiredPrivileges[], parameters?, metadata? }` — ce que le frontend sait faire sans tool exécutable associé (information pour le planificateur de l'agent, non appelable).
 
 ### Serveur → client
 

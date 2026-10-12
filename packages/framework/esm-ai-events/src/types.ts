@@ -8,10 +8,6 @@
 // ─── Noms d'événements ────────────────────────────────────────────────────────
 
 export const AI_EVENTS = {
-  // Configuration
-  CONFIG_CHANGED: 'egen:ai:config:changed',
-  CONFIG_ERROR: 'egen:ai:config:error',
-
   // Contexte
   CONTEXT_BUILT: 'egen:ai:context:built',
   CONTEXT_PROVIDER_REGISTERED: 'egen:ai:context:provider:registered',
@@ -37,18 +33,11 @@ export const AI_EVENTS = {
   MESSAGE_SENT: 'egen:ai:message:sent',
   MESSAGE_RECEIVED: 'egen:ai:message:received',
   MESSAGE_ERROR: 'egen:ai:message:error',
-  MESSAGE_STREAMING: 'egen:ai:message:streaming',
-  MESSAGE_STREAM_END: 'egen:ai:message:stream:end',
 
   // Session
   SESSION_STARTED: 'egen:ai:session:started',
   SESSION_ENDED: 'egen:ai:session:ended',
   SESSION_CLEARED: 'egen:ai:session:cleared',
-
-  // Pipeline
-  PIPELINE_STARTED: 'egen:ai:pipeline:started',
-  PIPELINE_COMPLETED: 'egen:ai:pipeline:completed',
-  PIPELINE_FAILED: 'egen:ai:pipeline:failed',
 
 } as const;
 
@@ -61,12 +50,6 @@ export interface AIEventPayload {
   timestamp: string;
   /** Identifiant unique de l'événement */
   eventId: string;
-}
-
-export interface AIConfigChangedPayload extends AIEventPayload {
-  previousEnabled: boolean;
-  newEnabled: boolean;
-  source: string;
 }
 
 export interface AIContextBuiltPayload extends AIEventPayload {
@@ -121,24 +104,9 @@ export interface AIMessagePayload extends AIEventPayload {
   contentLength?: number;
 }
 
-export interface AIMessageStreamingPayload extends AIEventPayload {
-  sessionId: string;
-  messageId: string;
-  chunk: string;
-  chunkIndex: number;
-}
-
-export interface AIPipelinePayload extends AIEventPayload {
-  pipelineId: string;
-  toolId?: string;
-  step?: string;
-}
-
 // ─── Map événement → payload ──────────────────────────────────────────────────
 
 export interface AIEventPayloadMap {
-  [AI_EVENTS.CONFIG_CHANGED]: AIConfigChangedPayload;
-  [AI_EVENTS.CONFIG_ERROR]: AIEventPayload & { errors: string[] };
   [AI_EVENTS.CONTEXT_BUILT]: AIContextBuiltPayload;
   [AI_EVENTS.CONTEXT_PROVIDER_REGISTERED]: AIContextProviderPayload;
   [AI_EVENTS.CONTEXT_PROVIDER_REMOVED]: AIContextProviderPayload;
@@ -157,14 +125,9 @@ export interface AIEventPayloadMap {
   [AI_EVENTS.MESSAGE_SENT]: AIMessagePayload;
   [AI_EVENTS.MESSAGE_RECEIVED]: AIMessagePayload;
   [AI_EVENTS.MESSAGE_ERROR]: AIMessagePayload & { error: string };
-  [AI_EVENTS.MESSAGE_STREAMING]: AIMessageStreamingPayload;
-  [AI_EVENTS.MESSAGE_STREAM_END]: AIMessagePayload;
   [AI_EVENTS.SESSION_STARTED]: AIEventPayload & { sessionId: string };
-  [AI_EVENTS.SESSION_ENDED]: AIEventPayload & { sessionId: string; messageCount: number };
+  [AI_EVENTS.SESSION_ENDED]: AIEventPayload & { sessionId: string };
   [AI_EVENTS.SESSION_CLEARED]: AIEventPayload;
-  [AI_EVENTS.PIPELINE_STARTED]: AIPipelinePayload;
-  [AI_EVENTS.PIPELINE_COMPLETED]: AIPipelinePayload & { durationMs: number };
-  [AI_EVENTS.PIPELINE_FAILED]: AIPipelinePayload & { error: string };
 }
 
 // ─── Listener ─────────────────────────────────────────────────────────────────

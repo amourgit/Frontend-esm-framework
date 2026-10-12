@@ -119,7 +119,8 @@ export {
   registerCapability,
   removeCapability,
   getAllCapabilities,
-  getToolsSchemaForLLM,
+  getToolDescriptors,
+  getCapabilityDescriptors,
   executeTool,
   validateToolArgs,
   checkToolPermissions,
@@ -129,6 +130,8 @@ export {
   getAllRoutes,
   getRoutesCatalogForLLM,
   type AIToolDefinition,
+  type AIToolDescriptor,
+  type AICapabilityDescriptor,
   type AIToolParam,
   type AIToolResult,
   type AIToolRequest,
@@ -161,9 +164,7 @@ export { defineAIModule, type AIModuleDefinition } from '@egen-civitas/esm-ai-ex
 // ─── React hooks ──────────────────────────────────────────────────────────────
 export {
   useAIContext,
-  useAIContextJson,
   useExecuteTool,
-  useAvailableToolsSchema,
   useAIActionable,
   useAIObservable,
   type UseExecuteToolResult,

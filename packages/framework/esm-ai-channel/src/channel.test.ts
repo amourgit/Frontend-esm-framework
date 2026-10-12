@@ -146,6 +146,16 @@ describe('poignée de main et état', () => {
   });
 });
 
+describe('arrêt', () => {
+  it("un canal arrêté n'est pas redémarrable (ses modules sont détachés) : erreur explicite", async () => {
+    const ch = makeChannel();
+    await connect(ch);
+    ch.stop();
+    expect(ch.state.getState().status).toBe('closed');
+    expect(() => ch.start()).toThrow(/nouvelle instance/);
+  });
+});
+
 describe('envoi, requêtes et flux', () => {
   it('send hors ligne → ChannelNotReadyError ; reliable → livré à la reconnexion', async () => {
     const ch = makeChannel();
@@ -284,11 +294,13 @@ describe('provisionnement des tools', () => {
 
   it('tools.sync à la connexion, tools.delta sur changement, resync à la demande', async () => {
     let tools = [descriptor('navigate')];
+    let capabilities: any[] = [{ id: 'grades', name: 'Notes', description: 'd', requiredPrivileges: [] }];
     let notify: () => void = () => undefined;
     const ch = makeChannel();
     ch.use(
       createToolsProvisioning({
         getDescriptors: () => tools,
+        getCapabilities: () => capabilities,
         getPrivileges: () => [],
         subscribePrivileges: () => () => undefined,
         subscribeRegistry: (l) => {
@@ -300,6 +312,7 @@ describe('provisionnement des tools', () => {
     );
     await connect(ch);
     expect(last().of('tools.sync')[0].payload.tools.map((t: any) => t.id)).toEqual(['navigate']);
+    expect(last().of('tools.sync')[0].payload.capabilities.map((c: any) => c.id)).toEqual(['grades']);
 
     tools = [descriptor('navigate'), descriptor('describe_screen')];
     notify();
@@ -315,8 +328,19 @@ describe('provisionnement des tools', () => {
     await tick(20);
     expect(last().of('tools.delta')).toHaveLength(2); // rien de neuf → rien envoyé
 
+    capabilities = [];
+    notify();
+    await tick(20);
+    expect(last().of('tools.delta')[2].payload).toMatchObject({
+      upsert: [],
+      removed: [],
+      capabilitiesUpsert: [],
+      capabilitiesRemoved: ['grades'],
+    });
+
     last().push('tools.request_sync');
     expect(last().of('tools.sync')).toHaveLength(2);
+    expect(last().of('tools.sync')[1].payload.capabilities).toEqual([]);
     expect(last().of('tools.sync')[1].payload.tools.map((t: any) => t.id)).toEqual(['describe_screen']);
   });
 
@@ -325,6 +349,7 @@ describe('provisionnement des tools', () => {
     ch.use(
       createToolsProvisioning({
         getDescriptors: () => [descriptor('navigate')],
+        getCapabilities: () => [],
         getPrivileges: () => [],
         subscribePrivileges: () => () => undefined,
         subscribeRegistry: () => () => undefined,

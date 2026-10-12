@@ -38,6 +38,16 @@ export interface ToolDescriptorPayload {
   metadata?: Record<string, unknown>;
 }
 
+/** Capacité déclarative : ce que le frontend « sait faire » sans qu'un tool exécutable y soit rattaché. */
+export interface CapabilityDescriptorPayload {
+  id: string;
+  name: string;
+  description: string;
+  requiredPrivileges: string[];
+  parameters?: ToolDescriptorPayload['parameters'];
+  metadata?: Record<string, unknown>;
+}
+
 // ─── Client → Serveur ────────────────────────────────────────────────────────
 
 export interface ClientPayloadMap {
@@ -49,10 +59,16 @@ export interface ClientPayloadMap {
     capabilities: string[];
     resumeSessionId?: string;
   };
-  /** Catalogue COMPLET des tools frontend autorisés pour l'utilisateur courant */
-  'tools.sync': { revision: number; tools: ToolDescriptorPayload[] };
+  /** Catalogue COMPLET (tools exécutables + capacités déclaratives) autorisé pour l'utilisateur courant */
+  'tools.sync': { revision: number; tools: ToolDescriptorPayload[]; capabilities: CapabilityDescriptorPayload[] };
   /** Modifications incrémentales du catalogue */
-  'tools.delta': { revision: number; upsert: ToolDescriptorPayload[]; removed: string[] };
+  'tools.delta': {
+    revision: number;
+    upsert: ToolDescriptorPayload[];
+    removed: string[];
+    capabilitiesUpsert: CapabilityDescriptorPayload[];
+    capabilitiesRemoved: string[];
+  };
   /** Résultat d'un `tool.call` */
   'tool.result': {
     callId: string;

@@ -3,7 +3,7 @@
  */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { overrideAIConfig, resetAIConfig } from '@egen-civitas/esm-ai-config';
-import { _clearToolRegistry, registerTool, hasTool, getTool, overrideTool } from '@egen-civitas/esm-ai-tools';
+import { _clearToolRegistry, hasTool, getTool, overrideTool } from '@egen-civitas/esm-ai-tools';
 import { _clearProviderRegistry } from '@egen-civitas/esm-ai-context';
 import { initAIFramework, cleanupAIFramework, isAIFrameworkInitialized } from './orchestrator';
 

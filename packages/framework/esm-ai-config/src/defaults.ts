@@ -64,7 +64,6 @@ export function buildDefaultConfig(): AIConfig {
       maxContextSize: readEnvNumber('EGEN_AI_CONTEXT_MAX_SIZE', 100000),
       includeActiveExtensions: readEnvBool('EGEN_AI_CONTEXT_EXTENSIONS', true),
       includeNavigation: readEnvBool('EGEN_AI_CONTEXT_NAVIGATION', true),
-      includeModuleConfig: readEnvBool('EGEN_AI_CONTEXT_CONFIG', false),
       includeFeatureFlags: readEnvBool('EGEN_AI_CONTEXT_FLAGS', true),
       serializationDepth: readEnvNumber('EGEN_AI_CONTEXT_DEPTH', 4),
     },
@@ -73,14 +72,10 @@ export function buildDefaultConfig(): AIConfig {
       requiredPrivileges: readEnvArray('EGEN_AI_REQUIRED_PRIVILEGES', []),
       validateToolsClient: readEnvBool('EGEN_AI_VALIDATE_TOOLS', true),
       toolTimeoutMs: readEnvNumber('EGEN_AI_TOOL_TIMEOUT', 30000),
-      auditLog: readEnvBool('EGEN_AI_AUDIT_LOG', false),
     },
 
     observability: {
       debug: readEnvBool('EGEN_AI_DEBUG', false),
-      eventsEnabled: readEnvBool('EGEN_AI_EVENTS_ENABLED', true),
-      analyticsEnabled: readEnvBool('EGEN_AI_ANALYTICS_ENABLED', false),
-      logLevel: readEnv('EGEN_AI_LOG_LEVEL', 'warn') as AIConfig['observability']['logLevel'],
     },
   };
 }

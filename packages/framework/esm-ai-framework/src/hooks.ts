@@ -2,12 +2,10 @@
 //  @egen-civitas/esm-ai-framework — React hooks pour les consommateurs (Layer 2)
 // =============================================================================
 
-import { useSyncExternalStore, useCallback, useEffect, useRef } from 'react';
+import { useSyncExternalStore, useCallback, useEffect, useRef, useState } from 'react';
 import type { RefObject } from 'react';
-import { useAIConfig, useAIEnabled } from '@egen-civitas/esm-ai-config';
-import { aiContextStore, getAIContextJson } from '@egen-civitas/esm-ai-context';
-import { getAllTools, executeTool, getToolsSchemaForLLM, registerUIAction, registerObservable } from '@egen-civitas/esm-ai-tools';
-import { sessionStore } from '@egen-civitas/esm-api';
+import { aiContextStore } from '@egen-civitas/esm-ai-context';
+import { executeTool, registerUIAction, registerObservable } from '@egen-civitas/esm-ai-tools';
 import type { AIToolRequest, AIToolResult, AIUIActionDefinition, AIObservableDefinition } from '@egen-civitas/esm-ai-tools';
 import type { AIContext } from '@egen-civitas/esm-ai-context';
 
@@ -25,13 +23,6 @@ export function useAIContext(): AIContext | null {
     () => aiContextStore.getState().context,
     () => null,
   );
-}
-
-/**
- * Hook React pour le contexte IA sérialisé en JSON (pour l'envoi au backend).
- */
-export function useAIContextJson(): string {
-  return useSyncExternalStore(aiContextStore.subscribe, getAIContextJson, () => '{}');
 }
 
 // ─── useExecuteTool ───────────────────────────────────────────────────────────
@@ -54,7 +45,7 @@ export interface UseExecuteToolResult {
  */
 export function useExecuteTool(): UseExecuteToolResult {
   const executingRef = useRef(false);
-  const [state, setState] = useSyncExternalStoreShim<{
+  const [state, setState] = useState<{
     executing: boolean;
     lastResult: AIToolResult | null;
     lastError: string | null;
@@ -91,27 +82,6 @@ export function useExecuteTool(): UseExecuteToolResult {
   );
 
   return { execute, ...state };
-}
-
-// ─── useAvailableTools ────────────────────────────────────────────────────────
-
-/**
- * Hook retournant la liste des tools disponibles pour l'utilisateur courant.
- * Filtré selon les privilèges de la session.
- */
-export function useAvailableToolsSchema(): object[] {
-  const sessionState = useSyncExternalStore(
-    sessionStore.subscribe,
-    () => sessionStore.getState(),
-    () => sessionStore.getState(),
-  );
-
-  const privileges =
-    sessionState.loaded && sessionState.session?.user
-      ? sessionState.session.user.privileges?.map((p) => p.display) ?? []
-      : [];
-
-  return getToolsSchemaForLLM(privileges);
 }
 
 // ─── useAIActionable ──────────────────────────────────────────────────────────
@@ -193,27 +163,3 @@ export function useAIObservable<T extends HTMLElement>(def: AIObservableDefiniti
 
 // ─── Shim helper ─────────────────────────────────────────────────────────────
 
-/** Mini useState-like avec getter pour useSyncExternalStore */
-function useSyncExternalStoreShim<T>(initial: T): [T, (updater: T | ((prev: T) => T)) => void] {
-  const storeRef = useRef<{ value: T; listeners: Set<() => void> }>({
-    value: initial,
-    listeners: new Set(),
-  });
-
-  const setState = useCallback((updater: T | ((prev: T) => T)) => {
-    const next = typeof updater === 'function' ? (updater as (p: T) => T)(storeRef.current.value) : updater;
-    storeRef.current.value = next;
-    storeRef.current.listeners.forEach((l) => l());
-  }, []);
-
-  const value = useSyncExternalStore(
-    useCallback((listener) => {
-      storeRef.current.listeners.add(listener);
-      return () => storeRef.current.listeners.delete(listener);
-    }, []),
-    () => storeRef.current.value,
-    () => initial,
-  );
-
-  return [value, setState];
-}

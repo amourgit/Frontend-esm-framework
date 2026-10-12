@@ -6,7 +6,7 @@
 // =============================================================================
 
 import { dispatchAIEvent, AI_EVENTS } from '@egen-civitas/esm-ai-events';
-import type { AIToolDefinition, AIToolDecorator, AIToolRegistryEntry, AICapability } from './types.js';
+import type { AIToolDefinition, AIToolDecorator, AIToolRegistryEntry, AICapability, AIToolParam } from './types.js';
 
 const _tools = new Map<string, AIToolRegistryEntry>();
 const _capabilities = new Map<string, AICapability>();
@@ -170,7 +170,7 @@ function isToolAllowed(tool: AIToolDefinition, privileges: Set<string>): boolean
   return tool.requiredPrivileges.every((p) => privileges.has(p));
 }
 
-function toJsonSchemaParameters(tool: AIToolDefinition): AIToolDescriptor['parameters'] {
+function toJsonSchemaParameters(tool: { parameters: Record<string, AIToolParam> }): AIToolDescriptor['parameters'] {
   return {
     type: 'object',
     // `tool.parameters` est le format INTERNE EGEN : chaque propriété y porte un
@@ -207,15 +207,29 @@ export function getToolDescriptors(userPrivileges: string[]): AIToolDescriptor[]
     }));
 }
 
-/**
- * Représentation compacte des tools (nom d'appel = id), filtrée selon les privilèges.
- */
-export function getToolsSchemaForLLM(userPrivileges: string[]): object[] {
-  return getToolDescriptors(userPrivileges).map(({ id, description, parameters }) => ({
-    name: id,
-    description,
-    parameters,
-  }));
+/** Descripteur sérialisable d'une capacité déclarative (ce que le frontend « sait faire », sans tool associé). */
+export interface AICapabilityDescriptor {
+  id: string;
+  name: string;
+  description: string;
+  requiredPrivileges: string[];
+  parameters?: AIToolDescriptor['parameters'];
+  metadata?: Record<string, unknown>;
+}
+
+/** Capacités déclaratives à provisionner au backend IA, filtrées selon les privilèges de l'utilisateur. */
+export function getCapabilityDescriptors(userPrivileges: string[]): AICapabilityDescriptor[] {
+  const privileges = new Set(userPrivileges);
+  return getAllCapabilities()
+    .filter((cap) => !cap.requiredPrivileges?.length || cap.requiredPrivileges.every((p) => privileges.has(p)))
+    .map((cap) => ({
+      id: cap.id,
+      name: cap.name,
+      description: cap.description,
+      requiredPrivileges: cap.requiredPrivileges ?? [],
+      ...(cap.parameters ? { parameters: toJsonSchemaParameters({ parameters: cap.parameters }) } : {}),
+      ...(cap.metadata ? { metadata: cap.metadata } : {}),
+    }));
 }
 
 /** @internal — tests uniquement */

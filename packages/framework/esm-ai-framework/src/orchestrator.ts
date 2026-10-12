@@ -15,7 +15,7 @@
 // =============================================================================
 
 import { getAIConfig, subscribeToAIConfig } from '@egen-civitas/esm-ai-config';
-import { initAIContextReactivity, aiContextStore } from '@egen-civitas/esm-ai-context';
+import { initAIContextReactivity } from '@egen-civitas/esm-ai-context';
 import { dispatchAIEvent, AI_EVENTS, enableAIEventDebugLogger } from '@egen-civitas/esm-ai-events';
 import { registerTool, hasTool, NATIVE_TOOLS } from '@egen-civitas/esm-ai-tools';
 import { startAIChannel, stopAIChannel, type StartAIChannelOptions } from '@egen-civitas/esm-ai-channel';
@@ -27,6 +27,7 @@ let _debugLoggerCleanup: (() => void) | null = null;
 // avant ce correctif, un nouvel abonnement était créé à chaque `force: true`
 // sans jamais désabonner le précédent (fuite à chaque hot-reload/remount).
 let _cleanupConfigSubscription: (() => void) | null = null;
+let _sessionId: string | null = null;
 
 export interface AIFrameworkInitOptions {
   /** Forcer la réinitialisation même si déjà initialisé */
@@ -91,9 +92,8 @@ export function initAIFramework(options: AIFrameworkInitOptions = {}): () => voi
   });
 
   // ── 6. Émettre l'événement de démarrage ──────────────────────────────────────
-  dispatchAIEvent(AI_EVENTS.SESSION_STARTED, {
-    sessionId: `egen-ai-session-${Date.now()}`,
-  });
+  _sessionId = `egen-ai-session-${Date.now()}`;
+  dispatchAIEvent(AI_EVENTS.SESSION_STARTED, { sessionId: _sessionId });
 
   _initialized = true;
 
@@ -102,6 +102,10 @@ export function initAIFramework(options: AIFrameworkInitOptions = {}): () => voi
 
 export function cleanupAIFramework(): void {
   stopAIChannel();
+  if (_sessionId) {
+    dispatchAIEvent(AI_EVENTS.SESSION_ENDED, { sessionId: _sessionId });
+    _sessionId = null;
+  }
   _cleanupContext?.();
   _cleanupContext = null;
   _debugLoggerCleanup?.();

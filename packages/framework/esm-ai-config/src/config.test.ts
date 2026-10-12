@@ -1,7 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildDefaultConfig } from './defaults';
 import { validateAIConfig, mergeConfig } from './validation';
 import { aiConfigStore, overrideAIConfig, resetAIConfig, getAIConfig } from './store';
@@ -98,12 +98,12 @@ describe('validateAIConfig', () => {
     expect(result.warnings.some((w) => w.includes('requestTimeoutMs'))).toBe(true);
   });
 
-  it('rejette un logLevel invalide', () => {
+  it('rejette un heartbeat trop court', () => {
     const config = makeValidConfig();
-    (config.observability as any).logLevel = 'verbose';
+    config.backend.heartbeatMs = 100;
     const result = validateAIConfig(config);
     expect(result.valid).toBe(false);
-    expect(result.errors.some((e) => e.includes('logLevel'))).toBe(true);
+    expect(result.errors.some((e) => e.includes('heartbeatMs'))).toBe(true);
   });
 
 });
@@ -124,11 +124,11 @@ describe('mergeConfig', () => {
     const base = makeValidConfig();
     const result = mergeConfig(base, {
       backend: { heartbeatMs: 5000 },
-      security: { auditLog: true },
+      security: { validateToolsClient: false },
     });
     expect(result.backend.heartbeatMs).toBe(5000);
     expect(result.backend.channelUrl).toBe(base.backend.channelUrl);
-    expect(result.security.auditLog).toBe(true);
+    expect(result.security.validateToolsClient).toBe(false);
     expect(result.security.toolTimeoutMs).toBe(base.security.toolTimeoutMs);
   });
 

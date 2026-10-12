@@ -3,7 +3,7 @@
 //  Pattern identique à useFeatureFlag() du framework.
 // =============================================================================
 
-import { useSyncExternalStore, useCallback } from 'react';
+import { useSyncExternalStore } from 'react';
 import { aiConfigStore } from './store.js';
 import type { AIConfig, AIConfigStore } from './types.js';
 

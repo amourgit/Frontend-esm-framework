@@ -31,14 +31,12 @@ export const getAIConfig = () => ({
 export const useAIEnabled = () => false;
 export const useAIConfig = getAIConfig;
 export const useAIContext = () => null;
-export const useAIContextJson = () => '{}';
 export const useExecuteTool = () => ({
   execute: async () => ({ success: false, error: 'mock', durationMs: 0 }),
   executing: false,
   lastResult: null,
   lastError: null,
 });
-export const useAvailableToolsSchema = () => [];
 
 export const startAIChannel = () => null;
 export const stopAIChannel = () => {};
@@ -71,7 +69,8 @@ export const removeTool = () => {};
 export const executeTool = async () => ({ success: false, error: 'mock', durationMs: 0 });
 export const getAllTools = () => [];
 export const hasTool = () => false;
-export const getToolsSchemaForLLM = () => [];
+export const getToolDescriptors = () => [];
+export const getCapabilityDescriptors = () => [];
 
 export const registerCapability = () => {};
 export const removeCapability = () => {};

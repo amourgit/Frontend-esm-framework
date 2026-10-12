@@ -61,12 +61,12 @@ export interface AIToolExecutionContext {
 
 // ─── Définition d'un tool ─────────────────────────────────────────────────────
 
-export interface AIToolDefinition<TArgs extends Record<string, unknown> = Record<string, unknown>, TResult = unknown> {
+export interface AIToolDefinition<TResult = unknown> {
   /** Identifiant unique du tool (snake_case recommandé) */
   id: string;
-  /** Nom lisible pour le LLM */
+  /** Nom lisible (affiché à l'utilisateur et transmis au backend IA) */
   name: string;
-  /** Description précise de ce que fait le tool (utilisée dans le prompt système) */
+  /** Description précise de ce que fait le tool (transmise au backend IA pour qu'il sache quand l'appeler) */
   description: string;
   /** Schéma de paramètres (JSON Schema simplifié) */
   parameters: Record<string, AIToolParam>;
@@ -84,7 +84,7 @@ export interface AIToolDefinition<TArgs extends Record<string, unknown> = Record
   metadata?: Record<string, unknown>;
 }
 
-// ─── Capacité déclarative (pour le LLM) ──────────────────────────────────────
+// ─── Capacité déclarative (transmise au backend IA) ──────────────────────────────────────
 
 export interface AICapability {
   id: string;

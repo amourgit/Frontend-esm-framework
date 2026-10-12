@@ -147,6 +147,7 @@ export class AIChannel {
   private outbox: Array<{ data: string; expiresAt: number }> = [];
   private welcomeTimer: ReturnType<typeof setTimeout> | null = null;
   private started = false;
+  private disposed = false;
   readonly clientId: string;
 
   constructor(private readonly opts: AIChannelOptions) {
@@ -173,6 +174,9 @@ export class AIChannel {
 
   start(): void {
     if (this.started) return;
+    if (this.disposed) {
+      throw new Error('[EGEN AI Channel] Canal arrêté : créer une nouvelle instance (startAIChannel) pour se reconnecter.');
+    }
     this.started = true;
     this.transport.start();
   }
@@ -180,6 +184,7 @@ export class AIChannel {
   stop(): void {
     if (!this.started) return;
     this.started = false;
+    this.disposed = true;
     for (const detach of this.modules.values()) detach();
     this.modules.clear();
     this.transport.stop();

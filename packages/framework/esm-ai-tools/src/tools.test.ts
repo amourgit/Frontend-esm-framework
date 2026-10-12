@@ -10,13 +10,13 @@ import {
   getTool,
   getAllTools,
   hasTool,
-  getToolsSchemaForLLM,
+  getToolDescriptors,
+  getCapabilityDescriptors,
+  registerCapability,
   _clearToolRegistry,
   validateToolArgs,
   checkToolPermissions,
   type AIToolDefinition,
-  type AIToolResult,
-  type AIToolExecutionContext,
 } from '.';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -218,28 +218,28 @@ describe('Tool Registry', () => {
     });
   });
 
-  describe('getToolsSchemaForLLM', () => {
+  describe('getToolDescriptors (catalogue provisionné au backend)', () => {
     it('retourne tous les tools si aucun privilège requis', () => {
       registerTool(makeTool({ id: 'open', name: 'Open' }));
       registerTool(makeTool({ id: 'restricted', name: 'Restricted', requiredPrivileges: ['Admin'] }));
-      const schema = getToolsSchemaForLLM([]);
-      expect(schema.find((t: any) => t.name === 'open')).toBeDefined();
-      expect(schema.find((t: any) => t.name === 'restricted')).toBeUndefined();
+      const schema = getToolDescriptors([]);
+      expect(schema.find((t) => t.id === 'open')).toBeDefined();
+      expect(schema.find((t) => t.id === 'restricted')).toBeUndefined();
     });
 
     it('inclut les tools restreints si l\'utilisateur a les privilèges', () => {
       registerTool(makeTool({ id: 'admin-tool', requiredPrivileges: ['Admin'] }));
-      const schema = getToolsSchemaForLLM(['Admin']);
-      expect(schema.find((t: any) => t.name === 'admin-tool')).toBeDefined();
+      const schema = getToolDescriptors(['Admin']);
+      expect(schema.find((t) => t.id === 'admin-tool')).toBeDefined();
     });
 
     it('exclut les tools restreints si l\'utilisateur n\'a pas les privilèges', () => {
       registerTool(makeTool({ id: 'secret-tool', requiredPrivileges: ['SuperAdmin'] }));
-      const schema = getToolsSchemaForLLM(['User']);
-      expect(schema.find((t: any) => t.name === 'secret-tool')).toBeUndefined();
+      const schema = getToolDescriptors(['User']);
+      expect(schema.find((t) => t.id === 'secret-tool')).toBeUndefined();
     });
 
-    it("n'expose jamais le champ interne `required` (booléen) au niveau d'une propriété — invalide pour tout LLM (OpenAI, Gemini, ...), seul un tableau `required` au niveau racine du schéma l'est", () => {
+    it("n'expose jamais le champ interne `required` (booléen) au niveau d'une propriété — invalide pour tout JSON Schema standard, seul un tableau `required` au niveau racine du schéma l'est", () => {
       registerTool(
         makeTool({
           id: 'navigate-like',
@@ -250,12 +250,32 @@ describe('Tool Registry', () => {
         }),
       );
 
-      const schema: any = getToolsSchemaForLLM([]).find((t: any) => t.name === 'navigate-like');
+      const schema: any = getToolDescriptors([]).find((t) => t.id === 'navigate-like');
 
       expect(schema.parameters.required).toEqual(['route']);
       expect(schema.parameters.properties.route).not.toHaveProperty('required');
       expect(schema.parameters.properties.newTab).not.toHaveProperty('required');
       expect(schema.parameters.properties.route).toMatchObject({ type: 'string', description: 'Route cible' });
+    });
+  });
+
+  describe('getCapabilityDescriptors', () => {
+    it('filtre les capacités selon les privilèges et sérialise leurs paramètres en JSON Schema', () => {
+      registerCapability({ id: 'open-cap', name: 'Ouverte', description: 'd' });
+      registerCapability({
+        id: 'admin-cap',
+        name: 'Admin',
+        description: 'd',
+        requiredPrivileges: ['Admin'],
+        parameters: { year: { type: 'number', required: true, description: 'Année' } },
+      });
+      expect(getCapabilityDescriptors([]).map((c) => c.id)).toEqual(['open-cap']);
+      const admin = getCapabilityDescriptors(['Admin']).find((c) => c.id === 'admin-cap')!;
+      expect(admin.parameters).toEqual({
+        type: 'object',
+        properties: { year: { type: 'number', description: 'Année' } },
+        required: ['year'],
+      });
     });
   });
 });

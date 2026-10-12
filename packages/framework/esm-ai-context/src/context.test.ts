@@ -91,7 +91,7 @@ describe('AIContextProvider Registry', () => {
       changeCallback.mockClear(); // Reset après l'enregistrement initial
 
       // Simuler un changement interne du provider
-      providerSubscribeCallback?.();
+      (providerSubscribeCallback as unknown as (() => void) | undefined)?.();
       expect(changeCallback).toHaveBeenCalledOnce();
 
       unsub();

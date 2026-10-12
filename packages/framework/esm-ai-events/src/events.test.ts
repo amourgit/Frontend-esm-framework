@@ -1,8 +1,8 @@
 /**
  * @vitest-environment jsdom
  */
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { dispatchAIEvent, subscribeToAIEvent, observeAIEvent, subscribeToAllAIEvents, aiEvents$, AI_EVENTS } from '.';
+import { describe, expect, it, vi } from 'vitest';
+import { dispatchAIEvent, subscribeToAIEvent, observeAIEvent, subscribeToAllAIEvents, AI_EVENTS } from '.';
 
 describe('AI Event Bus', () => {
   describe('dispatchAIEvent', () => {
@@ -148,11 +148,7 @@ describe('AI Event Bus', () => {
       const received: string[] = [];
       const unsub = subscribeToAllAIEvents((name) => received.push(name));
 
-      dispatchAIEvent(AI_EVENTS.CONFIG_CHANGED, {
-        previousEnabled: false,
-        newEnabled: true,
-        source: 'runtime',
-      });
+      dispatchAIEvent(AI_EVENTS.SESSION_ENDED, { sessionId: 's' });
       dispatchAIEvent(AI_EVENTS.SESSION_STARTED, { sessionId: 's' });
       dispatchAIEvent(AI_EVENTS.TOOL_FAILED, {
         toolId: 't',
@@ -162,7 +158,7 @@ describe('AI Event Bus', () => {
         durationMs: 0,
       });
 
-      expect(received).toContain(AI_EVENTS.CONFIG_CHANGED);
+      expect(received).toContain(AI_EVENTS.SESSION_ENDED);
       expect(received).toContain(AI_EVENTS.SESSION_STARTED);
       expect(received).toContain(AI_EVENTS.TOOL_FAILED);
       unsub();

@@ -99,6 +99,7 @@ export { subscribeToAIEvent, observeAIEvent, AI_EVENTS, type AIEventName } from 
 import {
   registerTool,
   overrideTool,
+  getTool,
   registerCapability,
   removeTool,
   removeCapability,
@@ -123,7 +124,7 @@ export interface AIModuleDefinition {
   /** Capacités déclaratives */
   capabilities?: AICapability[];
   /**
-   * Routes déclarées par ce module, pour que le LLM les consulte (contexte
+   * Routes déclarées par ce module, pour que l'assistant les consulte (contexte
    * IA + tool `list_routes`) au lieu de deviner un chemin de navigation.
    * Voir @egen-civitas/esm-ai-tools/routes.ts pour le format attendu.
    */
@@ -148,49 +149,36 @@ export function defineAIModule(def: AIModuleDefinition): () => void {
   // Enregistrer les tools
   for (const tool of def.tools ?? []) {
     registerTool({ ...tool, moduleName: tool.moduleName ?? def.moduleName });
-    cleanupFns.push(() => {
-      try {
-        removeTool(tool.id);
-      } catch (e) {
-        // Ignore cleanup errors
-      }
-    });
+    cleanupFns.push(() => removeTool(tool.id));
   }
 
-  // Appliquer les overrides
+  // Appliquer les overrides — le nettoyage restaure la définition remplacée (ou retire le tool s'il n'existait pas)
   for (const tool of def.toolOverrides ?? []) {
+    const previous = getTool(tool.id)?.definition;
     overrideTool({ ...tool, moduleName: tool.moduleName ?? def.moduleName });
+    cleanupFns.push(() => (previous ? overrideTool(previous) : removeTool(tool.id)));
   }
 
   // Enregistrer les context providers
   for (const provider of def.contextProviders ?? []) {
-    const unsub = registerAIContextProvider(provider);
-    cleanupFns.push(unsub);
+    cleanupFns.push(registerAIContextProvider(provider));
   }
 
   // Enregistrer les capacités
   for (const cap of def.capabilities ?? []) {
     registerCapability(cap);
-    cleanupFns.push(() => {
-      try {
-        removeCapability(cap.id);
-      } catch (e) {
-        // Ignore cleanup errors
-      }
-    });
+    cleanupFns.push(() => removeCapability(cap.id));
   }
 
   // Enregistrer les routes
   for (const route of def.routes ?? []) {
     registerRoute({ ...route, moduleName: route.moduleName ?? def.moduleName });
-    cleanupFns.push(() => {
-      try {
-        removeRoute(route.path);
-      } catch (e) {
-        // Ignore cleanup errors
-      }
-    });
+    cleanupFns.push(() => removeRoute(route.path));
   }
 
-  return () => cleanupFns.forEach((fn) => fn());
+  // Nettoyage dans l'ordre inverse de l'enregistrement
+  return () => {
+    for (const fn of cleanupFns.reverse()) fn();
+    cleanupFns.length = 0;
+  };
 }

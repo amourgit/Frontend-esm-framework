@@ -8,7 +8,7 @@ function mockVisible(el: HTMLElement, rect: Partial<DOMRect> = {}) {
     configurable: true,
   });
   vi.spyOn(window, 'getComputedStyle').mockImplementation(
-    (target) =>
+    () =>
       ({
         display: 'block',
         visibility: 'visible',

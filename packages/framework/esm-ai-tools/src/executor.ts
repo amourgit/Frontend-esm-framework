@@ -28,12 +28,16 @@ function generateExecutionId(): string {
   return `exec-${Date.now()}-${++_executionCounter}`;
 }
 
-/** Supprime les données sensibles des logs */
-function sanitizeForLog(args: Record<string, unknown>): Record<string, unknown> {
-  const SENSITIVE = new Set(['password', 'token', 'secret', 'key', 'credential', 'apiKey']);
+const SENSITIVE_KEY = /pass(word|wd|phrase)?|token|secret|credential|api[-_]?key|authorization|cookie|private[-_]?key/i;
+
+/** Masque, jusqu'à 3 niveaux de profondeur, les valeurs dont le NOM de clé évoque un secret. */
+function sanitizeForLog(args: Record<string, unknown>, depth = 0): Record<string, unknown> {
   const sanitized: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(args)) {
-    sanitized[k] = SENSITIVE.has(k.toLowerCase()) ? '[REDACTED]' : v;
+    if (SENSITIVE_KEY.test(k)) sanitized[k] = '[REDACTED]';
+    else if (depth < 3 && v && typeof v === 'object' && !Array.isArray(v)) {
+      sanitized[k] = sanitizeForLog(v as Record<string, unknown>, depth + 1);
+    } else sanitized[k] = v;
   }
   return sanitized;
 }
@@ -94,6 +98,7 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, toolId: string, 
  * Le contexte IA est optionnel et passé en référence — jamais sérialisé ici.
  */
 export async function executeTool(request: AIToolRequest, aiContext?: AIContextLazy): Promise<AIToolResult> {
+  const args = request.arguments ?? {};
   const startTime = performance.now();
   const executionId = generateExecutionId();
   const config = getAIConfig();
@@ -109,13 +114,13 @@ export async function executeTool(request: AIToolRequest, aiContext?: AIContextL
     toolId: definition.id,
     toolName: definition.name,
     executionId,
-    args: sanitizeForLog(request.arguments),
+    args: sanitizeForLog(args),
   });
 
   // ── 2. Valider les arguments ──────────────────────────────────────────────
-  let resolvedArgs = request.arguments;
+  let resolvedArgs = args;
   if (config.security.validateToolsClient) {
-    const validation = validateToolArgs(request.arguments, definition.parameters);
+    const validation = validateToolArgs(args, definition.parameters);
     if (!validation.valid) {
       const error = `Arguments invalides pour "${definition.id}" : ${validation.errors.join(' | ')}`;
       dispatchAIEvent(AI_EVENTS.TOOL_FAILED, {
@@ -127,7 +132,7 @@ export async function executeTool(request: AIToolRequest, aiContext?: AIContextL
       });
       return fail(error, startTime);
     }
-    resolvedArgs = validation.coercedArgs ?? request.arguments;
+    resolvedArgs = validation.coercedArgs ?? args;
   }
 
   // ── 3. Vérifier les permissions ───────────────────────────────────────────

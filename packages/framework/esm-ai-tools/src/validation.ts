@@ -4,6 +4,8 @@
 
 import type { AIToolParam, AIToolValidationResult } from './types.js';
 
+const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 /**
  * Valide et coerce les arguments d'un tool selon son schéma.
  * Retourne les arguments coercés (ex: "42" → 42 pour type 'number').
@@ -39,9 +41,9 @@ export function validateToolArgs(
     const { coerced, error } = coerceValue(value, paramName, paramDef);
     if (error) {
       errors.push(error);
-    } else {
-      coercedArgs[paramName] = coerced;
+      continue;
     }
+    coercedArgs[paramName] = coerced;
 
     // Enum
     if (paramDef.enum && !paramDef.enum.includes(coerced)) {
@@ -49,10 +51,10 @@ export function validateToolArgs(
     }
   }
 
-  // Avertissement pour les paramètres inconnus (pas une erreur bloquante)
+  // Paramètres non déclarés : transmis tels quels (non bloquant), sauf les clés qui altéreraient le prototype
   for (const key of Object.keys(args)) {
-    if (!(key in schema)) {
-      coercedArgs[key] = args[key]; // Passer les paramètres inconnus
+    if (!(key in schema) && !UNSAFE_KEYS.has(key)) {
+      coercedArgs[key] = args[key];
     }
   }
 
@@ -67,16 +69,19 @@ function coerceValue(value: unknown, name: string, param: AIToolParam): { coerce
       return { coerced: value, error: `"${name}" doit être une chaîne (reçu: ${typeof value})` };
 
     case 'number': {
-      if (typeof value === 'number' && !isNaN(value)) return { coerced: value };
-      const parsed = Number(value);
-      if (!isNaN(parsed)) return { coerced: parsed };
+      if (typeof value === 'number' && Number.isFinite(value)) return { coerced: value };
+      // Seule une chaîne numérique non vide est convertie : Number('') vaut 0, Number([5]) vaut 5, Number(true) vaut 1.
+      if (typeof value === 'string' && value.trim() !== '') {
+        const parsed = Number(value);
+        if (Number.isFinite(parsed)) return { coerced: parsed };
+      }
       return { coerced: value, error: `"${name}" doit être un nombre (reçu: ${JSON.stringify(value)})` };
     }
 
     case 'boolean':
       if (typeof value === 'boolean') return { coerced: value };
-      if (value === 'true' || value === 1) return { coerced: true };
-      if (value === 'false' || value === 0) return { coerced: false };
+      if (value === 1 || (typeof value === 'string' && value.trim().toLowerCase() === 'true')) return { coerced: true };
+      if (value === 0 || (typeof value === 'string' && value.trim().toLowerCase() === 'false')) return { coerced: false };
       return { coerced: value, error: `"${name}" doit être un booléen (reçu: ${JSON.stringify(value)})` };
 
     case 'array':
@@ -87,9 +92,10 @@ function coerceValue(value: unknown, name: string, param: AIToolParam): { coerce
       if (typeof value === 'object' && !Array.isArray(value)) return { coerced: value };
       if (typeof value === 'string') {
         try {
-          return { coerced: JSON.parse(value) };
-        } catch (e) {
-          // Ignore parse errors
+          const parsed = JSON.parse(value);
+          if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return { coerced: parsed };
+        } catch {
+          // chaîne non JSON : erreur de type ci-dessous
         }
       }
       return { coerced: value, error: `"${name}" doit être un objet (reçu: ${typeof value})` };

@@ -59,41 +59,24 @@ const egenFavicon = process.env.EGEN_FAVICON || `${egenPublicPath}/favicon.ico`;
  * underscores sont supprimés — comportement hérité, pas idéal mais il faut
  * rester cohérent des deux côtés).
  */
+// Liste EXACTE des variables lues par esm-ai-config/src/defaults.ts (garde-fou : env-bridge.test.ts).
+// Tout ce qui est ajouté ici est embarqué en clair dans le bundle navigateur : jamais de secret.
 const EGEN_AI_ENV_KEYS = [
   'EGEN_AI_ENABLED',
-  'EGEN_AI_PROVIDER',
-  'EGEN_AI_MODEL',
-  'EGEN_AI_TEMPERATURE',
-  'EGEN_AI_TOP_P',
-  'EGEN_AI_TOP_K',
-  'EGEN_AI_MAX_TOKENS',
-  'EGEN_AI_STREAM',
-  'EGEN_AI_API_KEY',
-  'EGEN_AI_API_ENDPOINT',
-  'EGEN_AI_BACKEND_URL',
-  'EGEN_AI_CHAT_ENDPOINT',
-  'EGEN_AI_STREAM_ENDPOINT',
+  'EGEN_AI_CHANNEL_URL',
+  'EGEN_AI_HEARTBEAT_MS',
+  'EGEN_AI_RECONNECT_MIN_MS',
+  'EGEN_AI_RECONNECT_MAX_MS',
   'EGEN_AI_REQUEST_TIMEOUT',
-  'EGEN_AI_MAX_RETRIES',
-  'EGEN_AI_RETRY_DELAY',
   'EGEN_AI_CONTEXT_MAX_SIZE',
   'EGEN_AI_CONTEXT_EXTENSIONS',
   'EGEN_AI_CONTEXT_NAVIGATION',
-  'EGEN_AI_CONTEXT_CONFIG',
   'EGEN_AI_CONTEXT_FLAGS',
   'EGEN_AI_CONTEXT_DEPTH',
-  'EGEN_AI_MEMORY_ENABLED',
-  'EGEN_AI_MEMORY_MAX_MESSAGES',
-  'EGEN_AI_MEMORY_KEY',
-  'EGEN_AI_MEMORY_PERSIST',
   'EGEN_AI_REQUIRED_PRIVILEGES',
   'EGEN_AI_VALIDATE_TOOLS',
   'EGEN_AI_TOOL_TIMEOUT',
-  'EGEN_AI_AUDIT_LOG',
   'EGEN_AI_DEBUG',
-  'EGEN_AI_EVENTS_ENABLED',
-  'EGEN_AI_ANALYTICS_ENABLED',
-  'EGEN_AI_LOG_LEVEL',
 ];
 
 function egenAiWindowKey(envKey) {

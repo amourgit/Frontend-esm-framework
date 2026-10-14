@@ -20,12 +20,11 @@ export const getAIConfig = () => ({
     maxContextSize: 100000,
     includeActiveExtensions: true,
     includeNavigation: true,
-    includeModuleConfig: false,
     includeFeatureFlags: true,
     serializationDepth: 4,
   },
-  security: { requiredPrivileges: [], validateToolsClient: true, toolTimeoutMs: 30000, auditLog: false },
-  observability: { debug: false, eventsEnabled: false, analyticsEnabled: false, logLevel: 'warn' as const },
+  security: { requiredPrivileges: [], validateToolsClient: true, toolTimeoutMs: 30000 },
+  observability: { debug: false },
 });
 
 export const useAIEnabled = () => false;

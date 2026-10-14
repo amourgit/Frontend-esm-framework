@@ -1,5 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { navigateTool, clickElementTool, fillFieldTool, describeScreenTool, listObservablesTool, switchTenantTool, inspectElementTool, inspectInterfaceTool, navigateAndInspectTool } from './index';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { navigateTool, clickElementTool, fillFieldTool, describeScreenTool, listObservablesTool, switchTenantTool, inspectElementTool, inspectInterfaceTool, navigateAndInspectTool, downloadFileTool, fetchDataTool, searchTool } from './index';
+import { egenFetch } from '@egen-civitas/esm-api';
 import { registerUIAction, _clearUIActionRegistry } from '../ui-actions';
 import { registerObservable, _clearObservableRegistry } from '../observables';
 
@@ -36,12 +37,95 @@ describe('navigateTool', () => {
     expect(mockNavigate).toHaveBeenCalledWith({ to: '${egenSpaBase}/home' });
   });
 
-  it('laisse une URL absolue inchangée', async () => {
+  it('laisse inchangée une URL absolue de la MÊME origine', async () => {
     mockNavigate.mockClear();
+    const url = `${window.location.origin}/egen-civitas/spa/page`;
 
-    await navigateTool.execute({ args: { route: 'https://example.com/page' } } as any);
+    const result = await navigateTool.execute({ args: { route: url } } as any);
 
-    expect(mockNavigate).toHaveBeenCalledWith({ to: 'https://example.com/page' });
+    expect(result.success).toBe(true);
+    expect(mockNavigate).toHaveBeenCalledWith({ to: url });
+  });
+
+  // Le backend (donc un contenu non fiable) pilote ce tool : jamais de sortie du site.
+  it.each([
+    ['site externe', 'https://evil.example.com/phish'],
+    ['schéma javascript:', 'javascript:alert(1)'],
+    ['schéma data:', 'data:text/html,<script>alert(1)</script>'],
+    ['route vide', '   '],
+  ])('refuse %s', async (_label, route) => {
+    mockNavigate.mockClear();
+    const result = await navigateTool.execute({ args: { route } } as any);
+    expect(result.success).toBe(false);
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it("une route protocole-relative reste sous la base SPA (pas d'ouverture vers un autre hôte)", async () => {
+    mockNavigate.mockClear();
+    await navigateTool.execute({ args: { route: '//evil.example.com' } } as any);
+    expect(mockNavigate).toHaveBeenCalledWith({ to: '${egenSpaBase}//evil.example.com' });
+  });
+});
+
+describe('downloadFileTool', () => {
+  it.each([
+    ['javascript:', 'javascript:alert(1)'],
+    ['data:', 'data:text/html;base64,PHNjcmlwdD4='],
+  ])('refuse une URL %s (exécutée au clic)', async (_l, url) => {
+    const clicked = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+    const result = await downloadFileTool.execute({ args: { url, filename: 'a.txt' } } as any);
+    expect(result.success).toBe(false);
+    expect(clicked).not.toHaveBeenCalled();
+    clicked.mockRestore();
+  });
+
+  it('assainit le nom de fichier et rejette un contenu non base64', async () => {
+    const clicked = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+    const ok = await downloadFileTool.execute({
+      args: { content: 'SGVsbG8=', filename: '../../etc/passwd', mimeType: 'text/plain' },
+    } as any);
+    expect(ok.success).toBe(true);
+    expect((ok.data as any).filename).not.toMatch(/[\\/]/);
+    const bad = await downloadFileTool.execute({ args: { content: 'pas du base64!', filename: 'a.txt' } } as any);
+    expect(bad.success).toBe(false);
+    clicked.mockRestore();
+  });
+});
+
+describe('fetchDataTool', () => {
+  beforeEach(() => vi.mocked(egenFetch).mockReset());
+
+  it.each(['https://evil.example.com/x', 'http://evil.example.com', '//evil.example.com', 'ws/rest/v1/student', '/ws/../admin', '/ws/%2e%2e/admin', '/a\\b'])(
+    "refuse l'endpoint %s (egenFetch enverrait les credentials hors de l'API)",
+    async (endpoint) => {
+      const result = await fetchDataTool.execute({ args: { endpoint } } as any);
+      expect(result.success).toBe(false);
+      expect(egenFetch).not.toHaveBeenCalled();
+    },
+  );
+
+  it('accepte un chemin API relatif et fusionne les query params', async () => {
+    vi.mocked(egenFetch).mockResolvedValue({ data: { ok: 1 } } as any);
+    const result = await fetchDataTool.execute({
+      args: { endpoint: '/ws/rest/v1/student?limit=20', queryParams: { page: 2 } },
+    } as any);
+    expect(result).toMatchObject({ success: true, data: { ok: 1 } });
+    expect(egenFetch).toHaveBeenCalledWith('/ws/rest/v1/student?limit=20&page=2');
+  });
+});
+
+describe('searchTool', () => {
+  afterEach(() => {
+    delete (window as any).getEgenSpaBase;
+  });
+
+  it('construit une route sous la base SPA, avec un seul slash', async () => {
+    mockNavigate.mockClear();
+    (window as any).getEgenSpaBase = () => '/egen-civitas/spa/';
+    await searchTool.execute({ args: { query: 'élève Ndong', category: 'students' } } as any);
+    expect(mockNavigate).toHaveBeenCalledWith({
+      to: '/egen-civitas/spa/search?q=%C3%A9l%C3%A8ve%20Ndong&category=students',
+    });
   });
 });
 
@@ -169,6 +253,15 @@ describe('switchTenantTool', () => {
     expect(result.success).toBe(true);
     expect((result.data as any).targetUrl).toBe('https://lycee-lb.egen.gabon.gov.ga/');
   });
+
+  it.each(['x.evil.com', 'evil.com#', 'a/b', '-bad', 'bad-', 'a b', ''])(
+    'refuse le slug %j (sous-domaine construit → redirection hors du domaine racine)',
+    async (tenantSlug) => {
+      setHostname('app.gov.ga');
+      const result = await switchTenantTool.execute({ args: { tenantSlug } } as any);
+      expect(result.success).toBe(false);
+    },
+  );
 
   it("retombe sur l'heuristique (retire le 1er label) si aucun rootDomain n'est configuré", async () => {
     const { setupTenantSystem } = await import('@egen-civitas/esm-tenant');

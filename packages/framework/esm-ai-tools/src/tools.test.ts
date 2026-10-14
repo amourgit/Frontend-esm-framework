@@ -66,6 +66,27 @@ describe('validateToolArgs', () => {
     expect(result.coercedArgs?.kind).toBe('info');
   });
 
+  it.each([[''], ['   '], [[5]], [true], ['abc'], [Infinity]])(
+    'refuse %j pour un nombre (Number() le convertirait silencieusement en 0, 1 ou 5)',
+    (value) => {
+      const result = validateToolArgs({ count: value }, { count: { type: 'number', required: true, description: '' } });
+      expect(result.valid).toBe(false);
+    },
+  );
+
+  it('ne transmet pas les clés qui altèrent le prototype, et saute le contrôle enum après une erreur de type', () => {
+    const args = JSON.parse('{"__proto__": {"admin": true}, "constructor": 1, "extra": "ok", "n": "x"}');
+    const result = validateToolArgs(args, { n: { type: 'number', required: true, description: '', enum: [1, 2] } });
+    expect(Object.keys(result.coercedArgs ?? {})).toEqual(['extra']);
+    expect(Object.getPrototypeOf(result.coercedArgs)).toBe(Object.prototype);
+    expect(result.errors).toHaveLength(1); // une seule erreur (type), pas de doublon enum
+  });
+
+  it('coerce « True » / « FALSE » en booléen', () => {
+    const schema = { a: { type: 'boolean' as const, required: true, description: '' }, b: { type: 'boolean' as const, required: true, description: '' } };
+    expect(validateToolArgs({ a: 'True', b: ' FALSE ' }, schema).coercedArgs).toEqual({ a: true, b: false });
+  });
+
   it('coerce une string en nombre', () => {
     const result = validateToolArgs(
       { count: '42' },

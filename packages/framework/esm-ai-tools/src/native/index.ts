@@ -19,6 +19,15 @@ import { getRoutesCatalogForLLM } from '../routes.js';
 import { getVisibleUIActions, getUIActionElement, setNativeInputValue } from '../ui-actions.js';
 import { getObservablesCatalogForLLM, getObservableElement } from '../observables.js';
 import { describeCurrentScreen } from './describe-screen.js';
+import {
+  isBase64,
+  isValidTenantSlug,
+  resolveAppRoute,
+  sanitizeFilename,
+  spaBaseTrimmed,
+  validateApiPath,
+  validateDownloadUrl,
+} from './safety.js';
 import { inspectDOMElement, inspectFullInterface, waitForDomSettle } from './inspect-element.js';
 
 export type { DescribedElement, DescribedHeading, ScreenDescription } from './describe-screen.js';
@@ -44,19 +53,13 @@ export const navigateTool: AIToolDefinition = {
   moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
-      const route = String(ctx.args.route);
-      // navigate() (voir @egen-civitas/esm-navigation) ne déclenche une vraie
-      // navigation SPA (navigateToUrl) QUE si la cible commence déjà par
-      // egenSpaBase (ex: "/egen-civitas/spa") — sinon elle fait un rechargement
-      // complet de page (window.location.assign), ce qui casse l'état de
-      // l'application et l'expérience de navigation. On ne peut pas
-      // compter sur le LLM pour toujours préfixer ${egenSpaBase} lui-même
-      // (il renvoie naturellement des chemins "logiques" comme "/login") —
-      // c'est donc CE tool, de façon déterministe, qui résout la route
-      // reçue vers le chemin SPA correct avant d'appeler navigate().
-      const isAbsoluteUrl = /^[a-z][a-z0-9+.-]*:\/\//i.test(route);
-      const isAlreadyResolved = route.includes('${egenBase}') || route.includes('${egenSpaBase}');
-      const target = isAbsoluteUrl || isAlreadyResolved ? route : `\${egenSpaBase}${route.startsWith('/') ? '' : '/'}${route}`;
+      // navigate() (voir @egen-civitas/esm-navigation) ne déclenche une vraie navigation SPA QUE si la
+      // cible commence déjà par egenSpaBase — sinon rechargement complet de page. C'est donc CE tool qui
+      // résout, de façon déterministe, le chemin « logique » reçu (« /login ») vers le chemin SPA, et qui
+      // refuse toute destination externe.
+      const resolved = resolveAppRoute(String(ctx.args.route));
+      if (!resolved.ok) return { success: false, error: resolved.error, durationMs: 0 };
+      const target = resolved.value;
 
       navigate({ to: target });
       return { success: true, data: { route: target }, durationMs: 0 };
@@ -220,13 +223,21 @@ export const downloadFileTool: AIToolDefinition = {
       if (!url && !content) {
         return { success: false, error: '"url" ou "content" est requis', durationMs: 0 };
       }
+      if (url) {
+        const urlError = validateDownloadUrl(url);
+        if (urlError) return { success: false, error: urlError, durationMs: 0 };
+      } else if (!isBase64(content)) {
+        return { success: false, error: '"content" doit être du base64 valide', durationMs: 0 };
+      }
+      const safeName = sanitizeFilename(filename);
       const link = document.createElement('a');
-      link.download = filename;
+      link.download = safeName;
+      link.rel = 'noopener noreferrer';
       link.href = url ? url : `data:${mimeType ?? 'application/octet-stream'};base64,${content}`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      return { success: true, data: { filename }, durationMs: 0 };
+      return { success: true, data: { filename: safeName }, durationMs: 0 };
     } catch (err) {
       return { success: false, error: String(err), durationMs: 0 };
     }
@@ -255,11 +266,13 @@ export const fetchDataTool: AIToolDefinition = {
   execute: async (ctx) => {
     try {
       const endpoint = String(ctx.args.endpoint);
+      const pathError = validateApiPath(endpoint);
+      if (pathError) return { success: false, error: pathError, durationMs: 0 };
       const queryParams = ctx.args.queryParams as Record<string, string> | undefined;
 
       let url = endpoint;
       if (queryParams && Object.keys(queryParams).length > 0) {
-        const params = new URLSearchParams(queryParams);
+        const params = new URLSearchParams(Object.entries(queryParams).map(([k, v]) => [k, String(v)]));
         url += (url.includes('?') ? '&' : '?') + params.toString();
       }
 
@@ -317,7 +330,10 @@ export const switchTenantTool: AIToolDefinition = {
   moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
-      const slug = String(ctx.args.tenantSlug);
+      const slug = String(ctx.args.tenantSlug).trim();
+      if (!isValidTenantSlug(slug)) {
+        return { success: false, error: `Identifiant d'établissement invalide : « ${slug} ».`, durationMs: 0 };
+      }
       const hostname = window.location.hostname;
       // Domaine racine : priorité au rootDomain explicitement configuré
       // (EGEN_TENANT_ROOT_DOMAIN / setupTenantSystem({ rootDomain })), avec
@@ -354,8 +370,7 @@ export const searchTool: AIToolDefinition = {
     try {
       const query = String(ctx.args.query);
       const category = ctx.args.category as string | undefined;
-      const spaBase = window.getEgenSpaBase?.() ?? '/';
-      const route = `${spaBase}search?q=${encodeURIComponent(query)}${
+      const route = `${spaBaseTrimmed()}/search?q=${encodeURIComponent(query)}${
         category ? `&category=${encodeURIComponent(category)}` : ''
       }`;
       navigate({ to: route });
@@ -681,9 +696,9 @@ export const navigateAndInspectTool: AIToolDefinition = {
       const route = String(ctx.args.route);
       const rootSelector = ctx.args.rootSelector ? String(ctx.args.rootSelector) : undefined;
 
-      const isAbsoluteUrl = /^[a-z][a-z0-9+.-]*:\/\//i.test(route);
-      const isAlreadyResolved = route.includes('${egenBase}') || route.includes('${egenSpaBase}');
-      const target = isAbsoluteUrl || isAlreadyResolved ? route : `\${egenSpaBase}${route.startsWith('/') ? '' : '/'}${route}`;
+      const resolved = resolveAppRoute(route);
+      if (!resolved.ok) return { success: false, error: resolved.error, durationMs: 0 };
+      const target = resolved.value;
 
       navigate({ to: target });
       await waitForDomSettle();

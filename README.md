@@ -42,7 +42,7 @@ afficher, capturer/lire l'audio, et exécuter les *tools frontend* demandés par
 | `@egen-civitas/esm-ai-config` | Adresse/transport du backend IA, sécurité d'exécution des tools |
 | `@egen-civitas/esm-ai-events` | Événements AI |
 | `@egen-civitas/esm-ai-context` | Snapshot du contexte EGEN (utilisateur, tenant, navigation) envoyé au backend |
-| `@egen-civitas/esm-ai-tools` | Tools frontend exécutables à la demande du backend (navigate, inspect-element, describe_screen...) |
+| `@egen-civitas/esm-ai-tools` | Tools frontend exécutables à la demande du backend (navigate, lecture de page — read_page / read_component / find_in_page —, inspect-element, describe_screen...) |
 | `@egen-civitas/esm-ai-extensions` | Bridge AI ↔ extensions |
 | **`@egen-civitas/esm-ai-framework`** | **Façade publique AI** |
 

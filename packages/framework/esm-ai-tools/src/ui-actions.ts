@@ -91,6 +91,16 @@ export function getVisibleUIActions(): AIUIActionDefinition[] {
     .map(({ element, ...rest }) => rest);
 }
 
+/**
+ * Actions visibles AVEC leur élément DOM — pour les lecteurs de page (read_page, read_component,
+ * discover_components) qui rattachent la déclaration fonctionnelle de l'app à ce qu'ils lisent.
+ */
+export function getVisibleUIActionEntries(): Array<{ definition: AIUIActionDefinition; element: HTMLElement }> {
+  return Array.from(_actions.values())
+    .filter((a) => a.element.isConnected)
+    .map(({ element, ...definition }) => ({ definition, element }));
+}
+
 /** Résout l'élément DOM réel d'une action, ou `null` s'il n'existe pas / n'est plus visible. */
 export function getUIActionElement(id: string): HTMLElement | null {
   const action = _actions.get(id);
@@ -117,6 +127,32 @@ export function setNativeInputValue(el: HTMLInputElement | HTMLTextAreaElement, 
   const nativeSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
   nativeSetter?.call(el, value);
   el.dispatchEvent(new Event('input', { bubbles: true }));
+  // Certains composants (Carbon NumberInput, validations au blur…) n'écoutent que « change ».
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+export type SelectResult = { ok: true; selected: string } | { ok: false; error: string; available: string[] };
+
+/**
+ * Choisit une option d'un <select> par sa valeur, à défaut par son libellé (insensible à la casse).
+ * Passe par le setter natif puis déclenche « input » et « change » (compatible select contrôlé React).
+ */
+export function setNativeSelectValue(el: HTMLSelectElement, wanted: string): SelectResult {
+  const options = Array.from(el.options);
+  const available = options.map((o) => (o.label || o.textContent || '').trim());
+  const needle = wanted.trim().toLowerCase();
+  const match =
+    options.find((o) => o.value === wanted) ??
+    options.find((o) => (o.label || o.textContent || '').trim().toLowerCase() === needle) ??
+    options.find((o) => o.value.toLowerCase() === needle);
+  if (!match) return { ok: false, error: `Aucune option « ${wanted} » dans ce champ.`, available };
+  if (match.disabled) return { ok: false, error: `L'option « ${wanted} » est désactivée.`, available };
+
+  const nativeSetter = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value')?.set;
+  nativeSetter?.call(el, match.value);
+  el.dispatchEvent(new Event('input', { bubbles: true }));
+  el.dispatchEvent(new Event('change', { bubbles: true }));
+  return { ok: true, selected: (match.label || match.textContent || '').trim() };
 }
 
 /** @internal — tests uniquement */

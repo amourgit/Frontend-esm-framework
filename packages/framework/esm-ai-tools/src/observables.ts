@@ -119,6 +119,13 @@ export function getObservableDefinition(id: string): Omit<AIObservableDefinition
   return rest;
 }
 
+/** Observables visibles AVEC leur élément DOM — pour les lecteurs de page (voir ui-actions.ts). */
+export function getVisibleObservableEntries(): Array<{ definition: Omit<AIObservableDefinition, 'getData'>; element: HTMLElement; getData: () => unknown }> {
+  return Array.from(_observables.values())
+    .filter((o) => o.element.isConnected)
+    .map(({ element, getData, ...definition }) => ({ definition, element, getData: () => safeGetData(getData, definition.id) }));
+}
+
 function safeGetData(getData: () => unknown, id: string): unknown {
   try {
     return getData();

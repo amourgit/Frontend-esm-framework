@@ -31,6 +31,22 @@
 
 import { getUIActionDefinition } from '../ui-actions.js';
 import { getObservableDefinition } from '../observables.js';
+import {
+  buildStableSelector,
+  computeAccessibleName,
+  computedStyleOf,
+  getElementRef,
+  getReactOwnerChain,
+  getVisibility,
+  isFormControl,
+  isInShadowRoot,
+  isSensitiveField,
+  readFieldValue,
+  truncateText as truncateShared,
+  walkElementsDeep,
+} from './dom-utils.js';
+import { SKIPPED_TAGS } from './text-extract.js';
+import { serializeForAI } from './serialize.js';
 
 // ---------------------------------------------------------------------------
 // Garde-fous (généreux, mais jamais littéralement illimités — voir principe
@@ -45,14 +61,8 @@ const MAX_REACT_PROPS_KEYS = 60;
 const MAX_INTERFACE_NODES = 500;
 const MAX_DOM_PATH_ANCESTORS = 25;
 
-/** Types de champs dont la VALEUR ne doit jamais être transmise en clair. */
-const SENSITIVE_INPUT_TYPES = new Set(['password']);
-/** Noms/autocomplete évoquant une donnée sensible même sur un input type="text". */
-const SENSITIVE_NAME_PATTERN = /password|secret|token|credential|pin\b|cvv|ssn|nir\b/i;
-
 function truncateText(text: string, max = MAX_TEXT_LENGTH): string {
-  if (text.length <= max) return text;
-  return `${text.slice(0, max)}… [tronqué à ${max} caractères]`;
+  return truncateShared(text, max);
 }
 
 // =============================================================================
@@ -74,39 +84,10 @@ export interface ElementIdentity {
   directChildrenTags: string[];
   siblingIndex: number;
   siblingCount: number;
-}
-
-/** Repli minimal si CSS.escape est indisponible (très rare, mais évite un crash sur un navigateur/WebView atypique). */
-function cssEscape(value: string): string {
-  if (typeof CSS !== 'undefined' && typeof CSS.escape === 'function') return CSS.escape(value);
-  return value.replace(/[^a-zA-Z0-9_-]/g, (c) => `\\${c}`);
-}
-
-/** Construit un sélecteur CSS suffisamment précis pour re-cibler cet élément (id > chemin nth-child). */
-function buildStableSelector(el: Element): string {
-  if (el.id) return `#${cssEscape(el.id)}`;
-
-  const parts: string[] = [];
-  let current: Element | null = el;
-  let depth = 0;
-  while (current && current !== document.body && depth < MAX_DOM_PATH_ANCESTORS) {
-    if (current.id) {
-      parts.unshift(`#${cssEscape(current.id)}`);
-      break;
-    }
-    const parent = current.parentElement;
-    if (!parent) {
-      parts.unshift(current.tagName.toLowerCase());
-      break;
-    }
-    const siblings = Array.from<Element>(parent.children).filter((c) => c.tagName === current!.tagName);
-    const index = siblings.indexOf(current) + 1;
-    const tag = current.tagName.toLowerCase();
-    parts.unshift(siblings.length > 1 ? `${tag}:nth-of-type(${index})` : tag);
-    current = parent;
-    depth++;
-  }
-  return parts.join(' > ');
+  /** Référence stable « eNN » de l'élément (utilisable avec read_component, read_table, scroll_to…). */
+  ref: string;
+  /** true si l'élément vit dans un Shadow DOM (le sélecteur CSS ne le retrouve alors pas depuis le document). */
+  inShadowRoot: boolean;
 }
 
 function collectIdentity(el: Element): ElementIdentity {
@@ -150,6 +131,8 @@ function collectIdentity(el: Element): ElementIdentity {
     directChildrenTags: Array.from(el.children).map((c) => c.tagName.toLowerCase()),
     siblingIndex: siblings.indexOf(el),
     siblingCount: siblings.length,
+    ref: getElementRef(el),
+    inShadowRoot: isInShadowRoot(el),
   };
 }
 
@@ -170,29 +153,7 @@ export interface ElementGeometry {
 
 function collectGeometry(el: Element): ElementGeometry {
   const rect = el.getBoundingClientRect();
-  const style = window.getComputedStyle(el);
-
-  let visible = true;
-  let reason = 'visible';
-  if (style.display === 'none') {
-    visible = false;
-    reason = 'display: none';
-  } else if (style.visibility === 'hidden' || style.visibility === 'collapse') {
-    visible = false;
-    reason = `visibility: ${style.visibility}`;
-  } else if (parseFloat(style.opacity) === 0) {
-    visible = false;
-    reason = 'opacity: 0';
-  } else if (rect.width === 0 && rect.height === 0) {
-    visible = false;
-    reason = 'dimensions nulles (0×0)';
-  } else if (el instanceof HTMLElement && el.offsetParent === null && style.position !== 'fixed') {
-    visible = false;
-    reason = 'offsetParent null (probablement dans un ancêtre display:none)';
-  }
-
-  const inViewport =
-    visible && rect.bottom > 0 && rect.right > 0 && rect.top < window.innerHeight && rect.left < window.innerWidth;
+  const { visible, inViewport, reason } = getVisibility(el);
 
   return {
     boundingRect: {
@@ -266,7 +227,7 @@ export interface ElementComputedStyle {
 }
 
 function collectComputedStyle(el: Element): ElementComputedStyle {
-  const computed = window.getComputedStyle(el);
+  const computed = computedStyleOf(el);
 
   const allProperties: Record<string, string> = {};
   for (let i = 0; i < computed.length; i++) {
@@ -372,27 +333,7 @@ export interface ElementAccessibility {
 }
 
 function collectAccessibility(el: Element): ElementAccessibility {
-  const ariaLabel = el.getAttribute('aria-label');
-  let accessibleName = ariaLabel?.trim() ?? '';
-
-  if (!accessibleName) {
-    const labelledBy = el.getAttribute('aria-labelledby');
-    if (labelledBy) {
-      accessibleName = labelledBy
-        .split(/\s+/)
-        .map((id) => document.getElementById(id)?.textContent?.trim())
-        .filter(Boolean)
-        .join(' ');
-    }
-  }
-
-  if (!accessibleName && (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement)) {
-    accessibleName = el.labels?.[0]?.textContent?.trim() ?? ('placeholder' in el ? el.placeholder : '') ?? '';
-  }
-
-  if (!accessibleName) {
-    accessibleName = truncateText((el.textContent ?? '').trim().replace(/\s+/g, ' '), 200);
-  }
+  const accessibleName = computeAccessibleName(el, 200);
 
   const ariaAttributes: Record<string, string> = {};
   for (const attr of Array.from(el.attributes)) {
@@ -414,22 +355,38 @@ function collectAccessibility(el: Element): ElementAccessibility {
 // 6. CONTENU — texte, valeur (avec rédaction), médias, validité de formulaire
 // =============================================================================
 
-function isSensitiveField(el: Element): boolean {
-  if (el instanceof HTMLInputElement) {
-    if (SENSITIVE_INPUT_TYPES.has(el.type)) return true;
-    if (SENSITIVE_NAME_PATTERN.test(el.name) || SENSITIVE_NAME_PATTERN.test(el.autocomplete)) return true;
-    if (el.id && SENSITIVE_NAME_PATTERN.test(el.id)) return true;
-  }
-  return false;
-}
-
 export interface ElementContent {
   textContent: string | null;
   innerText: string | null;
   formValue?: { value: string; redacted: boolean; disabled: boolean; required: boolean; validity?: Record<string, boolean> };
   checked?: boolean;
+  /** <select> : options (libellé, valeur, sélection), 50 max. */
+  options?: Array<{ label: string; value: string; selected: boolean }>;
   href?: string;
   media?: { src: string; alt: string; naturalWidth?: number; naturalHeight?: number };
+  /** Texte injecté par CSS (::before / ::after) — invisible dans textContent mais bien affiché (icônes-police, libellés…). */
+  pseudoElements?: { before?: string; after?: string };
+}
+
+/** Texte d'un `content:` CSS (chaîne simple uniquement ; `none`, `normal`, compteurs, attr()… sont ignorés). */
+function parsePseudoContent(raw: string | undefined): string | undefined {
+  if (!raw) return undefined;
+  const match = /^(["'])([\s\S]*)\1$/.exec(raw.trim());
+  const text = match?.[2];
+  return text && text.trim() ? text : undefined;
+}
+
+function collectPseudoElements(el: Element): ElementContent['pseudoElements'] {
+  const read = (pseudo: string) => {
+    try {
+      return parsePseudoContent(computedStyleOf(el, pseudo).content);
+    } catch {
+      return undefined;
+    }
+  };
+  const before = read('::before');
+  const after = read('::after');
+  return before || after ? { ...(before ? { before } : {}), ...(after ? { after } : {}) } : undefined;
 }
 
 function collectContent(el: Element): ElementContent {
@@ -438,20 +395,29 @@ function collectContent(el: Element): ElementContent {
     innerText: el instanceof HTMLElement ? truncateText(el.innerText?.trim().replace(/\s+/g, ' ') ?? '') : null,
   };
 
-  if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
-    const sensitive = isSensitiveField(el);
+  if (isFormControl(el)) {
+    const control = el as HTMLInputElement;
+    const field = readFieldValue(el);
     content.formValue = {
-      value: sensitive ? '••••••' : el.value,
-      redacted: sensitive,
-      disabled: el.disabled,
-      required: el.required,
-      validity: el.validity ? Object.fromEntries(
-        Object.entries(Object.getPrototypeOf(el.validity)).map(([k]) => [k, (el.validity as any)[k]])
-          .filter(([k]) => typeof (el.validity as any)[k] === 'boolean'),
-      ) : undefined,
+      value: field?.value ?? '',
+      redacted: field?.redacted ?? false,
+      disabled: control.disabled,
+      required: control.required,
+      validity: control.validity
+        ? Object.fromEntries(
+            Object.entries(Object.getPrototypeOf(control.validity))
+              .map(([k]) => [k, (control.validity as any)[k]])
+              .filter(([, v]) => typeof v === 'boolean'),
+          )
+        : undefined,
     };
     if (el instanceof HTMLInputElement && (el.type === 'checkbox' || el.type === 'radio')) {
       content.checked = el.checked;
+    }
+    if (el instanceof HTMLSelectElement) {
+      content.options = Array.from(el.options)
+        .slice(0, 50)
+        .map((o) => ({ label: (o.label || o.textContent || '').trim(), value: o.value, selected: o.selected }));
     }
   }
 
@@ -460,6 +426,9 @@ function collectContent(el: Element): ElementContent {
   if (el instanceof HTMLImageElement) {
     content.media = { src: el.src, alt: el.alt, naturalWidth: el.naturalWidth, naturalHeight: el.naturalHeight };
   }
+
+  const pseudo = collectPseudoElements(el);
+  if (pseudo) content.pseudoElements = pseudo;
 
   return content;
 }
@@ -480,36 +449,13 @@ export interface ReactElementInfo {
   componentName?: string;
   props?: unknown;
   hasKey?: boolean;
+  /** Composants React qui rendent cet élément, du plus proche au plus lointain (noms exploitables seulement). */
+  ownerChain?: string[];
   reason?: string;
 }
 
 function findExpandoKey(el: HTMLElement, prefix: string): string | undefined {
   return Object.keys(el).find((k) => k.startsWith(prefix));
-}
-
-function serializeReactValue(value: unknown, depth: number): unknown {
-  if (depth > MAX_REACT_PROPS_DEPTH) return '[…tronqué — profondeur max atteinte]';
-  if (value == null) return value;
-  if (typeof value === 'function') return '[Function]';
-  if (typeof value !== 'object') return value;
-  if (typeof (value as { $$typeof?: unknown }).$$typeof === 'symbol') return '[ReactElement]';
-  if (Array.isArray(value)) {
-    return value.slice(0, MAX_REACT_PROPS_KEYS).map((v) => serializeReactValue(v, depth + 1));
-  }
-  const out: Record<string, unknown> = {};
-  let count = 0;
-  for (const key of Object.keys(value as Record<string, unknown>)) {
-    if (key === 'children') {
-      out.children = '[omis — utiliser inspect_interface pour explorer la sous-arborescence]';
-      continue;
-    }
-    if (++count > MAX_REACT_PROPS_KEYS) {
-      out['…'] = 'tronqué';
-      break;
-    }
-    out[key] = serializeReactValue((value as Record<string, unknown>)[key], depth + 1);
-  }
-  return out;
 }
 
 function collectReactInfo(el: Element): ReactElementInfo {
@@ -541,9 +487,19 @@ function collectReactInfo(el: Element): ReactElementInfo {
     }
 
     const rawProps = propsKey ? (el as unknown as Record<string, unknown>)[propsKey] : undefined;
-    const props = rawProps !== undefined ? serializeReactValue(rawProps, 0) : undefined;
+    // Les props d'un champ sensible portent sa valeur en clair (`value`) : elle est masquée comme ailleurs,
+    // et toute clé évoquant un secret (password, token…) l'est aussi, à n'importe quelle profondeur.
+    const props =
+      rawProps !== undefined
+        ? serializeForAI(rawProps, {
+            maxDepth: MAX_REACT_PROPS_DEPTH,
+            maxKeys: MAX_REACT_PROPS_KEYS,
+            redactKeys: isSensitiveField(el) ? ['value', 'defaultValue'] : [],
+          })
+        : undefined;
 
-    return { available: true, componentName, props, hasKey: Boolean(fiberKey) };
+    const ownerChain = getReactOwnerChain(el);
+    return { available: true, componentName, props, hasKey: Boolean(fiberKey), ...(ownerChain.length ? { ownerChain } : {}) };
   } catch (err) {
     return { available: false, reason: `introspection React échouée : ${String(err)}` };
   }
@@ -575,7 +531,22 @@ function collectDeclaredMetadata(el: Element, actionId?: string): DeclaredMetada
 // ASSEMBLAGE — rapport complet d'un élément
 // =============================================================================
 
+/**
+ * Niveau de détail d'un rapport :
+ *  - full     : tout (CSS calculé intégral, cascade de règles) — défaut d'inspect_element ;
+ *  - standard : CSS regroupé par catégorie, sans l'intégralité des propriétés ni la cascade — défaut d'inspect_interface ;
+ *  - compact  : identité, géométrie, accessibilité, contenu, React (sans props) — pas de CSS du tout.
+ * La cascade CSS parcourt TOUTES les feuilles de style pour chaque élément : à réserver à `full` sur un élément précis.
+ */
+export type InspectDetail = 'compact' | 'standard' | 'full';
+
+export interface InspectOptions {
+  detail?: InspectDetail;
+}
+
 export interface ElementInspectionReport {
+  /** Sections volontairement omises par le niveau de détail demandé (vide en `full`). */
+  omittedSections: string[];
   identity: ElementIdentity;
   geometry: ElementGeometry;
   computedStyle: ElementComputedStyle;
@@ -592,7 +563,8 @@ export interface ElementInspectionReport {
  * complet. Chaque section est calculée indépendamment — une erreur dans une
  * section n'empêche jamais les autres d'être renvoyées.
  */
-export function inspectDOMElement(el: Element, actionId?: string): ElementInspectionReport {
+export function inspectDOMElement(el: Element, actionId?: string, options: InspectOptions = {}): ElementInspectionReport {
+  const detail: InspectDetail = options.detail ?? 'full';
   const safe = <T,>(fn: () => T, fallback: T): T => {
     try {
       return fn();
@@ -601,9 +573,24 @@ export function inspectDOMElement(el: Element, actionId?: string): ElementInspec
     }
   };
 
-  const appliedCSSRules = safe(() => collectAppliedCSSRules(el), []);
+  const omittedSections: string[] = [];
+  if (detail !== 'full') omittedSections.push('appliedCSSRules', 'computedStyle.allProperties', 'computedStyle.cssText');
+  if (detail === 'compact') omittedSections.push('computedStyle.byCategory', 'react.props');
+
+  const appliedCSSRules = detail === 'full' ? safe(() => collectAppliedCSSRules(el), []) : [];
+
+  const emptyStyle: ElementComputedStyle = { cssText: '', allProperties: {}, byCategory: {} };
+  let computedStyle = emptyStyle;
+  if (detail !== 'compact') {
+    computedStyle = safe(() => collectComputedStyle(el), emptyStyle);
+    if (detail === 'standard') computedStyle = { cssText: '', allProperties: {}, byCategory: computedStyle.byCategory };
+  }
+
+  let react = safe(() => collectReactInfo(el), { available: false, reason: 'échec inattendu' } as ReactElementInfo);
+  if (detail === 'compact' && react.props !== undefined) react = { ...react, props: undefined };
 
   return {
+    omittedSections,
     identity: safe(() => collectIdentity(el), {
       tagName: el.tagName.toLowerCase(),
       id: null,
@@ -616,6 +603,8 @@ export function inspectDOMElement(el: Element, actionId?: string): ElementInspec
       directChildrenTags: [],
       siblingIndex: -1,
       siblingCount: 0,
+      ref: '',
+      inShadowRoot: false,
     }),
     geometry: safe(() => collectGeometry(el), {
       boundingRect: { x: 0, y: 0, width: 0, height: 0, top: 0, right: 0, bottom: 0, left: 0 },
@@ -627,7 +616,7 @@ export function inspectDOMElement(el: Element, actionId?: string): ElementInspec
       isInViewport: false,
       visibilityReason: 'inconnu (échec de calcul)',
     }),
-    computedStyle: safe(() => collectComputedStyle(el), { cssText: '', allProperties: {}, byCategory: {} }),
+    computedStyle,
     appliedCSSRules,
     appliedCSSRulesTruncated: appliedCSSRules.length >= MAX_APPLIED_CSS_RULES,
     accessibility: safe(() => collectAccessibility(el), {
@@ -638,7 +627,7 @@ export function inspectDOMElement(el: Element, actionId?: string): ElementInspec
       ariaAttributes: {},
     }),
     content: safe(() => collectContent(el), { textContent: null, innerText: null }),
-    react: safe(() => collectReactInfo(el), { available: false, reason: 'échec inattendu' }),
+    react,
     declaredMetadata: safe(() => collectDeclaredMetadata(el, actionId), { registeredAction: null, registeredObservable: null }),
   };
 }
@@ -693,6 +682,18 @@ export interface FullInterfaceReport {
   nodes: InterfaceNodeReport[];
   totalMeaningfulNodesFound: number;
   truncated: boolean;
+  detail: InspectDetail;
+  /** Index (dans la liste des nœuds significatifs) du premier nœud de ce rapport. */
+  offset: number;
+  /** Valeur d'`offset` pour obtenir la suite, ou null si tout a été renvoyé. */
+  nextOffset: number | null;
+}
+
+export interface InspectInterfaceOptions extends InspectOptions {
+  /** Nœuds renvoyés au maximum (plafond absolu : 500). */
+  limit?: number;
+  /** Pagination : nombre de nœuds significatifs à sauter. */
+  offset?: number;
 }
 
 /**
@@ -723,19 +724,26 @@ function isMeaningfulNode(el: Element): boolean {
  * nœud significatif, avec la hiérarchie parent/enfant pour reconstituer la
  * mise en page.
  */
-export function inspectFullInterface(rootSelector?: string): FullInterfaceReport {
+export function inspectFullInterface(rootSelector?: string, options: InspectInterfaceOptions = {}): FullInterfaceReport {
+  const detail: InspectDetail = options.detail ?? 'full';
+  const limit = Math.max(1, Math.min(Math.floor(options.limit ?? MAX_INTERFACE_NODES), MAX_INTERFACE_NODES));
+  const offset = Math.max(0, Math.floor(options.offset ?? 0));
+
   const root = rootSelector ? document.querySelector(rootSelector) : document.body;
   if (!root) {
-    return { url: window.location.href, title: document.title, nodes: [], totalMeaningfulNodesFound: 0, truncated: false };
+    return { url: window.location.href, title: document.title, nodes: [], totalMeaningfulNodesFound: 0, truncated: false, detail, offset, nextOffset: null };
   }
 
-  const allMeaningful = Array.from(root.querySelectorAll('*')).filter(isMeaningfulNode);
-  const truncated = allMeaningful.length > MAX_INTERFACE_NODES;
-  const selected = allMeaningful.slice(0, MAX_INTERFACE_NODES);
+  // Shadow DOM ouverts inclus ; zones `data-ai-ignore` (ex: le panneau de l'assistant) et balises techniques écartées.
+  const allMeaningful = Array.from(
+    walkElementsDeep(root, { iframes: false }, (el) => SKIPPED_TAGS.has(el.localName) || el.hasAttribute('data-ai-ignore')),
+  ).filter(isMeaningfulNode);
+  const selected = allMeaningful.slice(offset, offset + limit);
+  const nextOffset = offset + limit < allMeaningful.length ? offset + limit : null;
 
-  // Index pour retrouver rapidement le nodeIndex du plus proche ancêtre significatif
+  // Index pour retrouver rapidement le nodeIndex du plus proche ancêtre significatif DANS cette page de résultats
   const indexByElement = new Map<Element, number>();
-  selected.forEach((el, i) => indexByElement.set(el, i));
+  selected.forEach((el, i) => indexByElement.set(el, offset + i));
 
   const nodes: InterfaceNodeReport[] = selected.map((el, i) => {
     let parentNodeIndex: number | null = null;
@@ -747,7 +755,7 @@ export function inspectFullInterface(rootSelector?: string): FullInterfaceReport
       }
       ancestor = ancestor.parentElement;
     }
-    return { ...inspectDOMElement(el), nodeIndex: i, parentNodeIndex };
+    return { ...inspectDOMElement(el, undefined, { detail }), nodeIndex: offset + i, parentNodeIndex };
   });
 
   return {
@@ -755,6 +763,9 @@ export function inspectFullInterface(rootSelector?: string): FullInterfaceReport
     title: document.title,
     nodes,
     totalMeaningfulNodesFound: allMeaningful.length,
-    truncated,
+    truncated: nextOffset !== null,
+    detail,
+    offset,
+    nextOffset,
   };
 }

@@ -16,8 +16,8 @@ import { egenFetch } from '@egen-civitas/esm-api';
 import { inferRootDomain, buildTenantSubdomainUrl, getTenantStoreState } from '@egen-civitas/esm-tenant';
 import type { AIToolDefinition } from '../types.js';
 import { getRoutesCatalogForLLM } from '../routes.js';
-import { getVisibleUIActions, getUIActionElement, setNativeInputValue } from '../ui-actions.js';
-import { getObservablesCatalogForLLM, getObservableElement } from '../observables.js';
+import { getVisibleUIActions, getUIActionElement, setNativeInputValue, setNativeSelectValue } from '../ui-actions.js';
+import { getObservablesCatalogForLLM } from '../observables.js';
 import { describeCurrentScreen } from './describe-screen.js';
 import {
   isBase64,
@@ -28,10 +28,28 @@ import {
   validateApiPath,
   validateDownloadUrl,
 } from './safety.js';
-import { inspectDOMElement, inspectFullInterface, waitForDomSettle } from './inspect-element.js';
+import { inspectDOMElement, inspectFullInterface, type InspectDetail } from './inspect-element.js';
+import { buildStableSelector, getElementRef } from './dom-utils.js';
+import { TARGET_PARAMS, resolveTarget } from './target.js';
+import { createReadContext, describeTable, isTableElement } from './text-extract.js';
+import { readPage } from './page-reader.js';
+import { discoverComponents, readComponent } from './component-reader.js';
+import { findInPage } from './find-in-page.js';
+import { getDomTree, getPageState, isPageLoading, scrollPage, waitForPageReady } from './page-state.js';
 
-export type { DescribedElement, DescribedHeading, ScreenDescription } from './describe-screen.js';
-export type { ElementInspectionReport, InterfaceNodeReport, FullInterfaceReport } from './inspect-element.js';
+export type { DescribedElement, DescribedHeading, DescribedLandmark, ScreenDescription } from './describe-screen.js';
+export type {
+  ElementInspectionReport,
+  InterfaceNodeReport,
+  FullInterfaceReport,
+  InspectDetail,
+  InspectOptions,
+} from './inspect-element.js';
+export type { PageReadResult, OutlineNode } from './page-reader.js';
+export type { ComponentReport, ComponentParts, DiscoverResult, DiscoveredComponent } from './component-reader.js';
+export type { FindMatch, FindResult } from './find-in-page.js';
+export type { PageState, DomTreeResult, ScrollResult } from './page-state.js';
+export type { FieldModel, TableModel } from './text-extract.js';
 
 // ─── navigate ─────────────────────────────────────────────────────────────────
 
@@ -457,45 +475,99 @@ export const clickElementTool: AIToolDefinition = {
   },
 };
 
+// ─── Aides communes aux tools de lecture ──────────────────────────────────────
+
+function numberArg(value: unknown): number | undefined {
+  const n = typeof value === 'number' ? value : typeof value === 'string' && value.trim() !== '' ? Number(value) : NaN;
+  return Number.isFinite(n) ? n : undefined;
+}
+
+function boolArg(value: unknown): boolean | undefined {
+  if (typeof value === 'boolean') return value;
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return undefined;
+}
+
+function detailArg(value: unknown, fallback: InspectDetail): InspectDetail {
+  return value === 'compact' || value === 'standard' || value === 'full' ? value : fallback;
+}
+
+const fail = (error: string) => ({ success: false as const, error, durationMs: 0 });
+const ok = (data: unknown) => ({ success: true as const, data, durationMs: 0 });
+
+function hasTargetArg(args: Record<string, unknown>): boolean {
+  return Boolean(args.ref || args.actionId || args.selector);
+}
+
+const TARGET_PARAMS_OPTIONAL = {
+  ref: { ...TARGET_PARAMS.ref },
+  actionId: { ...TARGET_PARAMS.actionId },
+  selector: { ...TARGET_PARAMS.selector },
+  matchIndex: { ...TARGET_PARAMS.matchIndex },
+};
+
 // ─── fill_field ────────────────────────────────────────────────────────────────
+
+const TRUTHY = new Set(['true', '1', 'oui', 'yes', 'on', 'coché', 'checked', 'vrai']);
+const FALSY = new Set(['false', '0', 'non', 'no', 'off', 'décoché', 'unchecked', 'faux', '']);
 
 export const fillFieldTool: AIToolDefinition = {
   id: 'fill_field',
   name: 'Remplir un champ',
   description:
-    "Renseigne la valeur d'un champ de formulaire de l'écran actuel, identifié par son id (voir le catalogue " +
-    "d'actions du contexte, ou list_ui_actions). N'agit QUE sur un champ actuellement visible à l'écran.",
+    "Renseigne un champ de formulaire de l'écran actuel, identifié par son id (voir le catalogue d'actions du " +
+    "contexte, ou list_ui_actions). Gère les champs texte/zone de texte (saisie), les listes <select> (valeur ou " +
+    'libellé de l\'option) et les cases à cocher / boutons radio (value = "true" ou "false"). N\'agit QUE sur un ' +
+    'champ actuellement visible à l\'écran.',
   parameters: {
     actionId: {
       type: 'string',
       required: true,
-      description: "Identifiant exact du champ, tel que fourni dans le catalogue — jamais deviné.",
+      description: 'Identifiant exact du champ, tel que fourni dans le catalogue — jamais deviné.',
     },
     value: {
       type: 'string',
       required: true,
-      description: 'Valeur à saisir dans le champ.',
+      description: 'Valeur à saisir ; libellé/valeur de l\'option pour un <select> ; "true"/"false" pour une case à cocher.',
     },
   },
   moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const actionId = String(ctx.args.actionId);
+      const value = String(ctx.args.value ?? '');
       const el = getUIActionElement(actionId);
       if (!el) {
-        return {
-          success: false,
-          error: `Aucun champ visible à l'écran avec l'id "${actionId}". Vérifie le catalogue d'actions courant avant de réessayer.`,
-          durationMs: 0,
-        };
+        return fail(`Aucun champ visible à l'écran avec l'id "${actionId}". Vérifie le catalogue d'actions courant avant de réessayer.`);
       }
+
+      if (el instanceof HTMLSelectElement) {
+        if (el.disabled) return fail(`Le champ "${actionId}" est désactivé.`);
+        const result = setNativeSelectValue(el, value);
+        if (!result.ok) return fail(`${result.error} Options disponibles : ${result.available.join(' | ')}`);
+        return ok({ actionId, selected: result.selected });
+      }
+
+      if (el instanceof HTMLInputElement && (el.type === 'checkbox' || el.type === 'radio')) {
+        if (el.disabled) return fail(`Le champ "${actionId}" est désactivé.`);
+        const normalized = value.trim().toLowerCase();
+        if (!TRUTHY.has(normalized) && !FALSY.has(normalized)) {
+          return fail('Pour une case à cocher / un bouton radio, value doit valoir "true" ou "false".');
+        }
+        const wanted = TRUTHY.has(normalized);
+        if (el.checked !== wanted) el.click();
+        return ok({ actionId, checked: el.checked });
+      }
+
       if (!(el instanceof HTMLInputElement) && !(el instanceof HTMLTextAreaElement)) {
-        return { success: false, error: `L'élément "${actionId}" n'est pas un champ de formulaire.`, durationMs: 0 };
+        return fail(`L'élément "${actionId}" n'est pas un champ de formulaire.`);
       }
-      setNativeInputValue(el, String(ctx.args.value));
-      return { success: true, data: { actionId }, durationMs: 0 };
+      if (el.disabled || el.readOnly) return fail(`Le champ "${actionId}" est ${el.disabled ? 'désactivé' : 'en lecture seule'}.`);
+      setNativeInputValue(el, value);
+      return ok({ actionId });
     } catch (err) {
-      return { success: false, error: String(err), durationMs: 0 };
+      return fail(String(err));
     }
   },
 };
@@ -508,15 +580,15 @@ export const listObservablesTool: AIToolDefinition = {
   description:
     "Retourne le catalogue du contenu descriptif actuellement visible à l'écran (messages, listes, tableaux, " +
     "cartes) déclaré par l'application — position, état sémantique et données structurées. Ce catalogue est déjà " +
-    "fourni dans le contexte à chaque message et se met à jour automatiquement ; appeler ce tool seulement si le " +
+    'fourni dans le contexte à chaque message et se met à jour automatiquement ; appeler ce tool seulement si le ' +
     "contexte semble tronqué ou pour revérifier après un changement d'écran.",
   parameters: {},
   moduleName: '@egen-civitas/esm-ai-tools',
   execute: async () => {
     try {
-      return { success: true, data: { observables: getObservablesCatalogForLLM() }, durationMs: 0 };
+      return ok({ observables: getObservablesCatalogForLLM() });
     } catch (err) {
-      return { success: false, error: String(err), durationMs: 0 };
+      return fail(String(err));
     }
   },
 };
@@ -527,102 +599,405 @@ export const describeScreenTool: AIToolDefinition = {
   id: 'describe_screen',
   name: "Décrire l'écran courant",
   description:
-    "Décrit l'écran actuellement affiché en lisant sa structure réelle (titres, éléments interactifs visibles " +
-    "avec leur nom, leur état et leur position, contenu descriptif déclaré). À utiliser en FILET DE SECOURS " +
-    "quand le catalogue d'actions/observables du contexte semble insuffisant pour comprendre une page — par " +
-    "exemple une page qui n'a pas explicitement déclaré ses éléments. Ne remplace PAS click_element/fill_field : " +
-    "une fois l'élément identifié ici, s'il ne figure pas dans le catalogue d'actions, informer l'utilisateur " +
-    "que cette action précise n'est pas encore prise en charge plutôt que de tenter une manipulation directe du DOM.",
+    "Vue d'ensemble LÉGÈRE de l'écran : titres, zones de page (landmarks), éléments interactifs visibles avec " +
+    'leur nom, leur état, leur position et une référence (ref) réutilisable, contenu descriptif déclaré. Premier ' +
+    "réflexe pour s'orienter ; pour LIRE le contenu (textes, cartes, tableaux, formulaires) utiliser read_page ; " +
+    'pour un composant précis, read_component. Ne remplace PAS click_element/fill_field : une fois l\'élément ' +
+    "identifié ici, s'il ne figure pas dans le catalogue d'actions, informer l'utilisateur que cette action " +
+    "précise n'est pas encore prise en charge plutôt que de tenter une manipulation directe du DOM.",
+  parameters: {
+    limit: {
+      type: 'number',
+      required: false,
+      description: "Éléments interactifs renvoyés au maximum (défaut 60, plafond 300). Si truncated=true, relancer avec offset.",
+    },
+    offset: { type: 'number', required: false, description: "Nombre d'éléments interactifs à sauter (pagination)." },
+    includeOffscreen: {
+      type: 'boolean',
+      required: false,
+      description: 'false pour ne garder que les éléments actuellement dans la fenêtre visible. Défaut : true.',
+    },
+  },
+  moduleName: '@egen-civitas/esm-ai-tools',
+  execute: async (ctx) => {
+    try {
+      return ok(
+        describeCurrentScreen({
+          limit: numberArg(ctx.args.limit),
+          offset: numberArg(ctx.args.offset),
+          includeOffscreen: boolArg(ctx.args.includeOffscreen),
+        }),
+      );
+    } catch (err) {
+      return fail(String(err));
+    }
+  },
+};
+
+// ─── get_page_state ───────────────────────────────────────────────────────────
+
+export const getPageStateTool: AIToolDefinition = {
+  id: 'get_page_state',
+  name: "État de la page",
+  description:
+    "Coup d'œil sur la page : URL, titre, langue, position de défilement, élément focalisé, texte sélectionné, " +
+    'thème, micro-apps montées, compte d\'éléments par type, modales ouvertes, messages/alertes affichés (avec ' +
+    "leur niveau), et surtout si la page est ENCORE EN CHARGEMENT (squelettes, spinners, aria-busy). À appeler " +
+    "après une navigation ou une action pour vérifier que l'écran est prêt avant de le lire.",
   parameters: {},
   moduleName: '@egen-civitas/esm-ai-tools',
   execute: async () => {
     try {
-      return { success: true, data: describeCurrentScreen(), durationMs: 0 };
+      const state = getPageState();
+      let tenantId: string | null = null;
+      try {
+        tenantId = (getTenantStoreState().tenantId as string | null | undefined) ?? null;
+      } catch {
+        // tenant non initialisé
+      }
+      return ok({ ...state, tenantId });
     } catch (err) {
-      return { success: false, error: String(err), durationMs: 0 };
+      return fail(String(err));
+    }
+  },
+};
+
+// ─── read_page ────────────────────────────────────────────────────────────────
+
+export const readPageTool: AIToolDefinition = {
+  id: 'read_page',
+  name: 'Lire le contenu de la page',
+  description:
+    "LIT tout ce qui est chargé dans la page (ou dans une zone) sous forme d'un plan structuré et indenté : zones " +
+    'de page, composants (cartes, modales, onglets, alertes…), titres, textes, listes, tableaux (aperçu des ' +
+    'lignes), formulaires et champs (libellé, valeur, erreurs, options), boutons, liens (avec href), images ' +
+    '(alt). Shadow DOM et iframes de même origine inclus. Chaque nœud structurel porte une référence {eNN} à ' +
+    'réutiliser avec read_component / read_table / inspect_element. C\'est LE tool pour connaître le contenu ' +
+    "d'un écran. Les champs sensibles (mot de passe…) sont toujours masqués. Réponse paginée : si " +
+    'lines.nextOffset est non nul, relancer avec offset.',
+  parameters: {
+    ...TARGET_PARAMS_OPTIONAL,
+    includeHidden: {
+      type: 'boolean',
+      required: false,
+      description: 'Lire aussi le contenu masqué (display:none, hidden…). Défaut : false.',
+    },
+    offset: { type: 'number', required: false, description: 'Première ligne du plan à renvoyer (pagination).' },
+    maxChars: { type: 'number', required: false, description: 'Budget de caractères de la réponse (défaut 24000).' },
+  },
+  moduleName: '@egen-civitas/esm-ai-tools',
+  execute: async (ctx) => {
+    try {
+      let root: Element | undefined;
+      if (hasTargetArg(ctx.args)) {
+        const target = resolveTarget(ctx.args);
+        if (!target.ok) return fail(target.error);
+        root = target.el;
+      }
+      const result = readPage({
+        root,
+        includeHidden: boolArg(ctx.args.includeHidden),
+        offset: numberArg(ctx.args.offset),
+        maxChars: numberArg(ctx.args.maxChars),
+      });
+      return ok({ ...result, pageLoading: isPageLoading() });
+    } catch (err) {
+      return fail(String(err));
+    }
+  },
+};
+
+// ─── read_component ───────────────────────────────────────────────────────────
+
+export const readComponentTool: AIToolDefinition = {
+  id: 'read_component',
+  name: 'Lire un composant en détail',
+  description:
+    "Lit le CONTENU d'un composant précis (titre, sous-titre, carte, tuile, modale, section, notification, " +
+    "formulaire, liste…) : ses parties déduites (titre, sous-titre, corps, métadonnées, actions, médias, champs, " +
+    'tableaux, listes), le plan complet de son contenu, son identité technique (composants React, bloc Carbon), ' +
+    "les données déclarées par l'app à l'intérieur (observables) et les props du composant React propriétaire. " +
+    "Cibler par ref (obtenue via read_page / find_in_page / discover_components), actionId ou selector. " +
+    'La liste `children` permet de descendre dans un sous-composant.',
+  parameters: {
+    ...TARGET_PARAMS_OPTIONAL,
+    includeHidden: { type: 'boolean', required: false, description: 'Lire aussi le contenu masqué. Défaut : false.' },
+    includeReactProps: {
+      type: 'boolean',
+      required: false,
+      description: 'Inclure les props du composant React propriétaire (secrets masqués). Défaut : true.',
+    },
+    maxChars: { type: 'number', required: false, description: 'Budget de caractères du plan (défaut 12000).' },
+  },
+  moduleName: '@egen-civitas/esm-ai-tools',
+  execute: async (ctx) => {
+    try {
+      const target = resolveTarget(ctx.args);
+      if (!target.ok) return fail(target.error);
+      return ok(
+        readComponent(target.el, {
+          includeHidden: boolArg(ctx.args.includeHidden),
+          includeReactProps: boolArg(ctx.args.includeReactProps),
+          maxChars: numberArg(ctx.args.maxChars),
+        }),
+      );
+    } catch (err) {
+      return fail(String(err));
+    }
+  },
+};
+
+// ─── read_table ───────────────────────────────────────────────────────────────
+
+const TABLE_SELECTOR = 'table, [role="table"], [role="grid"], [role="treegrid"]';
+
+export const readTableTool: AIToolDefinition = {
+  id: 'read_table',
+  name: 'Lire un tableau',
+  description:
+    "Lit un tableau complet (<table> ou grille ARIA, y compris Carbon DataTable) : légende, en-têtes, lignes " +
+    "(paginées par offset/limit), pied de tableau, colonne triée, sélection. Cibler le tableau — ou un élément qui " +
+    "le contient — par ref, actionId ou selector. À utiliser quand read_page indique « lignes de plus ». Ne lit " +
+    "que les lignes présentes dans le DOM : une liste virtualisée n'en rend qu'une partie (voir scroll_to).",
+  parameters: {
+    ...TARGET_PARAMS_OPTIONAL,
+    offset: { type: 'number', required: false, description: 'Première ligne à renvoyer (défaut 0).' },
+    limit: { type: 'number', required: false, description: 'Nombre de lignes (défaut 50, plafond 500).' },
+    includeHidden: { type: 'boolean', required: false, description: 'Inclure les lignes masquées. Défaut : false.' },
+  },
+  moduleName: '@egen-civitas/esm-ai-tools',
+  execute: async (ctx) => {
+    try {
+      const target = resolveTarget(ctx.args);
+      if (!target.ok) return fail(target.error);
+
+      const table = isTableElement(target.el)
+        ? target.el
+        : (target.el.querySelector(TABLE_SELECTOR) ?? target.el.closest(TABLE_SELECTOR));
+      if (!table) return fail("Aucun tableau trouvé dans / autour de cet élément (cibler un <table> ou une grille ARIA).");
+
+      const read = createReadContext({ includeHidden: boolArg(ctx.args.includeHidden) });
+      const model = describeTable(table, read, {
+        offset: numberArg(ctx.args.offset),
+        limit: Math.min(numberArg(ctx.args.limit) ?? 50, 500),
+      });
+      return ok({ ref: getElementRef(table), selector: buildStableSelector(table), ...model });
+    } catch (err) {
+      return fail(String(err));
+    }
+  },
+};
+
+// ─── find_in_page ─────────────────────────────────────────────────────────────
+
+export const findInPageTool: AIToolDefinition = {
+  id: 'find_in_page',
+  name: 'Chercher dans la page',
+  description:
+    "Retrouve OÙ un texte apparaît dans la page (texte affiché, et avec scope=all aria-label, title, placeholder, " +
+    'alt, valeurs de champs) : pour chaque occurrence, la référence du bloc, un extrait avec contexte, la section ' +
+    "(titre qui précède), la nature du composant et si c'est visible à l'écran. Idéal pour localiser un nom, un " +
+    'montant, un message d\'erreur ou un libellé avant de le lire avec read_component.',
+  parameters: {
+    query: { type: 'string', required: true, description: 'Texte à chercher (ou expression régulière si regex=true).' },
+    regex: { type: 'boolean', required: false, description: 'Interpréter query comme expression régulière (≤ 200 car.).' },
+    caseSensitive: { type: 'boolean', required: false, description: 'Respecter la casse. Défaut : false.' },
+    scope: {
+      type: 'string',
+      required: false,
+      enum: ['text', 'all'],
+      description: '"text" : texte affiché seulement ; "all" (défaut) : + attributs accessibles et valeurs de champs.',
+    },
+    includeHidden: { type: 'boolean', required: false, description: 'Chercher aussi dans le contenu masqué.' },
+    limit: { type: 'number', required: false, description: "Occurrences détaillées (défaut 25, plafond 100)." },
+    ...TARGET_PARAMS_OPTIONAL,
+  },
+  moduleName: '@egen-civitas/esm-ai-tools',
+  execute: async (ctx) => {
+    try {
+      let root: Element | undefined;
+      if (hasTargetArg(ctx.args)) {
+        const target = resolveTarget(ctx.args);
+        if (!target.ok) return fail(target.error);
+        root = target.el;
+      }
+      const result = findInPage({
+        query: String(ctx.args.query ?? ''),
+        regex: boolArg(ctx.args.regex),
+        caseSensitive: boolArg(ctx.args.caseSensitive),
+        scope: ctx.args.scope === 'text' ? 'text' : 'all',
+        includeHidden: boolArg(ctx.args.includeHidden),
+        limit: numberArg(ctx.args.limit),
+        root,
+      });
+      if ('error' in result) return fail(result.error);
+      return ok(result);
+    } catch (err) {
+      return fail(String(err));
+    }
+  },
+};
+
+// ─── discover_components ──────────────────────────────────────────────────────
+
+export const discoverComponentsTool: AIToolDefinition = {
+  id: 'discover_components',
+  name: 'Découvrir les composants de la page',
+  description:
+    "Inventaire des composants présents dans la page : zones de page, cartes/tuiles, modales, onglets, " +
+    "accordéons, notifications, tableaux, formulaires, tags, fils d'Ariane, pagination, etc. — avec leur nature, " +
+    "titre, extrait, composant React / bloc Carbon et position — et le décompte par nature. kinds=['react-component'] " +
+    "liste les composants React eux-mêmes ; reactComponents donne toujours les plus fréquents. À utiliser pour " +
+    'savoir quoi lire, puis read_component sur la ref voulue.',
+  parameters: {
+    kinds: {
+      type: 'array',
+      required: false,
+      items: { type: 'string' },
+      description: "Ne garder que ces natures (ex: ['card','dialog','tabs','notification','table','form']).",
+    },
+    query: { type: 'string', required: false, description: 'Filtre texte sur la nature, le nom (React/Carbon) ou le titre.' },
+    limit: { type: 'number', required: false, description: 'Composants détaillés (défaut 100, plafond 500).' },
+    includeHidden: { type: 'boolean', required: false, description: 'Inclure les composants masqués.' },
+    ...TARGET_PARAMS_OPTIONAL,
+  },
+  moduleName: '@egen-civitas/esm-ai-tools',
+  execute: async (ctx) => {
+    try {
+      let root: Element | undefined;
+      if (hasTargetArg(ctx.args)) {
+        const target = resolveTarget(ctx.args);
+        if (!target.ok) return fail(target.error);
+        root = target.el;
+      }
+      const kinds = Array.isArray(ctx.args.kinds) ? ctx.args.kinds.map(String) : undefined;
+      return ok(
+        discoverComponents({
+          root,
+          kinds,
+          query: ctx.args.query ? String(ctx.args.query) : undefined,
+          limit: numberArg(ctx.args.limit),
+          includeHidden: boolArg(ctx.args.includeHidden),
+        }),
+      );
+    } catch (err) {
+      return fail(String(err));
+    }
+  },
+};
+
+// ─── get_dom_tree ─────────────────────────────────────────────────────────────
+
+export const getDomTreeTool: AIToolDefinition = {
+  id: 'get_dom_tree',
+  name: "Arbre DOM compact",
+  description:
+    "Arbre DOM compact (une ligne par nœud : balise, id, classes, rôle, référence, texte direct) en largeur " +
+    "d'abord, pour comprendre la STRUCTURE d'une zone sans le volume d'inspect_interface. À utiliser quand " +
+    "read_page ne suffit pas à comprendre comment la page est construite (conteneurs, classes, imbrication).",
+  parameters: {
+    ...TARGET_PARAMS_OPTIONAL,
+    maxDepth: { type: 'number', required: false, description: 'Profondeur maximale (défaut 4, plafond 12).' },
+    maxNodes: { type: 'number', required: false, description: 'Nombre de nœuds affichés (défaut 250, plafond 1500).' },
+    includeText: { type: 'boolean', required: false, description: 'Afficher le texte direct de chaque nœud. Défaut : true.' },
+    includeHidden: { type: 'boolean', required: false, description: 'Inclure les nœuds masqués.' },
+  },
+  moduleName: '@egen-civitas/esm-ai-tools',
+  execute: async (ctx) => {
+    try {
+      let root: Element | undefined;
+      if (hasTargetArg(ctx.args)) {
+        const target = resolveTarget(ctx.args);
+        if (!target.ok) return fail(target.error);
+        root = target.el;
+      }
+      return ok(
+        getDomTree({
+          root,
+          maxDepth: numberArg(ctx.args.maxDepth),
+          maxNodes: numberArg(ctx.args.maxNodes),
+          includeText: boolArg(ctx.args.includeText),
+          includeHidden: boolArg(ctx.args.includeHidden),
+        }),
+      );
+    } catch (err) {
+      return fail(String(err));
+    }
+  },
+};
+
+// ─── scroll_to ────────────────────────────────────────────────────────────────
+
+export const scrollToTool: AIToolDefinition = {
+  id: 'scroll_to',
+  name: 'Faire défiler la page',
+  description:
+    "Fait défiler la page jusqu'à un élément (centré dans la fenêtre) ou dans une direction (top, bottom, up, " +
+    "down), puis renvoie la position obtenue. Utile pour révéler du contenu chargé au défilement (listes " +
+    "virtualisées, chargement infini) avant de relire la page. N'a aucun effet sur les données.",
+  parameters: {
+    ...TARGET_PARAMS_OPTIONAL,
+    direction: {
+      type: 'string',
+      required: false,
+      enum: ['top', 'bottom', 'up', 'down'],
+      description: "Direction de défilement de la fenêtre si aucune cible n'est donnée (up/down = 85 % de la hauteur visible).",
+    },
+  },
+  moduleName: '@egen-civitas/esm-ai-tools',
+  execute: async (ctx) => {
+    try {
+      if (hasTargetArg(ctx.args)) {
+        const target = resolveTarget(ctx.args);
+        if (!target.ok) return fail(target.error);
+        return ok(scrollPage({ el: target.el }));
+      }
+      const direction = ctx.args.direction;
+      if (direction !== 'top' && direction !== 'bottom' && direction !== 'up' && direction !== 'down') {
+        return fail('Fournir une cible (ref, actionId, selector) ou direction (top, bottom, up, down).');
+      }
+      return ok(scrollPage({ direction }));
+    } catch (err) {
+      return fail(String(err));
     }
   },
 };
 
 // ─── inspect_element ──────────────────────────────────────────────────────────
 //
-// Complémentaire à describe_screen/list_ui_actions/list_observables (qui
-// restent légers et sémantiques, fournis à chaque message). Ce tool est la
-// plongée technique COMPLÈTE, appelée seulement quand l'agent en a
-// explicitement besoin — le résultat (volumineux, assumé) enrichit alors la
-// conversation en cours, sans jamais alourdir le contexte de base des autres
-// messages. Voir native/inspect-element.ts pour le détail de chaque section.
+// Complémentaire à describe_screen/read_page (qui restent légers et sémantiques).
+// Ce tool est la plongée technique sur UN élément : CSS, cascade, géométrie,
+// accessibilité, contenu, React. Voir native/inspect-element.ts.
 
 export const inspectElementTool: AIToolDefinition = {
   id: 'inspect_element',
-  name: "Inspecter un élément en détail",
+  name: 'Inspecter un élément en détail',
   description:
-    "Retourne un rapport technique et visuel COMPLET sur un élément précis de l'écran actuel : identité (tag, " +
-    "attributs, chemin DOM), géométrie et visibilité, style CSS calculé intégral (toutes les propriétés) plus " +
-    "un regroupement structuré (boîte, typographie, mise en page, visuel, interaction), la cascade de règles " +
-    "CSS qui s'appliquent (sélecteur, spécificité, feuille source), l'accessibilité, le contenu (texte/valeur, " +
-    "avec les champs sensibles toujours masqués), et — au mieux — le composant React propriétaire et ses props. " +
-    "Si l'élément a été déclaré via useAIActionable/useAIObservable, ses métadonnées fonctionnelles déclarées " +
-    "sont aussi incluses. À utiliser pour un diagnostic précis (pourquoi cet élément a tel aspect, tel " +
-    "comportement, telles données) — PAS pour une simple description générale, déjà couverte par le contexte " +
-    "et describe_screen/list_ui_actions/list_observables.",
+    "Rapport technique et visuel sur un élément précis de l'écran actuel : identité (tag, attributs, chemin DOM, " +
+    'ref), géométrie et visibilité, style CSS calculé (intégral en detail=full, regroupé en standard), cascade ' +
+    "de règles CSS appliquées (full), accessibilité, contenu (texte/valeur, options d'un select, texte injecté " +
+    'par CSS ::before/::after, champs sensibles toujours masqués), et — au mieux — le composant React propriétaire ' +
+    "et ses props. Si l'élément a été déclaré via useAIActionable/useAIObservable, ses métadonnées déclarées sont " +
+    'incluses. À utiliser pour un diagnostic précis (pourquoi cet aspect, ce comportement) — PAS pour lire le ' +
+    'contenu (read_page / read_component).',
   parameters: {
-    actionId: {
+    ...TARGET_PARAMS_OPTIONAL,
+    detail: {
       type: 'string',
       required: false,
+      enum: ['full', 'standard', 'compact'],
       description:
-        "Identifiant d'une action ou d'un observable déjà connu (catalogue du contexte, list_ui_actions, " +
-        'list_observables). Prioritaire sur selector si les deux sont fournis.',
-    },
-    selector: {
-      type: 'string',
-      required: false,
-      description:
-        "Sélecteur CSS ciblant l'élément (ex: '.card__title', '#submit-button'). Utilisé si actionId est " +
-        "absent, ou pour inspecter un élément qui n'a pas été déclaré par l'app.",
-    },
-    matchIndex: {
-      type: 'number',
-      required: false,
-      description: 'Si selector matche plusieurs éléments, index (0-based) de celui à inspecter. Défaut : 0.',
+        '"full" (défaut) : tout ; "standard" : CSS regroupé sans cascade ; "compact" : sans CSS. Les sections omises sont listées dans omittedSections.',
     },
   },
   moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
-      const actionId = ctx.args.actionId ? String(ctx.args.actionId) : undefined;
-      const selector = ctx.args.selector ? String(ctx.args.selector) : undefined;
-      const matchIndex = typeof ctx.args.matchIndex === 'number' ? ctx.args.matchIndex : 0;
-
-      let el: Element | null = null;
-      if (actionId) {
-        el = getUIActionElement(actionId) ?? getObservableElement(actionId);
-      }
-      if (!el && selector) {
-        const matches = document.querySelectorAll(selector);
-        el = matches[matchIndex] ?? null;
-        if (!el && matches.length === 0) {
-          return { success: false, error: `Aucun élément ne correspond au sélecteur "${selector}".`, durationMs: 0 };
-        }
-        if (!el) {
-          return {
-            success: false,
-            error: `matchIndex ${matchIndex} hors limites : "${selector}" ne matche que ${matches.length} élément(s).`,
-            durationMs: 0,
-          };
-        }
-      }
-      if (!el) {
-        return {
-          success: false,
-          error: 'Fournir actionId (id connu du catalogue) ou selector (sélecteur CSS).',
-          durationMs: 0,
-        };
-      }
-
-      return { success: true, data: inspectDOMElement(el, actionId), durationMs: 0 };
+      const target = resolveTarget(ctx.args);
+      if (!target.ok) return fail(target.error);
+      return ok(inspectDOMElement(target.el, target.actionId, { detail: detailArg(ctx.args.detail, 'full') }));
     } catch (err) {
-      return { success: false, error: String(err), durationMs: 0 };
+      return fail(String(err));
     }
   },
 };
@@ -633,62 +1008,80 @@ export const inspectInterfaceTool: AIToolDefinition = {
   id: 'inspect_interface',
   name: "Inspecter l'interface courante en détail",
   description:
-    "Retourne le même rapport complet que inspect_element (CSS calculé intégral, cascade de règles, " +
-    "géométrie, accessibilité, contenu, React best-effort) pour CHAQUE élément significatif actuellement " +
-    "affiché à l'écran (boutons, champs, labels, titres, images, zones sémantiques...), avec la hiérarchie " +
-    "parent/enfant pour comprendre la mise en page. Rapport volumineux par nature — à réserver aux besoins " +
-    "d'un audit technique/visuel complet de l'écran, PAS pour un usage courant (préférer describe_screen, " +
-    "déjà présent dans le contexte, pour une vue d'ensemble légère).",
+    "Rapport technique (même structure qu'inspect_element) pour CHAQUE élément significatif affiché (boutons, " +
+    'champs, labels, titres, images, zones sémantiques…), avec la hiérarchie parent/enfant. Par défaut en ' +
+    'detail=standard (CSS regroupé par catégorie, sans cascade) et paginé (120 nœuds) : un rapport « full » sur ' +
+    "tout l'écran est énorme. À réserver aux audits techniques/visuels ; pour LIRE l'écran préférer read_page, " +
+    "pour la structure get_dom_tree.",
   parameters: {
     rootSelector: {
       type: 'string',
       required: false,
-      description:
-        "Sélecteur CSS pour limiter l'inspection à une sous-partie de l'écran (ex: '.main-content'). " +
-        "Si absent, inspecte tout <body>.",
+      description: "Sélecteur CSS pour limiter l'inspection à une sous-partie de l'écran (ex: '.main-content'). Si absent, inspecte tout <body>.",
     },
+    detail: {
+      type: 'string',
+      required: false,
+      enum: ['full', 'standard', 'compact'],
+      description: '"standard" (défaut) ; "compact" : sans CSS ; "full" : CSS intégral + cascade (très volumineux).',
+    },
+    limit: { type: 'number', required: false, description: 'Nœuds renvoyés (défaut 120, plafond 500).' },
+    offset: { type: 'number', required: false, description: 'Nœuds significatifs à sauter (pagination ; voir nextOffset).' },
   },
   moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
     try {
       const rootSelector = ctx.args.rootSelector ? String(ctx.args.rootSelector) : undefined;
-      return { success: true, data: inspectFullInterface(rootSelector), durationMs: 0 };
+      return ok(
+        inspectFullInterface(rootSelector, {
+          detail: detailArg(ctx.args.detail, 'standard'),
+          limit: numberArg(ctx.args.limit) ?? 120,
+          offset: numberArg(ctx.args.offset),
+        }),
+      );
     } catch (err) {
-      return { success: false, error: String(err), durationMs: 0 };
+      return fail(String(err));
     }
   },
 };
 
-// ─── navigate_and_inspect ─────────────────────────────────────────────────────
+// ─── navigate_and_inspect / navigate_and_read ─────────────────────────────────
 //
-// Couvre le besoin d'inspecter N'IMPORTE QUELLE interface du projet, pas
-// seulement celle affichée actuellement — SANS système d'analyse statique
-// séparé (irréalisable de toute façon : le CSS calculé et les props React
-// n'existent qu'une fois l'élément réellement monté et rendu). La seule
-// approche fiable est de naviguer réellement vers la route, laisser le temps
-// à l'app single-spa cible de se monter, puis inspecter — ce tool enchaîne
-// les deux étapes pour réduire la friction (1 appel au lieu de navigate puis
-// inspect_interface séparément).
+// Couvre le besoin d'examiner N'IMPORTE QUELLE interface du projet, pas seulement
+// celle affichée — SANS analyse statique (irréalisable : CSS calculé, props React
+// et contenu n'existent qu'une fois l'élément monté et rendu). La seule approche
+// fiable est de naviguer réellement vers la route, attendre le montage de la
+// micro-app ET la fin des indicateurs de chargement, puis lire/inspecter.
+
+const ROUTE_PARAM = {
+  type: 'string' as const,
+  required: true,
+  description: 'Route applicative cible, relative à la racine de la SPA (ex: "/students/123", "/login").',
+};
 
 export const navigateAndInspectTool: AIToolDefinition = {
   id: 'navigate_and_inspect',
   name: 'Naviguer puis inspecter une interface',
   description:
     "Navigue vers une route de l'application (voir navigate — même règle : ne jamais deviner un chemin, le " +
-    "prendre du catalogue de routes ou de list_routes), attend que l'écran se stabilise, puis retourne le " +
-    "même rapport complet qu'inspect_interface pour cette nouvelle interface. À utiliser pour examiner en " +
-    "détail une interface du projet différente de celle actuellement affichée.",
+    "prendre du catalogue de routes ou de list_routes), attend que l'écran se stabilise et que le chargement se " +
+    "termine, puis retourne le même rapport qu'inspect_interface (detail=standard par défaut). Pour LIRE le " +
+    'contenu de cette route, préférer navigate_and_read.',
   parameters: {
-    route: {
-      type: 'string',
-      required: true,
-      description: 'Route applicative cible, relative à la racine de la SPA (ex: "/students/123", "/login").',
-    },
+    route: ROUTE_PARAM,
     rootSelector: {
       type: 'string',
       required: false,
       description: "Sélecteur CSS pour limiter l'inspection à une sous-partie de l'écran cible.",
     },
+    detail: {
+      type: 'string',
+      required: false,
+      enum: ['full', 'standard', 'compact'],
+      description: '"standard" (défaut) ; "compact" : sans CSS ; "full" : CSS intégral + cascade.',
+    },
+    limit: { type: 'number', required: false, description: 'Nœuds renvoyés (défaut 120, plafond 500).' },
+    offset: { type: 'number', required: false, description: 'Nœuds significatifs à sauter (pagination).' },
   },
   moduleName: '@egen-civitas/esm-ai-tools',
   execute: async (ctx) => {
@@ -697,15 +1090,54 @@ export const navigateAndInspectTool: AIToolDefinition = {
       const rootSelector = ctx.args.rootSelector ? String(ctx.args.rootSelector) : undefined;
 
       const resolved = resolveAppRoute(route);
-      if (!resolved.ok) return { success: false, error: resolved.error, durationMs: 0 };
+      if (!resolved.ok) return fail(resolved.error);
       const target = resolved.value;
 
       navigate({ to: target });
-      await waitForDomSettle();
+      const ready = await waitForPageReady();
 
-      return { success: true, data: { navigatedTo: target, ...inspectFullInterface(rootSelector) }, durationMs: 0 };
+      return ok({
+        navigatedTo: target,
+        stillLoading: ready.stillLoading,
+        ...inspectFullInterface(rootSelector, {
+          detail: detailArg(ctx.args.detail, 'standard'),
+          limit: numberArg(ctx.args.limit) ?? 120,
+          offset: numberArg(ctx.args.offset),
+        }),
+      });
     } catch (err) {
-      return { success: false, error: String(err), durationMs: 0 };
+      return fail(String(err));
+    }
+  },
+};
+
+export const navigateAndReadTool: AIToolDefinition = {
+  id: 'navigate_and_read',
+  name: 'Naviguer puis lire une page',
+  description:
+    "Navigue vers une route de l'application (ne jamais deviner un chemin : le prendre du catalogue de routes ou " +
+    "de list_routes), attend que l'écran se stabilise et que le chargement se termine, puis lit tout son contenu " +
+    "comme read_page (plan structuré : titres, textes, cartes, tableaux, formulaires, liens…). À utiliser pour " +
+    "connaître le contenu d'une page différente de celle actuellement affichée.",
+  parameters: {
+    route: ROUTE_PARAM,
+    offset: { type: 'number', required: false, description: 'Première ligne du plan à renvoyer (pagination).' },
+    maxChars: { type: 'number', required: false, description: 'Budget de caractères de la réponse (défaut 24000).' },
+  },
+  moduleName: '@egen-civitas/esm-ai-tools',
+  execute: async (ctx) => {
+    try {
+      const resolved = resolveAppRoute(String(ctx.args.route));
+      if (!resolved.ok) return fail(resolved.error);
+      const target = resolved.value;
+
+      navigate({ to: target });
+      const ready = await waitForPageReady();
+
+      const result = readPage({ offset: numberArg(ctx.args.offset), maxChars: numberArg(ctx.args.maxChars) });
+      return ok({ navigatedTo: target, stillLoading: ready.stillLoading, ...result });
+    } catch (err) {
+      return fail(String(err));
     }
   },
 };
@@ -718,9 +1150,18 @@ export const NATIVE_TOOLS: AIToolDefinition[] = [
   listUIActionsTool,
   listObservablesTool,
   describeScreenTool,
+  getPageStateTool,
+  readPageTool,
+  readComponentTool,
+  readTableTool,
+  findInPageTool,
+  discoverComponentsTool,
+  getDomTreeTool,
+  scrollToTool,
   inspectElementTool,
   inspectInterfaceTool,
   navigateAndInspectTool,
+  navigateAndReadTool,
   clickElementTool,
   fillFieldTool,
   showNotificationTool,

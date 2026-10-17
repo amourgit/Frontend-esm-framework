@@ -56,6 +56,9 @@ export {
   createContextSync,
   createConversationClient,
   resolveChannelUrl,
+  assertChannelUrlAllowed,
+  createCallAuthenticator,
+  EGEN_AI_TOOL_CALL_CONTRACT,
   AIChannel,
   ChannelNotReadyError,
   ChannelClosedError,
@@ -73,6 +76,10 @@ export {
   type ToolActivityStatus,
   type ToolDescriptorPayload,
   type StartAIChannelOptions,
+  type CallAuthenticator,
+  type CallAuthResult,
+  type CallRejectionCode,
+  type ChannelUrlPolicy,
 } from '@egen-civitas/esm-ai-channel';
 
 // ─── Événements ───────────────────────────────────────────────────────────────

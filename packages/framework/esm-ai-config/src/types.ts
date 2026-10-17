@@ -54,6 +54,23 @@ export interface AISecurityConfig {
   validateToolsClient: boolean;
   /** Timeout d'exécution des tools en millisecondes */
   toolTimeoutMs: number;
+  /**
+   * Authentification des appels de tools par le backend (JWS signé — RFC 7515/7519) :
+   *  - 'off'     : appels non vérifiés (comportement historique) ;
+   *  - 'warn'    : vérifie quand une signature est présente, journalise les manquements, exécute quand même ;
+   *  - 'enforce' : refuse tout appel sans signature valide (échec fermé) — mode cible en production.
+   */
+  signedToolCalls: 'off' | 'warn' | 'enforce';
+  /** JWKS PUBLIC (JSON) des clés de vérification, épinglé dans le build. Jamais de clé privée ni symétrique. */
+  channelJwks: string;
+  /** URL (https) d'un JWKS distant, pour la rotation de clés — alternative à `channelJwks`. */
+  channelJwksUrl: string;
+  /** Algorithmes de signature acceptés (asymétriques uniquement ; ES256 par défaut, supporté partout). */
+  channelAlgorithms: string[];
+  /** Autoriser un canal `ws://` vers un hôte non local (déconseillé : session et ordres en clair). */
+  allowInsecureChannel: boolean;
+  /** Épinglage des hôtes du canal (« api.exemple.ga », « *.exemple.ga »). Vide = pas d'épinglage. */
+  allowedChannelHosts: string[];
 }
 
 export interface AIObservabilityConfig {

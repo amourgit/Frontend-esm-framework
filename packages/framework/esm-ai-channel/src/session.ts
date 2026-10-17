@@ -4,7 +4,7 @@
 
 import { getAIConfig } from '@egen-civitas/esm-ai-config';
 import { AIChannel, type AIChannelOptions, type ChannelModule } from './channel.js';
-import { resolveChannelUrl } from './url.js';
+import { assertChannelUrlAllowed, resolveChannelUrl } from './url.js';
 import {
   createContextSync,
   createConversationClient,
@@ -49,7 +49,12 @@ export function startAIChannel(options: StartAIChannelOptions = {}): AIChannel |
   }
 
   const channel = new AIChannel({
-    url: () => resolveChannelUrl(config.backend.channelUrl),
+    // Destination vérifiée à CHAQUE connexion : wss:// hors machine locale, hôtes épinglés si configurés.
+    url: () =>
+      assertChannelUrlAllowed(resolveChannelUrl(config.backend.channelUrl), {
+        allowInsecure: config.security.allowInsecureChannel,
+        allowedHosts: config.security.allowedChannelHosts,
+      }),
     heartbeatMs: config.backend.heartbeatMs,
     reconnectMinMs: config.backend.reconnectMinMs,
     reconnectMaxMs: config.backend.reconnectMaxMs,

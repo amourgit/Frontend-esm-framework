@@ -72,6 +72,12 @@ export function buildDefaultConfig(): AIConfig {
       requiredPrivileges: readEnvArray('EGEN_AI_REQUIRED_PRIVILEGES', []),
       validateToolsClient: readEnvBool('EGEN_AI_VALIDATE_TOOLS', true),
       toolTimeoutMs: readEnvNumber('EGEN_AI_TOOL_TIMEOUT', 30000),
+      signedToolCalls: readEnv('EGEN_AI_SIGNED_CALLS', 'off') as AIConfig['security']['signedToolCalls'],
+      channelJwks: readEnv('EGEN_AI_CHANNEL_JWKS', ''),
+      channelJwksUrl: readEnv('EGEN_AI_CHANNEL_JWKS_URL', ''),
+      channelAlgorithms: readEnvArray('EGEN_AI_CHANNEL_ALGORITHMS', ['ES256']),
+      allowInsecureChannel: readEnvBool('EGEN_AI_ALLOW_INSECURE_CHANNEL', false),
+      allowedChannelHosts: readEnvArray('EGEN_AI_CHANNEL_ALLOWED_HOSTS', []),
     },
 
     observability: {

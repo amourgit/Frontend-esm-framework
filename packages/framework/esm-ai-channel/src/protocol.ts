@@ -119,6 +119,12 @@ export interface ServerPayloadMap {
     timeoutMs?: number;
     /** Flux de conversation à l'origine de l'appel (pour l'affichage) */
     streamId?: string;
+    /**
+     * Appel SIGNÉ par le backend (JWS compact, RFC 7515) — voir modules/call-authenticator.ts.
+     * Quand `security.signedToolCalls` est actif, le frontend exécute le contenu signé (tool, args…)
+     * et non les champs ci-dessus.
+     */
+    jws?: string;
   };
   'tool.cancel': { callId: string };
   'conversation.transcript': { text: string };

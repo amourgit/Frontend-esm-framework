@@ -18,7 +18,14 @@ export * from '@egen-civitas/esm-state/mock';
 export * from '@egen-civitas/esm-styleguide/mock';
 export * from '@egen-civitas/esm-translations/mock';
 
-export { parseDate, formatDate, formatDatetime, formatTime, isEgenDateToday, matchLocale } from '@egen-civitas/esm-utils';
+export {
+  parseDate,
+  formatDate,
+  formatDatetime,
+  formatTime,
+  isEgenDateToday,
+  matchLocale,
+} from '@egen-civitas/esm-utils';
 
 /* esm-globals */
 
@@ -66,6 +73,15 @@ export const showModal = vi.fn();
 export const LeftNavMenu = vi.fn(() => <div>Left Nav Menu</div>);
 export const setLeftNav = vi.fn();
 export const unsetLeftNav = vi.fn();
+export const registerNavBehavior = vi.fn(() => () => {});
+export const getNavBehavior = vi.fn();
+// Constantes et validateurs purs : on garde les vraies implémentations (aucune raison de les simuler).
+export {
+  TOPBAR_LEVEL2_NAV_SLOT,
+  NAV_ALL_WORKSPACES,
+  isNavEntryMeta,
+  isNavEntryInWorkspace,
+} from '@egen-civitas/esm-extensions';
 export const ResponsiveWrapper = vi.fn(({ children }) => <>{children}</>);
 export const ErrorState = vi.fn(() => <div>Error State</div>);
 

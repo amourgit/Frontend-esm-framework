@@ -1254,7 +1254,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-extensions@npm:^1.0.0, @egen-civitas/esm-extensions@npm:^1.1.1, @egen-civitas/esm-extensions@workspace:packages/framework/esm-extensions":
+"@egen-civitas/esm-extensions@npm:^1.0.0, @egen-civitas/esm-extensions@npm:^1.1.1, @egen-civitas/esm-extensions@npm:^1.2.0, @egen-civitas/esm-extensions@workspace:packages/framework/esm-extensions":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-extensions@workspace:packages/framework/esm-extensions"
   dependencies:
@@ -1368,7 +1368,7 @@ __metadata:
     "@egen-civitas/esm-dynamic-loading": "npm:^2.0.0"
     "@egen-civitas/esm-error-handling": "npm:^1.0.0"
     "@egen-civitas/esm-expression-evaluator": "npm:^1.0.0"
-    "@egen-civitas/esm-extensions": "npm:^1.1.1"
+    "@egen-civitas/esm-extensions": "npm:^1.2.0"
     "@egen-civitas/esm-feature-flags": "npm:^1.0.0"
     "@egen-civitas/esm-globals": "npm:^1.0.0"
     "@egen-civitas/esm-navigation": "npm:^1.0.0"
@@ -1810,7 +1810,7 @@ __metadata:
     "@egen-civitas/esm-data-api": "npm:^1.0.2"
     "@egen-civitas/esm-error-handling": "npm:^1.0.0"
     "@egen-civitas/esm-expression-evaluator": "npm:^1.0.0"
-    "@egen-civitas/esm-extensions": "npm:^1.1.1"
+    "@egen-civitas/esm-extensions": "npm:^1.2.0"
     "@egen-civitas/esm-globals": "npm:^1.0.2"
     "@egen-civitas/esm-navigation": "npm:^1.0.2"
     "@egen-civitas/esm-react-utils": "npm:^1.0.5"

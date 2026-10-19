@@ -17,7 +17,14 @@ export * from '@egen-civitas/esm-state/mock';
 export * from '@egen-civitas/esm-styleguide/mock';
 export * from '@egen-civitas/esm-translations/mock';
 
-export { parseDate, formatDate, formatDatetime, formatTime, isEgenDateToday, matchLocale } from '@egen-civitas/esm-utils';
+export {
+  parseDate,
+  formatDate,
+  formatDatetime,
+  formatTime,
+  isEgenDateToday,
+  matchLocale,
+} from '@egen-civitas/esm-utils';
 
 /* esm-globals */
 
@@ -65,6 +72,15 @@ export const showModal = jest.fn();
 export const LeftNavMenu = jest.fn(() => <div>Left Nav Menu</div>);
 export const setLeftNav = jest.fn();
 export const unsetLeftNav = jest.fn();
+export const registerNavBehavior = jest.fn(() => () => {});
+export const getNavBehavior = jest.fn();
+// Constantes et validateurs purs : on garde les vraies implémentations (aucune raison de les simuler).
+export {
+  TOPBAR_LEVEL2_NAV_SLOT,
+  NAV_ALL_WORKSPACES,
+  isNavEntryMeta,
+  isNavEntryInWorkspace,
+} from '@egen-civitas/esm-extensions';
 export const ResponsiveWrapper = jest.fn(({ children }) => <>{children}</>);
 export const ErrorState = jest.fn(() => <div>Error State</div>);
 

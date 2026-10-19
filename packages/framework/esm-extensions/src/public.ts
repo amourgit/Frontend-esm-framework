@@ -20,4 +20,17 @@ export {
 } from './store.js';
 export { type WorkspaceRegistration } from './workspaces.js';
 export { type ExtensionData, type ComponentConfig } from './types.js';
-export { TOPBAR_LEVEL2_NAV_SLOT, type NavEntryMeta, isNavEntryMeta } from './nav-entry.js';
+export {
+  TOPBAR_LEVEL2_NAV_SLOT,
+  NAV_ALL_WORKSPACES,
+  type NavEntryMeta,
+  isNavEntryMeta,
+  isNavEntryInWorkspace,
+} from './nav-entry.js';
+export {
+  type NavBehavior,
+  type NavBehaviorTarget,
+  type NavSelectContext,
+  registerNavBehavior,
+  getNavBehavior,
+} from './nav-behavior.js';

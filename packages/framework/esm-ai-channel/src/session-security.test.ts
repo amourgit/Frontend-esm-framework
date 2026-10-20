@@ -2,18 +2,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { overrideAIConfig, resetAIConfig } from '@egen-civitas/esm-ai-config';
 import { getAIChannel, getChannelStore, startAIChannel, stopAIChannel, type WebSocketLike } from './index.js';
 
-// Le canal branche des modules qui lisent la session / le tenant : on neutralise esm-api (hors sujet ici).
-vi.mock('@egen-civitas/esm-api', () => ({
-  sessionStore: {
-    getState: () => ({ loaded: true, session: { authenticated: false } }),
-    subscribe: () => () => undefined,
-  },
+// Le canal branche des modules qui lisent la session / le tenant. On garde le VRAI esm-api (son graphe est chargé
+// par les autres dépendances, ex. esm-data-api qui en importe `restBaseUrl`) et on ne neutralise que le tenant.
+vi.mock('@egen-civitas/esm-api', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@egen-civitas/esm-api')>()),
   getTenantId: () => null,
   isMultiTenant: () => false,
-  subscribeTenant: () => () => undefined,
-  egenFetch: vi.fn(),
-  // lu à l'import par esm-data-api (attachments) : sans lui, le mock lève une erreur à l'évaluation du module.
-  restBaseUrl: '/ws/rest/v1',
 }));
 
 class SpySocket implements WebSocketLike {

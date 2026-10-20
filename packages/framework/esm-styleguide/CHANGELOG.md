@@ -1,5 +1,11 @@
 # @egen-civitas/esm-styleguide
 
+## 1.10.0
+
+### Minor Changes
+
+- 6a75627: Ajoute la catégorie `sites` (Tailwind, présentationnelle) : `SiteCarousel`, `SiteSearchBar`, `SiteTabbedLayout`, `SitePanelHeader`, `SiteBanner` et les panneaux `SiteApplicationsPanel`, `SiteResourcesPanel`, `SiteMembersPanel`, `SiteTasksPanel`, `SiteActivityPanel`, `SiteSettingsPanel`, avec leurs types. Reprise des composants « sites » de Civitas-GED, rendus autonomes : aucun routage, aucune donnée ni son, tout passe par les props et callbacks.
+
 ## 1.9.0
 
 ### Minor Changes

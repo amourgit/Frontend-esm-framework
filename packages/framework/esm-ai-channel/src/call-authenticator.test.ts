@@ -279,6 +279,139 @@ describe('mode « enforce »', () => {
   });
 });
 
+describe('cas limites du jeton', () => {
+  let signer: Awaited<ReturnType<typeof makeSigner>>;
+  beforeEach(async () => {
+    signer = await makeSigner();
+  });
+
+  it('un jws absent, vide ou non textuel équivaut à « non signé » (jamais exécuté en enforce)', async () => {
+    const auth = makeAuth(signer);
+    for (const jws of [undefined, '', 123, null, {}, []]) {
+      expectRejected(await auth.authenticate(frame({ jws: jws as never })), 'missing');
+    }
+  });
+
+  it('refuse un jeton illisible (pas un JWS, base64 invalide, parties manquantes)', async () => {
+    const auth = makeAuth(signer);
+    for (const jws of ['pas-un-jeton', 'a.b', 'a.b.c', '....', 'eyJhbGciOiJFUzI1NiJ9.e30.']) {
+      const result = await auth.authenticate(frame({ jws }));
+      expect(result.ok, jws).toBe(false);
+    }
+  });
+
+  it('refuse un jeton pas encore valide (nbf dans le futur)', async () => {
+    const iat = Math.floor(NOW / 1000);
+    const token = await new SignJWT({ tool: 'navigate', args: {} })
+      .setProtectedHeader({ alg: 'ES256', typ: EGEN_AI_TOOL_CALL_CONTRACT.typ, kid: 'k1' })
+      .setIssuedAt(iat)
+      .setNotBefore(iat + 3600)
+      .setExpirationTime(iat + 7200)
+      .setAudience(EGEN_AI_TOOL_CALL_CONTRACT.audience)
+      .setSubject(SESSION)
+      .setJti('call-1')
+      .sign(signer.privateKey);
+    expectRejected(await makeAuth(signer).authenticate(frame({ jws: token })), 'expired');
+  });
+
+  it('exige tous les claims de base (exp, iat, jti, sub, aud) — chacun, individuellement', async () => {
+    const iat = Math.floor(NOW / 1000);
+    const build = (omit: string) => {
+      const jwt = new SignJWT({ tool: 'navigate', args: {} }).setProtectedHeader({
+        alg: 'ES256',
+        typ: EGEN_AI_TOOL_CALL_CONTRACT.typ,
+        kid: 'k1',
+      });
+      if (omit !== 'iat') jwt.setIssuedAt(iat);
+      if (omit !== 'exp') jwt.setExpirationTime(iat + 60);
+      if (omit !== 'aud') jwt.setAudience(EGEN_AI_TOOL_CALL_CONTRACT.audience);
+      if (omit !== 'sub') jwt.setSubject(SESSION);
+      if (omit !== 'jti') jwt.setJti('call-1');
+      return jwt.sign(signer.privateKey);
+    };
+    for (const omit of ['iat', 'exp', 'aud', 'sub', 'jti']) {
+      const result = await makeAuth(signer).authenticate(frame({ jws: await build(omit) }));
+      expect(result.ok, `sans ${omit}`).toBe(false);
+    }
+    expect((await makeAuth(signer).authenticate(frame({ jws: await build('none') }))).ok).toBe(true);
+  });
+
+  it('refuse des claims applicatifs hors bornes (jti trop long, tool trop long, timeoutMs excessif, streamId non textuel)', async () => {
+    const auth = makeAuth(signer);
+    expectRejected(
+      await auth.authenticate(frame({ callId: 'x'.repeat(300), jws: await signer.sign({}, { jti: 'x'.repeat(300) }) })),
+      'claims',
+    );
+    expectRejected(await auth.authenticate(frame({ jws: await signer.sign({ tool: 't'.repeat(200) }) })), 'claims');
+    expectRejected(await auth.authenticate(frame({ jws: await signer.sign({ timeoutMs: 999_999_999 }) })), 'claims');
+    expectRejected(await auth.authenticate(frame({ jws: await signer.sign({ streamId: 42 }) })), 'claims');
+    expectRejected(await auth.authenticate(frame({ jws: await signer.sign({ args: 'texte' }) })), 'claims');
+    expectRejected(await auth.authenticate(frame({ jws: await signer.sign({ args: null }) })), 'claims');
+  });
+
+  it("refuse un jeton dont l'en-tête déclare une extension critique inconnue (crit)", async () => {
+    // jose refuse déjà de SIGNER avec un `crit` inconnu : on forge l'en-tête à la main.
+    const [header, payload, signature] = (await signer.sign()).split('.');
+    const forged = Buffer.from(
+      JSON.stringify({ ...JSON.parse(Buffer.from(header, 'base64url').toString()), crit: ['exp-x'], 'exp-x': 1 }),
+    ).toString('base64url');
+    expect((await makeAuth(signer).authenticate(frame({ jws: `${forged}.${payload}.${signature}` }))).ok).toBe(false);
+  });
+
+  it('en mode warn, un jeton illisible est accepté avec avertissement et sans authentification', async () => {
+    const warnings: string[] = [];
+    const auth = createCallAuthenticator({
+      mode: 'warn',
+      jwks: signer.jwks,
+      getSessionId: () => SESSION,
+      now: () => NOW,
+      onWarning: (m) => warnings.push(m),
+    });
+    const result = await auth.authenticate(frame({ jws: 'pas-un-jeton' }));
+    expect(result).toMatchObject({ ok: true, authenticated: false, warning: 'malformed', call: { tool: 'evil_tool' } });
+    expect(warnings[0]).toContain('malformed');
+  });
+
+  it('utilise le résolveur de clés injecté et un URL JWKS invalide échoue fermé', async () => {
+    const jws = await signer.sign();
+    const custom = createCallAuthenticator({
+      mode: 'enforce',
+      keyResolver: (async () => (await import('jose')).importJWK(signer.jwks.keys[0], 'ES256')) as never,
+      getSessionId: () => SESSION,
+      now: () => NOW,
+    });
+    expect((await custom.authenticate(frame({ jws }))).ok).toBe(true);
+    const badUrl = createCallAuthenticator({
+      mode: 'enforce',
+      jwksUrl: 'pas une url',
+      getSessionId: () => SESSION,
+      now: () => NOW,
+    });
+    expectRejected(await badUrl.authenticate(frame({ jws })), 'key-unavailable');
+  });
+
+  it("refuse l'algorithme EdDSA quand seul ES256 est autorisé, et l'accepte si la config le permet", async () => {
+    const ed = await makeSigner('ked', 'EdDSA').catch(() => null);
+    if (!ed) return; // runtime sans Ed25519 : rien à vérifier
+    const only256 = createCallAuthenticator({
+      mode: 'enforce',
+      jwks: ed.jwks,
+      algorithms: ['ES256'],
+      getSessionId: () => SESSION,
+      now: () => NOW,
+    });
+    expectRejected(await only256.authenticate(frame({ jws: await ed.sign() })), 'algorithm');
+    const allowed = createCallAuthenticator({
+      mode: 'enforce',
+      jwks: ed.jwks,
+      algorithms: ['EdDSA'],
+      getSessionId: () => SESSION,
+      now: () => NOW,
+    });
+    expect((await allowed.authenticate(frame({ jws: await ed.sign() }))).ok).toBe(true);
+  });
+});
+
 describe('mode « warn »', () => {
   it('accepte tout mais signale : non signé, signature invalide ; exécute le contenu signé si valide', async () => {
     const signer = await makeSigner();

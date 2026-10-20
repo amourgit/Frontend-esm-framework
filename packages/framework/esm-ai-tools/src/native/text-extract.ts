@@ -206,6 +206,9 @@ function textOf(el: Element, ctx: ReadContext, links: boolean): string {
  * (masquée si sensible). Ne contient jamais le contenu de script/style ni celui des nœuds masqués.
  */
 export function inlineText(el: Element, ctx: ReadContext, options: { links?: boolean } = {}): string {
+  // Le contenu d'un champ EST sa valeur (<textarea>) ou ses options (<select>) : il se lit via le modèle de champ,
+  // jamais comme du texte — sinon un champ sensible fuirait ici.
+  if (isTag(el, 'textarea', 'select')) return '';
   return clip(collapseWhitespace(textOf(el, ctx, options.links ?? true)), ctx.maxTextLength);
 }
 

@@ -42,10 +42,11 @@ import {
   isInShadowRoot,
   isSensitiveField,
   readFieldValue,
+  safeTextContent,
   truncateText as truncateShared,
   walkElementsDeep,
 } from './dom-utils.js';
-import { SKIPPED_TAGS } from './text-extract.js';
+import { SKIPPED_TAGS, createReadContext, inlineText } from './text-extract.js';
 import { serializeForAI } from './serialize.js';
 
 // ---------------------------------------------------------------------------
@@ -390,9 +391,14 @@ function collectPseudoElements(el: Element): ElementContent['pseudoElements'] {
 }
 
 function collectContent(el: Element): ElementContent {
+  // Texte « sûr » : sans la valeur des champs (le texte d'un <textarea> EST sa valeur ; celui d'un champ sensible, un secret).
+  const safeText = safeTextContent(el);
   const content: ElementContent = {
-    textContent: el.textContent ? truncateText(el.textContent.trim().replace(/\s+/g, ' ')) : null,
-    innerText: el instanceof HTMLElement ? truncateText(el.innerText?.trim().replace(/\s+/g, ' ') ?? '') : null,
+    textContent: safeText ? truncateText(safeText.trim().replace(/\s+/g, ' ')) : null,
+    innerText:
+      el instanceof HTMLElement
+        ? truncateText(inlineText(el, createReadContext(), { links: false }))
+        : null,
   };
 
   if (isFormControl(el)) {

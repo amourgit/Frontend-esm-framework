@@ -117,6 +117,30 @@ export function readFieldValue(el: Element): FieldValue | null {
   return { value: collapseWhitespace(el.textContent), redacted: false };
 }
 
+/**
+ * `textContent` SANS le contenu des champs : le texte d'un <textarea> est sa valeur (souvent saisie par
+ * l'utilisateur), et celui d'un champ sensible est un secret. Ignore aussi script/style. À utiliser partout où
+ * le texte d'un élément QUELCONQUE (conteneur, formulaire, modale) part vers le backend.
+ */
+export function safeTextContent(el: Element): string {
+  const parts: string[] = [];
+  const visit = (node: Node): void => {
+    if (node.nodeType === 3) {
+      parts.push(node.textContent ?? '');
+      return;
+    }
+    if (node.nodeType !== 1) return;
+    const child = node as Element;
+    const tag = child.localName.toLowerCase();
+    if (tag === 'script' || tag === 'style' || tag === 'textarea' || (isFormControl(child) && isSensitiveField(child)))
+      return;
+    for (const grandChild of Array.from(child.childNodes)) visit(grandChild);
+  };
+  if (isTag(el, 'textarea') || (isFormControl(el) && isSensitiveField(el))) return '';
+  for (const child of Array.from(el.childNodes)) visit(child);
+  return parts.join('');
+}
+
 // ─── Visibilité ───────────────────────────────────────────────────────────────
 
 export interface VisibilityInfo {
@@ -234,7 +258,7 @@ export function computeAccessibleName(el: Element, max = 200): string {
   }
 
   if (!isFormControl(el)) {
-    const text = collapseWhitespace(el.textContent);
+    const text = collapseWhitespace(safeTextContent(el));
     if (text) return truncateName(text, max);
   }
 

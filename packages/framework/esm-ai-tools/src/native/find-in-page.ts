@@ -198,6 +198,9 @@ export function findInPage(options: FindOptions): FindResult | { error: string }
   const root = options.root ?? document.body;
   const ctx = createReadContext({ includeHidden: options.includeHidden });
   const limit = Math.max(1, Math.min(options.limit ?? 25, 100));
+  if (options.root && ctx.isIgnored(options.root)) {
+    return { query: options.query, totalMatches: 0, returned: 0, truncated: false, timedOut: false, matches: [] };
+  }
   const deadline = performance.now() + TIME_BUDGET_MS;
 
   const raw: Array<{

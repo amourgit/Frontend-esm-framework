@@ -233,10 +233,18 @@ describe('switchTenantTool', () => {
   // Conséquence concrète du bug : un EGEN_TENANT_ROOT_DOMAIN configuré
   // explicitement (nécessaire sur les TLD à plusieurs niveaux, ex: "gov.ga")
   // était totalement ignoré par ce tool.
+  // `setHostname` remplace window.location pour tout le fichier : sans restauration, les tests qui
+  // dépendent de l'origine réelle (navigate : « même origine ») échouent selon l'ordre d'exécution.
+  const originalLocation = Object.getOwnPropertyDescriptor(window, 'location');
+  afterEach(() => {
+    if (originalLocation) Object.defineProperty(window, 'location', originalLocation);
+  });
+
   function setHostname(hostname: string) {
     Object.defineProperty(window, 'location', {
       value: { ...window.location, hostname, protocol: 'https:', port: '' },
       writable: true,
+      configurable: true,
     });
   }
 

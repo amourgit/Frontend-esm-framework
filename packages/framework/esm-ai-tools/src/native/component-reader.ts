@@ -80,6 +80,15 @@ function flatten(nodes: OutlineNode[], out: OutlineNode[] = []): OutlineNode[] {
   return out;
 }
 
+/** Nœuds de texte hors listes et tableaux (qui ont leur propre restitution). */
+function flattenText(nodes: OutlineNode[], out: OutlineNode[] = []): OutlineNode[] {
+  for (const node of nodes) {
+    if (node.kind === 'text') out.push(node);
+    else if (node.kind !== 'list' && node.kind !== 'table') flattenText(node.children, out);
+  }
+  return out;
+}
+
 export function extractParts(nodes: OutlineNode[], rootLabel?: string): ComponentParts {
   const all = flatten(nodes);
   const parts: ComponentParts = { body: [], meta: [], actions: [], media: [], fields: [], tables: [], lists: [] };
@@ -89,7 +98,8 @@ export function extractParts(nodes: OutlineNode[], rootLabel?: string): Componen
   const subtitleHeading = titleHeading
     ? headings.find((h) => h !== titleHeading && (h.level ?? 6) >= (titleHeading.level ?? 1))
     : undefined;
-  const texts = all.filter((n) => n.kind === 'text' && n.text);
+  // Le texte des listes et des tableaux est déjà restitué par `lists` / `tables` : on ne le recopie pas dans `body`.
+  const texts = flattenText(nodes).filter((n) => n.text);
 
   const titleText = texts.find((n) => n.hint === 'title');
   parts.title = titleHeading?.text ?? titleText?.text ?? rootLabel;
@@ -313,6 +323,10 @@ export function discoverComponents(options: DiscoverOptions = {}): DiscoverResul
   const ctx = createReadContext({ includeHidden: options.includeHidden });
   const limit = Math.max(1, Math.min(options.limit ?? 100, 500));
   const maxNodes = options.maxNodes ?? 20000;
+  // Inventaire de ce qui est VISIBLE : une racine masquée (sauf includeHidden) n'a rien à inventorier.
+  if (options.root && ctx.isIgnored(options.root)) {
+    return { total: 0, returned: 0, truncated: false, byKind: {}, reactComponents: [], components: [] };
+  }
   const wanted = options.kinds?.length ? new Set(options.kinds.map((k) => k.toLowerCase())) : null;
   const query = options.query?.trim().toLowerCase();
 

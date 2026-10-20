@@ -18,6 +18,7 @@ import {
   isFormControl,
   isHiddenForReading,
   isSensitiveField,
+  safeTextContent,
   snippet,
   tagOf,
   windowOf,
@@ -187,7 +188,7 @@ export function getPageState(): PageState {
     .map((el) => ({
       ref: getElementRef(el),
       name: getComponentTitle(el, 80) ?? '',
-      text: snippet(el.textContent ?? '', 300),
+      text: snippet(safeTextContent(el), 300),
     }));
 
   const notifications = Array.from(doc.querySelectorAll(NOTIFICATION_SELECTOR))
@@ -197,7 +198,7 @@ export function getPageState(): PageState {
       ref: getElementRef(el),
       role: roleOf(el) ?? null,
       level: notificationLevel(el),
-      text: snippet(el.textContent ?? '', 300),
+      text: snippet(safeTextContent(el), 300),
     }))
     .filter((n) => n.text);
 
@@ -267,7 +268,8 @@ function describeNode(el: Element, includeText: boolean, hiddenChildren: number)
     .join('');
   const role = roleOf(el);
   let line = `${tagOf(el)}${id}${classes} {${getElementRef(el)}}${role ? ` role=${role}` : ''}`;
-  if (includeText) {
+  // Pas de texte pour un champ : le contenu d'un <textarea> est sa valeur (voir safeTextContent).
+  if (includeText && !isFormControl(el)) {
     const own = collapseWhitespace(
       Array.from(el.childNodes)
         .filter((n) => n.nodeType === 3)

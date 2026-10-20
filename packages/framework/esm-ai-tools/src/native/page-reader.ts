@@ -257,14 +257,14 @@ function isInlineFlow(el: Element): boolean {
   return el.querySelector(BLOCKISH) === null;
 }
 
-/** Un <label> dont le contrôle est lu comme champ : son texte est déjà le libellé du champ. */
-function isLabelOfControl(label: Element): boolean {
-  if (tagOf(label) !== 'label') return false;
+/** Contrôle de formulaire associé à un <label> (attribut `for` ou contrôle imbriqué), ou `null`. */
+function controlOfLabel(label: Element): Element | null {
+  if (tagOf(label) !== 'label') return null;
   const forId = label.getAttribute('for');
   const control = forId ? label.ownerDocument.getElementById(forId) : label.querySelector('input, select, textarea');
-  return Boolean(
-    control && isTag(control, 'input', 'select', 'textarea') && (control as HTMLInputElement).type !== 'hidden',
-  );
+  return control && isTag(control, 'input', 'select', 'textarea') && (control as HTMLInputElement).type !== 'hidden'
+    ? control
+    : null;
 }
 
 // ─── Construction de l'arbre ──────────────────────────────────────────────────
@@ -292,7 +292,16 @@ function walkChildren(parent: Element | ShadowRoot, out: OutlineNode[], ctx: Bui
         break;
       }
       if (ctx.isIgnored(el)) continue;
-      if (isLabelOfControl(el)) continue;
+      const labelled = controlOfLabel(el);
+      if (labelled) {
+        // Le texte du <label> est déjà le libellé du champ. Label « à côté » (for=…) : on l'ignore, le champ sera lu
+        // à sa place ; label qui ENVELOPPE son champ : on lit le champ ici (sinon il disparaîtrait du plan).
+        if (el.contains(labelled) && !ctx.isIgnored(labelled)) {
+          flush();
+          visit(labelled, out, ctx);
+        }
+        continue;
+      }
       if (isInlineFlow(el)) {
         run.push(el);
         continue;
@@ -328,8 +337,14 @@ function emitSegment(run: Node[], parent: Element, out: OutlineNode[], ctx: Buil
   if (!hasText && elements.length === 1) {
     const only = elements[0];
     const tag = tagOf(only);
-    if (tag === 'a' && only.hasAttribute('href')) return void out.push(linkNode(only, ctx));
+    if ((tag === 'a' && only.hasAttribute('href')) || roleOf(only) === 'link')
+      return void out.push(linkNode(only, ctx));
     if (tag === 'button' || roleOf(only) === 'button') return void out.push(buttonNode(only, ctx));
+    if (tag === 'svg') {
+      const name = computeAccessibleName(only, 80);
+      if (name) out.push(newNode('image', only, ctx, { text: name }));
+      return;
+    }
     if (tag === 'img' || tag === 'picture') {
       const image = imageNode(tag === 'picture' ? (only.querySelector('img') ?? only) : only, ctx);
       if (image) out.push(image);
@@ -659,7 +674,7 @@ export function renderOutline(nodes: OutlineNode[], depth = 0, lines: string[] =
         break;
       case 'list':
         lines.push(
-          `${pad}- list${node.label ? ` ${quote(node.label)}` : ''}${refOf(node)} (${node.children.length} éléments)${flagsOf(node)}`,
+          `${pad}- list${node.label ? ` ${quote(node.label)}` : ''}${refOf(node)} (${node.children.length} éléments)${flagsOf(node)}${metaOf(node)}`,
         );
         renderOutline(node.children, depth + 1, lines);
         break;
@@ -676,7 +691,7 @@ export function renderOutline(nodes: OutlineNode[], depth = 0, lines: string[] =
           ? `, trié par ${t.sortedBy.column} ${t.sortedBy.direction === 'ascending' ? '↑' : '↓'}`
           : '';
         lines.push(
-          `${pad}- table${node.label ? ` ${quote(node.label)}` : ''}${refOf(node)} (${t.totalRows} lignes × ${t.columns} colonnes${sorted})${flagsOf(node)}`,
+          `${pad}- table${node.label ? ` ${quote(node.label)}` : ''}${refOf(node)} (${t.totalRows} lignes × ${t.columns} colonnes${sorted})${flagsOf(node)}${metaOf(node)}`,
         );
         for (const row of renderTableRows(t)) lines.push(`${pad}  ${row}`);
         if (t.hasMore)
@@ -690,13 +705,13 @@ export function renderOutline(nodes: OutlineNode[], depth = 0, lines: string[] =
         break;
       case 'button':
         lines.push(
-          `${pad}- button${node.text ? ` ${quote(node.text)}` : node.label ? ` ${quote(node.label)}` : ''}${refOf(node)}${flagsOf(node)}`,
+          `${pad}- button${node.text ? ` ${quote(node.text)}` : node.label ? ` ${quote(node.label)}` : ''}${refOf(node)}${flagsOf(node)}${metaOf(node)}`,
         );
         renderOutline(node.children, depth + 1, lines);
         break;
       case 'link':
         lines.push(
-          `${pad}- link${node.text ? ` ${quote(node.text)}` : node.label ? ` ${quote(node.label)}` : ''}${refOf(node)}${node.href ? ` → ${node.href}` : ''}${flagsOf(node)}`,
+          `${pad}- link${node.text ? ` ${quote(node.text)}` : node.label ? ` ${quote(node.label)}` : ''}${refOf(node)}${node.href ? ` → ${node.href}` : ''}${flagsOf(node)}${metaOf(node)}`,
         );
         renderOutline(node.children, depth + 1, lines);
         break;

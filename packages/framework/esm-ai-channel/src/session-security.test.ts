@@ -12,6 +12,8 @@ vi.mock('@egen-civitas/esm-api', () => ({
   isMultiTenant: () => false,
   subscribeTenant: () => () => undefined,
   egenFetch: vi.fn(),
+  // lu à l'import par esm-data-api (attachments) : sans lui, le mock lève une erreur à l'évaluation du module.
+  restBaseUrl: '/ws/rest/v1',
 }));
 
 class SpySocket implements WebSocketLike {

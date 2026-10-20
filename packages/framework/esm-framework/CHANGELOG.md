@@ -1,5 +1,13 @@
 # @egen-civitas/esm-framework
 
+## 1.2.1
+
+### Patch Changes
+
+- bd97b0e: Correctif de 1.2.0 : `registerNavBehavior` et `getNavBehavior` (ainsi que les types `NavBehavior`, `NavBehaviorTarget`, `NavSelectContext`) étaient documentés dans l'API publique mais absents du point d'entrée du package, donc inutilisables par les apps. `esm-extensions` les exporte désormais, et `esm-framework` les réexporte. Un test vérifie que chaque module de l'API publique (`public.ts`) est bien exporté par `index.ts`.
+- Updated dependencies [bd97b0e]
+  - @egen-civitas/esm-extensions@1.2.1
+
 ## 1.2.0
 
 ### Minor Changes

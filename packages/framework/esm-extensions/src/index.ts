@@ -2,6 +2,7 @@ export * from './extensions.js';
 export * from './helpers.js';
 export * from './left-nav.js';
 export * from './nav-entry.js';
+export * from './nav-behavior.js';
 export * from './modals.js';
 export * from './workspaces.js';
 export * from './workspaces2.js';

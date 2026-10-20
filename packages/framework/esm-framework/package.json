@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-framework",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "license": "MPL-2.0",
   "type": "module",
   "main": "dist/index.js",
@@ -74,7 +74,7 @@
     "@egen-civitas/esm-dynamic-loading": "^2.0.0",
     "@egen-civitas/esm-error-handling": "^1.0.0",
     "@egen-civitas/esm-expression-evaluator": "^1.0.0",
-    "@egen-civitas/esm-extensions": "^1.2.0",
+    "@egen-civitas/esm-extensions": "^1.2.1",
     "@egen-civitas/esm-feature-flags": "^1.0.0",
     "@egen-civitas/esm-globals": "^1.0.0",
     "@egen-civitas/esm-navigation": "^1.0.0",

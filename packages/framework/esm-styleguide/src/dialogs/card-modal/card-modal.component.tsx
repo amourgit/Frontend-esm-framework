@@ -5,8 +5,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 import classNames from 'classnames';
 import { CloseIcon, MaximizeIcon } from '../../icons/index.js';
 import { DecoratedCard } from '../../cards/decorated-card/index.js';
-import { cardModalAnimationPresets } from './card-modal.animations.js';
+import { cardModalAnimationPresets, cardModalPresetStyles } from './card-modal.animations.js';
 import type { CardModalAnimationConfig, CardModalProps } from './card-modal.types.js';
+import { CardModalWarpGlow } from './card-modal.warp-glow.js';
 import styles from './card-modal.module.scss';
 
 interface DockState {
@@ -42,6 +43,13 @@ const isPresetConfig = (animation: CardModalProps['animation']): animation is Ca
  * ```tsx
  * <CardModal trigger={<button>Ouvrir</button>} cardVariant="glass" animation="zoom">
  *   <p>Contenu du modal</p>
+ * </CardModal>
+ * ```
+ *
+ * @example Variante warp (distorsion + halos lumineux, couleur personnalisable)
+ * ```tsx
+ * <CardModal trigger={<button>Alerte</button>} animation="warp" warpColor="var(--colors-primary-500)" cardVariant="glass">
+ *   <p>Contenu</p>
  * </CardModal>
  * ```
  *
@@ -81,6 +89,8 @@ export const CardModal: React.FC<CardModalProps> = ({
   lockScroll = true,
   animation = 'scale',
   overlayAnimation,
+  overlayEffect,
+  warpColor,
   className,
   style,
   overlayClassName,
@@ -174,6 +184,9 @@ export const CardModal: React.FC<CardModalProps> = ({
     duration: animationConfig.duration ?? 0.25,
     ease: animationConfig.ease ?? [0.16, 1, 0.3, 1],
   };
+  const presetName = animationConfig.variants ? undefined : (animationConfig.preset ?? 'scale');
+  const presetStyle = presetName ? cardModalPresetStyles[presetName] : undefined;
+  const effect = overlayEffect ?? (presetName === 'warp' ? 'warp' : 'none');
   const overlayTransition = {
     duration: overlayAnimation?.duration ?? 0.2,
     ease: overlayAnimation?.ease ?? 'easeOut',
@@ -186,13 +199,20 @@ export const CardModal: React.FC<CardModalProps> = ({
           {showOverlay && !dock && (
             <motion.div
               className={classNames(styles.overlay, overlayClassName)}
+              style={
+                effect === 'warp'
+                  ? ({ '--card-modal-warp-color': warpColor ?? 'var(--colors-error-500)' } as React.CSSProperties)
+                  : undefined
+              }
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={overlayTransition}
               onClick={closeOnOverlayClick ? close : undefined}
               aria-hidden="true"
-            />
+            >
+              {effect === 'warp' && <CardModalWarpGlow />}
+            </motion.div>
           )}
 
           {dock ? (
@@ -234,7 +254,7 @@ export const CardModal: React.FC<CardModalProps> = ({
                 aria-modal="true"
                 aria-labelledby={cardProps?.title ? titleId : undefined}
                 className={classNames(styles.panel, className)}
-                style={style}
+                style={{ ...presetStyle, ...style }}
                 variants={variants}
                 initial="initial"
                 animate="animate"

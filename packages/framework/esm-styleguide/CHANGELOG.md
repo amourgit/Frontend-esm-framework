@@ -1,5 +1,11 @@
 # @egen-civitas/esm-styleguide
 
+## 1.11.0
+
+### Minor Changes
+
+- 493c18d: CardModal : nouvelle variante d'animation `warp` (distorsion 3D + ressort) avec effet d'overlay lumineux (`overlayEffect`, `warpColor`). Respecte `prefers-reduced-motion` et les tokens du design system ; les préréglages existants sont inchangés.
+
 ## 1.10.1
 
 ### Patch Changes

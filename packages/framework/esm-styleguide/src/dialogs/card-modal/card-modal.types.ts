@@ -12,7 +12,12 @@ export type CardModalAnimationPreset =
   | 'slide-down'
   | 'slide-left'
   | 'slide-right'
+  /** Entrée « distorsion » : la carte s'étire verticalement puis se stabilise en ressort. Active par défaut l'effet d'overlay `warp`. */
+  | 'warp'
   | 'none';
+
+/** Effet visuel optionnel derrière le modal, dans l'overlay. */
+export type CardModalOverlayEffect = 'none' | 'warp';
 
 /** Configuration d'animation complète — surcharge totale possible via `variants`/`transition` (framer-motion natif). */
 export interface CardModalAnimationConfig {
@@ -78,6 +83,13 @@ export interface CardModalProps {
   /** Préréglage simple (string) ou configuration complète. Défaut : 'scale'. */
   animation?: CardModalAnimationPreset | CardModalAnimationConfig;
   overlayAnimation?: Pick<CardModalAnimationConfig, 'duration' | 'ease'>;
+  /**
+   * Effet lumineux animé dans l'overlay (halos flous). Défaut : 'warp' si
+   * `animation` vaut 'warp', 'none' sinon. Nécessite `showOverlay`.
+   */
+  overlayEffect?: CardModalOverlayEffect;
+  /** Couleur des halos de l'effet 'warp' (toute valeur CSS, token inclus). Défaut : `var(--colors-error-500)`. */
+  warpColor?: string;
 
   // ── Apparence du conteneur modal (pas de la carte elle-même) ────────────────
   className?: string;

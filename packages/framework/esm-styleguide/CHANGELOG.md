@@ -1,5 +1,11 @@
 # @egen-civitas/esm-styleguide
 
+## 1.10.1
+
+### Patch Changes
+
+- d8f7023: Exporte la catégorie `sites` depuis le point d'entrée `internal` (celui du `.` du package, donc de `@egen-civitas/esm-framework`) : elle n'était exposée que par `public`, les apps ne la voyaient pas.
+
 ## 1.10.0
 
 ### Minor Changes

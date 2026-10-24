@@ -1,5 +1,11 @@
 # @egen-civitas/egen
 
+## 2.0.5
+
+### Patch Changes
+
+- bf22033: `ejs` passe en 6.0.1 (dépendance non importée par le code d'egen : le gabarit `index.ejs` de l'app-shell est traité par le plugin HTML du bundler).
+
 ## 2.0.4
 
 ### Patch Changes

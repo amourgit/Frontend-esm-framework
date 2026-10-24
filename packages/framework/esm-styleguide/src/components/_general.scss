@@ -28,8 +28,24 @@ html[data-public-route='true'] {
   }
 
   #egen-workspaces-container,
-  #egen-footer-app-container {
+  #egen-footer-app-container,
+  #egen-rail-left-container,
+  #egen-rail-right-container,
+  #egen-zone-left-container,
+  #egen-zone-right-container,
+  #egen-zone-bottom-container {
     display: none;
+  }
+
+  // Plus de rails ni de zones : le contenu occupe toute la largeur (cf. grille du body).
+  body {
+    grid-template-columns: 0 0 minmax(0, 1fr) 0 0 min-content;
+    grid-template-rows: auto minmax(0, 1fr) 0 var(--egen-footer-height, 0px);
+  }
+
+  #egen-scroll-region {
+    margin: 0;
+    border-radius: 0;
   }
 }
 
@@ -79,7 +95,52 @@ html[data-public-route='true'] {
   overflow-y: auto;
   overscroll-behavior: contain;
   // La ligne de grille définit la hauteur : la région ne dépasse jamais.
-  height: 100%;
+  height: auto;
+  // Carte centrale du plan de travail : 2px de marge (4px avec la carte voisine) et coins
+  // arrondis ; le contenu est coupé net à ces bords. Les routes publiques la remettent plein cadre.
+  margin: 2px;
+  border-radius: 0.625rem;
+}
+
+// ── Plan de travail : rails fixes + zones redimensionnables (façon IntelliJ) ──
+// Chaque conteneur est une cellule de la grille du body ; la zone de scroll ci-dessus en est
+// le centre. Les tailles des zones viennent de variables CSS publiées par le shell
+// (--egen-zone-left-width, --egen-zone-right-width, --egen-zone-bottom-height : 0 quand la zone
+// est repliée) ; les rails ont une largeur fixe.
+:root {
+  --egen-rail-width: 2.5rem;
+}
+
+#egen-rail-left-container {
+  grid-area: railL;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#egen-rail-right-container {
+  grid-area: railR;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#egen-zone-left-container {
+  grid-area: zoneL;
+  min-width: 0;
+  min-height: 0;
+}
+
+#egen-zone-right-container {
+  grid-area: zoneR;
+  min-width: 0;
+  min-height: 0;
+}
+
+#egen-zone-bottom-container {
+  grid-area: zoneB;
+  min-width: 0;
+  min-height: 0;
 }
 
 #egen-apps-container {
@@ -150,17 +211,53 @@ body {
   // la TopBar et se termine au bord haut du footer, et son contenu y est coupé.
   // NB : on n'utilise PAS padding-bottom sur le body : des resets globaux
   // chargés plus tard (`html, body { padding: 0 }`) l'écrasent.
+  //
+  // Plan de travail : colonnes = rail gauche | zone gauche | centre | zone droite | rail droit |
+  // workspaces ; lignes = TopBar | corps | zone basse | footer. Les rails couvrent corps + zone
+  // basse ; la zone basse s'étend entre les deux rails.
   grid-template-areas:
-    'topNav topNav'
-    'appRoots workspace'
-    'footerGap footerGap';
-  grid-template-columns: 1fr min-content;
-  grid-template-rows: auto minmax(0, 1fr) var(--egen-footer-height, 0px);
+    'topNav topNav topNav topNav topNav topNav'
+    'railL zoneL appRoots zoneR railR workspace'
+    'railL zoneB zoneB zoneB railR workspace'
+    'footerGap footerGap footerGap footerGap footerGap footerGap';
+  grid-template-columns:
+    var(--egen-rail-width, 2.5rem)
+    var(--egen-zone-left-width, 0px)
+    minmax(0, 1fr)
+    var(--egen-zone-right-width, 0px)
+    var(--egen-rail-width, 2.5rem)
+    min-content;
+  grid-template-rows:
+    auto
+    minmax(0, 1fr)
+    var(--egen-zone-bottom-height, 0px)
+    var(--egen-footer-height, 0px);
   box-sizing: border-box;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
   container-type: inline-size;
+}
+
+// Petits écrans : pas de place pour des rails et des zones, le contenu prend toute la largeur.
+@media (max-width: 767px) {
+  #egen-rail-left-container,
+  #egen-rail-right-container,
+  #egen-zone-left-container,
+  #egen-zone-right-container,
+  #egen-zone-bottom-container {
+    display: none;
+  }
+
+  body {
+    grid-template-columns: 0 0 minmax(0, 1fr) 0 0 min-content;
+    grid-template-rows: auto minmax(0, 1fr) 0 var(--egen-footer-height, 0px);
+  }
+
+  #egen-scroll-region {
+    margin: 0;
+    border-radius: 0;
+  }
 }
 
 @media print {
@@ -174,7 +271,12 @@ body {
 
   #egen-workspaces-container,
   #egen-top-nav-app-container,
-  #egen-footer-app-container {
+  #egen-footer-app-container,
+  #egen-rail-left-container,
+  #egen-rail-right-container,
+  #egen-zone-left-container,
+  #egen-zone-right-container,
+  #egen-zone-bottom-container {
     display: none;
   }
 

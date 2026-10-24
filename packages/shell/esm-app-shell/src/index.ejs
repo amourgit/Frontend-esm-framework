@@ -99,11 +99,19 @@
     <div id="egen-workspaces-container"></div>
     <div id="egen-top-nav-app-container"></div>
     <div id="egen-ai-assistant-app-container"></div>
-    <!-- Zone de scroll : le contenu des apps défile ici, sous la TopBar,
+    <!-- Plan de travail (façon IntelliJ), rendu par le shell (voir renderWorkbench) :
+         rails fixes gauche/droit, puis zones gauche, droite et bas redimensionnables.
+         Les apps y déclarent leurs fenêtres d'outils par extensions (slots shell-rail-*). -->
+    <div id="egen-rail-left-container"></div>
+    <div id="egen-zone-left-container"></div>
+    <!-- Zone centrale (scroll) : le contenu des apps défile ici, sous la TopBar,
          et est coupé net à sa frontière (voir _general.scss). -->
     <div id="egen-scroll-region">
       <div id="egen-apps-container"></div>
     </div>
+    <div id="egen-zone-right-container"></div>
+    <div id="egen-rail-right-container"></div>
+    <div id="egen-zone-bottom-container"></div>
     <!-- Footer fixe en bas de page, au-dessus du contenu -->
     <div id="egen-footer-app-container"></div>
     <template id="loading-spinner">

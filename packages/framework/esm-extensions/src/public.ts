@@ -28,6 +28,15 @@ export {
   isNavEntryInWorkspace,
 } from './nav-entry.js';
 export {
+  SHELL_RAIL_LEFT_SLOT,
+  SHELL_RAIL_BOTTOM_SLOT,
+  SHELL_RAIL_RIGHT_SLOT,
+  TOOL_WINDOW_SLOTS,
+  type ToolWindowAnchor,
+  type ToolWindowMeta,
+  isToolWindowMeta,
+} from './tool-window.js';
+export {
   type NavBehavior,
   type NavBehaviorTarget,
   type NavSelectContext,

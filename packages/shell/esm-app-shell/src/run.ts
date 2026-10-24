@@ -28,6 +28,7 @@ import {
   renderPageBackground,
   renderSnackbars,
   renderToasts,
+  renderWorkbench,
   renderWorkspaceWindowsAndMenu,
   restBaseUrl,
   setupApiModule,
@@ -267,6 +268,16 @@ function showPageBackground() {
   renderPageBackground(document.querySelector('#egen-page-background-container'));
 }
 
+function showWorkbench() {
+  renderWorkbench({
+    railLeft: document.querySelector('#egen-rail-left-container'),
+    railRight: document.querySelector('#egen-rail-right-container'),
+    zoneLeft: document.querySelector('#egen-zone-left-container'),
+    zoneRight: document.querySelector('#egen-zone-right-container'),
+    zoneBottom: document.querySelector('#egen-zone-bottom-container'),
+  });
+}
+
 function showModals() {
   setupModals(document.querySelector('.egen-modals-container'));
 }
@@ -465,6 +476,7 @@ export function run(configUrls: Array<string>) {
     setupLayoutHeightSync();
     showToasts();
     showPageBackground();
+    showWorkbench();
     showModals();
     showNotifications();
     showActionableNotifications();

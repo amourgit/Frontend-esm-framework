@@ -3,7 +3,8 @@
 // components/_general.scss ; ici : l'apparence des rails, des zones et des poignées.
 
 $radius: 0.625rem;
-$handle: 0.375rem;
+// Écart entre deux cartes voisines (zones, centre) : défini dans components/_general.scss.
+$gap: var(--egen-workbench-gap, 0.375rem);
 
 // ── Rails ───────────────────────────────────────────────────────────────────
 .rail {
@@ -17,8 +18,10 @@ $handle: 0.375rem;
   padding: 0.5rem 0;
   overflow-y: auto;
   scrollbar-width: none;
-  background: var(--colors-surface-translucent, rgb(0 0 0 / 20%));
-  backdrop-filter: blur(12px);
+  // Toujours transparent, sans bordure : le rail se fond avec la TopBar (aussi transparente) et
+  // laisse voir le fond global, sans aucune discontinuité à leur jonction.
+  border: 0;
+  background: transparent;
 }
 
 .railGroup {
@@ -74,15 +77,15 @@ $handle: 0.375rem;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  // Les marges (2px) s'additionnent à celles des voisins : 4px entre deux cartes.
-  margin: 2px;
-  height: calc(100% - 4px);
+  // Une demi-marge de chaque côté : elle s'additionne à celle du voisin et laisse un écart de
+  // --egen-workbench-gap entre deux cartes. Pas de bordure : c'est cet écart qui marque la frontière.
+  margin: calc(#{$gap} / 2);
+  height: calc(100% - #{$gap});
   min-width: 0;
   min-height: 0;
-  border: 1px solid var(--colors-border-default, rgb(255 255 255 / 8%));
   border-radius: $radius;
-  background: var(--colors-surface-card, rgb(20 22 26 / 72%));
-  backdrop-filter: blur(12px);
+  // Même léger assombrissement que la carte centrale (voir _general.scss).
+  background: var(--egen-workbench-card-bg, rgb(0 0 0 / 16%));
   color: var(--colors-surface-foreground, #fff);
 
   &[hidden] {
@@ -146,45 +149,85 @@ $handle: 0.375rem;
 
 // La zone basse prend toute la largeur entre les rails : sa hauteur vient de la ligne de grille.
 .zone-bottom {
-  height: calc(100% - 4px);
+  height: calc(100% - #{$gap});
 }
 
 // ── Poignées de redimensionnement ───────────────────────────────────────────
-// Posées dans l'interstice entre la zone et le contenu central (marges de 2px + bord).
+// Posées au milieu de l'écart entre la zone et sa voisine : l'écart montre la limite, la poignée
+// l'endroit où saisir. La zone de saisie déborde de 2px de chaque côté de l'écart pour rester
+// facile à attraper ; au survol, au focus et pendant le glissement, un filet d'accent y apparaît.
 .splitter {
+  --splitter-hit: calc(#{$gap} + 0.25rem);
+  // Distance entre le bord de la zone et le bord extérieur de la poignée (milieu de l'écart + moitié de la poignée).
+  --splitter-offset: calc(-1 * (#{$gap} + 0.125rem));
+
   position: absolute;
   z-index: 2;
   background: transparent;
   touch-action: none;
-  transition: background-color 120ms ease;
 
-  &:hover,
-  &:focus-visible {
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: 999px;
     background: var(--colors-primary-500, #3b82f6);
+    opacity: 0;
+    transition: opacity 120ms ease;
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    opacity: 0.8;
+  }
+
+  &:focus-visible {
     outline: none;
   }
 }
 
-.splitter-left {
-  top: 0;
-  bottom: 0;
-  right: -$handle;
-  width: $handle;
-  cursor: col-resize;
+// Pendant le glissement le pointeur peut quitter la poignée : le filet reste allumé.
+:global(html[data-workbench-resizing='left']) .splitter-left::after,
+:global(html[data-workbench-resizing='right']) .splitter-right::after,
+:global(html[data-workbench-resizing='bottom']) .splitter-bottom::after {
+  opacity: 1;
 }
 
+.splitter-left,
 .splitter-right {
   top: 0;
   bottom: 0;
-  left: -$handle;
-  width: $handle;
+  width: var(--splitter-hit);
   cursor: col-resize;
+
+  &::after {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+  }
+}
+
+.splitter-left {
+  right: var(--splitter-offset);
+}
+
+.splitter-right {
+  left: var(--splitter-offset);
 }
 
 .splitter-bottom {
   left: 0;
   right: 0;
-  top: -$handle;
-  height: $handle;
+  top: var(--splitter-offset);
+  height: var(--splitter-hit);
   cursor: row-resize;
+
+  &::after {
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    transform: translateY(-50%);
+  }
 }

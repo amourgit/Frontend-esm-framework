@@ -46,6 +46,7 @@ html[data-public-route='true'] {
   #egen-scroll-region {
     margin: 0;
     border-radius: 0;
+    background: transparent;
   }
 }
 
@@ -96,10 +97,13 @@ html[data-public-route='true'] {
   overscroll-behavior: contain;
   // La ligne de grille définit la hauteur : la région ne dépasse jamais.
   height: auto;
-  // Carte centrale du plan de travail : 2px de marge (4px avec la carte voisine) et coins
-  // arrondis ; le contenu est coupé net à ces bords. Les routes publiques la remettent plein cadre.
-  margin: 2px;
+  // Carte centrale du plan de travail : une demi-marge de chaque côté (l'écart entre deux cartes
+  // voisines vaut donc --egen-workbench-gap), coins arrondis et léger assombrissement du fond pour
+  // la distinguer des rails et de la TopBar, qui restent transparents. Le contenu est coupé net à
+  // ces bords. Les routes publiques la remettent plein cadre, sans teinte.
+  margin: calc(var(--egen-workbench-gap, 0.375rem) / 2);
   border-radius: 0.625rem;
+  background: var(--egen-workbench-card-bg, rgb(0 0 0 / 16%));
 }
 
 // ── Plan de travail : rails fixes + zones redimensionnables (façon IntelliJ) ──
@@ -109,6 +113,21 @@ html[data-public-route='true'] {
 // est repliée) ; les rails ont une largeur fixe.
 :root {
   --egen-rail-width: 2.5rem;
+  // Écart visible entre deux cartes voisines (zones, centre) : il matérialise leur frontière et
+  // la poignée de redimensionnement qui s'y trouve.
+  --egen-workbench-gap: 0.375rem;
+  // Fond des cartes (zones + centre) : un léger assombrissement, jamais un aplat opaque, pour que
+  // le fond global reste visible. Les rails et la TopBar n'ont, eux, AUCUN fond.
+  --egen-workbench-card-bg: rgb(0 0 0 / 16%);
+}
+
+:root[data-theme='light'] {
+  --egen-workbench-card-bg: rgb(0 0 0 / 5%);
+}
+
+// Pendant un redimensionnement : pas de sélection de texte qui suit le pointeur.
+html[data-workbench-resizing] {
+  user-select: none;
 }
 
 #egen-rail-left-container {
@@ -257,6 +276,7 @@ body {
   #egen-scroll-region {
     margin: 0;
     border-radius: 0;
+    background: transparent;
   }
 }
 
@@ -285,5 +305,11 @@ body {
     height: auto;
     min-height: auto;
     overflow: visible;
+  }
+
+  #egen-scroll-region {
+    margin: 0;
+    border-radius: 0;
+    background: transparent;
   }
 }

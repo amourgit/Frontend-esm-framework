@@ -231,6 +231,25 @@ describe('poignée de redimensionnement', () => {
     expect(workbenchStore.getState().sizes.left).toBe(200); // plus de glisser en cours
   });
 
+  it('la frontière suit le pointeur sans saut, même si la poignée est saisie à côté de son centre', () => {
+    const handle = openLeftZone();
+    vi.spyOn(screen.getByTestId('cell'), 'getBoundingClientRect').mockReturnValue({
+      left: 40,
+      right: 320,
+      top: 0,
+      bottom: 600,
+    } as DOMRect);
+
+    // Saisie 4px au-delà de la frontière (320) : un mouvement nul ne change pas la taille.
+    fireEvent.pointerDown(handle, { button: 0, clientX: 324, clientY: 100 });
+    fireEvent.pointerMove(handle, { clientX: 324, clientY: 100 });
+    expect(workbenchStore.getState().sizes.left).toBe(DEFAULT_ZONE_SIZES.left);
+    // Puis la frontière avance exactement comme le pointeur : +120px.
+    fireEvent.pointerMove(handle, { clientX: 444, clientY: 100 });
+    expect(workbenchStore.getState().sizes.left).toBe(DEFAULT_ZONE_SIZES.left + 120);
+    fireEvent.pointerUp(handle);
+  });
+
   it('zone droite : le glisser vers la gauche agrandit', () => {
     workbenchStore.setState({ active: { left: null, right: 'notifications', bottom: null } });
     render(

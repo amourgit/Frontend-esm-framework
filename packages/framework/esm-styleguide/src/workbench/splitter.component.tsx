@@ -15,20 +15,22 @@ interface SplitterProps {
 
 /**
  * Poignée de redimensionnement d'une zone : glisser à la souris/au doigt, flèches au clavier,
- * double-clic pour revenir à la taille par défaut. La poignée est posée sur le bord de la zone
- * tourné vers le contenu central ; la taille est calculée à partir du bord opposé, qui ne bouge pas.
+ * double-clic pour revenir à la taille par défaut. La poignée est centrée dans l'écart entre la
+ * zone et le contenu central ; la taille est calculée à partir du bord opposé, qui ne bouge pas.
+ * L'écart entre le point saisi et la frontière est mémorisé : la frontière suit le pointeur sans
+ * saut au début du glissement, même si la poignée a été saisie à côté de son centre.
  */
 export function Splitter({ anchor, label }: SplitterProps) {
   // NB : `useStore` retourne toujours un objet (état étalé) : on lit l'état entier, jamais une valeur primitive.
   const { sizes } = useStore(workbenchStore);
   const size = sizes[anchor];
-  const dragging = useRef<{ edge: number } | null>(null);
+  const dragging = useRef<{ edge: number; grab: number } | null>(null);
   const vertical = anchor !== 'bottom'; // poignée verticale (redimensionne la largeur)
 
-  const sizeFromPointer = (clientX: number, clientY: number, edge: number) => {
-    if (anchor === 'left') return clientX - edge;
-    if (anchor === 'right') return edge - clientX;
-    return edge - clientY;
+  const sizeFromPointer = (clientX: number, clientY: number, edge: number, grab: number) => {
+    if (anchor === 'left') return clientX - grab - edge;
+    if (anchor === 'right') return edge - (clientX - grab);
+    return edge - (clientY - grab);
   };
 
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -38,7 +40,10 @@ export function Splitter({ anchor, label }: SplitterProps) {
     const rect = cell.getBoundingClientRect();
     // Bord fixe de la zone : gauche pour `left`, droite pour `right`, bas pour `bottom`.
     const edge = anchor === 'left' ? rect.left : anchor === 'right' ? rect.right : rect.bottom;
-    dragging.current = { edge };
+    // Bord mobile de la cellule, au milieu de l'écart où se trouve la poignée.
+    const movingEdge = anchor === 'left' ? rect.right : anchor === 'right' ? rect.left : rect.top;
+    const pointer = anchor === 'bottom' ? event.clientY : event.clientX;
+    dragging.current = { edge, grab: pointer - movingEdge };
     event.currentTarget.setPointerCapture?.(event.pointerId);
     document.documentElement.setAttribute(RESIZING_ATTRIBUTE, anchor);
     event.preventDefault();
@@ -46,7 +51,7 @@ export function Splitter({ anchor, label }: SplitterProps) {
 
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!dragging.current) return;
-    setZoneSize(anchor, sizeFromPointer(event.clientX, event.clientY, dragging.current.edge));
+    setZoneSize(anchor, sizeFromPointer(event.clientX, event.clientY, dragging.current.edge, dragging.current.grab));
   };
 
   const stopDragging = (event: React.PointerEvent<HTMLDivElement>) => {

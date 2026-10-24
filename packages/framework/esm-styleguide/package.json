@@ -90,7 +90,8 @@
     "gsap": "^3.12.5",
     "lodash-es": "^4.17.21",
     "lucide-react": "^0.469.0",
-    "react-aria-components": "^1.7.1"
+    "react-aria-components": "^1.7.1",
+    "uuid": "^14.0.1"
   },
   "peerDependencies": {
     "@egen-civitas/esm-api": "^1.1.1",

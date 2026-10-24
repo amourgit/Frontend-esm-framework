@@ -53,6 +53,7 @@ export * from './sheet/index.js';
 export * from './glass-card/index.js';
 export * from './containers/index.js';
 export * from './master-detail/index.js';
+export * from './workbench/index.js';
 export * from './dialogs/index.js';
 export * from './selections/index.js';
 export * from './carousel/index.js';

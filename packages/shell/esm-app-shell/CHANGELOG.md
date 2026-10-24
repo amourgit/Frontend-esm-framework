@@ -1,5 +1,19 @@
 # @egen-civitas/esm-app-shell
 
+## 2.5.1
+
+### Patch Changes
+
+- 2468548: Plan de travail : rails transparents, cartes assombries et séparées par un écart.
+
+  - Les rails gauche et droit sont toujours transparents (plus de fond ni de flou) et sans bordure : collés à la TopBar, ils se fondent avec elle sans aucune discontinuité.
+  - Les zones et la carte centrale reçoivent un léger assombrissement de fond (`--egen-workbench-card-bg`, plus faible en thème clair) ; la bordure des zones disparaît.
+  - Les cartes voisines sont séparées par un écart visible (`--egen-workbench-gap`, 6 px par défaut) : il matérialise la frontière, et la poignée de redimensionnement y est centrée. Elle s'illumine au survol, au focus et pendant le glissement, et la frontière suit le pointeur sans saut à la prise.
+  - Routes publiques, écrans de moins de 768 px et impression : la carte centrale reste plein cadre, sans teinte.
+
+- Updated dependencies [2468548]
+  - @egen-civitas/esm-styleguide@1.12.1
+
 ## 2.5.0
 
 ### Minor Changes

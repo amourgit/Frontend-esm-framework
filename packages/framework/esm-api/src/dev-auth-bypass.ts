@@ -135,6 +135,63 @@ export const DEV_BYPASS_SESSION = {
   },
 };
 
+// ─── Préférences de langue simulées ───────────────────────────────────────────
+
+/**
+ * Un vrai backend mémorise le choix de langue : `POST /session { locale }` pour la
+ * session en cours, `POST /user/<uuid> { userProperties: { defaultLocale } }` pour la langue par
+ * défaut de l'utilisateur. Sans cela, changer de langue dans la TopBar ne produisait aucun effet
+ * en mode bypass (la page se rechargeait toujours en `fr`, ou la requête partait dans le vide).
+ *
+ *   - langue de session  → sessionStorage (dure comme l'onglet, comme une session serveur)
+ *   - langue par défaut  → localStorage   (survit aux rechargements et aux nouveaux onglets)
+ */
+const DEV_SESSION_LOCALE_KEY = 'egen.devBypass.sessionLocale';
+const DEV_DEFAULT_LOCALE_KEY = 'egen.devBypass.defaultLocale';
+
+function readStorage(kind: 'session' | 'local', key: string): string | null {
+  try {
+    return (kind === 'session' ? window.sessionStorage : window.localStorage).getItem(key);
+  } catch {
+    return null; // stockage indisponible (mode privé strict, SSR…)
+  }
+}
+
+function writeStorage(kind: 'session' | 'local', key: string, value: string): void {
+  try {
+    (kind === 'session' ? window.sessionStorage : window.localStorage).setItem(key, value);
+  } catch {
+    // non persisté : le changement reste valable jusqu'au prochain rechargement
+  }
+}
+
+/** Retourne la locale (forme `fr`, `en_GB`) si elle fait partie des locales autorisées, sinon null. */
+function toAllowedLocale(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const normalized = value.replaceAll('-', '_');
+  return DEV_BYPASS_SESSION.allowedLocales.includes(normalized) ? normalized : null;
+}
+
+/**
+ * Session fictive courante : `DEV_BYPASS_SESSION` + les préférences de langue mémorisées.
+ * Priorité : langue de la session > langue par défaut > `DEV_BYPASS_SESSION.locale`.
+ */
+export function getDevBypassSession() {
+  const defaultLocale =
+    toAllowedLocale(readStorage('local', DEV_DEFAULT_LOCALE_KEY)) ??
+    DEV_BYPASS_SESSION.user.userProperties.defaultLocale;
+  const locale = toAllowedLocale(readStorage('session', DEV_SESSION_LOCALE_KEY)) ?? defaultLocale;
+  return {
+    ...DEV_BYPASS_SESSION,
+    locale,
+    user: {
+      ...DEV_BYPASS_SESSION.user,
+      locale,
+      userProperties: { ...DEV_BYPASS_SESSION.user.userProperties, defaultLocale },
+    },
+  };
+}
+
 // ─── État d'authentification simulé ────────────────────────────────────────
 
 /**
@@ -163,7 +220,7 @@ function injectDevBypassSession(): SessionStore {
   _bypassAuthenticated = true;
   const bypassStore: SessionStore = {
     loaded: true,
-    session: { ...DEV_BYPASS_SESSION },
+    session: getDevBypassSession(),
   };
   sessionStore.setState(bypassStore);
   return bypassStore;
@@ -174,6 +231,30 @@ const DEV_BYPASS_LOGGED_OUT_SESSION = { authenticated: false, sessionId: '' };
 // ─── Interception fetch ───────────────────────────────────────────────────────
 
 let _fetchIntercepted = false;
+
+function jsonResponse(body: unknown): Response {
+  return new Response(JSON.stringify(body), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json', 'X-Dev-Bypass': 'true' },
+  });
+}
+
+/** Corps JSON d'une requête (objet `init.body` sérialisé, ou `Request`), ou null s'il est absent/illisible. */
+async function readJsonBody(input: RequestInfo | URL, init?: RequestInit): Promise<Record<string, unknown> | null> {
+  try {
+    const raw =
+      typeof init?.body === 'string' ? init.body : input instanceof Request ? await input.clone().text() : null;
+    const parsed = raw ? JSON.parse(raw) : null;
+    return parsed && typeof parsed === 'object' ? (parsed as Record<string, unknown>) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Republie la session courante dans le store : l'UI (et `<html lang>`) suivent sans rechargement. */
+function syncSessionStore(): void {
+  sessionStore.setState({ loaded: true, session: getDevBypassSession() });
+}
 
 /**
  * Intercepte window.fetch pour le session endpoint et simule un vrai
@@ -202,7 +283,35 @@ export function interceptSessionFetch(): void {
     const url = typeof input === 'string' ? input : input instanceof Request ? input.url : String(input);
     const method = (init?.method ?? (input instanceof Request ? input.method : 'GET')).toUpperCase();
 
-    // Intercepter uniquement le session endpoint
+    // Changement de langue de la session : POST /session { locale }
+    if (method === 'POST' && (url.includes(sessionEndpoint) || url.includes('/ws/rest/v1/session'))) {
+      const locale = toAllowedLocale((await readJsonBody(input, init))?.locale);
+      if (locale && _bypassAuthenticated) {
+        writeStorage('session', DEV_SESSION_LOCALE_KEY, locale);
+        syncSessionStore();
+      }
+      return jsonResponse(_bypassAuthenticated ? getDevBypassSession() : DEV_BYPASS_LOGGED_OUT_SESSION);
+    }
+
+    // Langue par défaut de l'utilisateur : POST /user/<uuid> { userProperties: { defaultLocale } }
+    const userMatch = url.match(/\/ws\/rest\/v1\/user\/([^/?#]+)/);
+    if (method === 'POST' && userMatch && userMatch[1] === DEV_BYPASS_SESSION.user.uuid) {
+      const properties = (await readJsonBody(input, init))?.userProperties as Record<string, unknown> | undefined;
+      const locale = toAllowedLocale(properties?.defaultLocale);
+      if (locale && _bypassAuthenticated) {
+        writeStorage('local', DEV_DEFAULT_LOCALE_KEY, locale);
+        // Un nouveau défaut s'applique tout de suite : il remplace le choix « cette session seulement ».
+        try {
+          window.sessionStorage.removeItem(DEV_SESSION_LOCALE_KEY);
+        } catch {
+          // ignoré
+        }
+        syncSessionStore();
+      }
+      return jsonResponse(getDevBypassSession().user);
+    }
+
+    // Intercepter le session endpoint (GET, DELETE…)
     if (url.includes(sessionEndpoint) || url.includes('/ws/rest/v1/session')) {
       if (method === 'DELETE') {
         _bypassAuthenticated = false;
@@ -212,14 +321,7 @@ export function interceptSessionFetch(): void {
         });
       }
 
-      const body = _bypassAuthenticated ? DEV_BYPASS_SESSION : DEV_BYPASS_LOGGED_OUT_SESSION;
-      return new Response(JSON.stringify(body), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Dev-Bypass': 'true',
-        },
-      });
+      return jsonResponse(_bypassAuthenticated ? getDevBypassSession() : DEV_BYPASS_LOGGED_OUT_SESSION);
     }
 
     // Tous les autres appels passent normalement

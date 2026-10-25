@@ -1,5 +1,13 @@
 # @egen-civitas/esm-app-shell
 
+## 2.5.6
+
+### Patch Changes
+
+- 23488df: Scrollbars invisibles dans toutes les apps et tous les composants (le défilement reste intact). Règle globale dans la feuille de style du shell, avec `!important` pour neutraliser aussi les réglages locaux (`scrollbar-thin`, `scrollbar-thumb-*`, Carbon). Exception ponctuelle : attribut `data-scrollbar="visible"` sur l'élément concerné.
+- Updated dependencies [23488df]
+  - @egen-civitas/esm-styleguide@1.14.0
+
 ## 2.5.5
 
 ### Patch Changes

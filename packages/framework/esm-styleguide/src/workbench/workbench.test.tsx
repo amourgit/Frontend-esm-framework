@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type AssignedExtension } from '@egen-civitas/esm-extensions';
-import { ExtensionSlot, useAssignedExtensions } from '@egen-civitas/esm-react-utils';
+import { ComponentContext, ExtensionSlot, useAssignedExtensions } from '@egen-civitas/esm-react-utils';
 import { LeftRail, RightRail } from './tool-window-rail.component';
 import { ToolWindowZone } from './tool-window-zone.component';
 import {
@@ -292,5 +292,18 @@ describe('pastilles des boutons de rail', () => {
   it('ne mémorise jamais les pastilles avec la disposition', () => {
     setToolWindowBadge('notifications', 5);
     expect(window.localStorage.getItem(WORKBENCH_STORAGE_KEY) ?? '').not.toContain('notifications');
+  });
+});
+
+describe('contexte de composant des zones', () => {
+  it("fournit un ComponentContext à l'ExtensionSlot de la zone (sinon useExtensionSlot lève une erreur)", () => {
+    let received: { moduleName?: string } | null = null;
+    vi.mocked(ExtensionSlot).mockImplementation((() => {
+      received = useContext(ComponentContext) as { moduleName?: string } | null;
+      return null;
+    }) as any);
+    workbenchStore.setState({ active: { left: null, right: 'notifications', bottom: null } });
+    render(<ToolWindowZone anchor="right" />);
+    expect(received?.moduleName).toBeTruthy();
   });
 });

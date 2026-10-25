@@ -1,11 +1,18 @@
 import React, { useCallback, useEffect } from 'react';
 import { TOOL_WINDOW_SLOTS, type ToolWindowAnchor } from '@egen-civitas/esm-extensions';
-import { ExtensionSlot, useStore } from '@egen-civitas/esm-react-utils';
+import { ComponentContext, ExtensionSlot, useStore } from '@egen-civitas/esm-react-utils';
 import { X } from 'lucide-react';
 import { Splitter } from './splitter.component.js';
 import { toolWindowTitle, useToolWindows } from './use-tool-windows.js';
 import { closeToolWindow, workbenchStore } from './workbench.store.js';
 import styles from './workbench.module.scss';
+
+/**
+ * Contexte de composant des zones. Le shell monte chaque zone dans un `createRoot` autonome, hors de tout
+ * `egenComponentDecorator` : sans ce contexte, `ExtensionSlot` lève « ComponentContext has not been provided »
+ * dès qu'une fenêtre d'outils s'ouvre. Les extensions rendues gardent, elles, le contexte de leur propre app.
+ */
+const ZONE_CONTEXT = { moduleName: '@egen-civitas/esm-styleguide', featureName: 'workbench' } as const;
 
 /** Variable CSS lue par la grille du body (`_general.scss`) pour dimensionner chaque zone. */
 const ZONE_SIZE_VARIABLES: Readonly<Record<ToolWindowAnchor, string>> = {
@@ -76,7 +83,9 @@ export function ToolWindowZone({ anchor }: ToolWindowZoneProps) {
             </button>
           </header>
           <div className={styles.zoneBody}>
-            <ExtensionSlot name={TOOL_WINDOW_SLOTS[anchor]} select={selectActive} className={styles.zoneSlot} />
+            <ComponentContext.Provider value={ZONE_CONTEXT}>
+              <ExtensionSlot name={TOOL_WINDOW_SLOTS[anchor]} select={selectActive} className={styles.zoneSlot} />
+            </ComponentContext.Provider>
           </div>
           <Splitter anchor={anchor} label={`Redimensionner ${title}`} />
         </>

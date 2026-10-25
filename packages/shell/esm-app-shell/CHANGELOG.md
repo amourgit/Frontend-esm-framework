@@ -1,5 +1,13 @@
 # @egen-civitas/esm-app-shell
 
+## 2.5.4
+
+### Patch Changes
+
+- fdbe154: Plan de travail : corrige l'erreur « ComponentContext has not been provided » à l'ouverture d'une zone (clic sur un bouton de rail). Les zones sont montées par le shell hors de tout décorateur de composant ; elles fournissent maintenant leur propre `ComponentContext` à l'`ExtensionSlot` qui rend la fenêtre d'outils active.
+- Updated dependencies [fdbe154]
+  - @egen-civitas/esm-styleguide@1.13.1
+
 ## 2.5.3
 
 ### Patch Changes

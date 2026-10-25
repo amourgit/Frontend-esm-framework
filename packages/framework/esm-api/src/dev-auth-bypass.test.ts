@@ -34,6 +34,9 @@ describe('dev-auth-bypass', () => {
     // window.egenDevNoAuth = true ferait fuiter le bypass dans les tests
     // suivants.
     delete (window as { egenDevNoAuth?: boolean }).egenDevNoAuth;
+    // Préférences de langue simulées (voir getDevBypassSession) : ne doivent pas fuiter d'un test à l'autre.
+    window.localStorage.clear();
+    window.sessionStorage.clear();
   });
 
   describe('isDevAuthBypassEnabled', () => {
@@ -76,7 +79,7 @@ describe('dev-auth-bypass', () => {
       expect(freshSessionStore.getState().loaded).toBe(false);
     });
 
-    it("peuple IMMÉDIATEMENT le sessionStore au boot — pas besoin de soumettre le formulaire de login", async () => {
+    it('peuple IMMÉDIATEMENT le sessionStore au boot — pas besoin de soumettre le formulaire de login', async () => {
       vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
       const { initDevAuthBypass } = await import('./dev-auth-bypass');
       const { sessionStore: freshSessionStore } = await import('./current-user');
@@ -168,6 +171,105 @@ describe('dev-auth-bypass', () => {
       applyDevAuthBypassForLogin();
       response = await window.fetch('/openmrs/ws/rest/v1/session');
       expect((await response.json()).authenticated).toBe(true);
+    });
+  });
+
+  describe('changement de langue (émulation du backend)', () => {
+    const post = (path: string, body: unknown) =>
+      window.fetch(path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+    it("POST /session { locale } change la langue de la session, dans la réponse, le store et l'attribut <html lang>", async () => {
+      vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
+      const { initDevAuthBypass } = await import('./dev-auth-bypass');
+      const { sessionStore: freshSessionStore } = await import('./current-user');
+      initDevAuthBypass();
+      expect(freshSessionStore.getState().session?.locale).toBe('fr');
+
+      const response = await post('/openmrs/ws/rest/v1/session', { locale: 'en' });
+      expect(response.status).toBe(200);
+      expect((await response.json()).locale).toBe('en');
+      expect(freshSessionStore.getState().session?.locale).toBe('en');
+
+      // Les GET suivants (refetchCurrentUser) renvoient la langue choisie, pas toujours « fr ».
+      const next = await window.fetch('/openmrs/ws/rest/v1/session');
+      expect((await next.json()).locale).toBe('en');
+    });
+
+    it('la langue de session survit à un rechargement de la page (nouvelle initialisation du bypass)', async () => {
+      vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
+      const first = await import('./dev-auth-bypass');
+      first.initDevAuthBypass();
+      await post('/openmrs/ws/rest/v1/session', { locale: 'en' });
+
+      // Simule le rechargement : modules neufs, stockages conservés.
+      vi.resetModules();
+      window.fetch = originalFetch;
+      const { initDevAuthBypass } = await import('./dev-auth-bypass');
+      const { sessionStore: reloadedStore } = await import('./current-user');
+      initDevAuthBypass();
+      expect(reloadedStore.getState().session?.locale).toBe('en');
+    });
+
+    it('POST /user/<uuid> { userProperties.defaultLocale } enregistre la langue par défaut (survit à une nouvelle session)', async () => {
+      vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
+      const first = await import('./dev-auth-bypass');
+      first.initDevAuthBypass();
+
+      const response = await post(`/openmrs/ws/rest/v1/user/${first.DEV_BYPASS_SESSION.user.uuid}`, {
+        userProperties: { defaultLocale: 'en' },
+      });
+      expect(response.status).toBe(200);
+      expect((await response.json()).userProperties.defaultLocale).toBe('en');
+
+      // Nouvelle session (nouvel onglet) : sessionStorage vide, localStorage conservé.
+      vi.resetModules();
+      window.fetch = originalFetch;
+      window.sessionStorage.clear();
+      const { initDevAuthBypass } = await import('./dev-auth-bypass');
+      const { sessionStore: reloadedStore } = await import('./current-user');
+      initDevAuthBypass();
+      expect(reloadedStore.getState().session?.locale).toBe('en');
+      expect(reloadedStore.getState().session?.user?.userProperties?.defaultLocale).toBe('en');
+    });
+
+    it("la langue de session seule n'écrase pas la langue par défaut dans une nouvelle session", async () => {
+      vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
+      const first = await import('./dev-auth-bypass');
+      first.initDevAuthBypass();
+      await post('/openmrs/ws/rest/v1/session', { locale: 'en' });
+
+      vi.resetModules();
+      window.fetch = originalFetch;
+      window.sessionStorage.clear();
+      const { initDevAuthBypass } = await import('./dev-auth-bypass');
+      const { sessionStore: reloadedStore } = await import('./current-user');
+      initDevAuthBypass();
+      expect(reloadedStore.getState().session?.locale).toBe('fr');
+    });
+
+    it('ignore une locale non autorisée sans casser la session', async () => {
+      vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
+      const { initDevAuthBypass } = await import('./dev-auth-bypass');
+      initDevAuthBypass();
+
+      const response = await post('/openmrs/ws/rest/v1/session', { locale: 'xx' });
+      expect(response.status).toBe(200);
+      expect((await response.json()).locale).toBe('fr');
+    });
+
+    it("n'intercepte pas le POST /user/<autre uuid> (il passe au vrai fetch)", async () => {
+      vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
+      const original = vi.fn().mockResolvedValue(new Response('{}', { status: 200 }));
+      window.fetch = original as unknown as typeof window.fetch;
+      const { interceptSessionFetch } = await import('./dev-auth-bypass');
+      interceptSessionFetch();
+
+      await post('/openmrs/ws/rest/v1/user/un-autre-utilisateur', { userProperties: { defaultLocale: 'en' } });
+      expect(original).toHaveBeenCalledTimes(1);
     });
   });
 });

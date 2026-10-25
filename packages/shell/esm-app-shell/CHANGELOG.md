@@ -1,5 +1,17 @@
 # @egen-civitas/esm-app-shell
 
+## 2.5.2
+
+### Patch Changes
+
+- 10be7cc: Plan de travail : pastilles (compteurs) sur les boutons des rails.
+
+  - Nouvelle API `setToolWindowBadge(id, badge)` (`id` = nom de l'extension du rail) : une app publie un compteur (ou un court texte) affiché sur son bouton de rail ; `null`, `0` ou `''` le retire. Les nombres supérieurs à 99 s'affichent « 99+ ».
+  - Les pastilles vivent dans un store dédié (`workbenchBadgeStore`) et ne sont jamais mémorisées avec la disposition du plan de travail.
+
+- Updated dependencies [10be7cc]
+  - @egen-civitas/esm-styleguide@1.13.0
+
 ## 2.5.1
 
 ### Patch Changes

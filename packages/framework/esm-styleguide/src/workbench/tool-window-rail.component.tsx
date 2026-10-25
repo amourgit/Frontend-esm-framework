@@ -4,6 +4,7 @@ import { useStore } from '@egen-civitas/esm-react-utils';
 import { resolveWorkbenchIcon } from './workbench-icons.js';
 import { toolWindowTitle, useToolWindows, type ToolWindow } from './use-tool-windows.js';
 import { toggleToolWindow, workbenchStore } from './workbench.store.js';
+import { formatToolWindowBadge, workbenchBadgeStore } from './workbench-badges.js';
 import styles from './workbench.module.scss';
 
 function RailGroup({ anchor, label }: { anchor: ToolWindowAnchor; label: string }) {
@@ -31,6 +32,8 @@ function RailGroup({ anchor, label }: { anchor: ToolWindowAnchor; label: string 
 function RailButton({ tool, active, onClick }: { tool: ToolWindow; active: boolean; onClick: () => void }) {
   const title = toolWindowTitle(tool);
   const Icon = resolveWorkbenchIcon(tool.meta.icon);
+  // NB : `useStore` retourne l'état étalé (clé = id de fenêtre d'outils).
+  const badge = useStore(workbenchBadgeStore)[tool.id];
 
   return (
     <button
@@ -43,6 +46,11 @@ function RailButton({ tool, active, onClick }: { tool: ToolWindow; active: boole
       onClick={onClick}
     >
       {Icon ? <Icon size={18} aria-hidden="true" /> : <span aria-hidden="true">{title.charAt(0).toUpperCase()}</span>}
+      {badge !== undefined && (
+        <span className={styles.railBadge} data-testid={`workbench-badge-${tool.id}`}>
+          {formatToolWindowBadge(badge)}
+        </span>
+      )}
     </button>
   );
 }

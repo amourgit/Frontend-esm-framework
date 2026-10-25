@@ -6,6 +6,28 @@ html {
 }
 
 // =============================================================================
+//  SCROLLBARS — Invisibles partout (toutes les apps, tous les composants)
+//
+//  Le défilement (molette, tactile, clavier, trackpad) reste intact : seule la barre est
+//  masquée. `!important` est volontaire : il neutralise aussi les réglages locaux des apps
+//  (`scrollbar-thin`, `scrollbar-thumb-*`, styles Carbon) pour qu'aucune barre ne réapparaisse.
+//
+//  Pour un élément qui doit exceptionnellement garder sa barre : `data-scrollbar="visible"`.
+//  Pour passer à des barres personnalisées plus tard, ne modifier que ce bloc.
+// =============================================================================
+
+*:not([data-scrollbar='visible']) {
+  scrollbar-width: none !important; // Firefox, Chrome 121+, Safari 18.2+
+  -ms-overflow-style: none !important; // anciens Edge / IE
+}
+
+*:not([data-scrollbar='visible'])::-webkit-scrollbar {
+  display: none !important; // anciens Chrome / Safari
+  width: 0 !important;
+  height: 0 !important;
+}
+
+// =============================================================================
 //  LAYOUT PUBLIC — Routes sans navigation primaire (landing, login, suspended)
 //
 //  Quand html[data-public-route="true"] est positionné par une app publique

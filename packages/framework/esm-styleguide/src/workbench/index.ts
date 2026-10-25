@@ -6,3 +6,4 @@ export * from './splitter.component.js';
 export * from './workbench-icons.js';
 export * from './workbench.render.js';
 export * from './workbench.store.js';
+export * from './workbench-badges.js';

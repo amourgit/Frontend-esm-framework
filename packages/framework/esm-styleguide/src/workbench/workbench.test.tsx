@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type AssignedExtension } from '@egen-civitas/esm-extensions';
 import { ExtensionSlot, useAssignedExtensions } from '@egen-civitas/esm-react-utils';
@@ -15,6 +15,7 @@ import {
   WORKBENCH_STORAGE_KEY,
   workbenchStore,
 } from './workbench.store';
+import { formatToolWindowBadge, setToolWindowBadge, workbenchBadgeStore } from './workbench-badges';
 
 const mounted = vi.hoisted(() => ({ apps: [] as string[] }));
 vi.mock('single-spa', () => ({ getMountedApps: () => mounted.apps }));
@@ -47,6 +48,7 @@ beforeEach(() => {
       ))}
     </div>
   )) as any);
+  workbenchBadgeStore.setState({}, true);
   window.localStorage.clear();
   document.documentElement.removeAttribute('style');
   workbenchStore.setState(
@@ -267,5 +269,28 @@ describe('poignée de redimensionnement', () => {
     fireEvent.pointerDown(handle, { button: 0, clientX: 1500 });
     fireEvent.pointerMove(handle, { clientX: 1400 });
     expect(workbenchStore.getState().sizes.right).toBe(480); // 1880 - 1400
+  });
+});
+
+describe('pastilles des boutons de rail', () => {
+  it('affiche la pastille publiée pour une fenêtre d\'outils et la retire à 0', () => {
+    render(<RightRail />);
+    expect(screen.queryByTestId('workbench-badge-notifications')).toBeNull();
+    act(() => setToolWindowBadge('notifications', 3));
+    expect(screen.getByTestId('workbench-badge-notifications').textContent).toBe('3');
+    act(() => setToolWindowBadge('notifications', 0));
+    expect(screen.queryByTestId('workbench-badge-notifications')).toBeNull();
+    expect(workbenchBadgeStore.getState()).toEqual({});
+  });
+
+  it('plafonne les grands nombres à 99+', () => {
+    expect(formatToolWindowBadge(7)).toBe('7');
+    expect(formatToolWindowBadge(100)).toBe('99+');
+    expect(formatToolWindowBadge('new')).toBe('new');
+  });
+
+  it('ne mémorise jamais les pastilles avec la disposition', () => {
+    setToolWindowBadge('notifications', 5);
+    expect(window.localStorage.getItem(WORKBENCH_STORAGE_KEY) ?? '').not.toContain('notifications');
   });
 });

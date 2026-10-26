@@ -1,5 +1,11 @@
 # @egen-civitas/esm-styleguide
 
+## 1.16.0
+
+### Minor Changes
+
+- f3bdd5e: Animations et loader : bibliothèque d'animations SCSS (classes `egen-anim-*`, mixins, tokens de mouvement), ouverture/fermeture animées des zones du plan de travail, entrée animée du contenu des pages, loader EGEN réutilisable (`Loader`, `showPageLoader`, `usePageLoading`) retenu pendant le chargement des pages.
+
 ## 1.15.0
 
 ### Minor Changes

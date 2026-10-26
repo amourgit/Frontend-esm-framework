@@ -134,6 +134,11 @@ declare global {
     // reste en fallback pour les builds compilés directement depuis les
     // sources, ex. `rspack serve` sur une app individuelle).
     egenDevNoAuth?: boolean;
+    /**
+     * URL same-origin du flux de logs du terminal (`egen develop` uniquement) : `<url>/stream` (SSE)
+     * et `<url>/history`. Absente en production.
+     */
+    egenLogsUrl?: string;
   }
 }
 

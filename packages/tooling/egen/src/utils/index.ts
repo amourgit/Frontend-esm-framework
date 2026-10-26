@@ -1,6 +1,7 @@
 export * from './config';
 export * from './helpers';
 export * from './importmap';
+export * from './log-hub';
 export * from './logger';
 export * from './packages';
 export * from './port';

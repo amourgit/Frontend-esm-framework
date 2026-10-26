@@ -7,6 +7,8 @@ import {
   getAvailablePort,
   getImportmapAndRoutes,
   isPortAvailable,
+  startLogHub,
+  getLogHub,
   logFail,
   mergeImportmapAndRoutes,
   proxyImportmapAndRoutes,
@@ -39,7 +41,9 @@ type Commands = typeof commands;
 type CommandNames = keyof Commands;
 
 function runCommand<T extends CommandNames>(type: T, args: Parameters<Commands[T]>[0]) {
-  const ps = fork(runner, [], { cwd: type === 'runBuild' ? root : process.cwd() });
+  const hub = type === 'runDevelop' ? getLogHub() : undefined;
+  const ps = fork(runner, [], { cwd: type === 'runBuild' ? root : process.cwd(), silent: !!hub });
+  hub?.attachChild(ps, 'egen-develop');
 
   ps.send({
     type,
@@ -180,6 +184,14 @@ export function buildCli(y: Argv) {
 
       const sources = deduplicated.length > 0 ? deduplicated : ['.'];
 
+      // Hub de logs : doit démarrer avant les serveurs de dev pour capter toute leur sortie.
+      let logsPort: number | undefined;
+      try {
+        logsPort = (await startLogHub()).port;
+      } catch {
+        // pas de hub : le terminal fonctionne normalement, sans diffusion des logs
+      }
+
       const importmapAndRoutes = await getImportmapAndRoutes(args.importmap, args.routes, port);
       // Les ports du backend sont réservés : un serveur de dev d'app ne doit jamais s'y voir allouer.
       const locallyRun = await runProject(port, sources, args['use-rspack'], backendPorts(args.backend));
@@ -189,6 +201,7 @@ export function buildCli(y: Argv) {
         configFiles: args['config-file'],
         ...args,
         port,
+        logsPort,
         ...proxyImportmapAndRoutes(
           await mergeImportmapAndRoutes(importmapAndRoutes, locallyRun, args.backend, args.spaPath),
           args.backend,

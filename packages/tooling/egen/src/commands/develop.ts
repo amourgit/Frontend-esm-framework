@@ -60,6 +60,8 @@ export interface DevelopArgs {
   configFiles: Array<string>;
   addCookie: string;
   supportOffline: boolean;
+  /** Port local du hub de logs du terminal (voir utils/log-hub). */
+  logsPort?: number;
 }
 
 export async function runDevelop(args: DevelopArgs, signal?: AbortSignal) {
@@ -75,6 +77,7 @@ export async function runDevelop(args: DevelopArgs, signal?: AbortSignal) {
     configFiles,
     addCookie,
     supportOffline,
+    logsPort,
   } = args;
   const apiUrl = removeTrailingSlash(args.apiUrl);
   const spaPath = removeTrailingSlash(args.spaPath);
@@ -120,6 +123,10 @@ export async function runDevelop(args: DevelopArgs, signal?: AbortSignal) {
     logInfo(`EGEN_TENANT_MODE=${runtimeWindowOverrides.egenTenantMode} — système multi-tenant actif.`);
   }
 
+  // URL same-origin du flux de logs du terminal, lue par l'app de logs du shell.
+  const logsPath = `${spaPath}/__egen_logs__`;
+  if (logsPort) runtimeWindowOverrides.egenLogsUrl = logsPath;
+
   const indexContent = readFileSync(index, 'utf8')
     .replace(
       /<script>initializeSpa\([\s\S\n]*<\/script>/m,
@@ -155,6 +162,18 @@ export async function runDevelop(args: DevelopArgs, signal?: AbortSignal) {
   // explicitly exclude routes that we want to use other handlers for.
   //
   // express.static respects normal route declaration order.
+
+  // Flux de logs du terminal (SSE + historique) : proxy vers le hub local, avant le catch-all index.html
+  if (logsPort) {
+    app.use(
+      logsPath,
+      createProxyMiddleware({
+        target: `http://127.0.0.1:${logsPort}`,
+        changeOrigin: true,
+        pathRewrite: { [`^${logsPath}`]: '' },
+      }),
+    );
+  }
 
   // Route for custom `importmap.json` goes above static assets
   if (importmap.type === 'inline') {

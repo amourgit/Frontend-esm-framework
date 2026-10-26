@@ -1,0 +1,36 @@
+// Ouverture / fermeture douces des zones du plan de travail : les tailles de zones sont des
+// variables CSS publiées sur <html> ; on les enregistre comme <length> pour que la grille du body
+// les interpole (sans @property elles changeraient d'un coup).
+@property --egen-zone-left-width {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+@property --egen-zone-right-width {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+@property --egen-zone-bottom-height {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+html {
+  transition:
+    --egen-zone-left-width var(--egen-motion-zone, 300ms) var(--egen-ease-out, ease),
+    --egen-zone-right-width var(--egen-motion-zone, 300ms) var(--egen-ease-out, ease),
+    --egen-zone-bottom-height var(--egen-motion-zone, 300ms) var(--egen-ease-out, ease);
+}
+
+// Pendant un glissement de poignée : suivi direct du pointeur, sans retard.
+html[data-workbench-resizing] {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
+}

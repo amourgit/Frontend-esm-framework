@@ -1,0 +1,94 @@
+// Loader EGEN (SVG « goo », porté depuis Civitas---GED) : marque d'attente unique du framework.
+// Utilisable partout : overlay de page (.egen-loader-overlay), overlay local à un conteneur
+// (.egen-loader-overlay--local) ou loader seul (.egen-loader). Couleurs pilotables par thème :
+// --egen-loader-from / --egen-loader-to / --egen-loader-glow.
+.egen-loader {
+  --egen-loader-from: var(--colors-primary-600, #008080);
+  --egen-loader-to: var(--colors-primary-300, #38bdf8);
+  --egen-loader-glow: rgb(0 128 128 / 60%);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  filter: drop-shadow(0 0 25px var(--egen-loader-glow));
+}
+
+.egen-loader__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.egen-loader__stop-from {
+  stop-color: var(--egen-loader-from);
+}
+
+.egen-loader__stop-to {
+  stop-color: var(--egen-loader-to);
+}
+
+.egen-loader__spin {
+  position: relative;
+  z-index: 1;
+  filter: url('#egen-loader-goo');
+}
+
+.egen-loader__shadow {
+  position: absolute;
+  opacity: 0.3;
+  filter: blur(5px);
+  transform: translate(3px, 3px);
+}
+
+.egen-loader__arc,
+.egen-loader__ring {
+  fill: none;
+  stroke: url('#egen-loader-gradient');
+  stroke-width: 23;
+  stroke-linecap: round;
+}
+
+.egen-loader__arc {
+  animation: egen-loader-spin 10s infinite linear;
+  stroke-dasharray: 180 800;
+}
+
+.egen-loader__ring {
+  animation: egen-loader-spin 3s infinite linear;
+  stroke-dasharray: 26 54;
+}
+
+@keyframes egen-loader-spin {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -403px;
+  }
+}
+
+// Overlay de page : transparent + flou, sous la TopBar et le footer (qui restent au-dessus).
+.egen-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--egen-shell-bar-z-index, 8100) - 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: transparent;
+  backdrop-filter: blur(8px);
+  cursor: wait;
+  user-select: none;
+}
+
+// Variante locale : couvre seulement son conteneur (qui doit être `position: relative`).
+.egen-loader-overlay--local {
+  position: absolute;
+  z-index: 1;
+  border-radius: inherit;
+}

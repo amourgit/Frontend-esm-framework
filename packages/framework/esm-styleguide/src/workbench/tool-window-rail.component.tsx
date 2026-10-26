@@ -16,7 +16,7 @@ function RailGroup({ anchor, label }: { anchor: ToolWindowAnchor; label: string 
   if (tools.length === 0) return null;
 
   return (
-    <div role="group" aria-label={label} data-anchor={anchor} className={styles.railGroup}>
+    <div role="group" aria-label={label} data-anchor={anchor} className={`${styles.railGroup} egen-anim-stagger egen-anim-stagger--fade`}>
       {tools.map((tool) => (
         <RailButton
           key={tool.id}

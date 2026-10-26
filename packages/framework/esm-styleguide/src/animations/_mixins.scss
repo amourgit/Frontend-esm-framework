@@ -1,0 +1,16 @@
+// Mixins : permettent à un composant (module SCSS) d'hériter d'une animation EGEN sans
+// dupliquer sa définition. Durée, courbe et délai restent pilotables par variables CSS.
+//
+//   @use '../animations/mixins' as motion;
+//   .panel { @include motion.animate(egen-zoom-in); }
+//
+// NB : dans un `.module.scss`, les noms de keyframes sont localisés par css-loader ; pour les
+// composants React, préférer les classes globales `egen-anim-*` (voir _animations.scss).
+@mixin animate($name, $duration: var(--egen-motion-base), $easing: var(--egen-ease-out), $fill: both) {
+  animation-name: $name;
+  animation-duration: var(--egen-anim-duration, #{$duration});
+  animation-timing-function: var(--egen-anim-easing, #{$easing});
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: $fill;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}

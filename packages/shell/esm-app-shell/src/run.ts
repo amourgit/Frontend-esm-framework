@@ -27,6 +27,7 @@ import {
   renderLoadingSpinner,
   renderPageBackground,
   renderSnackbars,
+  setupPageTransitions,
   renderToasts,
   renderWorkbench,
   renderWorkspaceWindowsAndMenu,
@@ -477,6 +478,7 @@ export function run(configUrls: Array<string>) {
     showToasts();
     showPageBackground();
     showWorkbench();
+    setupPageTransitions();
     showModals();
     showNotifications();
     showActionableNotifications();

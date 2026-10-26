@@ -106,8 +106,51 @@ $gap: var(--egen-workbench-gap, 0.375rem);
   background: var(--egen-workbench-card-bg, rgb(0 0 0 / 16%));
   color: var(--colors-surface-foreground, #fff);
 
+  // Distance de glissement des animations d'ouverture/fermeture (classes egen-anim-*).
+  --egen-anim-distance: 0.75rem;
+  --egen-anim-duration: var(--egen-motion-zone, 300ms);
+
   &[hidden] {
     display: none;
+  }
+
+  // Pendant l'ouverture/fermeture la cellule de grille s'anime : on rogne le contenu et on le fige
+  // à la taille cible (pas de reflow du contenu à chaque image), sans toucher la poignée au repos.
+  &[data-phase='opening'],
+  &[data-phase='closing'] {
+    overflow: hidden;
+  }
+
+  &[data-phase='closing'] {
+    pointer-events: none;
+  }
+
+  &[data-phase='opening'] .zoneHeader,
+  &[data-phase='opening'] .zoneBody,
+  &[data-phase='closing'] .zoneHeader,
+  &[data-phase='closing'] .zoneBody {
+    flex-shrink: 0;
+  }
+
+  &.zone-left[data-phase='opening'],
+  &.zone-left[data-phase='closing'],
+  &.zone-right[data-phase='opening'],
+  &.zone-right[data-phase='closing'] {
+    .zoneHeader,
+    .zoneBody {
+      min-width: var(--egen-zone-inner-size);
+    }
+  }
+
+  // Zone droite : le contenu reste accroché au bord droit pendant que la cellule grandit vers la gauche.
+  &.zone-right[data-phase='opening'],
+  &.zone-right[data-phase='closing'] {
+    align-items: flex-end;
+  }
+
+  &.zone-bottom[data-phase='opening'] .zoneBody,
+  &.zone-bottom[data-phase='closing'] .zoneBody {
+    min-height: var(--egen-zone-inner-size);
   }
 }
 

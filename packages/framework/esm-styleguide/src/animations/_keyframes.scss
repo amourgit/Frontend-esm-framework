@@ -1,0 +1,135 @@
+// Bibliothèque de keyframes EGEN (préfixe egen-). Aucune règle ici : uniquement des @keyframes,
+// consommés par les classes utilitaires (_animations.scss) et par les mixins (_mixins.scss).
+
+// ── Fondus ──────────────────────────────────────────────────────────────────
+@keyframes egen-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes egen-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+// ── Glissements (nommés d'après le côté d'origine / de destination) ─────────
+@keyframes egen-slide-in-from-left {
+  from { opacity: 0; transform: translate3d(calc(var(--egen-anim-distance) * -1), 0, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes egen-slide-in-from-right {
+  from { opacity: 0; transform: translate3d(var(--egen-anim-distance), 0, 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes egen-slide-in-from-top {
+  from { opacity: 0; transform: translate3d(0, calc(var(--egen-anim-distance) * -1), 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes egen-slide-in-from-bottom {
+  from { opacity: 0; transform: translate3d(0, var(--egen-anim-distance), 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes egen-slide-out-to-left {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translate3d(calc(var(--egen-anim-distance) * -1), 0, 0); }
+}
+@keyframes egen-slide-out-to-right {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translate3d(var(--egen-anim-distance), 0, 0); }
+}
+@keyframes egen-slide-out-to-top {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translate3d(0, calc(var(--egen-anim-distance) * -1), 0); }
+}
+@keyframes egen-slide-out-to-bottom {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translate3d(0, var(--egen-anim-distance), 0); }
+}
+
+// ── Zoom ────────────────────────────────────────────────────────────────────
+@keyframes egen-zoom-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes egen-zoom-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: scale(0.94); }
+}
+
+// ── Flou ────────────────────────────────────────────────────────────────────
+@keyframes egen-blur-in {
+  from { opacity: 0; filter: blur(12px); }
+  to { opacity: 1; filter: blur(0); }
+}
+@keyframes egen-blur-out {
+  from { opacity: 1; filter: blur(0); }
+  to { opacity: 0; filter: blur(12px); }
+}
+
+// ── Montée douce (entrée de page) ───────────────────────────────────────────
+@keyframes egen-rise-in {
+  from { opacity: 0; transform: translate3d(0, calc(var(--egen-anim-distance) * 0.5), 0); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes egen-rise-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translate3d(0, calc(var(--egen-anim-distance) * -0.35), 0); }
+}
+
+// ── Rebonds / ressort ───────────────────────────────────────────────────────
+@keyframes egen-drop-in {
+  0% { opacity: 0; transform: translate3d(0, calc(var(--egen-anim-distance) * -1.5), 0); }
+  60% { opacity: 1; transform: translate3d(0, 4px, 0); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes egen-bounce-in {
+  0% { opacity: 0; transform: scale(0.6); }
+  55% { opacity: 1; transform: scale(1.06); }
+  80% { transform: scale(0.97); }
+  100% { opacity: 1; transform: none; }
+}
+
+// ── Rotations 3D ────────────────────────────────────────────────────────────
+@keyframes egen-flip-in-x {
+  from { opacity: 0; transform: perspective(600px) rotateX(-70deg); }
+  to { opacity: 1; transform: perspective(600px) rotateX(0); }
+}
+@keyframes egen-flip-in-y {
+  from { opacity: 0; transform: perspective(600px) rotateY(-70deg); }
+  to { opacity: 1; transform: perspective(600px) rotateY(0); }
+}
+
+// ── Révélations (clip-path) ─────────────────────────────────────────────────
+@keyframes egen-wipe-in-left {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes egen-wipe-in-top {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes egen-wipe-out-left {
+  from { clip-path: inset(0 0 0 0); }
+  to { clip-path: inset(0 100% 0 0); }
+}
+
+// ── Boucles d'attention / d'attente ─────────────────────────────────────────
+@keyframes egen-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.04); }
+}
+@keyframes egen-float {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -6px, 0); }
+}
+@keyframes egen-shake {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  20%, 60% { transform: translate3d(-6px, 0, 0); }
+  40%, 80% { transform: translate3d(6px, 0, 0); }
+}
+@keyframes egen-shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+@keyframes egen-spin {
+  to { transform: rotate(360deg); }
+}

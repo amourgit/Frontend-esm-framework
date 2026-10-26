@@ -1,0 +1,102 @@
+@use 'sass:list';
+@use './mixins' as motion;
+
+// Classes utilitaires d'animation : `class="egen-anim-fade-in"`. Les composants héritent de ces
+// classes (zones, rails, pages...). Variables de réglage : --egen-anim-duration, --egen-anim-easing,
+// --egen-anim-delay, --egen-anim-iterations, --egen-anim-distance.
+
+// name => (keyframes, durée, courbe)
+$egen-animations: (
+  'fade-in': (egen-fade-in, var(--egen-motion-base), var(--egen-ease-standard)),
+  'fade-out': (egen-fade-out, var(--egen-motion-fast), var(--egen-ease-in)),
+  'slide-in-from-left': (egen-slide-in-from-left, var(--egen-motion-zone), var(--egen-ease-out)),
+  'slide-in-from-right': (egen-slide-in-from-right, var(--egen-motion-zone), var(--egen-ease-out)),
+  'slide-in-from-top': (egen-slide-in-from-top, var(--egen-motion-zone), var(--egen-ease-out)),
+  'slide-in-from-bottom': (egen-slide-in-from-bottom, var(--egen-motion-zone), var(--egen-ease-out)),
+  'slide-out-to-left': (egen-slide-out-to-left, var(--egen-motion-zone), var(--egen-ease-in-out)),
+  'slide-out-to-right': (egen-slide-out-to-right, var(--egen-motion-zone), var(--egen-ease-in-out)),
+  'slide-out-to-top': (egen-slide-out-to-top, var(--egen-motion-zone), var(--egen-ease-in-out)),
+  'slide-out-to-bottom': (egen-slide-out-to-bottom, var(--egen-motion-zone), var(--egen-ease-in-out)),
+  'zoom-in': (egen-zoom-in, var(--egen-motion-base), var(--egen-ease-out)),
+  'zoom-out': (egen-zoom-out, var(--egen-motion-fast), var(--egen-ease-in)),
+  'blur-in': (egen-blur-in, var(--egen-motion-slow), var(--egen-ease-out)),
+  'blur-out': (egen-blur-out, var(--egen-motion-base), var(--egen-ease-in)),
+  'rise-in': (egen-rise-in, var(--egen-motion-slow), var(--egen-ease-out)),
+  'rise-out': (egen-rise-out, var(--egen-motion-base), var(--egen-ease-in)),
+  'drop-in': (egen-drop-in, var(--egen-motion-slow), var(--egen-ease-standard)),
+  'bounce-in': (egen-bounce-in, var(--egen-motion-slower), var(--egen-ease-standard)),
+  'flip-in-x': (egen-flip-in-x, var(--egen-motion-slow), var(--egen-ease-out)),
+  'flip-in-y': (egen-flip-in-y, var(--egen-motion-slow), var(--egen-ease-out)),
+  'wipe-in-left': (egen-wipe-in-left, var(--egen-motion-slow), var(--egen-ease-in-out)),
+  'wipe-in-top': (egen-wipe-in-top, var(--egen-motion-slow), var(--egen-ease-in-out)),
+  'wipe-out-left': (egen-wipe-out-left, var(--egen-motion-base), var(--egen-ease-in-out)),
+);
+
+@each $name, $def in $egen-animations {
+  .egen-anim-#{$name} {
+    @include motion.animate(list.nth($def, 1), list.nth($def, 2), list.nth($def, 3));
+  }
+}
+
+// Boucles (attente / attention)
+.egen-anim-pulse {
+  @include motion.animate(egen-pulse, 1.6s, ease-in-out);
+  --egen-anim-iterations: infinite;
+}
+.egen-anim-float {
+  @include motion.animate(egen-float, 3s, ease-in-out);
+  --egen-anim-iterations: infinite;
+}
+.egen-anim-shake {
+  @include motion.animate(egen-shake, var(--egen-motion-slow), var(--egen-ease-standard));
+}
+.egen-anim-spin {
+  @include motion.animate(egen-spin, 1s, linear);
+  --egen-anim-iterations: infinite;
+}
+.egen-anim-shimmer {
+  background-image: linear-gradient(90deg, transparent 0%, rgb(255 255 255 / 14%) 50%, transparent 100%);
+  background-size: 200% 100%;
+  @include motion.animate(egen-shimmer, 1.6s, linear);
+  --egen-anim-iterations: infinite;
+}
+
+// Modificateurs de vitesse
+.egen-anim--fast { --egen-anim-duration: var(--egen-motion-fast); }
+.egen-anim--slow { --egen-anim-duration: var(--egen-motion-slow); }
+.egen-anim--slower { --egen-anim-duration: var(--egen-motion-slower); }
+
+// Cascade : les enfants directs apparaissent l'un après l'autre (12 premiers).
+.egen-anim-stagger > * {
+  --egen-i: 0;
+  @include motion.animate(egen-rise-in, var(--egen-motion-slow), var(--egen-ease-out));
+  animation-delay: calc(var(--egen-anim-stagger-step, 40ms) * var(--egen-i));
+}
+@for $i from 1 through 12 {
+  .egen-anim-stagger > :nth-child(#{$i}) { --egen-i: #{$i - 1}; }
+}
+.egen-anim-stagger--fade > * { animation-name: egen-fade-in; }
+.egen-anim-stagger--zoom > * { animation-name: egen-zoom-in; }
+.egen-anim-stagger--slide-left > * { animation-name: egen-slide-in-from-left; }
+.egen-anim-stagger--slide-right > * { animation-name: egen-slide-in-from-right; }
+
+// Entrée de contenu de page (posée par setupPageTransitions sur #egen-apps-container).
+// Variantes via html[data-egen-page-anim="fade|zoom|blur|slide"].
+.egen-anim-page-enter {
+  @include motion.animate(egen-rise-in, var(--egen-motion-slow), var(--egen-ease-out));
+  --egen-anim-distance: 1rem;
+}
+html[data-egen-page-anim='fade'] .egen-anim-page-enter { animation-name: egen-fade-in; }
+html[data-egen-page-anim='zoom'] .egen-anim-page-enter { animation-name: egen-zoom-in; }
+html[data-egen-page-anim='blur'] .egen-anim-page-enter { animation-name: egen-blur-in; }
+html[data-egen-page-anim='slide'] .egen-anim-page-enter { animation-name: egen-slide-in-from-right; }
+
+// Accessibilité : mouvement réduit => animations quasi instantanées (hors loader, qui est un état).
+@media (prefers-reduced-motion: reduce) {
+  [class*='egen-anim-'],
+  [class*='egen-anim-'] > * {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

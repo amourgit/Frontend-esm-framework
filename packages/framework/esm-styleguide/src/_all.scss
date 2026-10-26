@@ -18,11 +18,14 @@
 @forward './components/panel-overrides';
 @forward './logo/logo';
 @forward './spinner/spinner';
+@forward './spinner/loader';
 @forward './notifications/notifications';
 @forward './notifications/actionable-notifications';
 @forward './toasts/toasts';
 @forward './snackbars/snackbars';
 @forward './modals/modals';
+
+@forward './animations/index';
 
 @forward './overrides';
 

@@ -1,0 +1,80 @@
+// Panneau de sous-options d'une option globale du rail gauche (zone gauche du plan de travail).
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-sizing: border-box;
+  padding: 0.5rem;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.groupTitle {
+  margin: 0;
+  padding: 0 0.5rem;
+  color: var(--colors-surface-muted-foreground, #9ca3af);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.4375rem 0.5rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--colors-surface-muted-foreground, #9ca3af);
+  font: inherit;
+  font-size: 0.8125rem;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+
+  &:hover {
+    background: var(--colors-surface-translucent-hover, rgb(255 255 255 / 10%));
+    color: var(--colors-surface-foreground, #fff);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--colors-border-ring, var(--colors-primary-500, #3b82f6));
+    outline-offset: 1px;
+  }
+
+  &[data-active='true'] {
+    background: var(--colors-surface-translucent-hover, rgb(255 255 255 / 14%));
+    color: var(--colors-surface-foreground, #fff);
+    font-weight: 600;
+  }
+}
+
+.entryIcon {
+  flex: 0 0 auto;
+}
+
+.entryLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

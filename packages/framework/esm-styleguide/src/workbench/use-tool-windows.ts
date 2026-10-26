@@ -24,7 +24,8 @@ export function toolWindowTitle({ moduleName, meta }: ToolWindow): string {
 /**
  * Fenêtres d'outils d'une zone, triées par `meta.order` (puis ordre du slot).
  *
- * Zones `left` et `bottom` : uniquement celles de l'app active (le rail change avec l'app).
+ * Zones `left` et `bottom` : celles de l'app active (le rail change avec l'app) et celles qui
+ * déclarent `meta.global` (toujours présentes).
  * Zone `right` : globale, toujours toutes les extensions déclarées.
  */
 export function useToolWindows(anchor: ToolWindowAnchor): ToolWindow[] {
@@ -36,7 +37,12 @@ export function useToolWindows(anchor: ToolWindowAnchor): ToolWindow[] {
       assigned
         .map((extension, index) => ({ extension, index }))
         .filter(({ extension }) => isToolWindowMeta(extension.meta))
-        .filter(({ extension }) => anchor === 'right' || activeModules.has(extension.moduleName))
+        .filter(
+          ({ extension }) =>
+            anchor === 'right' ||
+            (extension.meta as ToolWindowMeta).global === true ||
+            activeModules.has(extension.moduleName),
+        )
         .sort((a, b) => {
           const orderA = (a.extension.meta as ToolWindowMeta).order ?? a.index;
           const orderB = (b.extension.meta as ToolWindowMeta).order ?? b.index;

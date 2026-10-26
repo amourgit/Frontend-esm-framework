@@ -18,6 +18,17 @@ import {
   Settings,
   Terminal,
   Users,
+  Calendar,
+  CalendarCheck,
+  Compass,
+  Contact,
+  FileCheck,
+  FileText,
+  Globe,
+  Layers,
+  Radio,
+  Star,
+  Zap,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -45,6 +56,17 @@ export const WORKBENCH_ICONS: Readonly<Record<string, LucideIcon>> = {
   Settings,
   Terminal,
   Users,
+  Calendar,
+  CalendarCheck,
+  Compass,
+  Contact,
+  FileCheck,
+  FileText,
+  Globe,
+  Layers,
+  Radio,
+  Star,
+  Zap,
 };
 
 export function resolveWorkbenchIcon(name?: string): LucideIcon | undefined {

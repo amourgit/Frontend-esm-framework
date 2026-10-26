@@ -1,5 +1,21 @@
 # @egen-civitas/esm-framework
 
+## 1.4.0
+
+### Minor Changes
+
+- 0978f93: Rails : le rail droit porte aussi un groupe bas ; `ToolWindowMeta.rail` ('left' par défaut | 'right') choisit le rail d'une option de la zone basse (pleine largeur entre les rails).
+
+### Patch Changes
+
+- ac88343: `egen develop` : hub de logs du terminal. Toute la sortie (processus principal, serveur de dev de chaque app, processus `develop`) est structurée (source, niveau, horodatage, ANSI conservé) et diffusée en temps réel (SSE) sur `<spaPath>/__egen_logs__/stream` (+ `/history`, `/health`), exposée au navigateur via `window.egenLogsUrl`. Écoute locale uniquement (127.0.0.1), absente en production.
+- Updated dependencies [0978f93]
+- Updated dependencies [5e15585]
+- Updated dependencies [ac88343]
+  - @egen-civitas/esm-extensions@1.5.0
+  - @egen-civitas/esm-styleguide@1.17.0
+  - @egen-civitas/esm-globals@1.0.3
+
 ## 1.3.0
 
 ### Minor Changes

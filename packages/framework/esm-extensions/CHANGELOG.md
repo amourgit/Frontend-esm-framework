@@ -1,5 +1,16 @@
 # @egen-civitas/esm-extensions
 
+## 1.5.0
+
+### Minor Changes
+
+- 0978f93: Rails : le rail droit porte aussi un groupe bas ; `ToolWindowMeta.rail` ('left' par défaut | 'right') choisit le rail d'une option de la zone basse (pleine largeur entre les rails).
+
+### Patch Changes
+
+- Updated dependencies [ac88343]
+  - @egen-civitas/esm-globals@1.0.3
+
 ## 1.4.0
 
 ### Minor Changes

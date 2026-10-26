@@ -1,5 +1,17 @@
 # @egen-civitas/esm-app-shell
 
+## 2.6.1
+
+### Patch Changes
+
+- 0978f93: Rails : le rail droit porte aussi un groupe bas ; `ToolWindowMeta.rail` ('left' par défaut | 'right') choisit le rail d'une option de la zone basse (pleine largeur entre les rails).
+- Updated dependencies [0978f93]
+- Updated dependencies [5e15585]
+- Updated dependencies [ac88343]
+  - @egen-civitas/esm-styleguide@1.17.0
+  - @egen-civitas/esm-framework@1.4.0
+  - @egen-civitas/esm-globals@1.0.3
+
 ## 2.6.0
 
 ### Minor Changes

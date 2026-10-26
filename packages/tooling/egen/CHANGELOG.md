@@ -1,5 +1,16 @@
 # @egen-civitas/egen
 
+## 2.1.0
+
+### Minor Changes
+
+- ac88343: `egen develop` : hub de logs du terminal. Toute la sortie (processus principal, serveur de dev de chaque app, processus `develop`) est structurée (source, niveau, horodatage, ANSI conservé) et diffusée en temps réel (SSE) sur `<spaPath>/__egen_logs__/stream` (+ `/history`, `/health`), exposée au navigateur via `window.egenLogsUrl`. Écoute locale uniquement (127.0.0.1), absente en production.
+
+### Patch Changes
+
+- Updated dependencies [0978f93]
+  - @egen-civitas/esm-app-shell@2.6.1
+
 ## 2.0.5
 
 ### Patch Changes

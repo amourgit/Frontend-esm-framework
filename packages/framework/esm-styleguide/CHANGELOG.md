@@ -1,5 +1,19 @@
 # @egen-civitas/esm-styleguide
 
+## 1.17.0
+
+### Minor Changes
+
+- 0978f93: Rails : le rail droit porte aussi un groupe bas ; `ToolWindowMeta.rail` ('left' par défaut | 'right') choisit le rail d'une option de la zone basse (pleine largeur entre les rails).
+- 5e15585: Ajout du squelette `Section` (Tailwind) : en-tête / corps / pied séparés par un trait fin sans bordure ni fond, dispositions configurables (`headerLayout`, `footerLayout`), repli optionnel, `classNames` par partie et variables CSS `--section-*`. Livré avec `SectionAction` (boutons de contrôle / filtres) et `SectionGrid` (grille responsive par colonnes ou par largeur minimale de carte). `ContentSection` est conservé et marqué `@deprecated`.
+
+### Patch Changes
+
+- Updated dependencies [0978f93]
+- Updated dependencies [ac88343]
+  - @egen-civitas/esm-extensions@1.5.0
+  - @egen-civitas/esm-globals@1.0.3
+
 ## 1.16.0
 
 ### Minor Changes

@@ -15,8 +15,10 @@
  * Déclaration dans le `routes.json` d'une app :
  * `{ "slot": "shell-rail-left-slot", "component": "projectPanel", "meta": ToolWindowMeta }`.
  *
- * Les rails gauche et bas n'affichent que les extensions de l'app active ; le rail droit est
- * global (toutes les apps, y compris celles qui ne sont pas montées).
+ * Les rails gauche et bas n'affichent que les extensions de l'app active, sauf celles qui
+ * déclarent `meta.global: true` (toujours visibles, quelle que soit l'app active, comme le rail
+ * droit). Le rail droit est entièrement global (toutes les apps, y compris celles qui ne sont
+ * pas montées).
  */
 export const SHELL_RAIL_LEFT_SLOT = 'shell-rail-left-slot';
 export const SHELL_RAIL_BOTTOM_SLOT = 'shell-rail-bottom-slot';
@@ -42,6 +44,12 @@ export interface ToolWindowMeta {
   icon?: string;
   /** Ordre d'affichage dans le rail (croissant) ; défaut : ordre du slot. */
   order?: number;
+  /**
+   * Rails gauche et bas : l'entrée reste affichée quelle que soit l'app active (option globale,
+   * ex. Annuaire, News), au lieu de n'apparaître que quand son app est montée. Sans effet sur
+   * le rail droit, déjà global.
+   */
+  global?: boolean;
 }
 
 /** Valide une `meta` d'extension : vrai si c'est une `ToolWindowMeta` exploitable. */
@@ -52,5 +60,6 @@ export function isToolWindowMeta(meta: unknown): meta is ToolWindowMeta {
   if (m.titleKey !== undefined && typeof m.titleKey !== 'string') return false;
   if (m.icon !== undefined && typeof m.icon !== 'string') return false;
   if (m.order !== undefined && (typeof m.order !== 'number' || !Number.isFinite(m.order))) return false;
+  if (m.global !== undefined && typeof m.global !== 'boolean') return false;
   return true;
 }

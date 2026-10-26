@@ -29,5 +29,11 @@ describe('isToolWindowMeta', () => {
     expect(isToolWindowMeta({ title: 'a', titleKey: 3 })).toBe(false);
     expect(isToolWindowMeta({ title: 'a', order: 'x' })).toBe(false);
     expect(isToolWindowMeta({ title: 'a', order: Number.NaN })).toBe(false);
+    expect(isToolWindowMeta({ title: 'a', global: 'yes' })).toBe(false);
+  });
+
+  it('accepte le drapeau global', () => {
+    expect(isToolWindowMeta({ title: 'Annuaire', icon: 'Users', global: true })).toBe(true);
+    expect(isToolWindowMeta({ title: 'Annuaire', global: false })).toBe(true);
   });
 });

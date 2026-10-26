@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { type AssignedExtension } from '@egen-civitas/esm-extensions';
 import { ComponentContext, ExtensionSlot, useAssignedExtensions } from '@egen-civitas/esm-react-utils';
@@ -118,6 +118,23 @@ describe('rails', () => {
     mounted.apps = ['@egen/esm-sites-app-page-0'];
     render(<LeftRail />);
     expect(screen.getAllByRole('button').map((b) => b.getAttribute('aria-label'))).toEqual(['Sites']);
+  });
+
+  it("rail gauche : une fenêtre `global` reste affichée quelle que soit l'app active", () => {
+    slots['shell-rail-left-slot'].push(
+      extension('annuaire-global', '@egen/esm-annuaire-app', { title: 'Annuaire global', icon: 'Users', global: true }),
+    );
+    mounted.apps = ['@egen/esm-sites-app-page-0'];
+    render(<LeftRail />);
+    // Sans `order`, l'ordre est celui du slot : l'option globale vient après `sites-tree`.
+    expect(screen.getAllByRole('button').map((b) => b.getAttribute('aria-label'))).toEqual([
+      'Sites',
+      'Annuaire global',
+    ]);
+    mounted.apps = [];
+    cleanup();
+    render(<LeftRail />);
+    expect(screen.getAllByRole('button').map((b) => b.getAttribute('aria-label'))).toEqual(['Annuaire global']);
   });
 
   it("rail droit : global, indépendant de l'app active", () => {
@@ -273,7 +290,7 @@ describe('poignée de redimensionnement', () => {
 });
 
 describe('pastilles des boutons de rail', () => {
-  it('affiche la pastille publiée pour une fenêtre d\'outils et la retire à 0', () => {
+  it("affiche la pastille publiée pour une fenêtre d'outils et la retire à 0", () => {
     render(<RightRail />);
     expect(screen.queryByTestId('workbench-badge-notifications')).toBeNull();
     act(() => setToolWindowBadge('notifications', 3));

@@ -1,5 +1,17 @@
 # @egen-civitas/esm-app-shell
 
+## 2.6.0
+
+### Minor Changes
+
+- f3bdd5e: Animations et loader : bibliothèque d'animations SCSS (classes `egen-anim-*`, mixins, tokens de mouvement), ouverture/fermeture animées des zones du plan de travail, entrée animée du contenu des pages, loader EGEN réutilisable (`Loader`, `showPageLoader`, `usePageLoading`) retenu pendant le chargement des pages.
+
+### Patch Changes
+
+- Updated dependencies [f3bdd5e]
+  - @egen-civitas/esm-styleguide@1.16.0
+  - @egen-civitas/esm-framework@1.3.0
+
 ## 2.5.7
 
 ### Patch Changes

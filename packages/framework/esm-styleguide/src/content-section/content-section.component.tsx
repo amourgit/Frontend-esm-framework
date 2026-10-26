@@ -27,6 +27,10 @@ export interface ContentSectionProps {
 }
 
 /**
+ * @deprecated Préférer `Section` (en-tête / corps / pied, trait fin, repli,
+ * dispositions configurables). `ContentSection` est conservé tel quel pour ne
+ * casser aucun consommateur (HeroMosaic, vitrine).
+ *
  * Squelette réutilisable pour une section de contenu de page : un titre
  * optionnel, une description optionnelle, un slot d'actions optionnel
  * (ex. « Voir tout ») et une zone de contenu libre.

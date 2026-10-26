@@ -7,8 +7,8 @@ import { toggleToolWindow, workbenchStore } from './workbench.store.js';
 import { formatToolWindowBadge, workbenchBadgeStore } from './workbench-badges.js';
 import styles from './workbench.module.scss';
 
-function RailGroup({ anchor, label }: { anchor: ToolWindowAnchor; label: string }) {
-  const tools = useToolWindows(anchor);
+function RailGroup({ anchor, label, rail }: { anchor: ToolWindowAnchor; label: string; rail?: 'left' | 'right' }) {
+  const tools = useToolWindows(anchor, rail);
   // NB : `useStore` retourne toujours un objet (état étalé) : on lit l'état entier, jamais une valeur primitive.
   const { active } = useStore(workbenchStore);
   const activeId = active[anchor];
@@ -64,16 +64,18 @@ export function LeftRail() {
     <nav aria-label="Outils de l'application" data-testid="workbench-rail-left" className={styles.rail}>
       <RailGroup anchor="left" label="Panneau latéral" />
       <span className={styles.railSpacer} />
-      <RailGroup anchor="bottom" label="Panneau inférieur" />
+      <RailGroup anchor="bottom" rail="left" label="Panneau inférieur" />
     </nav>
   );
 }
 
-/** Rail droit (fixe) : options globales, affichées dans la zone droite. */
+/** Rail droit (fixe) : options globales en haut (zone droite) ; en bas, celles qui ouvrent la zone basse. */
 export function RightRail() {
   return (
     <nav aria-label="Outils globaux" data-testid="workbench-rail-right" className={styles.rail}>
       <RailGroup anchor="right" label="Panneau droit" />
+      <span className={styles.railSpacer} />
+      <RailGroup anchor="bottom" rail="right" label="Panneau inférieur" />
     </nav>
   );
 }

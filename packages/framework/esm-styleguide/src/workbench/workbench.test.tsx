@@ -106,6 +106,19 @@ describe('store du plan de travail', () => {
 });
 
 describe('rails', () => {
+  it('rail droit : une option de la zone basse (meta.rail = right) vit en bas du rail droit, pas du gauche', () => {
+    slots['shell-rail-bottom-slot'].push(
+      extension('flash', '@egen/esm-annuaire-app', { title: 'Flash info', icon: 'Megaphone', rail: 'right' }),
+    );
+    const { unmount } = render(<RightRail />);
+    const bottomRight = within(screen.getByRole('group', { name: 'Panneau inférieur' }));
+    expect(bottomRight.getAllByRole('button').map((b) => b.getAttribute('aria-label'))).toEqual(['Flash info']);
+    unmount();
+    render(<LeftRail />);
+    const bottomLeft = within(screen.getByRole('group', { name: 'Panneau inférieur' }));
+    expect(bottomLeft.getAllByRole('button').map((b) => b.getAttribute('aria-label'))).toEqual(['Terminal']);
+  });
+
   it("rail gauche : seulement les fenêtres de l'app active, triées, meta invalide ignorée", () => {
     render(<LeftRail />);
     const side = within(screen.getByRole('group', { name: 'Panneau latéral' }));

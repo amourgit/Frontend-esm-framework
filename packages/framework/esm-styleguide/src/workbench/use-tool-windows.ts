@@ -27,8 +27,9 @@ export function toolWindowTitle({ moduleName, meta }: ToolWindow): string {
  * Zones `left` et `bottom` : celles de l'app active (le rail change avec l'app) et celles qui
  * déclarent `meta.global` (toujours présentes).
  * Zone `right` : globale, toujours toutes les extensions déclarées.
+ * Zone `bottom` + `rail` : ne garde que les entrées portées par ce rail (`meta.rail`, défaut `left`).
  */
-export function useToolWindows(anchor: ToolWindowAnchor): ToolWindow[] {
+export function useToolWindows(anchor: ToolWindowAnchor, rail?: 'left' | 'right'): ToolWindow[] {
   const assigned = useAssignedExtensions(TOOL_WINDOW_SLOTS[anchor]);
   const activeModules = useActiveAppModules();
 
@@ -37,6 +38,10 @@ export function useToolWindows(anchor: ToolWindowAnchor): ToolWindow[] {
       assigned
         .map((extension, index) => ({ extension, index }))
         .filter(({ extension }) => isToolWindowMeta(extension.meta))
+        .filter(
+          ({ extension }) =>
+            !rail || anchor !== 'bottom' || ((extension.meta as ToolWindowMeta).rail ?? 'left') === rail,
+        )
         .filter(
           ({ extension }) =>
             anchor === 'right' ||
@@ -53,6 +58,6 @@ export function useToolWindows(anchor: ToolWindowAnchor): ToolWindow[] {
           moduleName: extension.moduleName,
           meta: extension.meta as ToolWindowMeta,
         })),
-    [assigned, activeModules, anchor],
+    [assigned, activeModules, anchor, rail],
   );
 }

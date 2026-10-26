@@ -10,7 +10,8 @@
  *
  *   rail gauche, groupe haut  → slot `shell-rail-left-slot`   → zone gauche (sidebar de l'app)
  *   rail gauche, groupe bas   → slot `shell-rail-bottom-slot` → zone basse (ex. terminal)
- *   rail droit                → slot `shell-rail-right-slot`  → zone droite (options globales)
+ *   rail droit, groupe haut   → slot `shell-rail-right-slot`  → zone droite (options globales)
+ *   rail droit, groupe bas    → slot `shell-rail-bottom-slot` + `meta.rail: 'right'` → zone basse
  *
  * Déclaration dans le `routes.json` d'une app :
  * `{ "slot": "shell-rail-left-slot", "component": "projectPanel", "meta": ToolWindowMeta }`.
@@ -50,6 +51,12 @@ export interface ToolWindowMeta {
    * le rail droit, déjà global.
    */
   global?: boolean;
+  /**
+   * Zone basse uniquement : rail qui porte le bouton. `left` (défaut) : groupe bas du rail gauche ;
+   * `right` : groupe bas du rail droit. Dans les deux cas le contenu s'ouvre dans la zone basse,
+   * qui occupe toute la largeur entre les rails.
+   */
+  rail?: 'left' | 'right';
 }
 
 /** Valide une `meta` d'extension : vrai si c'est une `ToolWindowMeta` exploitable. */
@@ -61,5 +68,6 @@ export function isToolWindowMeta(meta: unknown): meta is ToolWindowMeta {
   if (m.icon !== undefined && typeof m.icon !== 'string') return false;
   if (m.order !== undefined && (typeof m.order !== 'number' || !Number.isFinite(m.order))) return false;
   if (m.global !== undefined && typeof m.global !== 'boolean') return false;
+  if (m.rail !== undefined && m.rail !== 'left' && m.rail !== 'right') return false;
   return true;
 }

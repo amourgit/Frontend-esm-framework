@@ -7,7 +7,6 @@ export {
   getAssignedExtensions,
   registerExtensionSlot,
 } from './extensions.js';
-export { type LeftNavStore, setLeftNav, unsetLeftNav, type SetLeftNavParams } from './left-nav.js';
 export { type CancelLoading, renderExtension } from './render.js';
 export {
   type ExtensionMeta,

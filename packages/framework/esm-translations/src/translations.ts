@@ -77,7 +77,6 @@ export const coreTranslations = {
   // Default value for the implementationName config property
   Framework: 'Framework',
   groups: 'Groups',
-  leftNavigation: 'Left navigation',
   loading: 'Loading',
   male: 'Male',
   noResultsToDisplay: 'No results to display',

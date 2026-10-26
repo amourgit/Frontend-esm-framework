@@ -78,6 +78,99 @@ export const ReportIcon = () => <span>ReportIcon</span>;
 export const ResetIcon = () => <span>ResetIcon</span>;
 export const SaveIcon = () => <span>SaveIcon</span>;
 export const SearchIcon = () => <span>SearchIcon</span>;
+
+// Section skeleton stubs (header / body / footer rendered flat; no styling)
+export const SectionAction = ({
+  children,
+  label,
+  active,
+  disabled,
+  href,
+  onClick,
+}: {
+  children?: React.ReactNode;
+  label?: string;
+  active?: boolean;
+  disabled?: boolean;
+  href?: string;
+  onClick?: () => void;
+}) =>
+  href ? (
+    <a href={href}>{children}</a>
+  ) : (
+    <button
+      type="button"
+      aria-label={children ? undefined : label}
+      aria-pressed={active || undefined}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+export const SectionBody = ({ children }: { children?: React.ReactNode }) => <div>{children}</div>;
+export const SectionDivider = () => <hr />;
+export const SectionFooter = ({ children, actions }: { children?: React.ReactNode; actions?: React.ReactNode }) => (
+  <div>
+    {children}
+    {actions}
+  </div>
+);
+export const SectionGrid = ({ children }: { children?: React.ReactNode }) => <div>{children}</div>;
+export const SectionHeader = ({
+  title,
+  actions,
+  children,
+}: {
+  title?: React.ReactNode;
+  actions?: React.ReactNode;
+  children?: React.ReactNode;
+}) => (
+  <div>
+    {children ?? (title ? <h2>{title}</h2> : null)}
+    {actions}
+  </div>
+);
+export const Section = Object.assign(
+  ({
+    title,
+    description,
+    actions,
+    header,
+    footer,
+    footerActions,
+    children,
+  }: {
+    title?: React.ReactNode;
+    description?: React.ReactNode;
+    actions?: React.ReactNode;
+    header?: React.ReactNode;
+    footer?: React.ReactNode;
+    footerActions?: React.ReactNode;
+    children?: React.ReactNode;
+  }) => (
+    <section>
+      {header ?? (title ? <h2>{title}</h2> : null)}
+      {description ? <p>{description}</p> : null}
+      {actions}
+      {children}
+      {footer || footerActions ? (
+        <div>
+          {footer}
+          {footerActions}
+        </div>
+      ) : null}
+    </section>
+  ),
+  {
+    Header: SectionHeader,
+    Body: SectionBody,
+    Footer: SectionFooter,
+    Divider: SectionDivider,
+    Action: SectionAction,
+    Grid: SectionGrid,
+  },
+);
 export const ShoppingCartAddItemIcon = () => <span>ShoppingCartAddItemIcon</span>;
 export const ShoppingCartArrowDownIcon = () => <span>ShoppingCartArrowDownIcon</span>;
 export const ShoppingCartIcon = () => <span>ShoppingCartIcon</span>;

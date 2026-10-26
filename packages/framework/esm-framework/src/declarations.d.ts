@@ -1,6 +1,3 @@
-declare type SideNavProps = {
-  isChildOfHeader?: boolean;
-};
 declare module '*.css';
 declare module '*.scss';
 declare module '*.svg' {

@@ -33,16 +33,6 @@
   border-right: none;
 }
 
-.cds--side-nav__overlay-active {
-  display: none;
-}
-
-/* Side nav */
-.cds--side-nav {
-  overflow: auto;
-  z-index: 0;
-}
-
 /* Tooltip */
 .cds--tooltip--definition .cds--tooltip__trigger {
   border-bottom: none;
@@ -673,32 +663,6 @@ html[dir='rtl'] {
       h4 {
         text-align: right;
       }
-    }
-  }
-
-  .active-left-nav-link {
-    border-right: layout.$spacing-02 solid var(--brand-01);
-    border-left: unset !important;
-  }
-
-  .egen-breakpoint-gt-tablet {
-    main {
-      & > section {
-        margin-left: unset;
-        margin-right: var(--egen-sidenav-width);
-
-        nav {
-          left: calc(100vw - var(--egen-sidenav-width));
-          border-left: 1px solid var(--colors-border-default, #e0e0e0);
-          border-right: unset;
-        }
-      }
-    }
-  }
-
-  .egen-breakpoint-lt-desktop {
-    .cds--side-nav {
-      left: unset !important;
     }
   }
 

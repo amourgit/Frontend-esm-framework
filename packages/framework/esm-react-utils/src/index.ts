@@ -30,8 +30,6 @@ export * from './useFhirFetchAll.js';
 export * from './useFhirInfinite.js';
 export * from './useFhirPagination.js';
 export * from './useLayoutType.js';
-export * from './useLeftNav.js';
-export * from './useLeftNavStore.js';
 export * from './useLocations.js';
 export * from './useOnClickOutside.js';
 export * from './useOnVisible.js';

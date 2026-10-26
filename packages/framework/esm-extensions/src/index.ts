@@ -1,6 +1,5 @@
 export * from './extensions.js';
 export * from './helpers.js';
-export * from './left-nav.js';
 export * from './nav-entry.js';
 export * from './tool-window.js';
 export * from './nav-behavior.js';

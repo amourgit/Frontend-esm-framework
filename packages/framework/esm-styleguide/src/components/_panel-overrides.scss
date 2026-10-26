@@ -30,18 +30,6 @@
   backdrop-filter: var(--panel-xs-backdrop-filter);
 }
 
-// ── Side Nav (leftNav) ───────────────────────────────────────────────────────
-.cds--side-nav {
-  @include panel.panel-sidebar;
-}
-
-.cds--side-nav__item--active .cds--side-nav__link,
-.cds--side-nav__link:hover {
-  background: var(--colors-surface-translucent-hover) !important;
-  backdrop-filter: var(--panel-xs-backdrop-filter);
-  border-radius: var(--border-radius-md);
-}
-
 // ── Modals ───────────────────────────────────────────────────────────────────
 .cds--modal-container {
   @include panel.panel-surface('modal');

@@ -69,9 +69,6 @@ export const showToast = jest.fn();
 export const showSnackbar = jest.fn();
 export const showModal = jest.fn();
 
-export const LeftNavMenu = jest.fn(() => <div>Left Nav Menu</div>);
-export const setLeftNav = jest.fn();
-export const unsetLeftNav = jest.fn();
 export const registerNavBehavior = jest.fn(() => () => {});
 export const getNavBehavior = jest.fn();
 // Constantes et validateurs purs : on garde les vraies implémentations (aucune raison de les simuler).

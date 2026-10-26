@@ -70,9 +70,6 @@ export const showToast = vi.fn();
 export const showSnackbar = vi.fn();
 export const showModal = vi.fn();
 
-export const LeftNavMenu = vi.fn(() => <div>Left Nav Menu</div>);
-export const setLeftNav = vi.fn();
-export const unsetLeftNav = vi.fn();
 export const registerNavBehavior = vi.fn(() => () => {});
 export const getNavBehavior = vi.fn();
 // Constantes et validateurs purs : on garde les vraies implémentations (aucune raison de les simuler).

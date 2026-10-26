@@ -1,5 +1,13 @@
 # @egen-civitas/esm-app-shell
 
+## 2.5.7
+
+### Patch Changes
+
+- 057d9c8: Republie le shell et `esm-framework` avec `esm-styleguide` 1.15 et `esm-extensions` 1.4 : options globales du rail gauche (`meta.global`) et `SectionNavPanel`.
+- Updated dependencies [057d9c8]
+  - @egen-civitas/esm-framework@1.2.2
+
 ## 2.5.6
 
 ### Patch Changes

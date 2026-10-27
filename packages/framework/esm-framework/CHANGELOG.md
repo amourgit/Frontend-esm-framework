@@ -1,5 +1,16 @@
 # @egen-civitas/esm-framework
 
+## 2.1.0
+
+### Minor Changes
+
+- d5c883a: Zones : l'en-tête expose un emplacement d'actions entre le titre et le bouton de fermeture, alimenté par le composant `ToolWindowHeader` (portail) depuis le contenu d'une fenêtre d'outils. Rendu sur place hors zone.
+
+### Patch Changes
+
+- Updated dependencies [d5c883a]
+  - @egen-civitas/esm-styleguide@2.1.0
+
 ## 2.0.0
 
 ### Major Changes

@@ -1,4 +1,3 @@
-import { type Concept } from './concept-resource.js';
 import { type EgenResourceStrict, type EgenResource } from './egen-resource.js';
 
 export interface PersonAttribute extends EgenResourceStrict {
@@ -12,9 +11,6 @@ export interface Person extends EgenResourceStrict {
   age?: number;
   birthdate?: string;
   birthdateEstimated?: boolean;
-  dead?: boolean;
-  deathDate?: string | null;
-  causeOfDeath?: Concept | null;
   preferredName?: PersonName;
   preferredAddress?: PersonAddress;
   names?: Array<PersonName>;
@@ -22,8 +18,6 @@ export interface Person extends EgenResourceStrict {
   attributes?: Array<PersonAttribute>;
   voided?: boolean;
   birthtime?: string | null;
-  deathdateEstimated?: boolean;
-  causeOfDeathNonCoded?: string | null;
 }
 
 export interface PersonName extends EgenResourceStrict {

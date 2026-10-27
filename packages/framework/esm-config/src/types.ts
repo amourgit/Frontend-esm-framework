@@ -1,13 +1,10 @@
 export enum Type {
   Array = 'Array',
   Boolean = 'Boolean',
-  ConceptUuid = 'ConceptUuid',
   Number = 'Number',
   Object = 'Object',
   String = 'String',
   UUID = 'UUID',
-  PersonAttributeTypeUuid = 'PersonAttributeTypeUuid',
-  EntityIdentifierTypeUuid = 'EntityIdentifierTypeUuid',
 }
 
 // Full-powered typing for Config and Schema trees depends on being able to

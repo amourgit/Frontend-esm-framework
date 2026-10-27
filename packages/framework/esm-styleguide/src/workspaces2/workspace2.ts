@@ -124,10 +124,10 @@ export async function closeWorkspaceGroup2(discardUnsavedChanges?: boolean) {
  * To do so, we need to call `launchChildWorkspace` instead.
  *
  * [^1] Omitting window or group props is useful for workspaces that don't have ties to the window or group "context" (props).
- * For example, in the patient chart, the visit notes / clinical forms / order basket action menu button all share
- * a "group context" of the current visit. However, the "patient list" action menu button does not need to share that group
+ * For example, in the entity chart, the notes / business forms / order basket action menu button all share
+ * a "group context" of the current session. However, the "entity list" action menu button does not need to share that group
  * context, so opening that workspace should not need to cause other workspaces / windows / groups to potentially close.
- * The "patient search" workspace in the queues and ward apps is another example.
+ * The "entity search" workspace in the queues and unit apps is another example.
  *
  * [^2] 2 sets of props are compatible if either one is nullish, or if they are shallow equal.
  * @experimental

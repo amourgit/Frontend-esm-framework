@@ -157,25 +157,6 @@ export function useAppContext() {
   return undefined;
 }
 
-export function usePatient() {
-  return { isLoading: false, patient: null, patientUuid: null, error: null };
-}
-
-export function useVisit() {
-  return {
-    error: null,
-    mutate: () => {},
-    isValidating: false,
-    currentVisit: null,
-    activeVisit: null,
-    currentVisitIsRetrospective: false,
-  };
-}
-
-export function useVisitTypes() {
-  return [];
-}
-
 export function useLocations() {
   return [];
 }

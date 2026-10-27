@@ -70,20 +70,20 @@ describe('userHasAccess', () => {
 
   const mockUser = {
     privileges: [
-      createPrivilege('View Patients'),
-      createPrivilege('Edit Patients'),
-      createPrivilege('Delete Patients'),
+      createPrivilege('View Entities'),
+      createPrivilege('Edit Entities'),
+      createPrivilege('Delete Entities'),
     ],
     roles: [createRole('Manager')],
   };
 
   const mockSuperUser = {
-    privileges: [createPrivilege('View Patients')],
+    privileges: [createPrivilege('View Entities')],
     roles: [createRole('System Developer')],
   };
 
   it('should return true when user has the required privilege', () => {
-    expect(userHasAccess('View Patients', mockUser)).toBe(true);
+    expect(userHasAccess('View Entities', mockUser)).toBe(true);
   });
 
   it('should return false when user lacks the required privilege', () => {
@@ -91,11 +91,11 @@ describe('userHasAccess', () => {
   });
 
   it('should handle array of privileges (user needs ALL)', () => {
-    expect(userHasAccess(['View Patients', 'Edit Patients'], mockUser)).toBe(true);
+    expect(userHasAccess(['View Entities', 'Edit Entities'], mockUser)).toBe(true);
   });
 
   it('should return false when user lacks one of multiple required privileges', () => {
-    expect(userHasAccess(['View Patients', 'Manage Users'], mockUser)).toBe(false);
+    expect(userHasAccess(['View Entities', 'Manage Users'], mockUser)).toBe(false);
   });
 
   it('should return true when user is undefined and no privilege is required', () => {
@@ -105,7 +105,7 @@ describe('userHasAccess', () => {
 
   it('should return false when user is undefined and privilege is required', () => {
     // @ts-expect-error Testing with undefined user
-    const result = userHasAccess('View Patients', undefined);
+    const result = userHasAccess('View Entities', undefined);
     expect(result).toBe(false);
   });
 
@@ -118,7 +118,7 @@ describe('userHasAccess', () => {
   });
 
   it('should be case-sensitive for privilege names', () => {
-    expect(userHasAccess('view patients', mockUser)).toBe(false);
+    expect(userHasAccess('view entities', mockUser)).toBe(false);
   });
 
   it('should handle empty privilege array', () => {
@@ -126,12 +126,12 @@ describe('userHasAccess', () => {
   });
 
   it('should return true when single privilege in array matches', () => {
-    expect(userHasAccess(['View Patients'], mockUser)).toBe(true);
+    expect(userHasAccess(['View Entities'], mockUser)).toBe(true);
   });
 
   it('should return false when user has no privileges', () => {
     const userWithNoPrivileges = { privileges: [], roles: [] };
-    const result = userHasAccess('View Patients', userWithNoPrivileges);
+    const result = userHasAccess('View Entities', userWithNoPrivileges);
     expect(result).toBe(false);
   });
 });

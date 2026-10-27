@@ -16,9 +16,9 @@ export const Default: Story = {
   args: {
     notification: {
       id: 1,
-      title: 'Allergies',
-      subtitle: 'No allergies have been recorded for this patient.',
-      actionButtonLabel: 'Record allergies',
+      title: 'Documents',
+      subtitle: 'No documents have been recorded for this entity.',
+      actionButtonLabel: 'Record documents',
       onActionButtonClick: () => {},
     },
   },
@@ -28,8 +28,8 @@ export const WithProgressLabel: Story = {
   args: {
     notification: {
       id: 2,
-      title: 'Visit ended',
-      subtitle: 'The current visit has been ended.',
+      title: 'Session ended',
+      subtitle: 'The current session has been ended.',
       actionButtonLabel: 'Undo',
       progressActionLabel: 'Undoing...',
       onActionButtonClick: () => {},

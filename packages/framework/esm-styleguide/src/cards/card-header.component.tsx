@@ -11,7 +11,7 @@ export interface CardHeaderProps {
 }
 
 /**
- * Re-usable header component for O3-style cards, like those found on the patient chart
+ * Re-usable header component for O3-style cards, like those found on the entity chart
  */
 export function CardHeader({ title, children }: CardHeaderProps) {
   const isTablet = useLayoutType() === 'tablet';

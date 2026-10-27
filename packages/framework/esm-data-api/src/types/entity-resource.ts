@@ -16,7 +16,7 @@ export interface EntityIdentifierType extends EgenResourceStrict {
 }
 
 /**
- * Represents a generic entity in the system (replaces domain-specific "Patient").
+ * Represents a generic entity in the system (replaces a domain-specific record).
  * An entity can be any actor: a user, a customer, a student, an employee, etc.
  */
 export interface Entity extends EgenResourceStrict {

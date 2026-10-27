@@ -771,13 +771,10 @@ function checkType(keyPath: string, _type: Type | undefined, value: any) {
     const validator: Record<string, Function> = {
       Array: isArray,
       Boolean: isBoolean,
-      ConceptUuid: isUuid,
       Number: isNumber,
       Object: isObject,
       String: isString,
       UUID: isUuid,
-      PersonAttributeTypeUuid: isUuid,
-      EntityIdentifierTypeUuid: isUuid,
     };
     return runValidators(keyPath, [validator[_type]], value);
   }

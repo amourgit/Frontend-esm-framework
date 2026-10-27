@@ -13,7 +13,7 @@ type Story = StoryObj<typeof ErrorState>;
 
 export const ServerError: Story = {
   args: {
-    headerTitle: 'Vitals',
+    headerTitle: 'Metrics',
     error: {
       response: { status: 500, statusText: 'Internal Server Error' },
     },
@@ -22,7 +22,7 @@ export const ServerError: Story = {
 
 export const NotFound: Story = {
   args: {
-    headerTitle: 'Allergies',
+    headerTitle: 'Documents',
     error: {
       response: { status: 404, statusText: 'Not Found' },
     },

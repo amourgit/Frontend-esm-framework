@@ -23,7 +23,7 @@ type Story = StoryObj<typeof ResponsiveWrapper>;
 export const Default: Story = {
   render: () => (
     <ResponsiveWrapper>
-      <TextInput id="example" labelText="Patient name" placeholder="Enter name" />
+      <TextInput id="example" labelText="Entity name" placeholder="Enter name" />
     </ResponsiveWrapper>
   ),
 };

@@ -6,13 +6,10 @@
 export enum Type {
   Array = 'Array',
   Boolean = 'Boolean',
-  ConceptUuid = 'ConceptUuid',
   Number = 'Number',
   Object = 'Object',
   String = 'String',
   UUID = 'UUID',
-  PersonAttributeTypeUuid = 'PersonAttributeTypeUuid',
-  PatientIdentifierTypeUuid = 'PatientIdentifierTypeUuid',
 }
 
 export interface ConfigSchema {
@@ -78,7 +75,7 @@ function getDefaults() {
         'Brand color #1': '#005d5d',
         'Brand color #2': '#004144',
         'Brand color #3': '#007d79',
-        implementationName: 'Clinic',
+        implementationName: 'Office',
       };
     }
   }

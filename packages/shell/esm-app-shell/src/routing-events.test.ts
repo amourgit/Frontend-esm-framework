@@ -19,14 +19,14 @@ function dispatchSingleSpaEvent(detail: {
 function makeEventDetail(overrides: Partial<Parameters<typeof dispatchSingleSpaEvent>[0]> = {}) {
   return {
     appsByNewStatus: {
-      MOUNTED: ['@egen-civitas/esm-patient-chart-app'],
+      MOUNTED: ['@egen-civitas/esm-entity-chart-app'],
       NOT_MOUNTED: [],
       NOT_LOADED: [],
       SKIP_BECAUSE_BROKEN: [],
     },
     totalAppChanges: 0,
-    oldUrl: 'http://localhost/patient/abc-123/chart/vitals',
-    newUrl: 'http://localhost/patient/abc-123/chart/conditions',
+    oldUrl: 'http://localhost/entity/abc-123/chart/metrics',
+    newUrl: 'http://localhost/entity/abc-123/chart/conditions',
     cancelNavigation: vi.fn(),
     ...overrides,
   };
@@ -54,13 +54,13 @@ describe('routing-events', () => {
       makeEventDetail({
         totalAppChanges: 1,
         oldUrl: 'http://localhost/home/appointments',
-        newUrl: 'http://localhost/patient/abc-123/chart',
+        newUrl: 'http://localhost/entity/abc-123/chart',
       }),
     );
 
     expect(pageChangedHandler).toHaveBeenCalledTimes(1);
     const payload = pageChangedHandler.mock.calls[0][0].detail;
-    expect(payload.newPage).toBe('@egen-civitas/esm-patient-chart-app');
+    expect(payload.newPage).toBe('@egen-civitas/esm-entity-chart-app');
   });
 
   it('should set newPage to undefined for pathname-only changes (no app changes)', () => {

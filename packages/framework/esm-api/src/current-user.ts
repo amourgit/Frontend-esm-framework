@@ -270,8 +270,8 @@ export function clearCurrentUser() {
  * @example
  * ```ts
  * import { userHasAccess } from '@egen-civitas/esm-api';
- * const hasAccess = userHasAccess('View Patients', currentUser);
- * const hasMultipleAccess = userHasAccess(['View Patients', 'Edit Patients'], currentUser);
+ * const hasAccess = userHasAccess('View Entities', currentUser);
+ * const hasMultipleAccess = userHasAccess(['View Entities', 'Edit Entities'], currentUser);
  * ```
  */
 export function userHasAccess(

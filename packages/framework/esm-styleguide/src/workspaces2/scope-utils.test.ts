@@ -44,7 +44,7 @@ describe('shouldCloseOnUrlChange', () => {
     [
       'stays open: same entity, different tab',
       '^/entity/([^/]+)/chart',
-      'http://localhost/entity/abc-123/chart/vitals',
+      'http://localhost/entity/abc-123/chart/metrics',
       'http://localhost/entity/abc-123/chart/conditions',
       false,
     ],
@@ -56,7 +56,7 @@ describe('shouldCloseOnUrlChange', () => {
       false,
     ],
     [
-      'closes: different patient',
+      'closes: different entity',
       '^/entity/([^/]+)/chart',
       'http://localhost/entity/abc-123/chart',
       'http://localhost/entity/def-456/chart',
@@ -80,23 +80,23 @@ describe('shouldCloseOnUrlChange', () => {
     // Multiple capture groups
     [
       'stays open: all captures match',
-      '^/ward/([^/]+)/entity/([^/]+)',
-      'http://localhost/ward/w1/entity/p1/details',
-      'http://localhost/ward/w1/entity/p1/vitals',
+      '^/unit/([^/]+)/entity/([^/]+)',
+      'http://localhost/unit/w1/entity/p1/details',
+      'http://localhost/unit/w1/entity/p1/metrics',
       false,
     ],
     [
       'closes: first capture differs',
-      '^/ward/([^/]+)/entity/([^/]+)',
-      'http://localhost/ward/w1/entity/p1',
-      'http://localhost/ward/w2/entity/p1',
+      '^/unit/([^/]+)/entity/([^/]+)',
+      'http://localhost/unit/w1/entity/p1',
+      'http://localhost/unit/w2/entity/p1',
       true,
     ],
     [
       'closes: second capture differs',
-      '^/ward/([^/]+)/entity/([^/]+)',
-      'http://localhost/ward/w1/entity/p1',
-      'http://localhost/ward/w1/entity/p2',
+      '^/unit/([^/]+)/entity/([^/]+)',
+      'http://localhost/unit/w1/entity/p1',
+      'http://localhost/unit/w1/entity/p2',
       true,
     ],
 

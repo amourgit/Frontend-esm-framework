@@ -3,9 +3,9 @@
 // =============================================================================
 //  Variables historiques du styleguide — MIGRÉES vers le thème dynamique EGEN
 //
-//  Ces ~25 variables SCSS étaient des couleurs Carbon v10 (thème clair OpenMRS)
+//  Ces ~25 variables SCSS étaient des couleurs Carbon v10 (thème clair historique)
 //  figées en hexadécimal, consommées par ~15 fichiers du styleguide
-//  (pagination, datepicker, cards, entity-banner, workspaces,
+//  (pagination, datepicker, cards, workspaces,
 //  canvas, breadcrumbs, overrides...) ET par des apps entières
 //  (esm-implementer-tools-app). Modifier colors.* dans theme.default.json
 //  n'avait donc aucun effet sur tout ce qui en dépendait.
@@ -74,7 +74,7 @@ $brand-primary-100: var(--colors-primary-900, #081a1c);
 // =============================================================================
 //  --brand-01/02/03 — RECÂBLÉS SUR LE THÈME EGEN (esm-theme)
 //
-//  Historiquement ces 3 variables étaient des couleurs OpenMRS figées
+//  Historiquement ces 3 variables étaient des couleurs historiques figées
 //  (teal #005d5d/#004144/#007d79), totalement indépendantes du JSON de
 //  thème. Une vingtaine de composants (nav latérale, workspaces, boutons
 //  d'action, focus rings...) les consomment encore via `@include brand-0X`
@@ -84,7 +84,7 @@ $brand-primary-100: var(--colors-primary-900, #081a1c);
 //
 //  Correction : `--brand-01/02/03` pointent maintenant vers l'échelle
 //  `--colors-primary-*` injectée dynamiquement par @egen-civitas/esm-theme, avec
-//  l'ancienne valeur OpenMRS conservée UNIQUEMENT comme fallback CSS natif
+//  l'ancienne valeur conservée UNIQUEMENT comme fallback CSS natif
 //  (`var(--x, fallback)`) — actif seulement tant que le moteur de thème n'a
 //  pas encore injecté ses variables (fenêtre de quelques ms au chargement).
 //  Dès que --colors-primary-* existe dans le DOM, tous les composants

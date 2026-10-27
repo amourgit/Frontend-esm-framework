@@ -1,5 +1,14 @@
 # @egen-civitas/esm-app-shell
 
+## 2.6.2
+
+### Patch Changes
+
+- Updated dependencies [b8a56e7]
+  - @egen-civitas/esm-styleguide@2.0.0
+  - @egen-civitas/esm-react-utils@2.0.0
+  - @egen-civitas/esm-framework@2.0.0
+
 ## 2.6.1
 
 ### Patch Changes

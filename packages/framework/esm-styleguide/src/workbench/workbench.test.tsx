@@ -191,6 +191,7 @@ describe('zones', () => {
     render(<ToolWindowZone anchor="left" />);
     expect(screen.getByRole('heading', { name: 'Annuaire' })).toBeInTheDocument();
     expect(screen.getByText('content:annuaire-tree')).toBeInTheDocument();
+    expect(screen.getByTestId('workbench-zone-left').querySelector('header [data-tool-window-header]')).not.toBeNull();
     expect(screen.queryByText('content:annuaire-search')).not.toBeInTheDocument();
     expect(document.documentElement.style.getPropertyValue('--egen-zone-left-width')).toBe(
       `${DEFAULT_ZONE_SIZES.left}px`,

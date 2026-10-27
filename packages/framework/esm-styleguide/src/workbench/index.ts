@@ -2,6 +2,7 @@ export * from './use-active-app-modules.js';
 export * from './use-tool-windows.js';
 export * from './tool-window-rail.component.js';
 export * from './tool-window-zone.component.js';
+export * from './tool-window-header.component.js';
 export * from './splitter.component.js';
 export * from './workbench-icons.js';
 export * from './workbench.render.js';

@@ -3,6 +3,7 @@ import { TOOL_WINDOW_SLOTS, type ToolWindowAnchor } from '@egen-civitas/esm-exte
 import { ComponentContext, ExtensionSlot, useStore } from '@egen-civitas/esm-react-utils';
 import { X } from 'lucide-react';
 import { Splitter } from './splitter.component.js';
+import { TOOL_WINDOW_HEADER_ATTRIBUTE } from './tool-window-header.component.js';
 import { toolWindowTitle, useToolWindows, type ToolWindow } from './use-tool-windows.js';
 import { closeToolWindow, workbenchStore } from './workbench.store.js';
 import styles from './workbench.module.scss';
@@ -118,6 +119,8 @@ export function ToolWindowZone({ anchor }: ToolWindowZoneProps) {
         <>
           <header className={styles.zoneHeader}>
             <h2 className={styles.zoneTitle}>{title}</h2>
+            {/* Emplacement des actions de la fenêtre d'outils (voir ToolWindowHeader). */}
+            <div className={styles.zoneHeaderTools} {...{ [TOOL_WINDOW_HEADER_ATTRIBUTE]: '' }} />
             <button
               type="button"
               className={styles.zoneClose}

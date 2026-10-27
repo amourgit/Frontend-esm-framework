@@ -183,6 +183,7 @@ export const TableOfContentsIcon = () => <span>TableOfContentsIcon</span>;
 export const TimeIcon = () => <span>TimeIcon</span>;
 export const ToolsIcon = () => <span>ToolsIcon</span>;
 export const TranslateIcon = () => <span>TranslateIcon</span>;
+export const ToolWindowHeader = ({ children }: { children?: React.ReactNode }) => <>{children}</>;
 export const TrashCanIcon = () => <span>TrashCanIcon</span>;
 export const TreeViewAltIcon = () => <span>TreeViewAltIcon</span>;
 export const UserAvatarIcon = () => <span>UserAvatarIcon</span>;

@@ -4,16 +4,44 @@ import { LogHub, detectLevel, stripAnsi } from './log-hub';
 describe('detectLevel', () => {
   it.each([
     ['\u001b[31mError: boom\u001b[0m', 'error'],
+    ['Rspack compiled with 6 errors in 25.54 s', 'error'],
     ['Module not found: failed to compile', 'error'],
     ['WARNING in ./src/a.ts', 'warn'],
+    ['Rspack compiled with 1 warning in 26 s', 'warn'],
     ['[egen] Listening at http://localhost:8081', 'success'],
-    ['compiled successfully', 'success'],
+    ['Rspack 1.7.9 compiled successfully in 19 s', 'success'],
     ['debug: cache hit', 'debug'],
-    ['plain line', 'info'],
+    ['<i> [webpack-dev-server] Loopback: http://localhost:8100/', 'info'],
   ])('%s → %s', (line, level) => expect(detectLevel(line)).toBe(level));
 
-  it('stderr sans indice → avertissement', () => expect(detectLevel('plain', 'warn')).toBe('warn'));
+  it.each(['plain line', './translations/en.json 779 bytes [built] [code generated]', 'asset main.js 5 MiB [emitted]'])(
+    'sans indice : %s',
+    (line) => expect(detectLevel(line)).toBeUndefined(),
+  );
   it('retire les séquences ANSI', () => expect(stripAnsi('\u001b[1;32mok\u001b[0m')).toBe('ok'));
+});
+
+describe('LogHub niveaux et lignes', () => {
+  const entries = (hub: LogHub) => (hub as unknown as { entries: Array<{ level: string; message: string; id: number }> }).entries;
+
+  it('les lignes de suite héritent du niveau du bloc d\'erreur', () => {
+    const hub = new LogHub();
+    hub.ingest('app', 'ERROR in ./src/index.ts:4:23\n  × TS2307: Cannot find module\n  │ > 4 | import x\nautre ligne\n');
+    expect(entries(hub).map((e) => e.level)).toEqual(['error', 'error', 'error', 'info']);
+  });
+
+  it('un retour chariot ne garde que le dernier état de la ligne', () => {
+    const hub = new LogHub();
+    hub.ingest('app', 'progress 10%\rprogress 60%\rprogress 100%\n');
+    expect(entries(hub).map((e) => e.message)).toEqual(['progress 100%']);
+  });
+
+  it('les ids sont croissants', () => {
+    const hub = new LogHub();
+    hub.ingest('a', 'x\ny\n');
+    const [first, second] = entries(hub);
+    expect(second.id).toBe(first.id + 1);
+  });
 });
 
 describe('LogHub', () => {

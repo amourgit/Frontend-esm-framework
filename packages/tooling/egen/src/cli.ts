@@ -8,6 +8,7 @@ import {
   getImportmapAndRoutes,
   isPortAvailable,
   startLogHub,
+  childColorEnv,
   getLogHub,
   logFail,
   mergeImportmapAndRoutes,
@@ -42,7 +43,7 @@ type CommandNames = keyof Commands;
 
 function runCommand<T extends CommandNames>(type: T, args: Parameters<Commands[T]>[0]) {
   const hub = type === 'runDevelop' ? getLogHub() : undefined;
-  const ps = fork(runner, [], { cwd: type === 'runBuild' ? root : process.cwd(), silent: !!hub });
+  const ps = fork(runner, [], { cwd: type === 'runBuild' ? root : process.cwd(), silent: !!hub, env: hub ? childColorEnv() : process.env });
   hub?.attachChild(ps, 'egen-develop');
 
   ps.send({

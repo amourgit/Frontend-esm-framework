@@ -29,19 +29,25 @@ export function stripAnsi(text: string): string {
   return text.replace(ANSI, '');
 }
 
-/** Déduit le niveau d'une ligne ; `fallback` (stderr → `error`) ne s'applique qu'en l'absence d'indice. */
-export function detectLevel(line: string, fallback: LogLevel = 'info'): LogLevel {
+/** Niveau explicite d'une ligne, ou `undefined` si rien ne l'indique (le niveau vient alors du contexte). */
+export function detectLevel(line: string): LogLevel | undefined {
   const text = stripAnsi(line);
-  if (/\b(error|erreur|fatal|failed|failure|exception|ELIFECYCLE|ERR_|TS\d{4})\b|✖|✘|^\s*at\s.+\(.+\)/i.test(text)) return 'error';
-  if (/\b(warn|warning|avertissement|deprecated|deprecation)\b|⚠/i.test(text)) return 'warn';
-  if (/\b(success|succeeded|compiled|ready|done|listening|available|built)\b|✔|✓/i.test(text)) return 'success';
+  if (/\b(errors?|erreurs?|fatal|failed|failure|exception|ELIFECYCLE|ERR_[A-Z_]+|TS\d{4})\b|✖|✘|^\s*at\s.+\(.+\)/i.test(text)) return 'error';
+  if (/\b(warn(ing)?s?|avertissements?|deprecated|deprecation)\b|⚠/i.test(text)) return 'warn';
+  if (/\b(success(ful(ly)?)?|succeeded|ready|done|listening at)\b|✔|✓/i.test(text)) return 'success';
   if (/\b(debug|trace|verbose)\b/i.test(text)) return 'debug';
-  return fallback === 'error' ? 'info' : fallback;
+  if (/^\s*<i>|\binfo\b/i.test(text)) return 'info';
+  return undefined;
 }
+
+/** Ligne de suite d'un bloc (indentée ou encadrée) : hérite du niveau de la ligne qui l'ouvre. */
+const CONTINUATION = /^\s+\S|^\s*[│╭╰├└┌┐┘╵╷×›>|]/;
 
 export class LogHub {
   private entries: LogEntry[] = [];
-  private nextId = 1;
+  // Base horaire : les ids restent croissants d'un redémarrage à l'autre (reprise SSE par Last-Event-ID sans trou ni doublon).
+  private nextId = Date.now() * 1000;
+  private lastLevel = new Map<string, LogLevel>();
   private clients = new Set<ServerResponse>();
   private partial = new Map<string, string>();
   private server?: Server;
@@ -50,10 +56,15 @@ export class LogHub {
     err: process.stderr.write.bind(process.stderr),
   };
 
-  push(source: string, line: string, stream: 'out' | 'err' = 'out') {
-    const message = line.replace(/\r$/, '');
+  push(source: string, line: string, _stream: 'out' | 'err' = 'out') {
+    // Comme le terminal : un retour chariot réécrit la ligne (barres de progression) — seul le dernier état compte.
+    const message = line.replace(/\r+$/, '').split('\r').pop() ?? '';
     if (stripAnsi(message).trim().length === 0) return;
-    const level = detectLevel(message, stream === 'err' ? 'warn' : 'info');
+    const explicit = detectLevel(message);
+    const previous = this.lastLevel.get(source);
+    const inherited = !explicit && CONTINUATION.test(stripAnsi(message)) && (previous === 'error' || previous === 'warn') ? previous : undefined;
+    const level = explicit ?? inherited ?? 'info';
+    this.lastLevel.set(source, level);
     const entry: LogEntry = { id: this.nextId++, ts: Date.now(), source, level, message };
     this.entries.push(entry);
     if (this.entries.length > MAX_ENTRIES) this.entries.splice(0, this.entries.length - MAX_ENTRIES);
@@ -138,6 +149,12 @@ export class LogHub {
       });
     });
   }
+}
+
+/** Env des processus fils capturés : sortie piped = non-TTY, donc on force les couleurs si le terminal en a. */
+export function childColorEnv(): NodeJS.ProcessEnv {
+  const color = process.stdout.isTTY && !process.env.NO_COLOR;
+  return color ? { ...process.env, FORCE_COLOR: process.env.FORCE_COLOR ?? '1' } : process.env;
 }
 
 let hub: LogHub | undefined;

@@ -36,7 +36,7 @@
 
 ### Patch Changes
 
-- 4e5e0a1: Retire l'import mort de `useVisitContextStore` dans `mock.tsx`/`mock-jest.tsx`. Ce fichier n'existe plus dans `src/` depuis la purge des références OpenMRS, ce qui faisait échouer la résolution de module (Vite/Vitest) pour tout consommateur du mock — notamment `@egen-civitas/esm-framework` dont les tests importent ce mock en cascade.
+- 4e5e0a1: Retire l'import mort de `useVisitContextStore` dans `mock.tsx`/`mock-jest.tsx`. Ce fichier n'existe plus dans `src/` depuis la purge des références héritées, ce qui faisait échouer la résolution de module (Vite/Vitest) pour tout consommateur du mock — notamment `@egen-civitas/esm-framework` dont les tests importent ce mock en cascade.
 - c82f723: Corrige une série de dépendances manquantes/mal déclarées trouvées en débloquant la CI (l'installation était bloquée depuis fin août, masquant ces problèmes) :
 
   - `esm-tenant` : `happy-dom` manquait alors que ses tests l'utilisent (ni dep, ni peerDep) → ajouté en devDependency.

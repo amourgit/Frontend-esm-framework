@@ -5,7 +5,14 @@ import { basename, resolve } from 'node:path';
 import { readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { resolvePublicEnv } from '@egen-civitas/rspack-config';
-import { type ImportmapDeclaration, type RoutesDeclaration, logInfo, logWarn, removeTrailingSlash } from '../utils';
+import {
+  type ImportmapDeclaration,
+  type RoutesDeclaration,
+  logInfo,
+  logWarn,
+  removeTrailingSlash,
+  resolveBrandDir,
+} from '../utils';
 
 /**
  * Variables qui doivent atteindre @egen-civitas/esm-app-shell au RUNTIME
@@ -239,6 +246,13 @@ export async function runDevelop(args: DevelopArgs, signal?: AbortSignal) {
   app.get(indexHtmlPathMatcher, (_, res) => res.contentType('text/html').send(indexContent));
 
   // Return static assets for any request for which we have one, except importmap.json and index.html
+  // Branding du projet client (favicon…) : servi AVANT le dist pré-compilé du shell, dont il remplace les
+  // assets neutres du même nom. Un fichier absent du dossier retombe naturellement sur ceux du shell.
+  const brandDir = resolveBrandDir(process.cwd(), 'development');
+  if (brandDir) {
+    logInfo(`Branding : assets de ${brandDir} servis à la place de ceux, neutres, de l'app-shell.`);
+    app.use(spaPath, express.static(brandDir, { index: false }));
+  }
   app.use(spaPath, express.static(source, { index: false }));
 
   // Proxy requests beginning with `apiUrl` but which should not serve `index.html`.

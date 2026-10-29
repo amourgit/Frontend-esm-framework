@@ -28,6 +28,7 @@ function createTempDir(): string {
 }
 
 afterEach(() => {
+  delete process.env.EGEN_BRAND_DIR;
   for (const controller of controllers) {
     controller.abort();
   }
@@ -148,6 +149,42 @@ describe('runDevelop', () => {
       const cssRes = await fetch(`${baseUrl}/egen-civitas/spa/${cssMatch![0]}`);
       expect(cssRes.status).toBe(200);
       expect(cssRes.headers.get('content-type')).toContain('css');
+    }, 15_000);
+
+    it("serves the client's branding assets instead of the neutral ones of the app shell", async () => {
+      const brandDir = createTempDir();
+      writeFileSync(join(brandDir, 'favicon.ico'), 'CLIENT-FAVICON');
+      process.env.EGEN_BRAND_DIR = brandDir;
+      const port = await getAvailablePort(19450);
+      const baseUrl = await startDevServer(defaultArgs({ port }));
+
+      const res = await fetch(`${baseUrl}/egen-civitas/spa/favicon.ico`);
+
+      expect(res.status).toBe(200);
+      expect(await res.text()).toBe('CLIENT-FAVICON');
+    }, 15_000);
+
+    it('falls back to the app shell assets for files the branding directory does not provide', async () => {
+      const brandDir = createTempDir();
+      writeFileSync(join(brandDir, 'favicon.ico'), 'CLIENT-FAVICON');
+      process.env.EGEN_BRAND_DIR = brandDir;
+      const port = await getAvailablePort(19460);
+      const baseUrl = await startDevServer(defaultArgs({ port }));
+
+      const res = await fetch(`${baseUrl}/egen-civitas/spa/icon-512.png`);
+
+      expect(res.status).toBe(200);
+      expect(res.headers.get('content-type')).toContain('image/png');
+    }, 15_000);
+
+    it('keeps serving the app shell assets when EGEN_BRAND_DIR is not set', async () => {
+      const port = await getAvailablePort(19470);
+      const baseUrl = await startDevServer(defaultArgs({ port }));
+
+      const res = await fetch(`${baseUrl}/egen-civitas/spa/favicon.ico`);
+
+      expect(res.status).toBe(200);
+      expect(await res.text()).not.toBe('CLIENT-FAVICON');
     }, 15_000);
 
     it('does not serve importmap.json from static assets when importmap is inline', async () => {

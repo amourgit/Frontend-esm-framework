@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 import {
   BLACK,
   EAR_COLORS,
+  HEAD_ZOOM,
   LiveOrb,
   WEBGL_COLORS,
   WHITE,
@@ -135,5 +136,16 @@ describe('LiveOrb sans WebGL', () => {
   it('le libellé accessible est personnalisable', () => {
     render(<LiveOrb label="Assistant EGEN" />);
     expect(screen.getByRole('img', { name: 'Assistant EGEN' })).toBeInTheDocument();
+  });
+
+  it('le repli agrandit toute la tête d’un même facteur (proportions conservées)', () => {
+    expect(HEAD_ZOOM).toBeGreaterThan(1);
+    expect(HEAD_ZOOM).toBeLessThanOrEqual(1.2);
+    const { container } = render(<LiveOrb />);
+    const zoom = container.querySelector('[data-part="zoom"]') as HTMLElement;
+    expect(zoom.style.transform).toBe(`scale(${HEAD_ZOOM})`);
+    expect(zoom.querySelector('[data-part="head"]')).not.toBeNull();
+    expect(zoom.querySelectorAll('[data-part="eye"]')).toHaveLength(2);
+    expect(zoom.querySelectorAll('[data-part="ear"]')).toHaveLength(2);
   });
 });

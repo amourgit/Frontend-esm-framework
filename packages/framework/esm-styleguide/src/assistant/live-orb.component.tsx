@@ -52,6 +52,13 @@ void main() {
 }
 `;
 
+/**
+ * Zoom of the whole head in its square box (1 = previous size). The camera is
+ * pulled in, so every part (skull, eyes, line, ears, halo) grows by the same
+ * factor and the proportions stay exactly as designed.
+ */
+export const HEAD_ZOOM = 1.09;
+
 const FRAG = `
 #ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
@@ -76,7 +83,7 @@ uniform vec3 u_ear2;
 
 // ---- Camera ---------------------------------------------------------------
 const float CAM_DIST = 6.0;
-const float HALF_VIEW = 1.5;
+const float HALF_VIEW = ${(1.5 / HEAD_ZOOM).toFixed(4)};
 
 // ---- Head (local space, +z = face) ----------------------------------------
 const vec3 HEAD_R = vec3(1.0, 0.74, 0.86);
@@ -798,7 +805,7 @@ function FallbackHead({
   } as const;
 
   return (
-    <>
+    <div data-part="zoom" aria-hidden style={{ ...abs, inset: 0, transform: `scale(${HEAD_ZOOM})` }}>
       {ears ? (
         <div ref={earsRef} data-part="ears" aria-hidden style={{ ...abs, inset: 0, transition: slide }}>
           {[0, 1].map((i) => (
@@ -859,7 +866,7 @@ function FallbackHead({
           }}
         />
       </div>
-    </>
+    </div>
   );
 }
 

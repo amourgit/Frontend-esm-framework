@@ -23,6 +23,8 @@ export interface SectionContextValue {
   toggle: () => void;
   headingId?: string;
   bodyId?: string;
+  /** Change quand le mode collant demandé par la section change (re-lecture du style calculé). */
+  stickyKey?: string;
 }
 
 export const DEFAULT_SECTION_LABELS: SectionLabels = {

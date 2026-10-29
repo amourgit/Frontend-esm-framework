@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '../page-background/page-background.utils.js';
 import { useSectionContext } from './section.context.js';
+import { STICKY_RESET, useStickyState } from './section-sticky.js';
 import type {
   SectionBodyProps,
   SectionDensity,
@@ -138,86 +139,114 @@ export function SectionHeader({
   const resolvedLayout = layout ?? ctx.headerLayout;
   const showDivider = divider ?? ctx.divider;
   const TitleTag = titleAs;
+  const headerRef = useRef<HTMLDivElement>(null);
+  const { isSticky, stuck, sentinelRef } = useStickyState(headerRef, ctx.stickyKey);
   const hasCount = count !== undefined && count !== null && count !== '';
   const hasActions = actions !== undefined && actions !== null && actions !== false;
 
   return (
-    <div data-section-part="header" className={cn('flex flex-col', classNames.header, className)}>
-      <div className={cn('flex gap-x-4 gap-y-2', HEADER_ROW[resolvedLayout], HEADER_PAD[density])}>
-        {children !== undefined && children !== null ? (
-          <div className="min-w-0 flex-1">{children}</div>
-        ) : (
-          <div
-            className={cn(
-              'flex min-w-0 flex-col gap-1',
-              resolvedLayout === 'split' && 'flex-1 basis-48',
-              classNames.heading,
-            )}
-          >
-            <div className={cn('flex min-w-0 items-center gap-2.5', resolvedLayout === 'centered' && 'justify-center')}>
-              {icon ? (
-                <span
+    <>
+      {isSticky ? (
+        <div
+          ref={sentinelRef}
+          aria-hidden="true"
+          data-section-part="sticky-sentinel"
+          className="pointer-events-none -mb-px h-px w-full shrink-0"
+        />
+      ) : null}
+      <div
+        ref={headerRef}
+        data-section-part="header"
+        data-stuck={isSticky ? String(stuck) : undefined}
+        className={cn(
+          'flex flex-col',
+          // Mode collant : piloté par des variables CSS héritées (voir section-sticky.ts).
+          '[position:var(--section-header-position,static)] top-(--section-sticky-top,0px) z-(--section-sticky-z,10)',
+          'transition-[background-color,box-shadow] duration-200 motion-reduce:transition-none',
+          'data-[stuck=true]:bg-(--section-sticky-bg,rgb(8_12_20/0.72)) data-[stuck=true]:backdrop-blur-xl',
+          'data-[stuck=true]:shadow-[0_8px_24px_-12px_rgb(0_0_0/0.45)]',
+          classNames.header,
+          className,
+        )}
+      >
+        <div className={cn('flex gap-x-4 gap-y-2', HEADER_ROW[resolvedLayout], HEADER_PAD[density])}>
+          {children !== undefined && children !== null ? (
+            <div className="min-w-0 flex-1">{children}</div>
+          ) : (
+            <div
+              className={cn(
+                'flex min-w-0 flex-col gap-1',
+                resolvedLayout === 'split' && 'flex-1 basis-48',
+                classNames.heading,
+              )}
+            >
+              <div
+                className={cn('flex min-w-0 items-center gap-2.5', resolvedLayout === 'centered' && 'justify-center')}
+              >
+                {icon ? (
+                  <span
+                    className={cn(
+                      'inline-flex shrink-0 items-center justify-center text-(--section-accent,#34d399)',
+                      classNames.leading,
+                    )}
+                  >
+                    {icon}
+                  </span>
+                ) : null}
+                {title ? (
+                  <TitleTag
+                    id={ctx.headingId}
+                    className={cn(
+                      'm-0 min-w-0 text-balance tracking-tight text-(--section-fg,#fff)',
+                      TITLE_SIZE[titleSize],
+                      classNames.title,
+                    )}
+                  >
+                    {title}
+                  </TitleTag>
+                ) : null}
+                {hasCount ? (
+                  <span
+                    className={cn(
+                      'inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1.5',
+                      'bg-(--section-fg,#fff)/10 text-[11px] font-medium leading-none text-(--section-muted,rgba(255,255,255,0.65))',
+                      classNames.count,
+                    )}
+                  >
+                    {count}
+                  </span>
+                ) : null}
+              </div>
+              {description ? (
+                <p
                   className={cn(
-                    'inline-flex shrink-0 items-center justify-center text-(--section-accent,#34d399)',
-                    classNames.leading,
+                    'm-0 max-w-3xl text-sm leading-relaxed text-(--section-muted,rgba(255,255,255,0.65))',
+                    classNames.description,
                   )}
                 >
-                  {icon}
-                </span>
-              ) : null}
-              {title ? (
-                <TitleTag
-                  id={ctx.headingId}
-                  className={cn(
-                    'm-0 min-w-0 text-balance tracking-tight text-(--section-fg,#fff)',
-                    TITLE_SIZE[titleSize],
-                    classNames.title,
-                  )}
-                >
-                  {title}
-                </TitleTag>
-              ) : null}
-              {hasCount ? (
-                <span
-                  className={cn(
-                    'inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1.5',
-                    'bg-(--section-fg,#fff)/10 text-[11px] font-medium leading-none text-(--section-muted,rgba(255,255,255,0.65))',
-                    classNames.count,
-                  )}
-                >
-                  {count}
-                </span>
+                  {description}
+                </p>
               ) : null}
             </div>
-            {description ? (
-              <p
-                className={cn(
-                  'm-0 max-w-3xl text-sm leading-relaxed text-(--section-muted,rgba(255,255,255,0.65))',
-                  classNames.description,
-                )}
-              >
-                {description}
-              </p>
-            ) : null}
-          </div>
-        )}
+          )}
 
-        {hasActions || collapsible ? (
-          <div
-            className={cn(
-              'flex flex-wrap items-center gap-1.5',
-              HEADER_ACTIONS[resolvedLayout],
-              children !== undefined && children !== null && resolvedLayout === 'split' && 'shrink-0',
-              classNames.actions,
-            )}
-          >
-            {actions}
-            {collapsible ? <CollapseToggle /> : null}
-          </div>
-        ) : null}
+          {hasActions || collapsible ? (
+            <div
+              className={cn(
+                'flex flex-wrap items-center gap-1.5',
+                HEADER_ACTIONS[resolvedLayout],
+                children !== undefined && children !== null && resolvedLayout === 'split' && 'shrink-0',
+                classNames.actions,
+              )}
+            >
+              {actions}
+              {collapsible ? <CollapseToggle /> : null}
+            </div>
+          ) : null}
+        </div>
+        {showDivider ? <SectionDivider /> : null}
       </div>
-      {showDivider ? <SectionDivider /> : null}
-    </div>
+    </>
   );
 }
 
@@ -250,7 +279,7 @@ export function SectionBody({ children, flush = false, maxHeight, className }: S
         classNames.body,
         className,
       )}
-      style={maxHeight ? { maxHeight } : undefined}
+      style={maxHeight ? { ...STICKY_RESET, maxHeight } : STICKY_RESET}
     >
       {children}
     </div>

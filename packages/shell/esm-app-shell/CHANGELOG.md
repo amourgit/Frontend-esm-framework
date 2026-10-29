@@ -1,5 +1,13 @@
 # @egen-civitas/esm-app-shell
 
+## 2.6.7
+
+### Patch Changes
+
+- 450752c: `LiveOrb` : la tête est agrandie d'environ 9 % dans sa boîte (nouvelle constante exportée `HEAD_ZOOM = 1.09`). Le zoom est appliqué à toute la scène (caméra du shader, et conteneur du repli sans GPU) : crâne, yeux, trait, oreillettes et halo grandissent du même facteur, donc les proportions mesurées sur la mascotte restent identiques. Le halo néon et la rotation maximale de la tête restent dans le cadre.
+- Updated dependencies [450752c]
+  - @egen-civitas/esm-styleguide@2.3.1
+
 ## 2.6.6
 
 ### Patch Changes

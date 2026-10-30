@@ -36,7 +36,7 @@ const isPageHeaderWrapperProps = (props: any): props is PageHeaderWrapperProps =
 /**
  * The page header is typically located at the top of a dashboard. It includes a pictogram on the left,
  * the name of the dashboard or page, and the `implementationName` from the configuration, which is typically
- * the name of the clinic or the authority that is using the implementation. It can also include interactive
+ * the name of the office or the authority that is using the implementation. It can also include interactive
  * content on the right-hand side. It can be used in two ways:
  *
  * 1. Alone, in order to render just the page header, with no content on the right side:

@@ -263,7 +263,7 @@ describe('egenFetch', () => {
           status: 404,
           statusText: 'Not Found',
           clone: () => ({
-            text: () => Promise.resolve(JSON.stringify({ title: 'Concept not found' })),
+            text: () => Promise.resolve(JSON.stringify({ title: 'Resource not found' })),
           }),
         }),
       );
@@ -272,7 +272,7 @@ describe('egenFetch', () => {
         await egenFetch('/ws/rest/v1/session');
         fail("Promise shouldn't resolve when server responds with 404");
       } catch (err) {
-        expect(err.problem).toEqual({ type: 'about:blank', title: 'Concept not found' });
+        expect(err.problem).toEqual({ type: 'about:blank', title: 'Resource not found' });
       }
     });
 

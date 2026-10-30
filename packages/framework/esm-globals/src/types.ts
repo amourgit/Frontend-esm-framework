@@ -490,7 +490,3 @@ export interface ResourceLoader<T = any> {
   (): Promise<T>;
 }
 
-/*
- * Supported values for FHIR HumanName.use as defined by https://hl7.org/fhir/R4/valueset-name-use.html
- */
-export type NameUse = 'usual' | 'official' | 'temp' | 'nickname' | 'anonymous' | 'old' | 'maiden';

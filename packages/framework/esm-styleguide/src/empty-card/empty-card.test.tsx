@@ -43,9 +43,9 @@ describe('EmptyCard', () => {
   });
 
   it('renders with different display text', () => {
-    render(<EmptyCard displayText="allergies" headerTitle="Allergies" />);
-    expect(screen.getByRole('heading', { name: /allergies/i })).toBeInTheDocument();
-    expect(screen.getByText(/there are no allergies to display/i)).toBeInTheDocument();
+    render(<EmptyCard displayText="documents" headerTitle="Documents" />);
+    expect(screen.getByRole('heading', { name: /documents/i })).toBeInTheDocument();
+    expect(screen.getByText(/there are no documents to display/i)).toBeInTheDocument();
   });
 
   it('renders the empty data illustration', () => {

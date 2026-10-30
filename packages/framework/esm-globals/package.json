@@ -51,9 +51,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "@types/fhir": "0.0.31"
-  },
   "peerDependencies": {
     "single-spa": "6.x"
   },

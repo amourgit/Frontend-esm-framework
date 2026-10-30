@@ -45,7 +45,7 @@ export interface UseServerPaginationOptions<R> {
  * @see `useEgenInfinite`
  * @see `useEgenFetchAll`
  * @see `usePagination` for pagination of client-side data`
- * @see `useFhirPagination``
+
  *
  * @param url The URL of the paginated rest endpoint. \
  *            It should be populated with any needed GET params, except `limit`, `startIndex` or `totalCount`,

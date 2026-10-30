@@ -82,7 +82,7 @@ describe('dynamic-loading', () => {
     });
 
     it('handles a typical module name', () => {
-      expect(slugify('@egen-civitas/esm-patient-chart-app')).toBe('_egen_civitas_esm_patient_chart_app');
+      expect(slugify('@egen-civitas/esm-entity-chart-app')).toBe('_egen_civitas_esm_entity_chart_app');
     });
 
     it('returns the input unchanged when there are no special characters', () => {

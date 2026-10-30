@@ -4,7 +4,6 @@ export * from './dates/index.js';
 export * from './get-locale.js';
 export * from './is-online.js';
 export * from './match-locale.js';
-export * from './entity-helpers.js';
 export * from './shallowEqual.js';
 export * from './storage.js';
 export * from './test-helpers.js';

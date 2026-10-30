@@ -39,7 +39,7 @@ export interface WorkspaceContainerProps {
 
 /**
  * Use this component to render the [workspace window](https://egen.alpha.vercel.com/design-system)
- * in an app such as the patient chart, or a workspace overlay in an app such as the clinic dashboard.
+ * in an app such as the entity chart, or a workspace overlay in an app such as the office dashboard.
  * This allows workspaces to be opened on the page where this component is mounted. This component
  * must not be mounted multiple times on the same page. If there are multiple apps on a page, only
  * one of those apps should use this component—it "hosts" the workspaces.
@@ -54,16 +54,16 @@ export interface WorkspaceContainerProps {
  * The context key is a string that appears in the URL, which defines the pages on which workspaces
  * are valid. If the URL changes in a way such that it no longer contains the context key, then
  * all workspaces will be closed. This ensures that, for example, workspaces on the home page do
- * not stay open when the user transitions to the patient dashboard; and also that workspaces do
- * not stay open when the user navigates to a different patient. The context key must be a valid
+ * not stay open when the user transitions to the entity dashboard; and also that workspaces do
+ * not stay open when the user navigates to a different entity. The context key must be a valid
  * sub-path of the URL, with no initial or trailing slash. So if the URL is
- * `https://example.com/patient/123/foo`, then `patient` and `patient/123` and `123/foo` are valid
- * context keys, but `patient/12` and `pati` are not.
+ * `https://example.com/entity/123/foo`, then `entity` and `entity/123` and `123/foo` are valid
+ * context keys, but `entity/12` and `pati` are not.
  *
  * An extension slot is provided in the workspace header. Its name is derived from the `featureName` of
  * the top-level component in which it is defined (feature names are generally provided in the lifecycle
  * functions in an app's `index.ts` file). The slot is named `workspace-header-${featureName}-slot`.
- * For the patient chart, this is `workspace-header-patient-chart-slot`.
+ * For the entity chart, this is `workspace-header-entity-chart-slot`.
  *
  * This component also provides the [Siderail and Bottom Nav](https://egen.alpha.vercel.com/design-system).
  * To use this, pass the `showSiderailAndBottomNav` prop. The Siderail is rendered on the right side of the screen
@@ -71,8 +71,8 @@ export interface WorkspaceContainerProps {
  * menu provides an extension slot, to which buttons are attached as extensions. The slot
  * derives its name from the `featureName` of the top-level component in which this `WorkspaceContainer`
  * appears (feature names are generally provided in the lifecycle functions in an app's `index.ts` file).
- * The slot is named `action-menu-${featureName}-items-slot`. For the patient chart, this is
- * `action-menu-patient-chart-items-slot`.
+ * The slot is named `action-menu-${featureName}-items-slot`. For the entity chart, this is
+ * `action-menu-entity-chart-items-slot`.
  *
  * This component also provides everything needed for workspace notifications to be rendered.
  *
@@ -174,7 +174,7 @@ function Workspace({ workspaceInstance, additionalWorkspaceProps }: WorkspacePro
 
   // We use the feature name of the app containing the workspace in order to set the extension
   // slot name. We can't use contextKey for this because we don't want the slot name to be
-  // different for different patients, but we do want it to be different for different apps.
+  // different for different entities, but we do want it to be different for different apps.
   const { featureName } = useContext(ComponentContext);
 
   const toggleWindowState = useCallback(() => {

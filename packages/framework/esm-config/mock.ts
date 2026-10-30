@@ -13,7 +13,6 @@ export const temporaryConfigStore = createGlobalStore('temporary-config', {});
 export enum Type {
   Array = 'Array',
   Boolean = 'Boolean',
-  ConceptUuid = 'ConceptUuid',
   Number = 'Number',
   Object = 'Object',
   String = 'String',

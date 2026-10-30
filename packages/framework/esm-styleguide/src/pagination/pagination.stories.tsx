@@ -47,7 +47,7 @@ export const WithDashboardLink: Story = {
     pageSize: 5,
     pageNumber: 1,
     currentItems: 5,
-    dashboardLinkUrl: '/dashboard/vitals',
-    dashboardLinkLabel: 'View all vitals',
+    dashboardLinkUrl: '/dashboard/metrics',
+    dashboardLinkLabel: 'View all metrics',
   },
 };

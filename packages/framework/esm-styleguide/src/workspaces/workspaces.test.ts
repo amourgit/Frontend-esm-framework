@@ -20,39 +20,39 @@ describe('workspace system', () => {
 
   it('registering, launching, and closing a workspace', () => {
     const store = getWorkspaceStore();
-    registerWorkspace({ name: 'allergies', title: 'Allergies', load: vi.fn(), moduleName: '@egen-civitas/foo' });
+    registerWorkspace({ name: 'documents', title: 'Documents', load: vi.fn(), moduleName: '@egen-civitas/foo' });
 
-    launchWorkspace('allergies', { foo: true });
+    launchWorkspace('documents', { foo: true });
 
     expect(store.getState().openWorkspaces.length).toEqual(1);
 
-    const allergies = store.getState().openWorkspaces[0];
-    expect(allergies.name).toBe('allergies');
-    expect(allergies.additionalProps['foo']).toBe(true);
+    const documents = store.getState().openWorkspaces[0];
+    expect(documents.name).toBe('documents');
+    expect(documents.additionalProps['foo']).toBe(true);
 
-    allergies.closeWorkspace();
+    documents.closeWorkspace();
 
     expect(store.getState().openWorkspaces.length).toEqual(0);
   });
 
-  describe('Testing launchPatientWorkspace', () => {
+  describe('Testing launchEntityWorkspace', () => {
     it('should launch a workspace', () => {
       const store = getWorkspaceStore();
-      registerWorkspace({ name: 'allergies', title: 'Allergies', load: vi.fn(), moduleName: '@egen-civitas/foo' });
+      registerWorkspace({ name: 'documents', title: 'Documents', load: vi.fn(), moduleName: '@egen-civitas/foo' });
 
-      launchWorkspace('allergies', { foo: true });
+      launchWorkspace('documents', { foo: true });
 
       expect(store.getState().openWorkspaces.length).toEqual(1);
 
-      const allergies = store.getState().openWorkspaces[0];
-      expect(allergies.name).toBe('allergies');
-      expect(allergies.additionalProps['foo']).toBe(true);
+      const documents = store.getState().openWorkspaces[0];
+      expect(documents.name).toBe('documents');
+      expect(documents.additionalProps['foo']).toBe(true);
     });
 
     it('should update additionalProps when re-opening an already opened form with same name but with different props', () => {
       const store = getWorkspaceStore();
 
-      registerWorkspace({ name: 'POC HIV Form', title: 'Clinical Form', load: vi.fn(), moduleName: '@egen-civitas/foo' });
+      registerWorkspace({ name: 'POC HIV Form', title: 'Business Form', load: vi.fn(), moduleName: '@egen-civitas/foo' });
       launchWorkspace('POC HIV Form', { workspaceTitle: 'POC HIV Form' });
 
       expect(store.getState().openWorkspaces.length).toEqual(1);
@@ -73,14 +73,14 @@ describe('workspace system', () => {
 
     it('should show a modal when a workspace is already open (with changes) and it cannot hide', () => {
       const store = getWorkspaceStore();
-      registerWorkspace({ name: 'allergies', title: 'Allergies', load: vi.fn(), moduleName: '@egen-civitas/foo' });
+      registerWorkspace({ name: 'documents', title: 'Documents', load: vi.fn(), moduleName: '@egen-civitas/foo' });
 
-      launchWorkspace('allergies', { foo: true });
+      launchWorkspace('documents', { foo: true });
 
       expect(store.getState().openWorkspaces.length).toEqual(1);
 
-      const allergies = store.getState().openWorkspaces?.[0];
-      allergies.promptBeforeClosing(() => true);
+      const documents = store.getState().openWorkspaces?.[0];
+      documents.promptBeforeClosing(() => true);
 
       registerWorkspace({ name: 'conditions', title: 'Conditions', load: vi.fn(), moduleName: '@egen-civitas/foo' });
       launchWorkspace('conditions', { foo: true });
@@ -89,7 +89,7 @@ describe('workspace system', () => {
       expect(prompt).toBeTruthy();
       expect(prompt.title).toMatch(/unsaved changes/i);
       expect(prompt.body).toMatch(
-        'There may be unsaved changes in "Allergies". Please save them before opening another workspace.',
+        'There may be unsaved changes in "Documents". Please save them before opening another workspace.',
       );
       expect(prompt.confirmText).toMatch(/Open anyway/i);
 
@@ -99,21 +99,21 @@ describe('workspace system', () => {
 
       const openedWorkspace = store.getState().openWorkspaces[0];
       expect(openedWorkspace.name).toBe('conditions');
-      expect(openedWorkspace.name).not.toBe('Allergies');
+      expect(openedWorkspace.name).not.toBe('Documents');
     });
 
     it('should not show a modal and open the workspace when a workspace is already open and it can hide, both workspaces being of different type', () => {
       const store = getWorkspaceStore();
       registerWorkspace({
-        name: 'allergies',
-        title: 'Allergies',
+        name: 'documents',
+        title: 'Documents',
         load: vi.fn(),
         canHide: true,
-        type: 'allergies-form',
+        type: 'documents-form',
         moduleName: '@egen-civitas/foo',
       });
 
-      launchWorkspace('allergies', { foo: true });
+      launchWorkspace('documents', { foo: true });
 
       expect(store.getState().openWorkspaces.length).toEqual(1);
 
@@ -130,15 +130,15 @@ describe('workspace system', () => {
 
       const openedWorkspaces = store.getState().openWorkspaces;
       expect(openedWorkspaces[0].name).toBe('conditions');
-      expect(openedWorkspaces[1].name).not.toBe('Allergies');
+      expect(openedWorkspaces[1].name).not.toBe('Documents');
     });
 
     it("should show a modal when launching a workspace with type matching the already opened workspace's type and should show the previous opened workspace in front when showing the modal", () => {
       const store = getWorkspaceStore();
 
       registerWorkspace({
-        name: 'allergies',
-        title: 'Allergies',
+        name: 'documents',
+        title: 'Documents',
         load: vi.fn(),
         canHide: true,
         type: 'form',
@@ -153,41 +153,41 @@ describe('workspace system', () => {
         moduleName: '@egen-civitas/foo',
       });
       registerWorkspace({
-        name: 'vitals',
-        title: 'Vitals form',
+        name: 'metrics',
+        title: 'Metrics form',
         load: vi.fn(),
         type: 'form',
         moduleName: '@egen-civitas/foo',
       });
 
-      launchWorkspace('allergies');
+      launchWorkspace('documents');
       launchWorkspace('conditions');
 
       expect(store.getState().openWorkspaces.length).toEqual(2);
       expect(store.getState().openWorkspaces[0].name).toBe('conditions');
-      expect(store.getState().openWorkspaces[1].name).toBe('allergies');
+      expect(store.getState().openWorkspaces[1].name).toBe('documents');
 
-      const allergies = store.getState().openWorkspaces[1];
-      allergies.promptBeforeClosing(() => true);
+      const documents = store.getState().openWorkspaces[1];
+      documents.promptBeforeClosing(() => true);
 
-      launchWorkspace('vitals');
+      launchWorkspace('metrics');
 
       expect(store.getState().openWorkspaces.length).toEqual(2);
-      expect(store.getState().openWorkspaces[0].name).toBe('allergies');
+      expect(store.getState().openWorkspaces[0].name).toBe('documents');
       expect(store.getState().openWorkspaces[1].name).toBe('conditions');
 
       const prompt = store.getState().prompt as Prompt;
       expect(prompt).toBeTruthy();
       expect(prompt.title).toMatch(/unsaved changes/i);
       expect(prompt.body).toMatch(
-        'There may be unsaved changes in "Allergies". Please save them before opening another workspace.',
+        'There may be unsaved changes in "Documents". Please save them before opening another workspace.',
       );
       expect(prompt.confirmText).toMatch(/Open anyway/i);
 
       prompt.onConfirm();
 
       expect(store.getState().openWorkspaces.length).toEqual(2);
-      expect(store.getState().openWorkspaces[0].name).toBe('vitals');
+      expect(store.getState().openWorkspaces[0].name).toBe('metrics');
       expect(store.getState().openWorkspaces[1].name).toBe('conditions');
     });
 
@@ -195,11 +195,11 @@ describe('workspace system', () => {
       const store = getWorkspaceStore();
 
       registerWorkspace({
-        name: 'allergies',
-        title: 'Allergies',
+        name: 'documents',
+        title: 'Documents',
         load: vi.fn(),
         canHide: true,
-        type: 'allergies-form',
+        type: 'documents-form',
         moduleName: '@egen-civitas/foo',
       });
       registerWorkspace({
@@ -211,26 +211,26 @@ describe('workspace system', () => {
         moduleName: '@egen-civitas/foo',
       });
       registerWorkspace({
-        name: 'vitals',
-        title: 'Vitals form',
+        name: 'metrics',
+        title: 'Metrics form',
         load: vi.fn(),
-        type: 'vitals-form',
+        type: 'metrics-form',
         moduleName: '@egen-civitas/foo',
       });
 
-      launchWorkspace('allergies');
+      launchWorkspace('documents');
       launchWorkspace('conditions');
 
       expect(store.getState().openWorkspaces.length).toEqual(2);
       expect(store.getState().openWorkspaces[0].name).toBe('conditions');
-      expect(store.getState().openWorkspaces[1].name).toBe('allergies');
+      expect(store.getState().openWorkspaces[1].name).toBe('documents');
 
-      launchWorkspace('vitals');
+      launchWorkspace('metrics');
 
       expect(store.getState().openWorkspaces.length).toEqual(3);
-      expect(store.getState().openWorkspaces[0].name).toBe('vitals');
+      expect(store.getState().openWorkspaces[0].name).toBe('metrics');
       expect(store.getState().openWorkspaces[1].name).toBe('conditions');
-      expect(store.getState().openWorkspaces[2].name).toBe('allergies');
+      expect(store.getState().openWorkspaces[2].name).toBe('documents');
 
       const prompt = store.getState().prompt;
       expect(prompt).toBeFalsy();
@@ -239,8 +239,8 @@ describe('workspace system', () => {
     it('should show 2 modals if both, workspace with `canHide=false` and workspace type matches with already opened workspace', () => {
       const store = getWorkspaceStore();
       registerWorkspace({
-        name: 'allergies',
-        title: 'Allergies',
+        name: 'documents',
+        title: 'Documents',
         load: vi.fn(),
         canHide: true,
         type: 'form',
@@ -262,25 +262,25 @@ describe('workspace system', () => {
         moduleName: '@egen-civitas/foo',
       });
       registerWorkspace({
-        name: 'vitals',
-        title: 'Vitals form',
+        name: 'metrics',
+        title: 'Metrics form',
         load: vi.fn(),
         type: 'form',
         moduleName: '@egen-civitas/foo',
       });
 
-      launchWorkspace('allergies');
+      launchWorkspace('documents');
       launchWorkspace('attachments');
       launchWorkspace('conditions');
 
       expect(store.getState().openWorkspaces.length).toEqual(3);
-      expect(store.getState().openWorkspaces.map((w) => w.name)).toEqual(['conditions', 'attachments', 'allergies']);
+      expect(store.getState().openWorkspaces.map((w) => w.name)).toEqual(['conditions', 'attachments', 'documents']);
 
       const conditionsWorkspace = store.getState().openWorkspaces?.[0];
-      const allergiesWorkspace = store.getState().openWorkspaces?.[2];
+      const documentsWorkspace = store.getState().openWorkspaces?.[2];
       conditionsWorkspace.promptBeforeClosing(() => true);
-      allergiesWorkspace.promptBeforeClosing(() => true);
-      launchWorkspace('vitals');
+      documentsWorkspace.promptBeforeClosing(() => true);
+      launchWorkspace('metrics');
 
       expect(store.getState().openWorkspaces.length).toEqual(3);
       expect(store.getState().openWorkspaces[0].name).toBe('conditions');
@@ -295,28 +295,28 @@ describe('workspace system', () => {
       prompt.onConfirm();
 
       expect(store.getState().openWorkspaces.length).toEqual(2);
-      // Bringing the `allergies` workspace in front because it matches the vitals workspace type
-      expect(store.getState().openWorkspaces[0].name).toEqual('allergies');
+      // Bringing the `documents` workspace in front because it matches the metrics workspace type
+      expect(store.getState().openWorkspaces[0].name).toEqual('documents');
 
       const prompt2 = store.getState().prompt as Prompt;
 
       expect(prompt2).toBeTruthy();
       expect(prompt2.body).toMatch(
-        'There may be unsaved changes in "Allergies". Please save them before opening another workspace.',
+        'There may be unsaved changes in "Documents". Please save them before opening another workspace.',
       );
 
       prompt2.onConfirm();
 
       expect(store.getState().openWorkspaces.length).toEqual(2);
-      expect(store.getState().openWorkspaces[0].name).toBe('vitals');
+      expect(store.getState().openWorkspaces[0].name).toBe('metrics');
       expect(store.getState().openWorkspaces[1].name).toBe('attachments');
     });
 
     it("should launch workspace in workspace's preferredSize", () => {
       const store = getWorkspaceStore();
       registerWorkspace({
-        name: 'allergies',
-        title: 'Allergies',
+        name: 'documents',
+        title: 'Documents',
         load: vi.fn(),
         canHide: true,
         type: 'form',
@@ -340,7 +340,7 @@ describe('workspace system', () => {
         moduleName: '@egen-civitas/foo',
       });
 
-      launchWorkspace('allergies');
+      launchWorkspace('documents');
 
       expect(store.getState().openWorkspaces.length).toBe(1);
       expect(store.getState().workspaceWindowState).toBe('maximized');
@@ -578,8 +578,8 @@ describe('workspace system', () => {
   describe('Testing workspace group store', () => {
     it('should create store for workspace groups', () => {
       registerWorkspace({
-        name: 'allergies',
-        title: 'Allergies',
+        name: 'documents',
+        title: 'Documents',
         load: vi.fn(),
         moduleName: '@egen-civitas/foo',
       });
@@ -588,7 +588,7 @@ describe('workspace system', () => {
         title: 'Entity Workspace',
         load: vi.fn(),
         type: 'workspace-group',
-        moduleName: '@egen-civitas/esm-ward-app',
+        moduleName: '@egen-civitas/esm-unit-app',
       });
 
       registerWorkspaceGroup({
@@ -609,10 +609,10 @@ describe('workspace system', () => {
 
       workspaceStore.getState().openWorkspaces[0].closeWorkspace({ ignoreChanges: true });
 
-      launchWorkspace('allergies');
+      launchWorkspace('documents');
 
       expect(workspaceStore.getState().openWorkspaces.length).toBe(1);
-      expect(workspaceStore.getState().openWorkspaces[0].name).toBe('allergies');
+      expect(workspaceStore.getState().openWorkspaces[0].name).toBe('documents');
       expect(workspaceGroupStore?.getState()).toStrictEqual({});
     });
 
@@ -622,7 +622,7 @@ describe('workspace system', () => {
         title: 'Entity Workspace',
         load: vi.fn(),
         type: 'workspace-group',
-        moduleName: '@egen-civitas/esm-ward-app',
+        moduleName: '@egen-civitas/esm-unit-app',
       });
       registerWorkspaceGroup({
         name: 'entity-workspace-group',
@@ -652,14 +652,14 @@ describe('workspace system', () => {
         title: 'Entity Workspace',
         load: vi.fn(),
         type: 'workspace-group',
-        moduleName: '@egen-civitas/esm-ward-app',
+        moduleName: '@egen-civitas/esm-unit-app',
       });
       registerWorkspace({
         name: 'transfer-entity-workspace',
         title: 'Transfer Entity Workspace',
         load: vi.fn(),
-        type: 'transfer-patient',
-        moduleName: '@egen-civitas/esm-ward-app',
+        type: 'transfer-entity',
+        moduleName: '@egen-civitas/esm-unit-app',
       });
       registerWorkspaceGroup({
         name: workspaceGroup,
@@ -685,7 +685,7 @@ describe('workspace system', () => {
 
       expect(workspaceStore.getState().openWorkspaces.length).toBe(1);
 
-      const transferPatientWorkspace = workspaceStore.getState().openWorkspaces[0];
+      const transferEntityWorkspace = workspaceStore.getState().openWorkspaces[0];
       expect(workspaceGroupStore?.getState()?.['foo']).toBe(true);
       expect(workspaceGroupStore?.getState()?.['bar']).toBe(false);
     });
@@ -696,14 +696,14 @@ describe('workspace system', () => {
         title: 'Entity Workspace',
         load: vi.fn(),
         type: 'workspace-group',
-        moduleName: '@egen-civitas/esm-ward-app',
+        moduleName: '@egen-civitas/esm-unit-app',
       });
       registerWorkspace({
         name: 'transfer-entity-workspace',
         title: 'Transfer Entity Workspace',
         load: vi.fn(),
-        type: 'transfer-patient',
-        moduleName: '@egen-civitas/esm-ward-app',
+        type: 'transfer-entity',
+        moduleName: '@egen-civitas/esm-unit-app',
       });
 
       registerWorkspaceGroup({
@@ -724,10 +724,10 @@ describe('workspace system', () => {
         workspaceToLaunch: { name: 'entity-workspace' },
       });
 
-      const wardPatientGroupStore = getWorkspaceGroupStore('entity-workspace-group');
+      const unitEntityGroupStore = getWorkspaceGroupStore('entity-workspace-group');
       expect(workspaceStore.getState().openWorkspaces.length).toBe(1);
-      expect(wardPatientGroupStore).toBeTruthy();
-      expect(wardPatientGroupStore?.getState()?.['foo']).toBe(true);
+      expect(unitEntityGroupStore).toBeTruthy();
+      expect(unitEntityGroupStore?.getState()?.['foo']).toBe(true);
 
       launchWorkspaceGroup('another-sidebar-group', {
         state: {
@@ -741,8 +741,8 @@ describe('workspace system', () => {
       const anotherWorkspaceGroupStore = getWorkspaceGroupStore('another-sidebar-group');
       expect(workspaceStore.getState().openWorkspaces.length).toBe(1);
       expect(anotherWorkspaceGroupStore?.getState()?.['bar']).toBe(false);
-      expect(wardPatientGroupStore?.getState()?.['foo']).toBeUndefined();
-      expect(wardPatientGroupStore?.getState()).toStrictEqual({});
+      expect(unitEntityGroupStore?.getState()?.['foo']).toBeUndefined();
+      expect(unitEntityGroupStore?.getState()).toStrictEqual({});
     });
 
     it('should not clear the workspace if a workspace of same sidebar group is opened', () => {
@@ -751,15 +751,15 @@ describe('workspace system', () => {
         title: 'Entity Workspace',
         load: vi.fn(),
         type: 'workspace-group',
-        moduleName: '@egen-civitas/esm-ward-app',
+        moduleName: '@egen-civitas/esm-unit-app',
         canHide: true,
       });
       registerWorkspace({
         name: 'transfer-entity-workspace',
         title: 'Transfer Entity Workspace',
         load: vi.fn(),
-        type: 'transfer-patient',
-        moduleName: '@egen-civitas/esm-ward-app',
+        type: 'transfer-entity',
+        moduleName: '@egen-civitas/esm-unit-app',
       });
 
       registerWorkspaceGroup({
@@ -776,16 +776,16 @@ describe('workspace system', () => {
         workspaceToLaunch: { name: 'entity-workspace' },
       });
 
-      const wardPatientGroupStore = getWorkspaceGroupStore('entity-workspace-group');
+      const unitEntityGroupStore = getWorkspaceGroupStore('entity-workspace-group');
       expect(workspaceStore.getState().openWorkspaces.length).toBe(1);
-      expect(wardPatientGroupStore).toBeTruthy();
-      expect(wardPatientGroupStore?.getState()?.['foo']).toBe(true);
+      expect(unitEntityGroupStore).toBeTruthy();
+      expect(unitEntityGroupStore?.getState()?.['foo']).toBe(true);
 
       launchWorkspace('transfer-entity-workspace', { bar: false });
 
       expect(workspaceStore.getState().openWorkspaces.length).toBe(2);
-      expect(wardPatientGroupStore?.getState()?.['foo']).toBe(true);
-      expect(wardPatientGroupStore?.getState()?.['bar']).toBe(false);
+      expect(unitEntityGroupStore?.getState()?.['foo']).toBe(true);
+      expect(unitEntityGroupStore?.getState()?.['bar']).toBe(false);
     });
 
     it('should retain default closeWorkspace options in case workspace options are passed', () => {
@@ -794,7 +794,7 @@ describe('workspace system', () => {
         title: 'Entity Workspace',
         load: vi.fn(),
         type: 'workspace-group',
-        moduleName: '@egen-civitas/esm-ward-app',
+        moduleName: '@egen-civitas/esm-unit-app',
       });
       registerWorkspaceGroup({
         name: 'entity-workspace-group',

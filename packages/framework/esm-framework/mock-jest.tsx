@@ -92,19 +92,6 @@ export const CustomOverflowMenuItem = jest.fn(({ itemText, ...props }) => (
     {itemText}
   </button>
 ));
-export const EntityBannerActionsMenu = jest.fn(() => <div>Entity Banner Actions Menu</div>);
-export const EntityBannerContactDetails = jest.fn(() => <div>Entity Banner Contact Details</div>);
-export const EntityBannerEntityInfo = jest.fn(() => <div>Entity Banner Entity Info</div>);
-export const EntityBannerEntityIdentifiers = jest.fn(() => <div>Entity Banner Entity Identifier</div>);
-export const EntityBannerToggleContactDetailsButton = jest.fn(() => (
-  <div>Entity Banner Toggle Contact Details Button</div>
-));
-export const EntityPhoto = jest.fn(() => <div>Entity Photo</div>);
-export const useEntityPhoto = jest.fn(() => ({
-  isLoading: true,
-  data: null,
-  error: null,
-}));
 
 export const ActionMenuButton = jest.fn(({ handler }) => <button onClick={handler}>Action Menu Button</button>);
 export const ActionMenuButton2 = jest.fn(({ label, tagContent, icon }) => (
@@ -170,8 +157,6 @@ export const EgenDateRangePicker = jest.fn(({ id, labelText, value = [], onChang
 /* esm-utils */
 export {
   getDefaultsFromConfigSchema,
-  getEntityName,
-  formatEntityName,
   selectPreferredName,
 } from '@egen-civitas/esm-utils';
 

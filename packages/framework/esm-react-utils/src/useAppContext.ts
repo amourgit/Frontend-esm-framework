@@ -11,13 +11,13 @@ import { shallowEqual } from '@egen-civitas/esm-utils';
  * @example
  * ```ts
  * // load a full namespace
- * const patientContext = useAppContext<PatientContext>('patient');
+ * const patientContext = useAppContext<PatientContext>('entity');
  * ```
  *
  * @example
  * ```ts
  * // loads part of a namespace
- * const patientName = useAppContext<PatientContext, string | undefined>('patient', (state) => state.display);
+ * const patientName = useAppContext<PatientContext, string | undefined>('entity', (state) => state.display);
  * ```
  *
  * @typeParam T The type of the value stored in the namespace
@@ -39,13 +39,13 @@ export function useAppContext<T extends NonNullable<object> = NonNullable<object
  * @example
  * ```ts
  * // load a full namespace
- * const patientContext = useAppContext<PatientContext>('patient');
+ * const patientContext = useAppContext<PatientContext>('entity');
  * ```
  *
  * @example
  * ```ts
  * // loads part of a namespace
- * const patientName = useAppContext<PatientContext, string | undefined>('patient', (state) => state.display);
+ * const patientName = useAppContext<PatientContext, string | undefined>('entity', (state) => state.display);
  * ```
  *
  * @typeParam T The type of the value stored in the namespace

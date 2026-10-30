@@ -13,8 +13,8 @@ type Story = StoryObj<typeof EmptyCard>;
 
 export const Default: Story = {
   args: {
-    headerTitle: 'Vitals',
-    displayText: 'vitals',
+    headerTitle: 'Metrics',
+    displayText: 'metrics',
   },
 };
 

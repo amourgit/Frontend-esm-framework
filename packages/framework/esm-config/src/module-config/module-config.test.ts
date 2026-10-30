@@ -969,7 +969,6 @@ describe('type validations', () => {
   it.each([
     [Type.Array, 'doop'],
     [Type.Boolean, 0],
-    [Type.ConceptUuid, 'Weight'],
     [Type.Number, 'foo'],
     [Type.Object, []],
     [Type.String, 0],

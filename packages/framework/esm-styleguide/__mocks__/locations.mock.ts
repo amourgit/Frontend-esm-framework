@@ -99,8 +99,8 @@ export const mockLoginLocations = {
             },
           ],
           status: 'active',
-          name: 'Outpatient Clinic',
-          description: 'Outpatient Clinic',
+          name: 'Main Office',
+          description: 'Main Office',
         },
       },
       {
@@ -177,8 +177,8 @@ export const mockLoginLocations = {
             },
           ],
           status: 'active',
-          name: 'Inpatient Ward',
-          description: 'Inpatient Ward',
+          name: 'Annex',
+          description: 'Annex',
         },
       },
       {
@@ -255,8 +255,8 @@ export const mockLoginLocations = {
             },
           ],
           status: 'active',
-          name: 'Mobile Clinic',
-          description: 'Mobile Clinic',
+          name: 'Mobile Office',
+          description: 'Mobile Office',
         },
       },
       {
@@ -341,7 +341,7 @@ export const mockLoginLocations = {
   },
 };
 
-export const inpatientWardResponse = {
+export const annexResponse = {
   ok: true,
   data: {
     resourceType: 'Bundle',
@@ -432,8 +432,8 @@ export const inpatientWardResponse = {
             },
           ],
           status: 'active',
-          name: 'Inpatient Ward',
-          description: 'Inpatient Ward',
+          name: 'Annex',
+          description: 'Annex',
         },
       },
     ],
@@ -466,7 +466,7 @@ export const locationResponseForNonExistingSearch = {
   },
 };
 
-export const outpatientClinicResponse = {
+export const mainOfficeResponse = {
   data: {
     resourceType: 'Bundle',
     id: '301b3ad6-868a-48a6-bc3f-aaa8aa3f89a6',
@@ -567,8 +567,8 @@ export const outpatientClinicResponse = {
             },
           ],
           status: 'active',
-          name: 'Outpatient Clinic',
-          description: 'Outpatient Clinic',
+          name: 'Main Office',
+          description: 'Main Office',
         },
       },
     ],

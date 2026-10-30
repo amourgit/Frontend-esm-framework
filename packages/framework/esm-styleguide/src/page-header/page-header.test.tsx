@@ -25,12 +25,12 @@ describe('PageHeaderContent', () => {
   });
 
   it('renders implementation name when provided in config', async () => {
-    mockGetCoreTranslation.mockReturnValueOnce('Test Clinic');
-    mockGetConfig.mockResolvedValue({ implementationName: 'Test Clinic' });
+    mockGetCoreTranslation.mockReturnValueOnce('Test Office');
+    mockGetConfig.mockResolvedValue({ implementationName: 'Test Office' });
 
     render(<PageHeaderContent title="Test Title" illustration={mockIllustration} />);
 
-    await screen.findByText('Test Clinic');
+    await screen.findByText('Test Office');
   });
 
   it('does not render implementation name when not provided in config', async () => {
@@ -39,7 +39,7 @@ describe('PageHeaderContent', () => {
     render(<PageHeaderContent title="Test Title" illustration={mockIllustration} />);
 
     await screen.findByText(/test title/i);
-    expect(screen.queryByText('Test Clinic')).not.toBeInTheDocument();
+    expect(screen.queryByText('Test Office')).not.toBeInTheDocument();
   });
 
   it('applies custom className when provided', async () => {

@@ -1,19 +1,19 @@
-import { type Concept, type EgenResource, type Person } from '@egen-civitas/esm-api';
+import { type EgenResource, type Person, type ReferenceTerm } from '@egen-civitas/esm-api';
 import { type Interaction } from './interaction-resource.js';
 import { type Location } from './location-resource.js';
 
 /**
  * Represents a generic data point — a single recorded observation or measurement
- * tied to an interaction (replaces domain-specific "Obs" / Observation).
+ * tied to an interaction.
  * Can represent form answers, survey responses, sensor readings, audit values, etc.
  */
 export interface DataPoint extends EgenResource {
-  concept?: Concept;
+  term?: ReferenceTerm;
   subject?: Person;
   recordedAt?: string;
   accessionNumber?: string;
   dataPointGroup?: DataPoint;
-  valueCodedName?: EgenResource;
+  valueTerm?: EgenResource;
   groupMembers?: Array<DataPoint>;
   comment?: string;
   location?: Location;

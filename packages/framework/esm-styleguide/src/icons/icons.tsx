@@ -12,7 +12,6 @@ export const iconIds = [
   'egen-icon-arrow-left',
   'egen-icon-arrow-right',
   'egen-icon-arrow-up',
-  'egen-icon-baby',
   'egen-icon-calendar-heat-map',
   'egen-icon-calendar',
   'egen-icon-caret-down',
@@ -23,7 +22,6 @@ export const iconIds = [
   'egen-icon-chart-line',
   'egen-icon-checkmark-filled',
   'egen-icon-checkmark-outline',
-  'egen-icon-chemistry',
   'egen-icon-chevron-down',
   'egen-icon-chevron-left',
   'egen-icon-chevron-right',
@@ -34,7 +32,6 @@ export const iconIds = [
   'egen-icon-document',
   'egen-icon-document-attachment',
   'egen-icon-download',
-  'egen-icon-drug-order',
   'egen-icon-edit',
   'egen-icon-event-schedule',
   'egen-icon-events',
@@ -42,25 +39,17 @@ export const iconIds = [
   'egen-icon-gender-male',
   'egen-icon-gender-other',
   'egen-icon-gender-unknown',
-  'egen-icon-generic-order-type',
   'egen-icon-group',
   'egen-icon-group-access',
-  'egen-icon-hospital-bed',
-  'egen-icon-image-medical',
   'egen-icon-information',
   'egen-icon-information-filled',
   'egen-icon-information-square',
   'egen-icon-inventory-management',
-  'egen-icon-lab-order',
   'egen-icon-list-checked',
   'egen-icon-location',
-  'egen-icon-material-order',
   'egen-icon-maximize',
-  'egen-icon-medication',
   'egen-icon-message-queue',
-  'egen-icon-microscope',
   'egen-icon-money',
-  'egen-icon-mother',
   'egen-icon-movement',
   'egen-icon-overflow-menu--horizontal',
   'egen-icon-overflow-menu--vertical',
@@ -68,10 +57,8 @@ export const iconIds = [
   'egen-icon-pedestrian-family',
   'egen-icon-pen',
   'egen-icon-printer',
-  'egen-icon-procedure-order',
   'egen-icon-programs',
   'egen-icon-renew',
-  'egen-icon-referral-order',
   'egen-icon-report',
   'egen-icon-reset',
   'egen-icon-save',
@@ -81,7 +68,6 @@ export const iconIds = [
   'egen-icon-shopping-cart--arrow-down',
   'egen-icon-sticky-note-add',
   'egen-icon-switcher',
-  'egen-icon-syringe',
   'egen-icon-table-of-contents',
   'egen-icon-table',
   'egen-icon-time',
@@ -91,7 +77,6 @@ export const iconIds = [
   'egen-icon-tree-view--alt',
   'egen-icon-user-avatar',
   'egen-icon-user-follow',
-  'egen-icon-user-xray',
   'egen-icon-user',
   'egen-icon-view-off',
   'egen-icon-view',
@@ -156,12 +141,6 @@ export const ArrowUpIcon = memo(
 
 /**
  */
-export const BabyIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function BabyIcon(props: IconProps, ref) {
-    return <Icon ref={ref} icon="egen-icon-baby" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const CalendarHeatMapIcon = memo(
@@ -244,12 +223,6 @@ export const CheckmarkOutlineIcon = memo(
 
 /**
  */
-export const ChemistryIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function ChemistryIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-chemistry" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const ChevronDownIcon = memo(
@@ -332,12 +305,6 @@ export const DownloadIcon = memo(
 
 /**
  */
-export const DrugOrderIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function DrugOrderIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-drug-order" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const EditIcon = memo(
@@ -393,12 +360,6 @@ export const GenderUnknownIcon = memo(
 
 /**
  */
-export const GenericOrderTypeIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function GenericOrderTypeIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-generic-order-type" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const GroupIcon = memo(
@@ -417,20 +378,8 @@ export const GroupAccessIcon = memo(
 
 /**
  */
-export const HospitalBedIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function HospitalBedIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-hospital-bed" iconProps={props} />;
-  }),
-);
-
 /**
  */
-export const ImageMedicalIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function ImageMedicalIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-image-medical" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const InformationIcon = memo(
@@ -465,12 +414,6 @@ export const InventoryManagementIcon = memo(
 
 /**
  */
-export const LabOrderIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function LabOrderIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-lab-order" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const ListCheckedIcon = memo(
@@ -489,12 +432,6 @@ export const LocationIcon = memo(
 
 /**
  */
-export const MaterialOrderIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function MaterialOrderIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-material-order" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const MaximizeIcon = memo(
@@ -505,12 +442,6 @@ export const MaximizeIcon = memo(
 
 /**
  */
-export const MedicationIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function MedicationIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-medication" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const MessageQueueIcon = memo(
@@ -521,12 +452,6 @@ export const MessageQueueIcon = memo(
 
 /**
  */
-export const MicroscopeIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function MicroscopeIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-microscope" iconProps={props} />;
-  }),
-);
-
 /**
  * Billing
  */
@@ -538,12 +463,6 @@ export const MoneyIcon = memo(
 
 /**
  */
-export const MotherIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function MotherIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-mother" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const MovementIcon = memo(
@@ -600,12 +519,6 @@ export const PrinterIcon = memo(
 
 /**
  */
-export const ProcedureOrderIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function ProcedureOrderIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-procedure-order" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const ProgramsIcon = memo(
@@ -616,12 +529,6 @@ export const ProgramsIcon = memo(
 
 /**
  */
-export const ReferralOrderIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function ReferralOrderIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-referral-order" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const RenewIcon = memo(
@@ -697,7 +604,7 @@ export const ShoppingCartArrowDownIcon = memo(
 );
 
 /**
- * Used as action button to open ward in-patient note workspace
+ * Used as action button to open note workspace
  */
 export const StickyNoteAddIcon = memo(
   forwardRef<SVGSVGElement, IconProps>(function StickyNoteAddIcon(props, ref) {
@@ -707,12 +614,6 @@ export const StickyNoteAddIcon = memo(
 
 /**
  */
-export const SyringeIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function SyringeIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-syringe" iconProps={props} />;
-  }),
-);
-
 /**
  * Used as a button to add an item to the Order basket from a search
  */
@@ -793,12 +694,6 @@ export const UserFollowIcon = memo(
  *
  * `UserXrayIcon` is also used for imaging orders
  */
-export const UserXrayIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function UserXrayIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-user-xray" iconProps={props} />;
-  }),
-);
-
 /**
  */
 export const UserIcon = memo(
@@ -835,28 +730,12 @@ export const WarningIcon = memo(
 // should all resolve to a defined React icon
 
 /**
- */
-export const AllergiesIcon = WarningIcon;
-
-/**
  *
  */
 export const AttachmentIcon = DocumentAttachmentIcon;
 
 /**
- * Conditions
- *
- * Note this is an alias for ListCheckedIcon
- */
-export const ConditionsIcon = ListCheckedIcon;
-
-/**
- *
- */
-export const RadiologyIcon = ImageMedicalIcon;
-
-/**
- * Used as a button to add an item to the Order basket from a search
+ * Used as a button to add an item to a basket from a search
  *
  * Note this is an alias for ShoppingCartArrowDownIcon
  */
@@ -868,7 +747,7 @@ export const ShoppingCartAddItemIcon = ShoppingCartArrowDownIcon;
  *
  * @example
  * ```tsx
- *   <MaybeIcon icon='egen-icon-baby' className={styles.myIconStyles} />
+ *   <MaybeIcon icon='egen-icon-user' className={styles.myIconStyles} />
  * ```
  */
 export const MaybeIcon = memo(

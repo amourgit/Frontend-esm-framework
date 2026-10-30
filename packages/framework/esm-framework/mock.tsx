@@ -93,19 +93,6 @@ export const CustomOverflowMenuItem = vi.fn(({ itemText, ...props }) => (
     {itemText}
   </button>
 ));
-export const EntityBannerActionsMenu = vi.fn(() => <div>Entity Banner Actions Menu</div>);
-export const EntityBannerContactDetails = vi.fn(() => <div>Entity Banner Contact Details</div>);
-export const EntityBannerEntityInfo = vi.fn(() => <div>Entity Banner Entity Info</div>);
-export const EntityBannerEntityIdentifiers = vi.fn(() => <div>Entity Banner Entity Identifier</div>);
-export const EntityBannerToggleContactDetailsButton = vi.fn(() => (
-  <div>Entity Banner Toggle Contact Details Button</div>
-));
-export const EntityPhoto = vi.fn(() => <div>Entity Photo</div>);
-export const useEntityPhoto = vi.fn(() => ({
-  isLoading: true,
-  data: null,
-  error: null,
-}));
 
 export const ActionMenuButton = vi.fn(({ handler }) => <button onClick={handler}>Action Menu Button</button>);
 export const ActionMenuButton2 = vi.fn(({ label, tagContent, icon }) => (
@@ -171,8 +158,6 @@ export const EgenDateRangePicker = vi.fn(({ id, labelText, value = [], onChange,
 /* esm-utils */
 export {
   getDefaultsFromConfigSchema,
-  getEntityName,
-  formatEntityName,
   selectPreferredName,
 } from '@egen-civitas/esm-utils';
 

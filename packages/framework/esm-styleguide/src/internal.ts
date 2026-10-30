@@ -38,6 +38,7 @@ export * from './dialogs/index.js';
 export * from './selections/index.js';
 export * from './carousel/index.js';
 export * from './content-section/index.js';
+export * from './section/index.js';
 export * from './hero-mosaic/index.js';
 export * from './top-bar/index.js';
 export * from './sites/index.js';

@@ -25,6 +25,7 @@ const { mkdirSync, readdirSync, statSync, readFileSync, writeFileSync } = requir
 const sass = require('sass-embedded');
 const semver = require('semver');
 const { removeTrailingSlash, getTimestamp } = require('./tools/helpers');
+const { resolveBranding } = require('./tools/brand');
 
 const { name, version, dependencies } = require('./package.json');
 const sharedDependencies = require('./dependencies.json');
@@ -42,6 +43,12 @@ const egenPublicPath = removeTrailingSlash(process.env.EGEN_PUBLIC_PATH || '/ege
 const egenProxyTarget = process.env.EGEN_PROXY_TARGET || 'http://localhost:8082/';
 const egenPageTitle = process.env.EGEN_PAGE_TITLE || 'Egen';
 const egenFavicon = process.env.EGEN_FAVICON || `${egenPublicPath}/favicon.ico`;
+// Métadonnées de l'application installable (PWA) — neutres par défaut, à fournir par le consommateur.
+const egenPageDescription = process.env.EGEN_PAGE_DESCRIPTION || egenPageTitle;
+const egenThemeColor = process.env.EGEN_THEME_COLOR || '#161616';
+// Identité visuelle (favicon, icône PWA) : le shell n'embarque que des assets neutres ; le consommateur
+// fournit les siens via EGEN_BRAND_DIR (voir tools/brand.js et le README).
+const egenBranding = resolveBranding(process.env, { defaultAssetsDir: resolve(__dirname, 'src/assets') });
 
 /**
  * Pont EGEN_AI_* (process.env, coté build Node) → window.egenAi* (runtime navigateur).
@@ -613,19 +620,19 @@ module.exports = (env, argv = []) => {
         name: egenPageTitle,
         short_name: egenPageTitle,
         publicPath: egenPublicPath,
-        description: 'Open source Health IT by and for the entire planet, starting with the developing world.',
+        description: egenPageDescription,
         background_color: '#ffffff',
-        theme_color: '#005d5d',
+        theme_color: egenThemeColor,
         icons: [
           {
-            src: resolve(__dirname, 'src/assets/logo-512.png'),
+            src: egenBranding.pwaIconPath,
             sizes: [96, 128, 144, 192, 256, 384, 512],
           },
         ],
       }),
       new CopyRspackPlugin({
         patterns: [
-          { from: resolve(__dirname, 'src/assets') },
+          ...egenBranding.copyPatterns,
           { from: resolve(cssTmpDir, egenCssFilename), to: egenCssFilename },
           { from: themeSourceDir, to: 'themes' },
           ...fontPatterns,

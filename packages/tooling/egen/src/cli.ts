@@ -4,6 +4,7 @@ import yargs, { type Argv } from 'yargs';
 import { fork } from 'child_process';
 import { resolve } from 'node:path';
 import {
+  BRAND_DIR_ENV,
   getAvailablePort,
   getImportmapAndRoutes,
   isPortAvailable,
@@ -13,6 +14,7 @@ import {
   logFail,
   mergeImportmapAndRoutes,
   proxyImportmapAndRoutes,
+  resolveBrandDir,
   resolvePackages,
   runProject,
   trimEnd,
@@ -43,7 +45,16 @@ type CommandNames = keyof Commands;
 
 function runCommand<T extends CommandNames>(type: T, args: Parameters<Commands[T]>[0]) {
   const hub = type === 'runDevelop' ? getLogHub() : undefined;
-  const ps = fork(runner, [], { cwd: type === 'runBuild' ? root : process.cwd(), silent: !!hub, env: hub ? childColorEnv() : process.env });
+  // Le dossier de branding est résolu ICI, dans le processus parent : `runBuild` s'exécute depuis `root`
+  // (dans node_modules), où un chemin relatif ne désignerait plus rien.
+  const env = { ...(hub ? childColorEnv() : process.env) };
+  const brandDir = resolveBrandDir(process.cwd(), type === 'runBuild' ? 'production' : 'development');
+  if (brandDir) {
+    env[BRAND_DIR_ENV] = brandDir;
+  } else {
+    delete env[BRAND_DIR_ENV];
+  }
+  const ps = fork(runner, [], { cwd: type === 'runBuild' ? root : process.cwd(), silent: !!hub, env });
   hub?.attachChild(ps, 'egen-develop');
 
   ps.send({

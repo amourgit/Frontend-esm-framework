@@ -1,4 +1,5 @@
 /** @category Section */
+import type { AssignedExtension } from '@egen-civitas/esm-extensions';
 import type React from 'react';
 
 /** `onDark` : texte clair (fond de page sombre, cas par défaut). `onLight` : texte foncé. */
@@ -119,6 +120,19 @@ export interface SectionProps {
   /** Trait fin sous l'en-tête. @default true */
   divider?: boolean;
 
+  // ── En-tête collant (sticky) ─────────────────────────────────────────────
+  /**
+   * Garde l'en-tête collé en haut de la zone de défilement tant que le corps
+   * de la section est visible ; il repart avec la section, et celui de la
+   * section suivante prend le relais. Absent : hérite du `SectionSlot` parent
+   * (collant par défaut dans un slot), sinon non collant.
+   */
+  stickyHeader?: boolean;
+  /** Décalage du haut de la zone (longueur CSS, ex. `'3rem'`). @default '0px' */
+  stickyOffset?: string;
+  /** Empilement de l'en-tête collant. @default 10 */
+  stickyZIndex?: number;
+
   // ── Pied ─────────────────────────────────────────────────────────────────
   /** Contenu du pied (à gauche en disposition `between`). Pas de pied si absent. */
   footer?: React.ReactNode;
@@ -154,4 +168,38 @@ export interface SectionProps {
    * manuelle) ; sinon ils sont enveloppés dans un `SectionBody`.
    */
   children?: React.ReactNode;
+}
+
+export interface SectionSlotItemInfo {
+  /** Nom de l'extension (clé `name` de `routes.json`). */
+  name: string;
+  /** Module qui a déclaré l'extension. */
+  moduleName: string;
+  /** `meta` déclarée par l'extension dans `routes.json`. */
+  meta: Record<string, unknown>;
+}
+
+export type SectionSlotGap = 'none' | 'sm' | 'md' | 'lg' | 'xl';
+
+export interface SectionSlotProps {
+  /** Nom du slot d'extensions (ex. `'home-sections'`). */
+  name: string;
+  /** Données transmises à chaque extension (props de leur composant racine). */
+  state?: Record<string | symbol | number, unknown>;
+  /** Filtre / réordonne les extensions (même contrat que `ExtensionSlot`). */
+  select?: (extensions: Array<AssignedExtension>) => Array<AssignedExtension>;
+  /** En-têtes collants pour toutes les sections du slot. @default true */
+  stickyHeaders?: boolean;
+  /** Décalage du haut de la zone de défilement (longueur CSS). @default '0px' */
+  stickyOffset?: string;
+  /** Empilement des en-têtes collants. @default 10 */
+  stickyZIndex?: number;
+  /** Espace vertical entre les sections. @default 'lg' */
+  gap?: SectionSlotGap;
+  /** Habille chaque extension (ex. pour une grille ou un conteneur dédié). */
+  renderItem?: (element: React.ReactElement, info: SectionSlotItemInfo) => React.ReactNode;
+  className?: string;
+  /** Classe de l'enveloppe de chaque extension. */
+  itemClassName?: string;
+  style?: React.CSSProperties;
 }

@@ -1,5 +1,40 @@
 # @egen-civitas/esm-styleguide
 
+## 2.3.1
+
+### Patch Changes
+
+- 450752c: `LiveOrb` : la tête est agrandie d'environ 9 % dans sa boîte (nouvelle constante exportée `HEAD_ZOOM = 1.09`). Le zoom est appliqué à toute la scène (caméra du shader, et conteneur du repli sans GPU) : crâne, yeux, trait, oreillettes et halo grandissent du même facteur, donc les proportions mesurées sur la mascotte restent identiques. Le halo néon et la rotation maximale de la tête restent dans le cadre.
+
+## 2.3.0
+
+### Minor Changes
+
+- 477171f: `LiveOrb` devient une **tête 3D de type Baymax** au lieu d'une sphère : crâne large et arrondi, deux yeux ovales reliés par un trait fin, et deux oreillettes de casque avec anneau lumineux vert → jaune. Les proportions ont été mesurées sur la mascotte EGEN (rapport largeur/hauteur de la tête ≈ 1 : 0,74, yeux ≈ 3,7 fois leur largeur d'écart, trait ≈ 15 % de la hauteur d'un œil).
+
+  - **Rendu** : un seul fragment shader raymarché (scène SDF : crâne ellipsoïdal, oreillettes à cuvette creuse + anneau néon, raccord doux). Éclairage fixe dans le monde (ombres douces, occlusion ambiante, reflet), halo néon, silhouette anti-crénelée.
+  - **La tête pivote** vers le pointeur (lacet, tangage, léger roulis) avec un ressort amorti pour un mouvement de cou naturel, et un très léger balancement au repos. Les yeux, le trait et les oreilles sont solidaires du crâne : ils épousent sa courbure et se déforment en perspective quand il tourne. Le clignement écrase les yeux, le trait reste.
+  - **Suivi du pointeur** par angle (et non plus saturé à quelques pixels du centre), donc fluide même pour un avatar de 38 px ; retour à la pose neutre quand le pointeur quitte la fenêtre.
+  - **Repli sans GPU** refait dans le même design (tête, yeux, trait, oreilles à dégradé néon) avec un léger parallaxe vers le pointeur ; il ne dépend plus d'aucune classe Tailwind.
+  - **Robustesse** : la boucle de rendu se met en pause hors écran / onglet masqué, et une perte de contexte WebGL bascule sur le repli.
+  - **API rétro-compatible** : `variant` (`white`, `black`, `webgl`, `custom`), `color`, `eyeColor`, `colors`, `interactive`, `blink`, `size`, `className` sont inchangés, donc tous les usages existants (avec leurs variantes) sont mis à jour sans modification. Nouveautés : `ears` (défaut `true`), `earColors` (deux couleurs, défaut vert → jaune ; la matière `webgl` réutilise sa palette), `label` (nom accessible, défaut `Assistant avatar`). `createLiveOrb` accepte les mêmes options ; `headRotation` est exporté depuis le module.
+
+  Le shell est republié pour embarquer cette version du styleguide.
+
+## 2.2.0
+
+### Minor Changes
+
+- 1ffdcd4: `SectionSlot` : une page expose un slot d'extensions (`<SectionSlot name="home-sections" />`) et chaque app y branche sa propre `Section` depuis son `routes.json`. Les en-têtes de section sont **collants** : l'en-tête reste en haut de la zone de défilement tant que le corps de sa section est visible, puis la section suivante prend le relais. Le mode passe par des variables CSS héritées (`--section-header-position`, `--section-sticky-top`, `--section-sticky-z`, `--section-sticky-bg`), donc il traverse les parcels single-spa sans contexte React partagé.
+
+  `Section` gagne `stickyHeader`, `stickyOffset` et `stickyZIndex` (hérités du `SectionSlot` quand absents ; `stickyHeader={false}` pour s'en exempter). Nouveaux exports : `SectionSlot`, `SectionCard`, `SectionCardTitleButton`, `SECTION_CARD_CLASS`, `stickyStyleVars`, `STICKY_VARS`. Le shell est republié pour embarquer cette version du styleguide.
+
+## 2.1.1
+
+### Patch Changes
+
+- b6c977c: Correction : `Section`, `SectionAction`, `SectionGrid` (et leurs parties) n'étaient exportés que par `public.ts` ; le point d'entrée réel du package (`internal.ts`) ne les exposait pas, donc `import { Section } from '@egen-civitas/esm-framework'` valait `undefined` à l'exécution et ne typait pas. Les deux points d'entrée les exportent désormais, avec un test garde-fou.
+
 ## 2.1.0
 
 ### Minor Changes

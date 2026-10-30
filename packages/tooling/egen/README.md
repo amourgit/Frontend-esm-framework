@@ -69,3 +69,14 @@ Example:
 # run the command
 npx @egen-civitas/egen assemble
 ```
+
+## Client branding (favicon, PWA icon)
+
+`egen` and the app shell are generic and ship no brand identity, only neutral placeholders. A client project supplies its own favicon and installable-app icon by pointing `EGEN_BRAND_DIR` to a folder containing `favicon.ico` and/or `icon-512.png`:
+
+```sh
+# .env.development (or .env.production, or the process environment)
+EGEN_BRAND_DIR=branding/shell
+```
+
+A relative path is resolved from the root of the consuming monorepo. `develop` serves that folder ahead of the app shell's own assets, and `build` copies it over them. Missing files fall back to the neutral ones, and an invalid path is ignored with a warning.

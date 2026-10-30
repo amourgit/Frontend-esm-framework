@@ -4,6 +4,7 @@ import { cn } from '../page-background/page-background.utils.js';
 import { DEFAULT_SECTION_LABELS, SectionContext, type SectionContextValue } from './section.context.js';
 import { SectionAction } from './section-action.component.js';
 import { SectionGrid } from './section-grid.component.js';
+import { stickyStyleVars } from './section-sticky.js';
 import { SectionBody, SectionDivider, SectionFooter, SectionHeader } from './section-parts.component.js';
 import type { SectionProps } from './section.types.js';
 
@@ -24,7 +25,8 @@ import type { SectionProps } from './section.types.js';
 //  d'utilisation en bas de fichier).
 // =============================================================================
 
-const TONE_ON_LIGHT = '[--section-fg:#0f172a] [--section-muted:rgba(15,23,42,0.62)] [--section-line:rgba(15,23,42,0.14)]';
+const TONE_ON_LIGHT =
+  '[--section-fg:#0f172a] [--section-muted:rgba(15,23,42,0.62)] [--section-line:rgba(15,23,42,0.14)] [--section-sticky-bg:rgb(255_255_255/0.82)]';
 
 const VARIANT: Record<NonNullable<SectionProps['variant']>, string> = {
   plain: '',
@@ -55,6 +57,9 @@ function SectionRoot({
   header,
   headerLayout = 'split',
   divider = true,
+  stickyHeader,
+  stickyOffset,
+  stickyZIndex,
   footer,
   footerActions,
   footerLayout = 'between',
@@ -101,6 +106,7 @@ function SectionRoot({
       toggle,
       headingId: hasTitle ? headingId : undefined,
       bodyId,
+      stickyKey: `${stickyHeader}|${stickyOffset}|${stickyZIndex}`,
     }),
     [
       tone,
@@ -117,6 +123,9 @@ function SectionRoot({
       hasTitle,
       headingId,
       bodyId,
+      stickyHeader,
+      stickyOffset,
+      stickyZIndex,
     ],
   );
 
@@ -139,6 +148,7 @@ function SectionRoot({
         aria-label={ariaLabel}
         aria-labelledby={!ariaLabel && hasTitle ? headingId : undefined}
         data-section-variant={variant}
+        style={stickyStyleVars({ sticky: stickyHeader, offset: stickyOffset, zIndex: stickyZIndex })}
         className={cn(
           'relative flex w-full min-w-0 flex-col text-(--section-fg,#fff)',
           tone === 'onLight' && TONE_ON_LIGHT,
@@ -240,4 +250,8 @@ export const Section = Object.assign(SectionRoot, {
  *      vitré, `density="compact" | "spacious"` pour les espacements.
  *
  *  Sans trait : `divider={false}` (sous l'en-tête) / `footerDivider={false}`.
+ *
+ *  En-tête collant : `stickyHeader` (+ `stickyOffset`, `stickyZIndex`). Dans un
+ *  `SectionSlot` c'est actif par défaut ; `stickyHeader={false}` s'en excepte.
+ *  Fond une fois collé : variable CSS `--section-sticky-bg`.
  * ==========================================================================*/

@@ -125,7 +125,7 @@ html[data-public-route='true'] {
   // ces bords. Les routes publiques la remettent plein cadre, sans teinte.
   margin: calc(var(--egen-workbench-gap, 0.375rem) / 2);
   border-radius: 0.625rem;
-  background: var(--egen-workbench-card-bg, rgb(0 0 0 / 16%));
+  background: var(--egen-workbench-card-bg, rgb(0 0 0 / 24%));
 }
 
 // ── Plan de travail : rails fixes + zones redimensionnables (façon IntelliJ) ──
@@ -140,11 +140,11 @@ html[data-public-route='true'] {
   --egen-workbench-gap: 0.375rem;
   // Fond des cartes (zones + centre) : un léger assombrissement, jamais un aplat opaque, pour que
   // le fond global reste visible. Les rails et la TopBar n'ont, eux, AUCUN fond.
-  --egen-workbench-card-bg: rgb(0 0 0 / 16%);
+  --egen-workbench-card-bg: rgb(0 0 0 / 24%);
 }
 
 :root[data-theme='light'] {
-  --egen-workbench-card-bg: rgb(0 0 0 / 5%);
+  --egen-workbench-card-bg: rgb(0 0 0 / 8%);
 }
 
 // Pendant un redimensionnement : pas de sélection de texte qui suit le pointeur.

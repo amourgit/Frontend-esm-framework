@@ -103,7 +103,7 @@ $gap: var(--egen-workbench-gap, 0.375rem);
   min-height: 0;
   border-radius: $radius;
   // Même léger assombrissement que la carte centrale (voir _general.scss).
-  background: var(--egen-workbench-card-bg, rgb(0 0 0 / 16%));
+  background: var(--egen-workbench-card-bg, rgb(0 0 0 / 24%));
   color: var(--colors-surface-foreground, #fff);
 
   // Distance de glissement des animations d'ouverture/fermeture (classes egen-anim-*).

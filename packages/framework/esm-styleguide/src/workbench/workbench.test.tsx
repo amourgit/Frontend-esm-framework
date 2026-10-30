@@ -338,3 +338,53 @@ describe('contexte de composant des zones', () => {
     expect(received?.moduleName).toBeTruthy();
   });
 });
+
+describe("poignées d'angle (intersection de trois zones)", () => {
+  function openBottomWith(side: 'left' | 'right') {
+    workbenchStore.setState({
+      active: {
+        left: side === 'left' ? 'annuaire-tree' : null,
+        right: side === 'right' ? 'notifications' : null,
+        bottom: 'terminal',
+      },
+    });
+    render(<ToolWindowZone anchor="bottom" />);
+  }
+  const corner = (side: string) => document.querySelector(`[data-corner="${side}"]`) as HTMLElement | null;
+
+  it("n'apparaît qu'avec la zone basse ET la zone latérale ouvertes", () => {
+    openBottomWith('left');
+    expect(corner('left')).not.toBeNull();
+    expect(corner('right')).toBeNull();
+  });
+
+  it("zone gauche : redimensionne largeur et hauteur d'un même geste", () => {
+    openBottomWith('left');
+    const handle = corner('left')!;
+    fireEvent.pointerDown(handle, { button: 0, clientX: 300, clientY: 500 });
+    expect(document.documentElement).toHaveAttribute('data-workbench-resizing', 'corner-left');
+    fireEvent.pointerMove(handle, { clientX: 360, clientY: 450 });
+    expect(workbenchStore.getState().sizes.left).toBe(DEFAULT_ZONE_SIZES.left + 60);
+    expect(workbenchStore.getState().sizes.bottom).toBe(DEFAULT_ZONE_SIZES.bottom + 50);
+    fireEvent.pointerUp(handle);
+    expect(document.documentElement).not.toHaveAttribute('data-workbench-resizing');
+  });
+
+  it('zone droite : glisser vers la gauche agrandit la zone droite', () => {
+    openBottomWith('right');
+    const handle = corner('right')!;
+    fireEvent.pointerDown(handle, { button: 0, clientX: 1500, clientY: 500 });
+    fireEvent.pointerMove(handle, { clientX: 1440, clientY: 520 });
+    expect(workbenchStore.getState().sizes.right).toBe(DEFAULT_ZONE_SIZES.right + 60);
+    expect(workbenchStore.getState().sizes.bottom).toBe(DEFAULT_ZONE_SIZES.bottom - 20);
+  });
+
+  it('le double-clic rétablit les deux tailles par défaut', () => {
+    openBottomWith('left');
+    setZoneSize('left', 500);
+    setZoneSize('bottom', 400);
+    fireEvent.doubleClick(corner('left')!);
+    expect(workbenchStore.getState().sizes.left).toBe(DEFAULT_ZONE_SIZES.left);
+    expect(workbenchStore.getState().sizes.bottom).toBe(DEFAULT_ZONE_SIZES.bottom);
+  });
+});

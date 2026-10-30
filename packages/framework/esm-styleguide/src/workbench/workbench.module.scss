@@ -272,6 +272,12 @@ $gap: var(--egen-workbench-gap, 0.375rem);
   opacity: 1;
 }
 
+:global(html[data-workbench-resizing='corner-left']) .splitter-left::after,
+:global(html[data-workbench-resizing='corner-right']) .splitter-right::after,
+:global(html[data-workbench-resizing^='corner-']) .splitter-bottom::after {
+  opacity: 1;
+}
+
 .splitter-left,
 .splitter-right {
   top: 0;
@@ -310,4 +316,52 @@ $gap: var(--egen-workbench-gap, 0.375rem);
     height: 2px;
     transform: translateY(-50%);
   }
+}
+
+// ── Poignées d'angle (intersection latérale / centre / bas) ─────────────────
+// Carré centré sur le croisement des deux frontières : la zone basse commence une demi-écart sous
+// le centre, et la frontière latérale se trouve à la largeur de la zone, moins une demi-écart
+// (la carte est décalée d'une demi-écart dans sa cellule). Au-dessus des deux poignées linéaires.
+.cornerSplitter {
+  --corner-size: calc(#{$gap} + 0.75rem);
+
+  position: absolute;
+  z-index: 3;
+  top: calc(-0.5 * (#{$gap} + var(--corner-size)));
+  width: var(--corner-size);
+  height: var(--corner-size);
+  border-radius: 999px;
+  background: transparent;
+  cursor: move;
+  touch-action: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--colors-primary-500, #3b82f6);
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity 120ms ease;
+  }
+
+  &:hover::after {
+    opacity: 0.9;
+  }
+}
+
+.cornerSplitter-left {
+  left: calc(var(--egen-zone-left-width, 0px) - 0.5 * (#{$gap} + var(--corner-size)));
+}
+
+.cornerSplitter-right {
+  right: calc(var(--egen-zone-right-width, 0px) - 0.5 * (#{$gap} + var(--corner-size)));
+}
+
+:global(html[data-workbench-resizing='corner-left']) .cornerSplitter-left::after,
+:global(html[data-workbench-resizing='corner-right']) .cornerSplitter-right::after {
+  opacity: 1;
 }

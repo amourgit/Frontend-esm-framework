@@ -10,7 +10,7 @@
 '@egen-civitas/esm-translations': patch
 ---
 
-Framework généraliste : suppression de la couche clinique héritée d'OpenMRS (patients, FHIR, santé).
+Framework généraliste : suppression de la couche clinique héritée d'un autre projet (patients, FHIR, santé).
 
 Retirés :
 - `esm-styleguide` : `EntityBanner*`, `EntityPhoto`/`useEntityPhoto`, `NumericDataPoint`, 17 pictogrammes de départements hospitaliers (labo, pharmacie, cardiologie, radio, triage, patients…) et 15 icônes cliniques (seringue, lit d'hôpital, ordres médicaux…), clés de config `entityPhotoConceptUuid`, `contactAttributeTypes`, `excludeEntityIdentifierCodeTypes`.

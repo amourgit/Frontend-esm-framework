@@ -8,6 +8,7 @@ import { ToolWindowZone } from './tool-window-zone.component';
 import {
   clampZoneSize,
   closeToolWindow,
+  openToolWindow,
   DEFAULT_ZONE_SIZES,
   resetZoneSize,
   setZoneSize,
@@ -73,6 +74,12 @@ describe('store du plan de travail', () => {
     toggleToolWindow('right', 'n');
     toggleToolWindow('left', 'b');
     expect(workbenchStore.getState().active).toEqual({ left: 'b', right: 'n', bottom: null });
+  });
+
+  it('openToolWindow ouvre sans jamais refermer', () => {
+    openToolWindow('left', 'annuaire-tree');
+    openToolWindow('left', 'annuaire-tree');
+    expect(workbenchStore.getState().active.left).toBe('annuaire-tree');
   });
 
   it('closeToolWindow replie la zone', () => {
@@ -386,5 +393,20 @@ describe("poignées d'angle (intersection de trois zones)", () => {
     fireEvent.doubleClick(corner('left')!);
     expect(workbenchStore.getState().sizes.left).toBe(DEFAULT_ZONE_SIZES.left);
     expect(workbenchStore.getState().sizes.bottom).toBe(DEFAULT_ZONE_SIZES.bottom);
+  });
+});
+
+describe('icône personnalisée de rail (apps distantes)', () => {
+  it("affiche iconUrl comme masque, et ignore une URL dangereuse (retour à l'initiale)", () => {
+    slots['shell-rail-right-slot'] = [
+      extension('remote-ok', '@remote/app', { title: 'Remote', iconUrl: 'https://cdn.example.org/a.svg' }),
+      extension('remote-bad', '@remote/app', { title: 'Bad', iconUrl: 'javascript:alert(1)' }),
+    ];
+    render(<RightRail />);
+    // meta invalide (iconUrl dangereuse) : l'entrée n'est pas affichée du tout
+    expect(
+      screen.getByRole('button', { name: 'Remote' }).querySelector('span[style*="--egen-rail-icon"]'),
+    ).not.toBeNull();
+    expect(screen.queryByRole('button', { name: 'Bad' })).toBeNull();
   });
 });

@@ -35,6 +35,15 @@ $gap: var(--egen-workbench-gap, 0.375rem);
   flex: 1 1 auto;
 }
 
+.railIconMask {
+  display: block;
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  mask: var(--egen-rail-icon) center / contain no-repeat;
+  -webkit-mask: var(--egen-rail-icon) center / contain no-repeat;
+}
+
 .railBadge {
   position: absolute;
   top: 0.125rem;

@@ -86,6 +86,12 @@ export function toggleToolWindow(anchor: ToolWindowAnchor, id: string) {
   workbenchStore.setState({ active: { ...active, [anchor]: active[anchor] === id ? null : id } });
 }
 
+/** Ouvre la fenêtre d'outils `id` dans la zone `anchor` (sans la refermer si elle est déjà affichée). */
+export function openToolWindow(anchor: ToolWindowAnchor, id: string) {
+  const { active } = workbenchStore.getState();
+  if (active[anchor] !== id) workbenchStore.setState({ active: { ...active, [anchor]: id } });
+}
+
 /** Replie la zone `anchor`. */
 export function closeToolWindow(anchor: ToolWindowAnchor) {
   const { active } = workbenchStore.getState();

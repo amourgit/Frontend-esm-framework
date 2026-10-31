@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { isToolWindowMeta, TOOL_WINDOW_SLOTS } from './tool-window';
+import {
+  getToolWindowMetaProblems,
+  isSafeToolWindowIconUrl,
+  isToolWindowMeta,
+  isToolWindowSlot,
+  TOOL_WINDOW_SLOTS,
+} from './tool-window';
 
 describe('TOOL_WINDOW_SLOTS', () => {
   it('associe chaque zone à son slot de rail', () => {
@@ -35,5 +41,38 @@ describe('isToolWindowMeta', () => {
   it('accepte le drapeau global', () => {
     expect(isToolWindowMeta({ title: 'Annuaire', icon: 'Users', global: true })).toBe(true);
     expect(isToolWindowMeta({ title: 'Annuaire', global: false })).toBe(true);
+  });
+});
+
+describe('iconUrl et diagnostic', () => {
+  it.each(['https://cdn.example.org/a.svg', '/assets/a.svg', 'data:image/svg+xml;base64,PHN2Zz4='])(
+    'accepte %s',
+    (url) => {
+      expect(isSafeToolWindowIconUrl(url)).toBe(true);
+      expect(isToolWindowMeta({ title: 'A', iconUrl: url })).toBe(true);
+    },
+  );
+
+  it.each([
+    'javascript:alert(1)',
+    'http://insecure.example/a.svg',
+    '//evil.example/a.svg',
+    'data:text/html,<b>',
+    '',
+    3,
+  ])('refuse %j', (url) => {
+    expect(isSafeToolWindowIconUrl(url)).toBe(false);
+    expect(isToolWindowMeta({ title: 'A', iconUrl: url })).toBe(false);
+  });
+
+  it('nomme chaque problème de la meta', () => {
+    expect(getToolWindowMetaProblems({ title: 'A', order: 'x', rail: 'top' })).toHaveLength(2);
+    expect(getToolWindowMetaProblems(undefined)[0]).toContain('meta');
+    expect(getToolWindowMetaProblems({ title: 'A' })).toEqual([]);
+  });
+
+  it('reconnaît les slots de rail', () => {
+    expect(isToolWindowSlot('shell-rail-left-slot')).toBe(true);
+    expect(isToolWindowSlot('home-sections')).toBe(false);
   });
 });

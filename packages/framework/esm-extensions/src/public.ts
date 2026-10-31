@@ -34,7 +34,11 @@ export {
   type ToolWindowAnchor,
   type ToolWindowMeta,
   isToolWindowMeta,
+  isToolWindowSlot,
+  isSafeToolWindowIconUrl,
+  getToolWindowMetaProblems,
 } from './tool-window.js';
+export { registerToolWindow, type ToolWindowRegistration } from './tool-window-registration.js';
 export {
   type NavBehavior,
   type NavBehaviorTarget,

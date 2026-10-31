@@ -1,0 +1,17 @@
+export { RobotController } from './controller.js';
+export type { AssistantState, ControllerOptions, PlayOptions } from './controller.js';
+export { Robot } from './Robot.js';
+export type { RobotProps } from './Robot.js';
+export { RobotStage } from './RobotStage.js';
+export type { RobotFraming, RobotStageProps } from './RobotStage.js';
+export { GESTURE_LIBRARY, GESTURE_NAMES, TALK_GESTURES, resolveGesture } from './gestures.js';
+export type { GestureName } from './gestures.js';
+export { HAND_SHAPES } from './hands.js';
+export type { HandShape, HandShapeName } from './hands.js';
+export { compileClip, mirrorClip, sampleClip } from './clips.js';
+export type { ClipDef, ClipKey } from './clips.js';
+export { solveArmIK } from './ik.js';
+export { DIMS, JOINTS, JOINT_NAMES, REST_POSE, mirrorPose } from './skeleton.js';
+export type { JointName, Pose, PartialPose, Side } from './skeleton.js';
+export { createRobotMaterials, resolveRobotTheme, ROBOT_BLACK, ROBOT_WHITE, ROBOT_EAR_COLORS } from './materials.js';
+export type { RobotTheme } from './materials.js';

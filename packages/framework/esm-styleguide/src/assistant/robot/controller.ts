@@ -132,6 +132,7 @@ export class RobotController {
   private walkBlend = 0;
   private walkPhase = 0;
   private speed = 0;
+  private yawRate = 0;
 
   private handManual: Record<Side, HandShape | null> = { L: null, R: null };
   private handGoal: Record<Side, HandShape> = { L: HAND_SHAPES.relaxed, R: HAND_SHAPES.relaxed };
@@ -390,6 +391,7 @@ export class RobotController {
 
   private updateLocomotion(dt: number) {
     const w = this.walkTarget;
+    const yawBefore = this.root.yaw;
     let moving = false;
     if (w) {
       const dx = w.x - this.root.x;
@@ -421,8 +423,14 @@ export class RobotController {
     } else {
       this.speed = damp(this.speed, 0, 8, dt);
     }
-    this.walkBlend = damp(this.walkBlend, moving ? 1 : 0, 6, dt);
-    if (this.walkBlend > 0.01) this.walkPhase += ((this.speed * dt) / STRIDE) * Math.PI * 2;
+    // Tourner sur place fait faire de petits pas : la vitesse de rotation compte comme un déplacement.
+    this.yawRate = wrapAngle(this.root.yaw - yawBefore) / dt;
+    const turning = Math.abs(this.yawRate) > 0.5;
+    this.walkBlend = damp(this.walkBlend, moving || turning ? 1 : 0, 6, dt);
+    if (this.walkBlend > 0.01) {
+      const travelled = this.speed * dt + (turning ? Math.abs(this.yawRate) * dt * 0.1 : 0);
+      this.walkPhase += (travelled / STRIDE) * Math.PI * 2;
+    }
   }
 
   private finishWalk() {
@@ -441,7 +449,8 @@ export class RobotController {
     const ph = this.walkPhase;
     const s = Math.sin(ph);
     const c = Math.cos(ph);
-    const amp = 0.5 * Math.min(1, 0.4 + this.speed / MAX_SPEED);
+    const effective = this.speed + Math.abs(this.yawRate) * 0.1;
+    const amp = 0.5 * Math.min(1, 0.4 + effective / MAX_SPEED);
     const mix = (j: JointName, v: Vec3) => {
       const a = t[j];
       a[0] += (v[0] - a[0]) * b;
@@ -475,6 +484,7 @@ export class RobotController {
     t.shoulderL[2] += breath * 0.012;
     t.shoulderR[2] -= breath * 0.012;
     t.hips[1] += Math.sin(time * 0.43) * 0.025 * (1 - this.walkBlend);
+    t.hips[2] += Math.sin(time * 0.31 + 0.7) * 0.012 * (1 - this.walkBlend); // transfert de poids d'un pied sur l'autre
     t.head[2] += Math.sin(time * 0.71 + 1.1) * 0.014;
 
     // Voix : la tête accompagne le volume.

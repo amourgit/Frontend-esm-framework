@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-routes",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "license": "MPL-2.0",
   "description": "Utilities for working with the routes registry",
   "type": "module",
@@ -53,7 +53,7 @@
   "peerDependencies": {
     "@egen-civitas/esm-config": "^1.0.0",
     "@egen-civitas/esm-dynamic-loading": "^2.0.0",
-    "@egen-civitas/esm-extensions": "^2.0.0",
+    "@egen-civitas/esm-extensions": "^2.1.0",
     "@egen-civitas/esm-feature-flags": "^1.0.0",
     "@egen-civitas/esm-globals": "^1.0.0",
     "@egen-civitas/esm-utils": "^1.0.0",
@@ -62,7 +62,7 @@
   "devDependencies": {
     "@egen-civitas/esm-config": "^1.0.0",
     "@egen-civitas/esm-dynamic-loading": "^2.0.0",
-    "@egen-civitas/esm-extensions": "^2.0.0",
+    "@egen-civitas/esm-extensions": "^2.1.0",
     "@egen-civitas/esm-feature-flags": "^1.0.0",
     "@egen-civitas/esm-globals": "^1.0.0",
     "@egen-civitas/esm-utils": "^1.0.0",

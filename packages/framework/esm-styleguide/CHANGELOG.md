@@ -1,5 +1,20 @@
 # @egen-civitas/esm-styleguide
 
+## 2.4.0
+
+### Minor Changes
+
+- cf941e7: Plan de travail : poignées d'angle à l'intersection de trois zones (latérale / centre / bas). Le curseur « déplacement » apparaît au croisement des frontières et un seul geste redimensionne les deux axes (largeur de la zone gauche ou droite + hauteur de la zone basse) ; double-clic = tailles par défaut. Les poignées linéaires existantes sont inchangées.
+- 4c84714: Le styleguide ne porte plus aucun logo : suppression du sprite SVG (`#egen-logo-full-color`, `#egen-logo-icon-color`, `#egen-logo-partial-color`, `#egen-logo-white`) — en réalité un ancien logo hérité d'un autre projet —, de sa palette SCSS (`--logo-*`) et de `setupLogo()` (interne). Le framework reste générique et neutre : l'identité visuelle appartient au projet client, qui affiche son logo comme une image ordinaire. **À savoir** : tout consommateur qui référençait ces identifiants de sprite doit migrer vers son propre logo.
+- 8a39e13: Rails et zones ouverts aux apps distantes/fédérées : `ToolWindowMeta.iconUrl` (icône personnalisée sûre, rendue en masque monochrome), `getToolWindowMetaProblems` + avertissement précis à l'enregistrement quand une `meta` de rail est invalide (plus d'entrée ignorée en silence), `registerToolWindow` (déclaration par le code, sans `routes.json`), `openToolWindow` (ouverture sans bascule). Guide : `packages/framework/esm-extensions/TOOL-WINDOWS.md`.
+
+### Patch Changes
+
+- fc70c70: Cartes du plan de travail (zones + centre) légèrement plus sombres, toujours translucides : 16 % → 24 % de noir (thème sombre), 5 % → 8 % (thème clair).
+- Updated dependencies [8a39e13]
+  - @egen-civitas/esm-extensions@2.1.0
+  - @egen-civitas/esm-routes@1.1.0
+
 ## 2.3.1
 
 ### Patch Changes

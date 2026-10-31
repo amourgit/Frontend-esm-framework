@@ -43,6 +43,13 @@ export interface ToolWindowMeta {
   titleKey?: string;
   /** Nom d'icône lucide (ex. `Users`), résolu par le shell dans une liste blanche. */
   icon?: string;
+  /**
+   * Icône personnalisée (apps distantes/fédérées qui ne trouvent pas leur bonheur dans la liste
+   * blanche) : URL `https://…`, chemin absolu `/…` ou `data:image/svg+xml|png|webp…`. Affichée comme un
+   * masque monochrome (elle prend la couleur du rail) : fournir une icône d'une seule teinte. Prioritaire
+   * sur `icon`. Jamais injectée comme HTML : aucun script ne peut s'exécuter.
+   */
+  iconUrl?: string;
   /** Ordre d'affichage dans le rail (croissant) ; défaut : ordre du slot. */
   order?: number;
   /**
@@ -59,15 +66,39 @@ export interface ToolWindowMeta {
   rail?: 'left' | 'right';
 }
 
+/** Vrai si `url` est une URL d'icône autorisée (`ToolWindowMeta.iconUrl`). */
+export function isSafeToolWindowIconUrl(url: unknown): url is string {
+  if (typeof url !== 'string' || url.length === 0) return false;
+  return /^(https:\/\/|\/(?!\/)|data:image\/(svg\+xml|png|webp|gif|jpeg)[;,])/i.test(url);
+}
+
+/**
+ * Liste précise des problèmes d'une `meta` de fenêtre d'outils (vide = valide). Sert aux messages
+ * d'avertissement à l'enregistrement : une entrée invalide n'apparaît pas dans les rails, et le dire
+ * clairement évite de chercher pourquoi à l'intégration d'une app distante.
+ */
+export function getToolWindowMetaProblems(meta: unknown): string[] {
+  if (!meta || typeof meta !== 'object') return ['`meta` est absente : ajouter au moins { "title": "…" }'];
+  const m = meta as Record<string, unknown>;
+  const problems: string[] = [];
+  if (typeof m.title !== 'string' || m.title.length === 0) problems.push('`title` doit être une chaîne non vide');
+  if (m.titleKey !== undefined && typeof m.titleKey !== 'string') problems.push('`titleKey` doit être une chaîne');
+  if (m.icon !== undefined && typeof m.icon !== 'string') problems.push('`icon` doit être une chaîne');
+  if (m.iconUrl !== undefined && !isSafeToolWindowIconUrl(m.iconUrl))
+    problems.push('`iconUrl` doit commencer par https://, / ou data:image/(svg+xml|png|webp|gif|jpeg)');
+  if (m.order !== undefined && (typeof m.order !== 'number' || !Number.isFinite(m.order)))
+    problems.push('`order` doit être un nombre fini');
+  if (m.global !== undefined && typeof m.global !== 'boolean') problems.push('`global` doit être un booléen');
+  if (m.rail !== undefined && m.rail !== 'left' && m.rail !== 'right') problems.push('`rail` vaut "left" ou "right"');
+  return problems;
+}
+
 /** Valide une `meta` d'extension : vrai si c'est une `ToolWindowMeta` exploitable. */
 export function isToolWindowMeta(meta: unknown): meta is ToolWindowMeta {
-  if (!meta || typeof meta !== 'object') return false;
-  const m = meta as Record<string, unknown>;
-  if (typeof m.title !== 'string' || m.title.length === 0) return false;
-  if (m.titleKey !== undefined && typeof m.titleKey !== 'string') return false;
-  if (m.icon !== undefined && typeof m.icon !== 'string') return false;
-  if (m.order !== undefined && (typeof m.order !== 'number' || !Number.isFinite(m.order))) return false;
-  if (m.global !== undefined && typeof m.global !== 'boolean') return false;
-  if (m.rail !== undefined && m.rail !== 'left' && m.rail !== 'right') return false;
-  return true;
+  return getToolWindowMetaProblems(meta).length === 0;
+}
+
+/** Vrai si `slot` est l'un des slots de rail du shell. */
+export function isToolWindowSlot(slot: string): boolean {
+  return (Object.values(TOOL_WINDOW_SLOTS) as string[]).includes(slot);
 }

@@ -19,7 +19,7 @@ Le shell essaie, dans cet ordre, pour chacun des deux documents :
 
 Il existe une troisième couche, réservée au développement du framework : si un dossier `packages/apps` existe **au même niveau que `esm-app-shell` dans son propre monorepo** (`EGEN_ESM_CORE_APPS_DIR`, uniquement en mode non-production), le shell scanne ce dossier et injecte un import map/registre de routes additionnel qui **prend le pas** sur celui du mode (1)/(2) pour les mêmes noms de package (il apparaît après dans le DOM — les import maps `systemjs-importmap` ultérieurs augmentent/écrasent les entrées précédentes pour une même clé).
 
-Dans l'architecture actuelle (`Frontend-esm-framework` / `Frontend-esm-core` séparés), ce dossier n'existe pas et cette couche est donc inerte — elle ne s'active que si quelqu'un place un jour des apps directement dans ce dépôt, à la manière de certains monorepos historiques dont ce framework s'inspire (OpenMRS `openmrs-esm-core`, qui a le même mécanisme pour les mêmes raisons).
+Dans l'architecture actuelle (`Frontend-esm-framework` / `Frontend-esm-core` séparés), ce dossier n'existe pas et cette couche est donc inerte — elle ne s'active que si quelqu'un place un jour des apps directement dans ce dépôt, à la manière de certains monorepos historiques dont ce framework s'inspire.
 
 ## Variables d'environnement
 
@@ -30,6 +30,20 @@ Dans l'architecture actuelle (`Frontend-esm-framework` / `Frontend-esm-core` sé
 | `EGEN_ROUTES` | Registre de routes figé au build. Vide = ignoré. | — |
 | `EGEN_ROUTES_URL` | URL à fetcher au runtime si pas de valeur figée. | `${spaPath}/routes.registry.json` |
 | `EGEN_ESM_CORE_APPS_DIR` | Dossier scanné pour la surcharge locale (dev uniquement). | `../../apps` relatif à ce package |
+
+## Identité visuelle : neutre par défaut, fournie par le projet client
+
+Le shell est **générique** : il n'embarque aucun logo ni aucune identité de marque. Il livre seulement un favicon et une icône d'application installable (PWA) volontairement neutres (`src/assets/favicon.ico` et `src/assets/icon-512.png`). Le projet client fournit les siens, sans rien modifier dans le framework :
+
+| Variable | Rôle | Défaut |
+|---|---|---|
+| `EGEN_BRAND_DIR` | Dossier du projet client dont les fichiers **remplacent** ceux de `src/assets` à nom identique. Noms reconnus : `favicon.ico` (favicon) et `icon-512.png` (icône PWA, 512 px minimum). Un chemin relatif se résout depuis la racine du monorepo consommateur. Peut être défini dans le `.env*` du consommateur. Un chemin invalide est ignoré avec un avertissement. | — (assets neutres) |
+| `EGEN_PAGE_TITLE` | Titre de la page et nom de l'application installable. | `Egen` |
+| `EGEN_PAGE_DESCRIPTION` | Description de l'application installable (manifest PWA). | valeur de `EGEN_PAGE_TITLE` |
+| `EGEN_THEME_COLOR` | Couleur de thème de l'application installable (manifest PWA). | `#161616` |
+| `EGEN_FAVICON` | URL complète du favicon, si vous préférez l'héberger ailleurs que dans le shell. | `${spaPath}/favicon.ico` |
+
+`egen develop` sert `EGEN_BRAND_DIR` **avant** le `dist` pré-compilé du shell, et `egen build` le copie par-dessus les assets neutres : le favicon du client s'affiche dans les deux cas. Dans `egen develop`, le manifest PWA reste celui du shell pré-compilé (l'icône installable n'est donc visible qu'après un `egen build`).
 
 ## Ce que doit exposer un consommateur
 

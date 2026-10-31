@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useRef, useState, type 
 import { TOOL_WINDOW_SLOTS, type ToolWindowAnchor } from '@egen-civitas/esm-extensions';
 import { ComponentContext, ExtensionSlot, useStore } from '@egen-civitas/esm-react-utils';
 import { X } from 'lucide-react';
-import { Splitter } from './splitter.component.js';
+import { CornerSplitter, Splitter } from './splitter.component.js';
 import { TOOL_WINDOW_HEADER_ATTRIBUTE } from './tool-window-header.component.js';
 import { toolWindowTitle, useToolWindows, type ToolWindow } from './use-tool-windows.js';
 import { closeToolWindow, workbenchStore } from './workbench.store.js';
@@ -137,6 +137,13 @@ export function ToolWindowZone({ anchor }: ToolWindowZoneProps) {
             </ComponentContext.Provider>
           </div>
           {phase !== 'closing' && <Splitter anchor={anchor} label={`Redimensionner ${title}`} />}
+          {/* Angles : à l'intersection de la zone basse et de chaque zone latérale ouverte (deux axes à la fois). */}
+          {anchor === 'bottom' && phase !== 'closing' && active.left !== null && (
+            <CornerSplitter side="left" label="Redimensionner la zone gauche et la zone basse" />
+          )}
+          {anchor === 'bottom' && phase !== 'closing' && active.right !== null && (
+            <CornerSplitter side="right" label="Redimensionner la zone droite et la zone basse" />
+          )}
         </>
       )}
     </aside>

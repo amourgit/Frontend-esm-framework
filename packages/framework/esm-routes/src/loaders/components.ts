@@ -1,5 +1,7 @@
 import {
   attach,
+  getToolWindowMetaProblems,
+  isToolWindowSlot,
   registerExtension,
   registerModal,
   registerWorkspace,
@@ -55,6 +57,16 @@ To fix this, ensure that you define a 'component' field inside the extension def
       extension,
     );
     return;
+  }
+
+  // Une entrée de rail dont la `meta` est invalide n'apparaît pas : on dit pourquoi, tout de suite.
+  if (slots.some(isToolWindowSlot)) {
+    const problems = getToolWindowMetaProblems(extension.meta);
+    if (problems.length > 0) {
+      console.warn(
+        `L'extension ${name} de ${appName} est sur un slot de rail du shell mais ne s'affichera pas : ${problems.join(' ; ')}.`,
+      );
+    }
   }
 
   registerExtension({

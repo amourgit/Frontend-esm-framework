@@ -131,7 +131,7 @@ describe('dev-auth-bypass', () => {
       const { interceptSessionFetch, DEV_BYPASS_SESSION } = await import('./dev-auth-bypass');
       interceptSessionFetch();
 
-      const response = await window.fetch('/openmrs/ws/rest/v1/session');
+      const response = await window.fetch('/egen/ws/rest/v1/session');
       const data = await response.json();
       expect(response.status).toBe(200);
       expect(data.authenticated).toBe(true);
@@ -148,13 +148,13 @@ describe('dev-auth-bypass', () => {
 
       // Simule exactement le flux réel de performLogout() :
       // esm-login-app/src/redirect-logout/logout.resource.ts
-      await window.fetch('/openmrs/ws/rest/v1/session', { method: 'DELETE' });
+      await window.fetch('/egen/ws/rest/v1/session', { method: 'DELETE' });
       freshClearCurrentUser();
 
       // refetchCurrentUser() est appelé juste après dans performLogout() —
       // avant le correctif, ce GET ré-authentifiait silencieusement
       // l'utilisateur au lieu de confirmer la déconnexion.
-      const response = await window.fetch('/openmrs/ws/rest/v1/session');
+      const response = await window.fetch('/egen/ws/rest/v1/session');
       const data = await response.json();
       expect(data.authenticated).toBe(false);
     });
@@ -164,12 +164,12 @@ describe('dev-auth-bypass', () => {
       const { initDevAuthBypass, applyDevAuthBypassForLogin } = await import('./dev-auth-bypass');
       initDevAuthBypass();
 
-      await window.fetch('/openmrs/ws/rest/v1/session', { method: 'DELETE' });
-      let response = await window.fetch('/openmrs/ws/rest/v1/session');
+      await window.fetch('/egen/ws/rest/v1/session', { method: 'DELETE' });
+      let response = await window.fetch('/egen/ws/rest/v1/session');
       expect((await response.json()).authenticated).toBe(false);
 
       applyDevAuthBypassForLogin();
-      response = await window.fetch('/openmrs/ws/rest/v1/session');
+      response = await window.fetch('/egen/ws/rest/v1/session');
       expect((await response.json()).authenticated).toBe(true);
     });
   });
@@ -189,13 +189,13 @@ describe('dev-auth-bypass', () => {
       initDevAuthBypass();
       expect(freshSessionStore.getState().session?.locale).toBe('fr');
 
-      const response = await post('/openmrs/ws/rest/v1/session', { locale: 'en' });
+      const response = await post('/egen/ws/rest/v1/session', { locale: 'en' });
       expect(response.status).toBe(200);
       expect((await response.json()).locale).toBe('en');
       expect(freshSessionStore.getState().session?.locale).toBe('en');
 
       // Les GET suivants (refetchCurrentUser) renvoient la langue choisie, pas toujours « fr ».
-      const next = await window.fetch('/openmrs/ws/rest/v1/session');
+      const next = await window.fetch('/egen/ws/rest/v1/session');
       expect((await next.json()).locale).toBe('en');
     });
 
@@ -203,7 +203,7 @@ describe('dev-auth-bypass', () => {
       vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
       const first = await import('./dev-auth-bypass');
       first.initDevAuthBypass();
-      await post('/openmrs/ws/rest/v1/session', { locale: 'en' });
+      await post('/egen/ws/rest/v1/session', { locale: 'en' });
 
       // Simule le rechargement : modules neufs, stockages conservés.
       vi.resetModules();
@@ -219,7 +219,7 @@ describe('dev-auth-bypass', () => {
       const first = await import('./dev-auth-bypass');
       first.initDevAuthBypass();
 
-      const response = await post(`/openmrs/ws/rest/v1/user/${first.DEV_BYPASS_SESSION.user.uuid}`, {
+      const response = await post(`/egen/ws/rest/v1/user/${first.DEV_BYPASS_SESSION.user.uuid}`, {
         userProperties: { defaultLocale: 'en' },
       });
       expect(response.status).toBe(200);
@@ -240,7 +240,7 @@ describe('dev-auth-bypass', () => {
       vi.stubEnv('EGEN_DEV_NO_AUTH', 'true');
       const first = await import('./dev-auth-bypass');
       first.initDevAuthBypass();
-      await post('/openmrs/ws/rest/v1/session', { locale: 'en' });
+      await post('/egen/ws/rest/v1/session', { locale: 'en' });
 
       vi.resetModules();
       window.fetch = originalFetch;
@@ -256,7 +256,7 @@ describe('dev-auth-bypass', () => {
       const { initDevAuthBypass } = await import('./dev-auth-bypass');
       initDevAuthBypass();
 
-      const response = await post('/openmrs/ws/rest/v1/session', { locale: 'xx' });
+      const response = await post('/egen/ws/rest/v1/session', { locale: 'xx' });
       expect(response.status).toBe(200);
       expect((await response.json()).locale).toBe('fr');
     });
@@ -268,7 +268,7 @@ describe('dev-auth-bypass', () => {
       const { interceptSessionFetch } = await import('./dev-auth-bypass');
       interceptSessionFetch();
 
-      await post('/openmrs/ws/rest/v1/user/un-autre-utilisateur', { userProperties: { defaultLocale: 'en' } });
+      await post('/egen/ws/rest/v1/user/un-autre-utilisateur', { userProperties: { defaultLocale: 'en' } });
       expect(original).toHaveBeenCalledTimes(1);
     });
   });

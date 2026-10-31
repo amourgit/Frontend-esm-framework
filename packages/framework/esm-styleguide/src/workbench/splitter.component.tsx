@@ -93,3 +93,67 @@ export function Splitter({ anchor, label }: SplitterProps) {
     />
   );
 }
+
+type CornerSide = 'left' | 'right';
+
+interface CornerSplitterProps {
+  /** Zone latérale dont la frontière croise celle de la zone basse. */
+  side: CornerSide;
+  label: string;
+}
+
+/**
+ * Poignée d'angle : posée à l'intersection de trois zones (latérale / centre / bas), elle redimensionne
+ * les deux axes d'un même geste — la largeur de la zone latérale et la hauteur de la zone basse.
+ * Le déplacement est relatif au point saisi : la frontière suit le pointeur sans saut. Double-clic :
+ * les deux tailles reviennent à leur valeur par défaut. Les deux poignées linéaires restent
+ * disponibles (souris et clavier) ; l'angle est donc un raccourci pointeur, masqué aux lecteurs d'écran.
+ */
+export function CornerSplitter({ side, label }: CornerSplitterProps) {
+  const start = useRef<{ x: number; y: number; side: number; bottom: number } | null>(null);
+  const attribute = `corner-${side}`;
+
+  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    const { sizes } = workbenchStore.getState();
+    start.current = { x: event.clientX, y: event.clientY, side: sizes[side], bottom: sizes.bottom };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    document.documentElement.setAttribute(RESIZING_ATTRIBUTE, attribute);
+    event.preventDefault();
+  };
+
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const origin = start.current;
+    if (!origin) return;
+    const dx = event.clientX - origin.x;
+    // Zone gauche : grandit vers la droite ; zone droite : vers la gauche ; zone basse : vers le haut.
+    setZoneSize(side, origin.side + (side === 'left' ? dx : -dx));
+    setZoneSize('bottom', origin.bottom - (event.clientY - origin.y));
+  };
+
+  const stopDragging = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!start.current) return;
+    start.current = null;
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+    document.documentElement.removeAttribute(RESIZING_ATTRIBUTE);
+  };
+
+  const reset = () => {
+    resetZoneSize(side);
+    resetZoneSize('bottom');
+  };
+
+  return (
+    <div
+      aria-hidden="true"
+      title={label}
+      data-corner={side}
+      className={`${styles.cornerSplitter} ${styles[`cornerSplitter-${side}`]}`}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={stopDragging}
+      onPointerCancel={stopDragging}
+      onDoubleClick={reset}
+    />
+  );
+}

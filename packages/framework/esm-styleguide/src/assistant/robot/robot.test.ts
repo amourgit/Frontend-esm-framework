@@ -214,6 +214,24 @@ describe('contrôleur', () => {
     expect(c.pose.kneeL[0]).toBeLessThan(0.05);
   });
 
+  it('turnTo tourne sur place avec de petits pas, puis se remet droit', async () => {
+    const c = new RobotController({ autoBehaviors: false });
+    let done = false;
+    void c.turnTo(Math.PI / 2).then(() => (done = true));
+    let steps = 0;
+    for (let i = 0; i < 60 * 3; i++) {
+      c.update(1 / 60);
+      steps = Math.max(steps, Math.abs(c.pose.hipL[0]));
+    }
+    await new Promise((r) => setTimeout(r, 0));
+    expect(done).toBe(true);
+    expect(c.root.yaw).toBeCloseTo(Math.PI / 2, 1);
+    expect(steps).toBeGreaterThan(0.1);
+    expect(Math.hypot(c.root.x, c.root.z)).toBeLessThan(0.01);
+    for (let i = 0; i < 120; i++) c.update(1 / 60);
+    expect(Math.abs(c.pose.hipL[0])).toBeLessThan(0.05);
+  });
+
   it('setGaze tourne la tête vers la cible', () => {
     const c = new RobotController({ autoBehaviors: false });
     c.setGaze({ yaw: 0.8, pitch: 0 });

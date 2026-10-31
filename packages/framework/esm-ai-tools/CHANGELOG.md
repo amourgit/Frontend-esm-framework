@@ -1,5 +1,20 @@
 # @egen-civitas/esm-ai-tools
 
+## 1.4.3
+
+### Patch Changes
+
+- Updated dependencies [75af6f5]
+- Updated dependencies [cf941e7]
+- Updated dependencies [fc70c70]
+- Updated dependencies [4c84714]
+- Updated dependencies [8a39e13]
+- Updated dependencies [159db44]
+  - @egen-civitas/esm-styleguide@3.0.0
+  - @egen-civitas/esm-api@2.0.0
+  - @egen-civitas/esm-ai-context@1.0.2
+  - @egen-civitas/esm-state@1.0.3
+
 ## 1.4.2
 
 ### Patch Changes

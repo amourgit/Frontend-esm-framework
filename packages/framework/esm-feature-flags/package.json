@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-feature-flags",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MPL-2.0",
   "description": "A feature flag system for the Egen Single-Spa framework.",
   "main": "dist/index.js",
@@ -50,13 +50,13 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-globals": "^1.0.0",
-    "@egen-civitas/esm-state": "^1.0.0",
+    "@egen-civitas/esm-globals": "^2.0.0",
+    "@egen-civitas/esm-state": "^1.0.3",
     "single-spa": "6.x"
   },
   "devDependencies": {
-    "@egen-civitas/esm-globals": "^1.0.0",
-    "@egen-civitas/esm-state": "^1.0.0",
+    "@egen-civitas/esm-globals": "^2.0.0",
+    "@egen-civitas/esm-state": "^1.0.3",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "concurrently": "^9.2.1",

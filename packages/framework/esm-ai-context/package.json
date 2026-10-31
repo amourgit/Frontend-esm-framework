@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-ai-context",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MPL-2.0",
   "description": "Agrégation du contexte global EGEN pour la couche IA — session, tenant, navigation, extensions, feature flags.",
   "main": "dist/index.js",
@@ -45,20 +45,20 @@
   "dependencies": {
     "@egen-civitas/esm-ai-config": "^1.0.0",
     "@egen-civitas/esm-ai-events": "^1.0.0",
-    "@egen-civitas/esm-api": "^1.0.0",
-    "@egen-civitas/esm-state": "^1.0.0",
+    "@egen-civitas/esm-api": "^2.0.0",
+    "@egen-civitas/esm-state": "^1.0.3",
     "rxjs": "^7.8.0"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-api": "^1.0.0",
-    "@egen-civitas/esm-state": "^1.0.0",
+    "@egen-civitas/esm-api": "^2.0.0",
+    "@egen-civitas/esm-state": "^1.0.3",
     "rxjs": "7.x"
   },
   "devDependencies": {
     "@egen-civitas/esm-ai-config": "^1.0.0",
     "@egen-civitas/esm-ai-events": "^1.0.0",
-    "@egen-civitas/esm-api": "^1.0.0",
-    "@egen-civitas/esm-state": "^1.0.0",
+    "@egen-civitas/esm-api": "^2.0.0",
+    "@egen-civitas/esm-state": "^1.0.3",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

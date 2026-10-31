@@ -17,7 +17,7 @@ export const Info: NotificationStory = {
     notification: {
       id: 1,
       title: 'Note',
-      description: 'This patient has an active visit.',
+      description: 'This entity has an active session.',
       kind: 'info',
     },
   },
@@ -28,7 +28,7 @@ export const Error: NotificationStory = {
     notification: {
       id: 2,
       title: 'Error',
-      description: 'Failed to load patient data.',
+      description: 'Failed to load entity data.',
       kind: 'error',
     },
   },
@@ -49,10 +49,10 @@ export const WithAction: NotificationStory = {
   args: {
     notification: {
       id: 4,
-      title: 'Allergies',
-      description: 'No allergies have been recorded for this patient.',
+      title: 'Documents',
+      description: 'No documents have been recorded for this entity.',
       kind: 'info',
-      action: 'Record allergies',
+      action: 'Record documents',
     },
   },
 };

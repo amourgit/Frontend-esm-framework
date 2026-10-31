@@ -4,9 +4,6 @@ import { configSchema } from '@egen-civitas/esm-config/mock';
 import { getExtensionInternalStore } from '@egen-civitas/esm-extensions/mock';
 import { createGlobalStore } from '@egen-civitas/esm-state/mock';
 import { isDesktop as realIsDesktop } from './src/useLayoutType';
-import { useFhirFetchAll as realUseFhirFetchAll } from './src/useFhirFetchAll';
-import { useFhirInfinite as realUseFhirInfinite } from './src/useFhirInfinite';
-import { useFhirPagination as realUseFhirPagination } from './src/useFhirPagination';
 import { useEgenFetchAll as realUseEgenFetchAll } from './src/useEgenFetchAll';
 import { useEgenInfinite as realUseEgenInfinite } from './src/useEgenInfinite';
 import { useEgenPagination as realUseEgenrPagination } from './src/useEgenPagination';
@@ -35,14 +32,7 @@ export const useConfig = jest.fn().mockImplementation((options?: { externalModul
   return utils.getDefaultsFromConfigSchema(configSchema);
 });
 
-export const useCurrentPatient = jest.fn(() => []);
 
-export const useEntity = jest.fn(() => ({
-  isLoading: true,
-  patient: null,
-  entityUuid: null,
-  error: null,
-}));
 
 export const useSession = jest.fn(() => ({
   authenticated: false,
@@ -79,9 +69,6 @@ export const usePaginationInfo = jest.fn(realUsePaginationInfo);
 export const useEgenPagination = jest.fn(realUseEgenrPagination);
 export const useEgenInfinite = jest.fn(realUseEgenInfinite);
 export const useEgenFetchAll = jest.fn(realUseEgenFetchAll);
-export const useFhirPagination = jest.fn(realUseFhirPagination);
-export const useFhirInfinite = jest.fn(realUseFhirInfinite);
-export const useFhirFetchAll = jest.fn(realUseFhirFetchAll);
 
 export const useSessionContext = jest.fn().mockReturnValue({
   error: null,
@@ -146,10 +133,7 @@ export const useForceUpdate = jest.fn();
 
 
 
-// TODO: Remove this in favour of usePrimaryIdentifierCode below
-export const usePrimaryIdentifierResource = jest.fn();
 
-export const usePrimaryIdentifierCode = jest.fn();
 
 export const useBackendConfiguration = jest.fn().mockReturnValue({
   backendConfiguration: undefined,

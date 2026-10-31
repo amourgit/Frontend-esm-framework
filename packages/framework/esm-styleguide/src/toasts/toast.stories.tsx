@@ -60,7 +60,7 @@ export const WithAction: Story = {
     toast: {
       id: 4,
       title: 'Form submitted',
-      description: 'The clinical form has been submitted.',
+      description: 'The business form has been submitted.',
       kind: 'success',
       actionButtonLabel: 'View',
     },

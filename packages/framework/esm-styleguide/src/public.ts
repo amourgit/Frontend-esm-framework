@@ -9,7 +9,6 @@ export * from './error-state/index.js';
 export * from './fields/index.js';
 export * from './icons/icons.js';
 export * from './location-picker/index.js';
-export * from './numeric-datapoint/index.js';
 export * from './page-background/index.js';
 export { showModal } from './modals/index.js';
 export { showNotification, showActionableNotification } from './notifications/index.js';
@@ -20,8 +19,6 @@ export {
 export { type NotificationDescriptor, type InlineNotificationType } from './notifications/notification.component.js';
 export * from './page-header/index.js';
 export * from './pagination/index.js';
-export * from './entity-banner/index.js';
-export * from './entity-photo/index.js';
 export * from './pictograms/pictograms.js';
 export * from './responsive-wrapper/index.js';
 export { showSnackbar, type SnackbarDescriptor, type SnackbarType, type SnackbarMeta } from './snackbars/index.js';

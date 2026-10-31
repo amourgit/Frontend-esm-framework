@@ -7,9 +7,9 @@ import { type LoggedInUser, type Session } from '@egen-civitas/esm-api';
 import { type FHIRLocationResource } from '@egen-civitas/esm-data-api';
 import { useConfig, useSession } from '@egen-civitas/esm-react-utils';
 import {
-  inpatientWardResponse,
+  annexResponse,
   locationResponseForNonExistingSearch,
-  outpatientClinicResponse,
+  mainOfficeResponse,
   mockLoginLocations,
 } from '../../__mocks__/locations.mock';
 import { mockConfig } from '../../__mocks__/config.mock';
@@ -17,7 +17,7 @@ import { LocationPicker } from './location-picker.component';
 import { useLocationByUuid, useLocations } from './location-picker.resource';
 
 const validLocationUuid = '1ce1b7d4-c865-4178-82b0-5932e51503d6';
-const inpatientWardLocationUuid = 'ba685651-ed3b-4e63-9b35-78893060758a';
+const annexLocationUuid = 'ba685651-ed3b-4e63-9b35-78893060758a';
 
 const mockUseConfig = vi.mocked(useConfig);
 const mockUseSession = vi.mocked(useSession);
@@ -32,14 +32,14 @@ vi.mock('./location-picker.resource', () => ({
 vi.mock('@egen-civitas/esm-api', async () => ({
   ...(await import('@egen-civitas/esm-api')),
   egenFetch: vi.fn((url) => {
-    if (url === `/ws/fhir2/R4/Location?_id=${inpatientWardLocationUuid}`) {
-      return inpatientWardResponse;
+    if (url === `/ws/fhir2/R4/Location?_id=${annexLocationUuid}`) {
+      return annexResponse;
     }
     if (url === '/ws/fhir2/R4/Location?_summary=data&_count=50&name%3Acontains=search_for_no_location') {
       return locationResponseForNonExistingSearch;
     }
-    if (url === '/ws/fhir2/R4/Location?_summary=data&_count=50&name%3Acontains=outpatient') {
-      return outpatientClinicResponse;
+    if (url === '/ws/fhir2/R4/Location?_summary=data&_count=50&name%3Acontains=main') {
+      return mainOfficeResponse;
     }
     return mockLoginLocations;
   }),
@@ -76,7 +76,7 @@ describe('LocationPicker', () => {
   });
 
   it('should render a search input and list of login locations', async () => {
-    render(<LocationPicker selectedLocationUuid={inpatientWardLocationUuid} onChange={vi.fn()} />);
+    render(<LocationPicker selectedLocationUuid={annexLocationUuid} onChange={vi.fn()} />);
 
     const searchInput = screen.getByRole('searchbox', { name: /search for a location/i });
     expect(searchInput).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('LocationPicker', () => {
       expect(locations).toHaveLength(4);
     });
 
-    const expectedLocations = [/community outreach/, /inpatient ward/, /mobile clinic/, /outpatient clinic/];
+    const expectedLocations = [/community outreach/, /annex/, /mobile office/, /main office/];
     expectedLocations.forEach((locationName) => {
       expect(screen.getByRole('radio', { name: new RegExp(locationName, 'i') })).toBeInTheDocument();
     });
@@ -99,43 +99,43 @@ describe('LocationPicker', () => {
     render(<LocationPicker selectedLocationUuid={validLocationUuid} onChange={handleChange} />);
 
     await waitFor(() => {
-      expect(screen.getByRole('radio', { name: /inpatient ward/i })).toBeInTheDocument();
+      expect(screen.getByRole('radio', { name: /annex/i })).toBeInTheDocument();
     });
 
-    const location = screen.getByRole('radio', { name: /inpatient ward/i });
+    const location = screen.getByRole('radio', { name: /annex/i });
     await user.click(location);
 
-    expect(handleChange).toHaveBeenCalledWith(inpatientWardLocationUuid);
+    expect(handleChange).toHaveBeenCalledWith(annexLocationUuid);
   });
 
   it('should select the provided selectedLocation when the component is rendered', async () => {
-    render(<LocationPicker selectedLocationUuid={inpatientWardLocationUuid} onChange={vi.fn()} />);
+    render(<LocationPicker selectedLocationUuid={annexLocationUuid} onChange={vi.fn()} />);
 
     await waitFor(() => {
-      const inpatientWardOption = screen.getByRole('radio', { name: /inpatient ward/i });
-      expect(inpatientWardOption).toBeChecked();
+      const annexOption = screen.getByRole('radio', { name: /annex/i });
+      expect(annexOption).toBeChecked();
     });
   });
 
   it('should load the default location on top of the list', async () => {
     mockUseLocationByUuid.mockReturnValue({
-      location: inpatientWardResponse.data.entry[0] as any,
+      location: annexResponse.data.entry[0] as any,
       error: null,
       isLoading: false,
     });
 
-    render(<LocationPicker defaultLocationUuid={inpatientWardLocationUuid} onChange={vi.fn()} />);
+    render(<LocationPicker defaultLocationUuid={annexLocationUuid} onChange={vi.fn()} />);
 
     await waitFor(() => {
       const locations = screen.getAllByRole('radio');
       expect(locations).toHaveLength(4);
     });
 
-    // Verify the default location (Inpatient Ward) appears first in the list
+    // Verify the default location (Annex) appears first in the list
     const locations = screen.getAllByRole('radio');
-    expect(locations[0]).toHaveAccessibleName(/inpatient ward/i);
+    expect(locations[0]).toHaveAccessibleName(/annex/i);
 
-    const expectedLocations = [/community outreach/, /inpatient ward/, /mobile clinic/, /outpatient clinic/];
+    const expectedLocations = [/community outreach/, /annex/, /mobile office/, /main office/];
     expectedLocations.forEach((locationName) => {
       expect(screen.getByRole('radio', { name: new RegExp(locationName, 'i') })).toBeInTheDocument();
     });
@@ -145,16 +145,16 @@ describe('LocationPicker', () => {
     const user = userEvent.setup();
 
     mockUseLocationByUuid.mockReturnValue({
-      location: inpatientWardResponse.data.entry[0] as any,
+      location: annexResponse.data.entry[0] as any,
       error: null,
       isLoading: false,
     });
 
     // Mock useLocations to return different results based on search query
     mockUseLocations.mockImplementation((locationTag, count, searchQuery) => {
-      if (searchQuery === 'outpatient') {
+      if (searchQuery === 'main') {
         return {
-          locations: outpatientClinicResponse.data.entry as any,
+          locations: mainOfficeResponse.data.entry as any,
           isLoading: false,
           totalResults: 1,
           hasMore: false,
@@ -174,17 +174,17 @@ describe('LocationPicker', () => {
       };
     });
 
-    render(<LocationPicker defaultLocationUuid={inpatientWardLocationUuid} onChange={vi.fn()} />);
+    render(<LocationPicker defaultLocationUuid={annexLocationUuid} onChange={vi.fn()} />);
 
     await waitFor(() => {
       expect(screen.getByRole('searchbox', { name: /search for a location/i })).toBeInTheDocument();
     });
 
     const searchInput = screen.getByRole('searchbox', { name: /search for a location/i });
-    await user.type(searchInput, 'outpatient');
+    await user.type(searchInput, 'main');
 
     await waitFor(() => {
-      expect(screen.queryByRole('radio', { name: /inpatient ward/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole('radio', { name: /annex/i })).not.toBeInTheDocument();
     });
   });
 
@@ -192,7 +192,7 @@ describe('LocationPicker', () => {
     const user = userEvent.setup();
 
     mockUseLocationByUuid.mockReturnValue({
-      location: inpatientWardResponse.data.entry[0] as any,
+      location: annexResponse.data.entry[0] as any,
       error: null,
       isLoading: false,
     });
@@ -221,7 +221,7 @@ describe('LocationPicker', () => {
       };
     });
 
-    render(<LocationPicker defaultLocationUuid={inpatientWardLocationUuid} onChange={vi.fn()} />);
+    render(<LocationPicker defaultLocationUuid={annexLocationUuid} onChange={vi.fn()} />);
 
     await waitFor(() => {
       expect(screen.getByRole('searchbox', { name: /search for a location/i })).toBeInTheDocument();
@@ -305,18 +305,18 @@ describe('LocationPicker', () => {
     });
 
     const searchInput = screen.getByRole('searchbox', { name: /search for a location/i });
-    await user.type(searchInput, '  outpatient  ');
+    await user.type(searchInput, '  main  ');
 
     // Verify that the trimmed search term is used (check if the mock was called with trimmed value)
     // The actual trimming happens in the component, so we verify by checking the search was performed
     await waitFor(() => {
-      // The search should filter results - verify outpatient clinic appears
-      expect(screen.getByRole('radio', { name: /outpatient clinic/i })).toBeInTheDocument();
+      // The search should filter results - verify main office appears
+      expect(screen.getByRole('radio', { name: /main office/i })).toBeInTheDocument();
     });
   });
 
   it('should filter out default location from fetched locations to avoid duplicates', async () => {
-    const defaultLocationEntry = inpatientWardResponse.data.entry[0];
+    const defaultLocationEntry = annexResponse.data.entry[0];
     const locationsWithDuplicate = [defaultLocationEntry, ...mockLoginLocations.data.entry];
 
     mockUseLocationByUuid.mockReturnValue({
@@ -335,25 +335,25 @@ describe('LocationPicker', () => {
       setPage: vi.fn().mockResolvedValue(undefined),
     });
 
-    render(<LocationPicker defaultLocationUuid={inpatientWardLocationUuid} onChange={vi.fn()} />);
+    render(<LocationPicker defaultLocationUuid={annexLocationUuid} onChange={vi.fn()} />);
 
     await waitFor(() => {
       const locations = screen.getAllByRole('radio');
       expect(locations).toHaveLength(4);
     });
 
-    // Verify the default location (Inpatient Ward) appears first in the list
+    // Verify the default location (Annex) appears first in the list
     const locations = screen.getAllByRole('radio');
-    expect(locations[0]).toHaveAccessibleName(/inpatient ward/i);
+    expect(locations[0]).toHaveAccessibleName(/annex/i);
 
-    // Verify Inpatient Ward only appears once
-    const inpatientWardLocations = screen.getAllByRole('radio', { name: /inpatient ward/i });
-    expect(inpatientWardLocations).toHaveLength(1);
+    // Verify Annex only appears once
+    const annexLocations = screen.getAllByRole('radio', { name: /annex/i });
+    expect(annexLocations).toHaveLength(1);
   });
 
   it('should not show default location when search term is provided', async () => {
     const user = userEvent.setup();
-    const defaultLocationEntry = inpatientWardResponse.data.entry[0];
+    const defaultLocationEntry = annexResponse.data.entry[0];
 
     mockUseLocationByUuid.mockReturnValue({
       location: defaultLocationEntry as any,
@@ -364,8 +364,8 @@ describe('LocationPicker', () => {
     // Mock useLocations to return filtered results when searching
     mockUseLocations.mockImplementation((locationTag, count, searchQuery) => {
       if (searchQuery === 'mobile') {
-        // Return only Mobile Clinic when searching for "mobile"
-        const mobileClinic = mockLoginLocations.data.entry.find((entry) => entry.resource.name === 'Mobile Clinic');
+        // Return only Mobile Office when searching for "mobile"
+        const mobileClinic = mockLoginLocations.data.entry.find((entry) => entry.resource.name === 'Mobile Office');
         return {
           locations: mobileClinic ? [mobileClinic] : ([] as any),
           isLoading: false,
@@ -387,7 +387,7 @@ describe('LocationPicker', () => {
       };
     });
 
-    render(<LocationPicker defaultLocationUuid={inpatientWardLocationUuid} onChange={vi.fn()} />);
+    render(<LocationPicker defaultLocationUuid={annexLocationUuid} onChange={vi.fn()} />);
 
     await waitFor(() => {
       expect(screen.getByRole('searchbox', { name: /search for a location/i })).toBeInTheDocument();
@@ -398,7 +398,7 @@ describe('LocationPicker', () => {
 
     await waitFor(() => {
       // Default location should not appear when searching
-      expect(screen.queryByRole('radio', { name: /inpatient ward/i })).not.toBeInTheDocument();
+      expect(screen.queryByRole('radio', { name: /annex/i })).not.toBeInTheDocument();
     });
   });
 

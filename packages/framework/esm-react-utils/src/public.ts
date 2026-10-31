@@ -20,9 +20,6 @@ export * from './useExtensionSlotMeta.js';
 export * from './useExtensionSlotStore.js';
 export * from './useExtensionStore.js';
 export * from './useFeatureFlag.js';
-export * from './useFhirFetchAll.js';
-export * from './useFhirInfinite.js';
-export * from './useFhirPagination.js';
 export * from './useForceUpdate.js';
 export * from './useLayoutType.js';
 export * from './useLocations.js';
@@ -34,8 +31,6 @@ export { useEgenPagination, type UseServerPaginationOptions } from './useEgenPag
 export * from './useEgenSWR.js';
 export * from './usePagination.js';
 export * from './usePaginationInfo.js';
-export * from './useEntity.js';
-export * from './usePrimaryIdentifierResource.js';
 export * from './useRenderableExtensions.js';
 export { useSession } from './useSession.js';
 export * from './useStore.js';

@@ -53,45 +53,45 @@ describe('UserHasAccess', () => {
 
   describe('when user has required privilege', () => {
     it('should render children for single privilege', () => {
-      const user = createMockUser(['Edit Patients']);
+      const user = createMockUser(['Edit Entities']);
 
       mockGetCurrentUser.mockReturnValue(new Observable((subscriber) => subscriber.next(user)));
       mockUserHasAccess.mockReturnValue(true);
 
       render(
-        <UserHasAccess privilege="Edit Patients">
+        <UserHasAccess privilege="Edit Entities">
           <div>Protected Content</div>
         </UserHasAccess>,
       );
 
       expect(screen.getByText('Protected Content')).toBeInTheDocument();
-      expect(mockUserHasAccess).toHaveBeenCalledWith('Edit Patients', user);
+      expect(mockUserHasAccess).toHaveBeenCalledWith('Edit Entities', user);
     });
 
     it('should render children for multiple privileges', () => {
-      const user = createMockUser(['Edit Patients', 'Delete Patients']);
+      const user = createMockUser(['Edit Entities', 'Delete Entities']);
 
       mockGetCurrentUser.mockReturnValue(new Observable((subscriber) => subscriber.next(user)));
       mockUserHasAccess.mockReturnValue(true);
 
       render(
-        <UserHasAccess privilege={['Edit Patients', 'Delete Patients']}>
+        <UserHasAccess privilege={['Edit Entities', 'Delete Entities']}>
           <div>Protected Content</div>
         </UserHasAccess>,
       );
 
       expect(screen.getByText('Protected Content')).toBeInTheDocument();
-      expect(mockUserHasAccess).toHaveBeenCalledWith(['Edit Patients', 'Delete Patients'], user);
+      expect(mockUserHasAccess).toHaveBeenCalledWith(['Edit Entities', 'Delete Entities'], user);
     });
 
     it('should render multiple children', () => {
-      const user = createMockUser(['Edit Patients']);
+      const user = createMockUser(['Edit Entities']);
 
       mockGetCurrentUser.mockReturnValue(new Observable((subscriber) => subscriber.next(user)));
       mockUserHasAccess.mockReturnValue(true);
 
       render(
-        <UserHasAccess privilege="Edit Patients">
+        <UserHasAccess privilege="Edit Entities">
           <div>First Child</div>
           <div>Second Child</div>
         </UserHasAccess>,
@@ -104,13 +104,13 @@ describe('UserHasAccess', () => {
 
   describe('when user does not have required privilege', () => {
     it('should render nothing when no fallback provided', () => {
-      const user = createMockUser(['View Patients']);
+      const user = createMockUser(['View Entities']);
 
       mockGetCurrentUser.mockReturnValue(new Observable((subscriber) => subscriber.next(user)));
       mockUserHasAccess.mockReturnValue(false);
 
       const { container } = render(
-        <UserHasAccess privilege="Edit Patients">
+        <UserHasAccess privilege="Edit Entities">
           <div>Protected Content</div>
         </UserHasAccess>,
       );
@@ -121,13 +121,13 @@ describe('UserHasAccess', () => {
     });
 
     it('should render fallback when provided', () => {
-      const user = createMockUser(['View Patients']);
+      const user = createMockUser(['View Entities']);
 
       mockGetCurrentUser.mockReturnValue(new Observable((subscriber) => subscriber.next(user)));
       mockUserHasAccess.mockReturnValue(false);
 
       render(
-        <UserHasAccess privilege="Edit Patients" fallback={<div>Access Denied</div>}>
+        <UserHasAccess privilege="Edit Entities" fallback={<div>Access Denied</div>}>
           <div>Protected Content</div>
         </UserHasAccess>,
       );
@@ -137,13 +137,13 @@ describe('UserHasAccess', () => {
     });
 
     it('should render fallback for missing privilege in array', () => {
-      const user = createMockUser(['Edit Patients']); // Has one but not both
+      const user = createMockUser(['Edit Entities']); // Has one but not both
 
       mockGetCurrentUser.mockReturnValue(new Observable((subscriber) => subscriber.next(user)));
       mockUserHasAccess.mockReturnValue(false);
 
       render(
-        <UserHasAccess privilege={['Edit Patients', 'Delete Patients']} fallback={<div>Need all privileges</div>}>
+        <UserHasAccess privilege={['Edit Entities', 'Delete Entities']} fallback={<div>Need all privileges</div>}>
           <div>Protected Content</div>
         </UserHasAccess>,
       );
@@ -159,7 +159,7 @@ describe('UserHasAccess', () => {
       mockUserHasAccess.mockReturnValue(false);
 
       const { container } = render(
-        <UserHasAccess privilege="Edit Patients">
+        <UserHasAccess privilege="Edit Entities">
           <div>Protected Content</div>
         </UserHasAccess>,
       );
@@ -174,7 +174,7 @@ describe('UserHasAccess', () => {
       mockUserHasAccess.mockReturnValue(false);
 
       render(
-        <UserHasAccess privilege="Edit Patients" fallback={<div>Please log in</div>}>
+        <UserHasAccess privilege="Edit Entities" fallback={<div>Please log in</div>}>
           <div>Protected Content</div>
         </UserHasAccess>,
       );
@@ -186,7 +186,7 @@ describe('UserHasAccess', () => {
 
   describe('observable subscription management', () => {
     it('should subscribe to getCurrentUser on mount', () => {
-      const user = createMockUser(['Edit Patients']);
+      const user = createMockUser(['Edit Entities']);
       const subscribeMock = vi.fn();
 
       mockGetCurrentUser.mockReturnValue(
@@ -199,7 +199,7 @@ describe('UserHasAccess', () => {
       mockUserHasAccess.mockReturnValue(true);
 
       render(
-        <UserHasAccess privilege="Edit Patients">
+        <UserHasAccess privilege="Edit Entities">
           <div>Protected Content</div>
         </UserHasAccess>,
       );
@@ -209,7 +209,7 @@ describe('UserHasAccess', () => {
     });
 
     it('should unsubscribe from getCurrentUser on unmount', () => {
-      const user = createMockUser(['Edit Patients']);
+      const user = createMockUser(['Edit Entities']);
       const unsubscribeMock = vi.fn();
 
       mockGetCurrentUser.mockReturnValue(
@@ -221,7 +221,7 @@ describe('UserHasAccess', () => {
       mockUserHasAccess.mockReturnValue(true);
 
       const { unmount } = render(
-        <UserHasAccess privilege="Edit Patients">
+        <UserHasAccess privilege="Edit Entities">
           <div>Protected Content</div>
         </UserHasAccess>,
       );
@@ -234,8 +234,8 @@ describe('UserHasAccess', () => {
 
   describe('user updates', () => {
     it('should update when user changes', async () => {
-      const user1 = createMockUser(['View Patients']);
-      const user2 = createMockUser(['Edit Patients']);
+      const user1 = createMockUser(['View Entities']);
+      const user2 = createMockUser(['Edit Entities']);
 
       let subscriber: Subscriber<unknown> | undefined = undefined;
       mockGetCurrentUser.mockReturnValue(
@@ -250,7 +250,7 @@ describe('UserHasAccess', () => {
       mockUserHasAccess.mockReturnValue(false);
 
       const { rerender } = render(
-        <UserHasAccess privilege="Edit Patients" fallback={<div>No Access</div>}>
+        <UserHasAccess privilege="Edit Entities" fallback={<div>No Access</div>}>
           <div>Protected Content</div>
         </UserHasAccess>,
       );
@@ -271,12 +271,12 @@ describe('UserHasAccess', () => {
 
   describe('edge cases', () => {
     it('should handle empty children gracefully', () => {
-      const user = createMockUser(['Edit Patients']);
+      const user = createMockUser(['Edit Entities']);
 
       mockGetCurrentUser.mockReturnValue(new Observable((subscriber) => subscriber.next(user)));
       mockUserHasAccess.mockReturnValue(true);
 
-      const { container } = render(<UserHasAccess privilege="Edit Patients" />);
+      const { container } = render(<UserHasAccess privilege="Edit Entities" />);
 
       // Should render empty fragment
       // eslint-disable-next-line jest-dom/prefer-empty, testing-library/no-node-access
@@ -284,14 +284,14 @@ describe('UserHasAccess', () => {
     });
 
     it('should handle complex fallback component', () => {
-      const user = createMockUser(['View Patients']);
+      const user = createMockUser(['View Entities']);
 
       mockGetCurrentUser.mockReturnValue(new Observable((subscriber) => subscriber.next(user)));
       mockUserHasAccess.mockReturnValue(false);
 
       render(
         <UserHasAccess
-          privilege="Edit Patients"
+          privilege="Edit Entities"
           fallback={
             <div>
               <h1>Access Denied</h1>

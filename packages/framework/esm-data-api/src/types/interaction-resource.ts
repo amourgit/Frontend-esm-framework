@@ -7,7 +7,7 @@ import { type WorkSession } from './session-resource.js';
 
 /**
  * Represents a generic interaction — a discrete event or transaction involving
- * an entity at a specific point in time (replaces domain-specific "Encounter").
+ * an entity at a specific point in time.
  */
 export interface Interaction extends EgenResource {
   interactionDatetime?: string;

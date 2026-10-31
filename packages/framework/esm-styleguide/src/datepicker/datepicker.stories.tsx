@@ -26,7 +26,7 @@ export const WithDefaultValue: Story = {
 
 export const Invalid: Story = {
   args: {
-    labelText: 'Visit date',
+    labelText: 'Session date',
     invalid: true,
     invalidText: 'A date is required.',
   },

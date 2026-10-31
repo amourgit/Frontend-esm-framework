@@ -5,9 +5,6 @@ import { configSchema } from '@egen-civitas/esm-config/mock';
 import { getExtensionInternalStore } from '@egen-civitas/esm-extensions/mock';
 import { createGlobalStore } from '@egen-civitas/esm-state/mock';
 import { isDesktop as realIsDesktop } from './src/useLayoutType';
-import { useFhirFetchAll as realUseFhirFetchAll } from './src/useFhirFetchAll';
-import { useFhirInfinite as realUseFhirInfinite } from './src/useFhirInfinite';
-import { useFhirPagination as realUseFhirPagination } from './src/useFhirPagination';
 import { useEgenFetchAll as realUseEgenFetchAll } from './src/useEgenFetchAll';
 import { useEgenInfinite as realUseEgenInfinite } from './src/useEgenInfinite';
 import { useEgenPagination as realUseEgenrPagination } from './src/useEgenPagination';
@@ -40,14 +37,7 @@ export const useConfig = vi.fn<typeof import('@egen-civitas/esm-react-utils').us
   },
 );
 
-export const useCurrentPatient = vi.fn(() => []);
 
-export const useEntity = vi.fn(() => ({
-  isLoading: true,
-  patient: null,
-  entityUuid: null,
-  error: null,
-}));
 
 export const useSession = vi.fn(() => ({
   authenticated: false,
@@ -84,9 +74,6 @@ export const usePaginationInfo = vi.fn(realUsePaginationInfo);
 export const useEgenPagination = vi.fn(realUseEgenrPagination);
 export const useEgenInfinite = vi.fn(realUseEgenInfinite);
 export const useEgenFetchAll = vi.fn(realUseEgenFetchAll);
-export const useFhirPagination = vi.fn(realUseFhirPagination);
-export const useFhirInfinite = vi.fn(realUseFhirInfinite);
-export const useFhirFetchAll = vi.fn(realUseFhirFetchAll);
 
 export const useSessionContext = vi.fn(() => ({
   error: null,
@@ -151,10 +138,7 @@ export const useForceUpdate = vi.fn();
 
 
 
-// TODO: Remove this in favour of usePrimaryIdentifierCode below
-export const usePrimaryIdentifierResource = vi.fn();
 
-export const usePrimaryIdentifierCode = vi.fn();
 
 export const useBackendConfiguration = vi.fn(() => ({
   backendConfiguration: undefined,

@@ -75,7 +75,6 @@
     "@egen-civitas/esm-globals": "^1.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
-    "@types/fhir": "0.0.31",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "^20",
     "@types/semver": "^7.3.4",

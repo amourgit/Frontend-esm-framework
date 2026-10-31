@@ -1,22 +1,9 @@
 // Storybook-compatible mock for @egen-civitas/esm-api.
 import { of } from 'rxjs';
-import humanPhotoUrl from '../public/human.jpg';
 
 // Recognises specific URL patterns and returns canned responses so that
 // components backed by SWR hooks render realistic data in stories.
-export function egenFetch(url?: string) {
-  if (url?.includes('patient=patient-with-photo')) {
-    return Promise.resolve({
-      data: {
-        results: [
-          {
-            obsDatetime: '2024-01-15T10:30:00.000+0000',
-            value: { links: { uri: humanPhotoUrl } },
-          },
-        ],
-      },
-    });
-  }
+export function egenFetch(_url?: string) {
   return Promise.resolve({ data: { results: [] } });
 }
 

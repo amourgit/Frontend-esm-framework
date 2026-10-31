@@ -50,7 +50,7 @@ export const WithAction: Story = {
   args: {
     snackbar: {
       id: 3,
-      title: 'Visit started',
+      title: 'Session started',
       subtitle: 'A new session has been started for this entity.',
       kind: 'info',
       actionButtonLabel: 'Undo',

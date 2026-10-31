@@ -28,7 +28,7 @@ export interface UseServerFetchAllOptions<R> extends UseServerInfiniteOptions<R>
  *
  * @see `useEgenPagination`
  * @see `useEgenInfinite`
- * @see `useFhirFetchAll`
+
  *
  * @param url The URL of the paginated Egen REST endpoint. Note that the `limit` GET param can be set to specify
  *            the page size; if not set, the page size defaults to the `webservices.rest.maxResultsDefault` value defined

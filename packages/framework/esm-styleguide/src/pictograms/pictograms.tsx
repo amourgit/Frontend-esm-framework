@@ -9,29 +9,12 @@ export const pictogramIds = [
   'egen-pict-appointments',
   'egen-pict-assessment-1',
   'egen-pict-assessment-2',
-  'egen-pict-blood-bank',
-  'egen-pict-cardiology',
-  'egen-pict-ct-scan',
-  'egen-pict-dentistry',
-  'egen-pict-emergency-department',
   'egen-pict-facility',
-  'egen-pict-geriatrics',
-  'egen-pict-gynaecology',
-  'egen-pict-in-patient',
-  'egen-pict-laboratory',
-  'egen-pict-labs-2',
-  'egen-pict-obstetrics',
-  'egen-pict-patient-search',
-  'egen-pict-patients',
   'egen-pict-payments-desk',
-  'egen-pict-pharmacy',
-  'egen-pict-pharmacy-2',
   'egen-pict-registration',
   'egen-pict-service-queues',
   'egen-pict-stock-management',
   'egen-pict-transfer',
-  'egen-pict-triage',
-  'egen-pict-x-ray',
 ] as const;
 
 export type PictogramId = (typeof pictogramIds)[number];
@@ -64,105 +47,15 @@ export const Assessment2Pictogram = memo(
   }),
 );
 
-export const BloodBankPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function BloodBankPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-blood-bank" pictogramProps={props} />;
-  }),
-);
-
-export const CardiologyPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function CardiologyPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-cardiology" pictogramProps={props} />;
-  }),
-);
-
-export const CtScanPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function CtScanPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-ct-scan" pictogramProps={props} />;
-  }),
-);
-
-export const DentistryPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function DentistryPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-dentistry" pictogramProps={props} />;
-  }),
-);
-
-export const EmergencyDepartmentPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function EmergencyDepartmentPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-emergency-department" pictogramProps={props} />;
-  }),
-);
-
 export const FacilityPictogram = memo(
   forwardRef<SVGSVGElement, PictogramProps>(function FacilityPictogram(props, ref) {
     return <Pictogram ref={ref} pictogram="egen-pict-facility" pictogramProps={props} />;
   }),
 );
 
-export const GeriatricsPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function GeriatricsPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-geriatrics" pictogramProps={props} />;
-  }),
-);
-
-export const GynaecologyPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function GynaecologyPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-gynaecology" pictogramProps={props} />;
-  }),
-);
-
-export const InPatientPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function InPatientPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-in-patient" pictogramProps={props} />;
-  }),
-);
-
-export const LaboratoryPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function LaboratoryPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-laboratory" pictogramProps={props} />;
-  }),
-);
-
-export const Labs2Pictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function Labs2Pictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-labs-2" pictogramProps={props} />;
-  }),
-);
-
-export const ObstetricsPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function ObstetricsPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-obstetrics" pictogramProps={props} />;
-  }),
-);
-
-export const PatientSearchPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function PatientSearchPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-patient-search" pictogramProps={props} />;
-  }),
-);
-
-export const PatientsPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function PatientsPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-patients" pictogramProps={props} />;
-  }),
-);
-
 export const PaymentsDeskPictogram = memo(
   forwardRef<SVGSVGElement, PictogramProps>(function PaymentsDeskPictogram(props, ref) {
     return <Pictogram ref={ref} pictogram="egen-pict-payments-desk" pictogramProps={props} />;
-  }),
-);
-
-export const PharmacyPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function PharmacyPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-pharmacy" pictogramProps={props} />;
-  }),
-);
-
-export const Pharmacy2Pictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function Pharmacy2Pictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-pharmacy-2" pictogramProps={props} />;
   }),
 );
 
@@ -190,24 +83,10 @@ export const TransferPictogram = memo(
   }),
 );
 
-export const TriagePictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function TriagePictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-triage" pictogramProps={props} />;
-  }),
-);
-
-export const XrayPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function XrayPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-x-ray" pictogramProps={props} />;
-  }),
-);
-
 // Pictogram aliases that are a little more aligned to specific use-cases
 // should all resolve to a defined React icon
 
 export const HomePictogram = FacilityPictogram;
-
-export const PatientListsPictogram = PatientsPictogram;
 
 /**
  * This is a utility component that takes an `pictogram` and render it if the sprite for the pictogram
@@ -215,7 +94,7 @@ export const PatientListsPictogram = PatientsPictogram;
  *
  * @example
  * ```tsx
- *   <MaybePictogram pictogram='egen-icon-baby' className={styles.myPictogramStyles} />
+ *   <MaybePictogram pictogram='egen-icon-user' className={styles.myPictogramStyles} />
  * ```
  */
 export const MaybePictogram = memo(

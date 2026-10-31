@@ -44,7 +44,7 @@ export type EgenFetchMiddleware = (
  * The resulting function does not preserve `egenFetch`'s `<T>` generic
  * (TypeScript cannot express "the same generic signature as this parameter"
  * for a returned function) — type the call site instead, e.g.
- * `useSWR<FetchResponse<Concept>>(url, resilientFetch)`.
+ * `useSWR<FetchResponse<ReferenceTerm>>(url, resilientFetch)`.
  *
  * @param handler The terminal handler that actually performs the request —
  *   typically {@link egenFetch} — invoked once every middleware in the

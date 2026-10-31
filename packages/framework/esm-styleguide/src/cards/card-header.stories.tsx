@@ -15,7 +15,7 @@ type Story = StoryObj<typeof CardHeader>;
 
 export const Default: Story = {
   args: {
-    title: 'Vitals',
+    title: 'Metrics',
   },
 };
 

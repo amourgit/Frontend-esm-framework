@@ -97,7 +97,7 @@ export interface TenantPathConfig {
    * SPA base (window.getEgenSpaBase()). Si absent, la stratégie "path" ne
    * capture RIEN — voir context/resolver.ts pour la justification : deviner
    * un "premier segment" sans convention explicite confondrait un vrai
-   * segment de route (ex: "/home", "/patient") avec un slug de tenant.
+   * segment de route (ex: "/home", "/entity") avec un slug de tenant.
    */
   prefix?: string;
 }

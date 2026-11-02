@@ -110,9 +110,9 @@ $gap: var(--egen-workbench-gap, 0.375rem);
   height: calc(100% - #{$gap});
   min-width: 0;
   min-height: 0;
-  border-radius: $radius;
-  // Même léger assombrissement que la carte centrale (voir _general.scss).
-  background: var(--egen-workbench-card-bg, rgb(0 0 0 / 24%));
+  // La zone est transparente : le fond sombre (même léger assombrissement que la carte centrale, voir
+  // _general.scss) est porté par chaque compartiment, qui est une carte à part entière.
+  background: transparent;
   color: var(--colors-surface-foreground, #fff);
 
   // Distance de glissement des animations d'ouverture/fermeture (classes egen-anim-*).
@@ -134,10 +134,8 @@ $gap: var(--egen-workbench-gap, 0.375rem);
     pointer-events: none;
   }
 
-  &[data-phase='opening'] .zoneHeader,
-  &[data-phase='opening'] .zoneBody,
-  &[data-phase='closing'] .zoneHeader,
-  &[data-phase='closing'] .zoneBody {
+  &[data-phase='opening'] .compartment,
+  &[data-phase='closing'] .compartment {
     flex-shrink: 0;
   }
 
@@ -145,8 +143,7 @@ $gap: var(--egen-workbench-gap, 0.375rem);
   &.zone-left[data-phase='closing'],
   &.zone-right[data-phase='opening'],
   &.zone-right[data-phase='closing'] {
-    .zoneHeader,
-    .zoneBody {
+    .compartment {
       min-width: var(--egen-zone-inner-size);
     }
   }
@@ -157,10 +154,77 @@ $gap: var(--egen-workbench-gap, 0.375rem);
     align-items: flex-end;
   }
 
-  &.zone-bottom[data-phase='opening'] .zoneBody,
-  &.zone-bottom[data-phase='closing'] .zoneBody {
+  &.zone-bottom[data-phase='opening'] .compartment,
+  &.zone-bottom[data-phase='closing'] .compartment {
     min-height: var(--egen-zone-inner-size);
   }
+}
+
+// ── Compartiments ───────────────────────────────────────────────────────────
+// Carte sombre arrondie ; plusieurs s'empilent dans une zone latérale. Leurs hauteurs (flex-grow en %,
+// base nulle) totalisent exactement la zone : jamais de débordement, le corps défile en interne.
+.compartment {
+  position: relative;
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: $radius;
+  background: var(--egen-workbench-card-bg, rgb(0 0 0 / 24%));
+}
+
+// Écart entre deux compartiments (hors animation) : même largeur que l'écart entre deux zones.
+.compartmentGap {
+  flex: 0 0 $gap;
+}
+
+// Poignée entre deux compartiments : elle occupe l'écart ; la zone de saisie déborde de 2px de chaque côté.
+.compartmentSplitter {
+  position: relative;
+  z-index: 2;
+  flex: 0 0 $gap;
+  cursor: row-resize;
+  touch-action: none;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -2px 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--colors-primary-500, #3b82f6);
+    opacity: 0;
+    transform: translateY(-50%);
+    transition: opacity 120ms ease;
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    opacity: 0.8;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+}
+
+:global(html[data-workbench-resizing^='compartment-']) .compartmentSplitter::after {
+  opacity: 1;
+}
+
+:global(html[data-workbench-resizing^='compartment-']) {
+  cursor: row-resize;
 }
 
 .zoneHeader {
@@ -228,8 +292,7 @@ $gap: var(--egen-workbench-gap, 0.375rem);
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
-  border-bottom-left-radius: $radius;
-  border-bottom-right-radius: $radius;
+  scrollbar-width: thin;
 }
 
 .zoneSlot {

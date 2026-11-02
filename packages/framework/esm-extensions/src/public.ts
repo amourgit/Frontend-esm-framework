@@ -37,6 +37,10 @@ export {
   isToolWindowSlot,
   isSafeToolWindowIconUrl,
   getToolWindowMetaProblems,
+  getToolWindowCompartment,
+  DEFAULT_COMPARTMENT_HEIGHTS,
+  type ToolWindowCompartment,
+  type ResolvedToolWindowCompartment,
 } from './tool-window.js';
 export { registerToolWindow, type ToolWindowRegistration } from './tool-window-registration.js';
 export {

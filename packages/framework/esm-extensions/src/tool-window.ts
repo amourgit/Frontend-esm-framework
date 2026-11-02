@@ -35,6 +35,35 @@ export const TOOL_WINDOW_SLOTS: Readonly<Record<ToolWindowAnchor, string>> = {
   right: SHELL_RAIL_RIGHT_SLOT,
 };
 
+/**
+ * Compartiment propre : bloc vertical redimensionnable d'une zone latérale (gauche ou droite).
+ *
+ * Une zone latérale est une pile verticale de compartiments dont les hauteurs, exprimées en
+ * **pourcentage de la hauteur de la zone**, totalisent toujours 100 : jamais de débordement. Chaque
+ * compartiment défile en interne quand son contenu est trop haut, et peut être redimensionné librement
+ * (dans ses bornes) face à ses voisins.
+ *
+ * Toutes les valeurs sont optionnelles : celles qui manquent prennent `DEFAULT_COMPARTMENT_HEIGHTS`.
+ */
+export interface ToolWindowCompartment {
+  /** Hauteur de base à l'ouverture, en % de la zone (défaut 40). */
+  height?: number;
+  /** Hauteur minimale, en % de la zone (défaut 15). */
+  minHeight?: number;
+  /** Hauteur maximale, en % de la zone (défaut 100). */
+  maxHeight?: number;
+}
+
+/** Hauteurs (en % de la zone) d'un compartiment propre dont l'app n'a pas précisé les valeurs. */
+export const DEFAULT_COMPARTMENT_HEIGHTS: Readonly<Required<ToolWindowCompartment>> = {
+  height: 40,
+  minHeight: 15,
+  maxHeight: 100,
+};
+
+/** Hauteurs résolues d'un compartiment propre : `minHeight <= height <= maxHeight`, tout dans ]0, 100]. */
+export type ResolvedToolWindowCompartment = Required<ToolWindowCompartment>;
+
 /** Métadonnées d'une fenêtre d'outils (bouton de rail + titre de zone). */
 export interface ToolWindowMeta {
   /** Titre par défaut : info-bulle du bouton et en-tête de la zone. */
@@ -64,6 +93,38 @@ export interface ToolWindowMeta {
    * qui occupe toute la largeur entre les rails.
    */
   rail?: 'left' | 'right';
+  /**
+   * Zones gauche et droite uniquement : où s'affiche le contenu.
+   *
+   * - `'default'` (ou absent) : dans le **compartiment par défaut** de la zone, partagé avec les autres
+   *   fenêtres d'outils du rail (une seule y est affichée à la fois). Ses dimensions sont fixées par le
+   *   shell et ne sont pas modifiables par les apps.
+   * - un objet `ToolWindowCompartment` : dans un **compartiment propre**, empilé verticalement sous/sur les
+   *   autres, ouvert indépendamment du compartiment par défaut. L'app y définit la hauteur de base, le
+   *   minimum et le maximum (en % de la zone) ; les valeurs omises prennent `DEFAULT_COMPARTMENT_HEIGHTS`.
+   *
+   * Sans effet sur la zone basse.
+   */
+  compartment?: 'default' | ToolWindowCompartment;
+}
+
+const COMPARTMENT_KEYS = ['height', 'minHeight', 'maxHeight'] as const;
+
+/**
+ * Résout `meta.compartment` : `null` pour le compartiment par défaut, sinon les hauteurs d'un compartiment
+ * propre, complétées par `DEFAULT_COMPARTMENT_HEIGHTS` puis rendues cohérentes (`min <= base <= max`).
+ */
+export function getToolWindowCompartment(meta: { compartment?: unknown }): ResolvedToolWindowCompartment | null {
+  const raw = meta.compartment;
+  if (!raw || raw === 'default' || typeof raw !== 'object') return null;
+  const value = (key: (typeof COMPARTMENT_KEYS)[number]) => {
+    const n = (raw as Record<string, unknown>)[key];
+    return typeof n === 'number' && Number.isFinite(n) && n > 0 && n <= 100 ? n : DEFAULT_COMPARTMENT_HEIGHTS[key];
+  };
+  const minHeight = value('minHeight');
+  const maxHeight = Math.max(minHeight, value('maxHeight'));
+  const height = Math.min(maxHeight, Math.max(minHeight, value('height')));
+  return { height, minHeight, maxHeight };
 }
 
 /** Vrai si `url` est une URL d'icône autorisée (`ToolWindowMeta.iconUrl`). */
@@ -90,6 +151,27 @@ export function getToolWindowMetaProblems(meta: unknown): string[] {
     problems.push('`order` doit être un nombre fini');
   if (m.global !== undefined && typeof m.global !== 'boolean') problems.push('`global` doit être un booléen');
   if (m.rail !== undefined && m.rail !== 'left' && m.rail !== 'right') problems.push('`rail` vaut "left" ou "right"');
+  if (m.compartment !== undefined && m.compartment !== 'default') {
+    const c = m.compartment as Record<string, unknown> | null;
+    if (!c || typeof c !== 'object' || Array.isArray(c)) {
+      problems.push('`compartment` vaut \"default\" ou un objet { height, minHeight, maxHeight }');
+    } else {
+      for (const key of COMPARTMENT_KEYS) {
+        const n = c[key];
+        if (n !== undefined && (typeof n !== 'number' || !Number.isFinite(n) || n <= 0 || n > 100))
+          problems.push(`\`compartment.${key}\` doit être un nombre dans ]0, 100] (pourcentage de la zone)`);
+      }
+      const resolved = getToolWindowCompartment({ compartment: c });
+      if (resolved && problems.length === 0) {
+        const { minHeight, maxHeight } = {
+          minHeight: (c.minHeight as number | undefined) ?? DEFAULT_COMPARTMENT_HEIGHTS.minHeight,
+          maxHeight: (c.maxHeight as number | undefined) ?? DEFAULT_COMPARTMENT_HEIGHTS.maxHeight,
+        };
+        if (minHeight > maxHeight)
+          problems.push('`compartment.minHeight` ne peut pas dépasser `compartment.maxHeight`');
+      }
+    }
+  }
   return problems;
 }
 

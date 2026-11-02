@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import {
+  getToolWindowCompartment,
   isToolWindowMeta,
+  type ResolvedToolWindowCompartment,
   TOOL_WINDOW_SLOTS,
   type ToolWindowAnchor,
   type ToolWindowMeta,
@@ -14,6 +16,11 @@ export interface ToolWindow {
   id: string;
   moduleName: string;
   meta: ToolWindowMeta;
+  /**
+   * Hauteurs du compartiment propre demandé par la fenêtre (zones gauche et droite), ou `null` : elle
+   * s'affiche dans le compartiment par défaut de la zone (toujours le cas dans la zone basse).
+   */
+  compartment: ResolvedToolWindowCompartment | null;
 }
 
 /** Titre affiché (traduit si `titleKey` a une traduction dans le module de l'app). */
@@ -26,6 +33,7 @@ export function toolWindowTitle({ moduleName, meta }: ToolWindow): string {
  *
  * Zones `left` et `bottom` : celles de l'app active (le rail change avec l'app) et celles qui
  * déclarent `meta.global` (toujours présentes).
+ * Zones `left` et `right` : une fenêtre dont `meta.compartment` est un objet a son propre compartiment (voir `ToolWindow.compartment`).
  * Zone `right` : globale, toujours toutes les extensions déclarées.
  * Zone `bottom` + `rail` : ne garde que les entrées portées par ce rail (`meta.rail`, défaut `left`).
  */
@@ -57,6 +65,7 @@ export function useToolWindows(anchor: ToolWindowAnchor, rail?: 'left' | 'right'
           id: extension.name,
           moduleName: extension.moduleName,
           meta: extension.meta as ToolWindowMeta,
+          compartment: anchor === 'bottom' ? null : getToolWindowCompartment(extension.meta as ToolWindowMeta),
         })),
     [assigned, activeModules, anchor, rail],
   );

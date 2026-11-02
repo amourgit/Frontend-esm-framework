@@ -40,6 +40,11 @@ export function registerToolWindow(registration: ToolWindowRegistration): boolea
     );
     return false;
   }
+  if (anchor === 'bottom' && meta.compartment && meta.compartment !== 'default') {
+    console.warn(
+      `[workbench] La fenêtre d'outils « ${name} » de ${moduleName} : \`compartment\` est ignoré dans la zone basse (zones gauche et droite uniquement).`,
+    );
+  }
   registerExtension({
     name,
     moduleName,

@@ -1,6 +1,9 @@
 import React, { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
+/** Attribut posé sur le conteneur (compartiment) qui affiche une fenêtre d'outils ; son en-tête s'y trouve. */
+export const TOOL_WINDOW_CONTAINER_ATTRIBUTE = 'data-tool-window-container';
+
 /** Attribut de l'emplacement d'en-tête d'une zone (entre le titre et le bouton de fermeture). */
 export const TOOL_WINDOW_HEADER_ATTRIBUTE = 'data-tool-window-header';
 
@@ -23,7 +26,8 @@ export function ToolWindowHeader({ children }: ToolWindowHeaderProps) {
   const [slot, setSlot] = useState<HTMLElement | null | undefined>(undefined);
 
   useLayoutEffect(() => {
-    const zone = markerRef.current?.closest('aside[data-anchor]');
+    // Compartiment de la fenêtre (une zone latérale peut en empiler plusieurs) ; à défaut, la zone elle-même.
+    const zone = markerRef.current?.closest(`[${TOOL_WINDOW_CONTAINER_ATTRIBUTE}], aside[data-anchor]`);
     setSlot(zone?.querySelector<HTMLElement>(`[${TOOL_WINDOW_HEADER_ATTRIBUTE}]`) ?? null);
   }, []);
 

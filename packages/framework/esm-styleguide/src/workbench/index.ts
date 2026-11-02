@@ -9,3 +9,4 @@ export * from './workbench.render.js';
 export * from './workbench.store.js';
 export * from './workbench-badges.js';
 export * from './section-nav-panel.component.js';
+export * from './compartments.js';

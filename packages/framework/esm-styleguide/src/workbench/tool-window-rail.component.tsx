@@ -3,15 +3,22 @@ import { isSafeToolWindowIconUrl, type ToolWindowAnchor } from '@egen-civitas/es
 import { useStore } from '@egen-civitas/esm-react-utils';
 import { resolveWorkbenchIcon } from './workbench-icons.js';
 import { toolWindowTitle, useToolWindows, type ToolWindow } from './use-tool-windows.js';
-import { toggleToolWindow, workbenchStore } from './workbench.store.js';
+import {
+  getOpenCompartments,
+  toggleCompartment,
+  toggleToolWindow,
+  workbenchStore,
+  type SideAnchor,
+} from './workbench.store.js';
 import { formatToolWindowBadge, workbenchBadgeStore } from './workbench-badges.js';
 import styles from './workbench.module.scss';
 
 function RailGroup({ anchor, label, rail }: { anchor: ToolWindowAnchor; label: string; rail?: 'left' | 'right' }) {
   const tools = useToolWindows(anchor, rail);
   // NB : `useStore` retourne toujours un objet (état étalé) : on lit l'état entier, jamais une valeur primitive.
-  const { active } = useStore(workbenchStore);
-  const activeId = active[anchor];
+  const state = useStore(workbenchStore);
+  const activeId = state.active[anchor];
+  const openOwn = getOpenCompartments(anchor, state);
 
   if (tools.length === 0) return null;
 
@@ -26,8 +33,11 @@ function RailGroup({ anchor, label, rail }: { anchor: ToolWindowAnchor; label: s
         <RailButton
           key={tool.id}
           tool={tool}
-          active={tool.id === activeId}
-          onClick={() => toggleToolWindow(anchor, tool.id)}
+          active={tool.compartment ? openOwn.includes(tool.id) : tool.id === activeId}
+          onClick={() =>
+            // Compartiment propre : s'ouvre/se ferme sans toucher au compartiment par défaut de la zone.
+            tool.compartment ? toggleCompartment(anchor as SideAnchor, tool.id) : toggleToolWindow(anchor, tool.id)
+          }
         />
       ))}
     </div>

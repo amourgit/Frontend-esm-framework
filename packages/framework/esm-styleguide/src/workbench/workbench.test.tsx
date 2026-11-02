@@ -56,6 +56,8 @@ beforeEach(() => {
     {
       sizes: { ...DEFAULT_ZONE_SIZES },
       active: { left: null, right: null, bottom: null },
+      compartments: { left: [], right: [] },
+      heights: {},
     },
     true,
   );
@@ -408,5 +410,108 @@ describe('icône personnalisée de rail (apps distantes)', () => {
       screen.getByRole('button', { name: 'Remote' }).querySelector('span[style*="--egen-rail-icon"]'),
     ).not.toBeNull();
     expect(screen.queryByRole('button', { name: 'Bad' })).toBeNull();
+  });
+});
+
+describe('compartiments verticaux des zones latérales', () => {
+  beforeEach(() => {
+    slots['shell-rail-right-slot'] = [
+      extension('notifications', '@egen/esm-notifications-app', { title: 'Notifications' }),
+      extension('chat', '@egen/esm-chat-app', {
+        title: 'Discussion',
+        compartment: { height: 40, minHeight: 20, maxHeight: 70 },
+      }),
+      extension('agenda', '@egen/esm-agenda-app', { title: 'Agenda', compartment: { height: 30 } }),
+      extension('bad', '@egen/esm-agenda-app', { title: 'Bad', compartment: { height: 500 } }),
+    ];
+  });
+
+  const stack = () =>
+    Array.from(screen.getByTestId('workbench-zone-right').querySelectorAll('section[data-compartment]'));
+
+  it("un compartiment propre s'ouvre sans toucher au compartiment par défaut", () => {
+    render(<RightRail />);
+    fireEvent.click(screen.getByRole('button', { name: 'Discussion' }));
+    expect(workbenchStore.getState().compartments.right).toEqual(['chat']);
+    expect(workbenchStore.getState().active.right).toBeNull();
+    expect(screen.getByRole('button', { name: 'Discussion' })).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(screen.getByRole('button', { name: 'Discussion' }));
+    expect(workbenchStore.getState().compartments.right).toEqual([]);
+    expect(screen.queryByRole('button', { name: 'Bad' })).toBeNull(); // meta invalide ignorée
+  });
+
+  it('empile le compartiment par défaut et les compartiments propres, somme = 100 %', () => {
+    workbenchStore.setState({
+      active: { left: null, right: 'notifications', bottom: null },
+      compartments: { left: [], right: ['chat', 'agenda'] },
+    });
+    render(<ToolWindowZone anchor="right" />);
+    const sections = stack();
+    expect(sections.map((s) => s.getAttribute('data-compartment'))).toEqual(['default', 'own', 'own']);
+    const total = sections.reduce((acc, s) => acc + Number(s.getAttribute('data-height')), 0);
+    expect(Math.round(total)).toBe(100);
+    expect(screen.getByText('content:chat')).toBeInTheDocument();
+    expect(screen.getByText('content:agenda')).toBeInTheDocument();
+    expect(document.querySelectorAll('[data-compartment-splitter]')).toHaveLength(2);
+  });
+
+  it('un compartiment propre seul ouvre la zone et la remplit', () => {
+    workbenchStore.setState({ compartments: { left: [], right: ['chat'] } });
+    render(<ToolWindowZone anchor="right" />);
+    expect(screen.getByTestId('workbench-zone-right')).toBeVisible();
+    expect(stack()).toHaveLength(1);
+  });
+
+  it('fermer un compartiment propre garde les autres ; closeToolWindow(zone) replie tout', () => {
+    workbenchStore.setState({
+      active: { left: null, right: 'notifications', bottom: null },
+      compartments: { left: [], right: ['chat'] },
+    });
+    render(<ToolWindowZone anchor="right" />);
+    fireEvent.click(screen.getByRole('button', { name: 'Fermer Discussion' }));
+    expect(workbenchStore.getState().compartments.right).toEqual([]);
+    expect(workbenchStore.getState().active.right).toBe('notifications');
+    act(() => openToolWindow('right', 'notifications'));
+    act(() => closeToolWindow('right'));
+    expect(workbenchStore.getState().active.right).toBeNull();
+  });
+
+  it('la frontière se déplace au clavier : les hauteurs restent bornées et totalisent 100', () => {
+    workbenchStore.setState({
+      active: { left: null, right: 'notifications', bottom: null },
+      compartments: { left: [], right: ['chat'] },
+    });
+    render(<ToolWindowZone anchor="right" />);
+    const handle = screen.getByRole('separator', { name: /Redimensionner Notifications et Discussion/ });
+    fireEvent.keyDown(handle, { key: 'ArrowUp' });
+    const { heights } = workbenchStore.getState();
+    expect(heights['right:__default__'] + heights['right:chat']).toBeCloseTo(100, 1);
+    expect(heights['right:chat']).toBeGreaterThan(40);
+    for (let i = 0; i < 20; i += 1) fireEvent.keyDown(handle, { key: 'ArrowUp' });
+    expect(workbenchStore.getState().heights['right:chat']).toBeLessThanOrEqual(70); // maximum du compartiment
+    fireEvent.doubleClick(handle);
+    expect(workbenchStore.getState().heights['right:chat']).toBe(40);
+  });
+
+  it('glisser la poignée convertit les pixels en % de la zone', () => {
+    workbenchStore.setState({
+      active: { left: null, right: 'notifications', bottom: null },
+      compartments: { left: [], right: ['chat'] },
+    });
+    render(<ToolWindowZone anchor="right" />);
+    const handle = screen.getByRole('separator', { name: /Redimensionner Notifications et Discussion/ });
+    vi.spyOn(handle.parentElement as HTMLElement, 'getBoundingClientRect').mockReturnValue({ height: 506 } as DOMRect);
+    vi.spyOn(handle, 'getBoundingClientRect').mockReturnValue({ height: 6 } as DOMRect);
+    fireEvent.pointerDown(handle, { button: 0, clientY: 300 });
+    fireEvent.pointerMove(handle, { clientY: 250 }); // 50 px vers le haut = 10 % de 500 px
+    expect(workbenchStore.getState().heights['right:chat']).toBe(50);
+    fireEvent.pointerUp(handle);
+  });
+
+  it('mémorise la disposition des compartiments', () => {
+    workbenchStore.setState({ compartments: { left: [], right: ['chat'] }, heights: { 'right:chat': 55 } });
+    const saved = JSON.parse(window.localStorage.getItem(WORKBENCH_STORAGE_KEY) ?? '{}');
+    expect(saved.compartments.right).toEqual(['chat']);
+    expect(saved.heights['right:chat']).toBe(55);
   });
 });

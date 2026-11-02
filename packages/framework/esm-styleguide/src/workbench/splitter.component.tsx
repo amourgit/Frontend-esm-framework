@@ -1,7 +1,15 @@
 import React, { useRef } from 'react';
 import type { ToolWindowAnchor } from '@egen-civitas/esm-extensions';
 import { useStore } from '@egen-civitas/esm-react-utils';
-import { clampZoneSize, resetZoneSize, setZoneSize, workbenchStore } from './workbench.store.js';
+import { fitCompartmentHeights, resizeCompartmentBoundary, type CompartmentItem } from './compartments.js';
+import {
+  clampZoneSize,
+  resetZoneSize,
+  setCompartmentHeights,
+  setZoneSize,
+  workbenchStore,
+  type SideAnchor,
+} from './workbench.store.js';
 import styles from './workbench.module.scss';
 
 const KEYBOARD_STEP = 16;
@@ -154,6 +162,86 @@ export function CornerSplitter({ side, label }: CornerSplitterProps) {
       onPointerUp={stopDragging}
       onPointerCancel={stopDragging}
       onDoubleClick={reset}
+    />
+  );
+}
+
+const COMPARTMENT_KEYBOARD_STEP = 5; // points de pourcentage
+
+const toRecord = (items: readonly CompartmentItem[], heights: readonly number[]) =>
+  Object.fromEntries(items.map((item, i) => [item.key, heights[i]]));
+
+interface CompartmentSplitterProps {
+  anchor: SideAnchor;
+  /** Rang de la frontière : celle qui sépare le compartiment `index` du suivant. */
+  index: number;
+  /** Compartiments affichés dans la zone, dans l'ordre. */
+  items: readonly CompartmentItem[];
+  /** Hauteurs courantes (%) des compartiments. */
+  heights: readonly number[];
+  label: string;
+}
+
+/**
+ * Poignée entre deux compartiments empilés d'une zone latérale : glisser (souris/doigt) ou flèches haut/bas
+ * déplacent la frontière ; les autres compartiments s'ajustent selon leurs minimum et maximum, la somme restant
+ * à 100 % de la zone. Double-clic : hauteurs de base. Elle occupe l'écart entre les deux cartes.
+ */
+export function CompartmentSplitter({ anchor, index, items, heights, label }: CompartmentSplitterProps) {
+  const start = useRef<{ y: number; heights: number[]; perPixel: number } | null>(null);
+
+  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return;
+    const zone = event.currentTarget.parentElement;
+    if (!zone) return;
+    // Hauteur répartie entre les compartiments = hauteur de la zone moins les écarts (poignées).
+    const gap = event.currentTarget.getBoundingClientRect().height;
+    const available = zone.getBoundingClientRect().height - gap * (items.length - 1);
+    if (!(available > 0)) return;
+    start.current = { y: event.clientY, heights: [...heights], perPixel: 100 / available };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    document.documentElement.setAttribute(RESIZING_ATTRIBUTE, `compartment-${anchor}`);
+    event.preventDefault();
+  };
+
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const origin = start.current;
+    if (!origin) return;
+    const delta = (event.clientY - origin.y) * origin.perPixel;
+    setCompartmentHeights(toRecord(items, resizeCompartmentBoundary(origin.heights, items, index, delta)));
+  };
+
+  const stopDragging = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!start.current) return;
+    start.current = null;
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+    document.documentElement.removeAttribute(RESIZING_ATTRIBUTE);
+  };
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+    const delta = event.key === 'ArrowDown' ? COMPARTMENT_KEYBOARD_STEP : -COMPARTMENT_KEYBOARD_STEP;
+    setCompartmentHeights(toRecord(items, resizeCompartmentBoundary(heights, items, index, delta)));
+    event.preventDefault();
+  };
+
+  return (
+    <div
+      role="separator"
+      tabIndex={0}
+      aria-label={label}
+      aria-orientation="horizontal"
+      aria-valuenow={Math.round(heights[index])}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      data-compartment-splitter={index}
+      className={styles.compartmentSplitter}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={stopDragging}
+      onPointerCancel={stopDragging}
+      onDoubleClick={() => setCompartmentHeights(toRecord(items, fitCompartmentHeights(items, {})))}
+      onKeyDown={onKeyDown}
     />
   );
 }

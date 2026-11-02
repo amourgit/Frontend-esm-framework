@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-utils",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "license": "MPL-2.0",
   "description": "Helper utilities for Egen",
   "type": "module",
@@ -66,13 +66,13 @@
     "semver": "^7.7.3"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-globals": "^1.0.0",
+    "@egen-civitas/esm-globals": "^2.0.0",
     "dayjs": "1.x",
     "i18next": "25.x",
     "rxjs": "7.x"
   },
   "devDependencies": {
-    "@egen-civitas/esm-globals": "^1.0.0",
+    "@egen-civitas/esm-globals": "^2.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@types/lodash-es": "^4.17.12",

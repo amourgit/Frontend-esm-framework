@@ -57,12 +57,12 @@
     "path-to-regexp": "^8.3.0"
   },
   "peerDependencies": {
-    "@egen-civitas/esm-state": "^1.0.0",
+    "@egen-civitas/esm-state": "^1.0.3",
     "single-spa": "6.x"
   },
   "devDependencies": {
-    "@egen-civitas/esm-globals": "^1.0.0",
-    "@egen-civitas/esm-state": "^1.0.0",
+    "@egen-civitas/esm-globals": "^2.0.0",
+    "@egen-civitas/esm-state": "^1.0.3",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

@@ -1,5 +1,16 @@
 # @egen-civitas/esm-ai-framework
 
+## 1.3.3
+
+### Patch Changes
+
+- Updated dependencies [159db44]
+  - @egen-civitas/esm-api@2.0.0
+  - @egen-civitas/esm-ai-tools@1.4.3
+  - @egen-civitas/esm-ai-channel@2.2.1
+  - @egen-civitas/esm-ai-context@1.0.2
+  - @egen-civitas/esm-state@1.0.3
+
 ## 1.3.2
 
 ### Patch Changes

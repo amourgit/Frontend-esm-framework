@@ -1,5 +1,45 @@
 # @egen-civitas/esm-styleguide
 
+## 3.0.0
+
+### Major Changes
+
+- 159db44: Framework généraliste : suppression de la couche clinique héritée d'un autre projet (patients, FHIR, santé).
+
+  Retirés :
+  - `esm-styleguide` : `EntityBanner*`, `EntityPhoto`/`useEntityPhoto`, `NumericDataPoint`, 17 pictogrammes de départements hospitaliers (labo, pharmacie, cardiologie, radio, triage, patients…) et 15 icônes cliniques (seringue, lit d'hôpital, ordres médicaux…), clés de config `entityPhotoConceptUuid`, `contactAttributeTypes`, `excludeEntityIdentifierCodeTypes`.
+  - `esm-react-utils` : `useEntity`, `usePrimaryIdentifierResource`, `useFhirFetchAll`, `useFhirInfinite`, `useFhirPagination` (utiliser `useEgenFetchAll`, `useEgenInfinite`, `useEgenPagination`).
+  - `esm-data-api` : `getCurrentEntity`/`CurrentEntity`, types FHIR (`FHIRResource`, `FHIRCode`, `fhir.*`), `Task`, `CatalogItem` ; `DataPoint` et `Classification` utilisent `ReferenceTerm` au lieu de `Concept`.
+  - `esm-api` : types `Concept*` remplacés par `ReferenceTerm` ; champs cliniques de `Person` (décès).
+  - `esm-config` : types `ConceptUuid`, `PersonAttributeTypeUuid`, `EntityIdentifierTypeUuid`.
+  - `esm-utils` : `getEntityName`, `formatEntityName`, `selectPreferredName` (noms FHIR) ; `esm-globals` : `NameUse`.
+  - Dépendance `@types/fhir` retirée.
+
+### Minor Changes
+
+- 75af6f5: Robot assistant 3D complet : corps articulé (37 articulations), 17 gestes, marche et pas en tournant sur place, regard, clignement, mains à 5 doigts, IK des bras, états de l'assistant (écoute, réflexion, parole). Nouveaux exports `AssistantRobotScene`, `preloadAssistantRobot`, `RobotController`, `GESTURE_NAMES` et types associés ; `three` et `@react-three/fiber` sont chargés à la demande.
+- cf941e7: Plan de travail : poignées d'angle à l'intersection de trois zones (latérale / centre / bas). Le curseur « déplacement » apparaît au croisement des frontières et un seul geste redimensionne les deux axes (largeur de la zone gauche ou droite + hauteur de la zone basse) ; double-clic = tailles par défaut. Les poignées linéaires existantes sont inchangées.
+- 4c84714: Le styleguide ne porte plus aucun logo : suppression du sprite SVG (`#egen-logo-full-color`, `#egen-logo-icon-color`, `#egen-logo-partial-color`, `#egen-logo-white`) — en réalité un ancien logo hérité d'un autre projet —, de sa palette SCSS (`--logo-*`) et de `setupLogo()` (interne). Le framework reste générique et neutre : l'identité visuelle appartient au projet client, qui affiche son logo comme une image ordinaire. **À savoir** : tout consommateur qui référençait ces identifiants de sprite doit migrer vers son propre logo.
+- 8a39e13: Rails et zones ouverts aux apps distantes/fédérées : `ToolWindowMeta.iconUrl` (icône personnalisée sûre, rendue en masque monochrome), `getToolWindowMetaProblems` + avertissement précis à l'enregistrement quand une `meta` de rail est invalide (plus d'entrée ignorée en silence), `registerToolWindow` (déclaration par le code, sans `routes.json`), `openToolWindow` (ouverture sans bascule). Guide : `packages/framework/esm-extensions/TOOL-WINDOWS.md`.
+
+### Patch Changes
+
+- fc70c70: Cartes du plan de travail (zones + centre) légèrement plus sombres, toujours translucides : 16 % → 24 % de noir (thème sombre), 5 % → 8 % (thème clair).
+- Updated dependencies [8a39e13]
+- Updated dependencies [159db44]
+  - @egen-civitas/esm-extensions@2.1.0
+  - @egen-civitas/esm-routes@1.1.0
+  - @egen-civitas/esm-api@2.0.0
+  - @egen-civitas/esm-data-api@2.0.0
+  - @egen-civitas/esm-config@2.0.0
+  - @egen-civitas/esm-react-utils@3.0.0
+  - @egen-civitas/esm-utils@2.0.0
+  - @egen-civitas/esm-globals@2.0.0
+  - @egen-civitas/esm-translations@1.0.3
+  - @egen-civitas/esm-state@1.0.3
+  - @egen-civitas/esm-error-handling@1.0.2
+  - @egen-civitas/esm-navigation@1.0.2
+
 ## 2.3.1
 
 ### Patch Changes

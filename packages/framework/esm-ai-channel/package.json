@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-ai-channel",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "license": "MPL-2.0",
   "description": "Canal temps réel EGEN frontend ↔ backend IA — protocole, transport WebSocket, provisionnement des tools frontend, appels de tools, contexte et conversation.",
   "main": "dist/index.js",
@@ -45,26 +45,26 @@
   },
   "dependencies": {
     "@egen-civitas/esm-ai-config": "^1.4.0",
-    "@egen-civitas/esm-ai-context": "^1.0.0",
+    "@egen-civitas/esm-ai-context": "^1.0.2",
     "@egen-civitas/esm-ai-events": "^1.2.0",
-    "@egen-civitas/esm-ai-tools": "^1.2.0",
-    "@egen-civitas/esm-api": "^1.1.1",
+    "@egen-civitas/esm-ai-tools": "^1.4.3",
+    "@egen-civitas/esm-api": "^2.0.0",
     "jose": "^6.2.0"
   },
   "peerDependencies": {
     "@egen-civitas/esm-ai-config": "^1.4.0",
-    "@egen-civitas/esm-ai-context": "^1.0.0",
+    "@egen-civitas/esm-ai-context": "^1.0.2",
     "@egen-civitas/esm-ai-events": "^1.2.0",
-    "@egen-civitas/esm-ai-tools": "^1.2.0",
-    "@egen-civitas/esm-api": "^1.1.1",
+    "@egen-civitas/esm-ai-tools": "^1.4.3",
+    "@egen-civitas/esm-api": "^2.0.0",
     "react": "18.x"
   },
   "devDependencies": {
     "@egen-civitas/esm-ai-config": "^1.4.0",
-    "@egen-civitas/esm-ai-context": "^1.0.0",
+    "@egen-civitas/esm-ai-context": "^1.0.2",
     "@egen-civitas/esm-ai-events": "^1.2.0",
-    "@egen-civitas/esm-ai-tools": "^1.2.0",
-    "@egen-civitas/esm-api": "^1.1.1",
+    "@egen-civitas/esm-ai-tools": "^1.4.3",
+    "@egen-civitas/esm-api": "^2.0.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@types/react": "^18.3.21",

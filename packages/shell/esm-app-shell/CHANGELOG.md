@@ -1,5 +1,11 @@
 # @egen-civitas/esm-app-shell
 
+## 2.8.0
+
+### Minor Changes
+
+- 02f20b7: Republie le shell avec le plan de travail à compartiments verticaux (esm-styleguide 3.1.0, esm-extensions 2.2.0) : le `dist` précompilé du shell embarque les rails et zones, il doit donc être reconstruit pour que `meta.compartment` des options de rail soit pris en compte (compartiment propre à côté du compartiment par défaut).
+
 ## 2.7.0
 
 ### Minor Changes

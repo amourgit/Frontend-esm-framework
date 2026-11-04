@@ -1,5 +1,16 @@
-import React, { useCallback, useLayoutEffect, useRef } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { STAGGERED_MENU_SLOT } from '@egen-civitas/esm-extensions';
+import { StaggeredMenuExtensionArea, type StaggeredMenuExtensionState } from './staggered-menu-extensions.component.js';
+import { useStaggeredMenuEntries } from './use-staggered-menu-entries.js';
+
+/**
+ * Cibles de clic qui ne ferment pas le panneau (`closeOnClickAway`) : les menus, listes et boîtes de dialogue
+ * que les composants des apps ouvrent dans un portail hors du panneau, et tout élément marqué
+ * `data-staggered-menu-keep-open`.
+ */
+const KEEP_OPEN_SELECTOR =
+  '[data-staggered-menu-keep-open], [data-radix-popper-content-wrapper], [role="dialog"], [role="listbox"], [role="menu"]';
 
 export interface StaggeredMenuItem {
   label: string;
@@ -27,6 +38,15 @@ export interface StaggeredMenuPanelProps {
   /** Couleur d'accent — à passer en `var(--...)` du thème EGEN pour rester cohérent avec le reste de l'app. */
   accentColor?: string;
   closeOnClickAway?: boolean;
+  /**
+   * Slot d'extensions du panneau (défaut `STAGGERED_MENU_SLOT`) : les apps y posent des composants libres,
+   * déclarés avec leur zone, leur ordre et leur priorité (voir `StaggeredMenuEntryMeta`). Passer un autre nom
+   * isole ce panneau (les apps le visent avec `slot` / `registerStaggeredMenuEntry({ slot })`) ; `false`
+   * désactive les extensions.
+   */
+  extensionSlot?: string | false;
+  /** Nombre maximal d'extensions affichées ; les moins prioritaires (`meta.priority`) sont écartées. */
+  maxExtensions?: number;
 }
 
 /**
@@ -36,6 +56,10 @@ export interface StaggeredMenuPanelProps {
  * C'est au consommateur de fournir la totalité du contenu (`items`,
  * `socialItems`, `colors`, `accentColor`) — typiquement via les tokens du
  * thème EGEN (`var(--colors-*)`), comme dans l'exemple ci-dessous.
+ *
+ * Les apps peuvent y poser des composants libres (voir `extensionSlot`) : elles déclarent une extension sur
+ * `STAGGERED_MENU_SLOT` avec une `meta` (zone, ordre, priorité, `global`…), comme pour les rails du shell.
+ * Guide : `esm-extensions/STAGGERED-MENU.md`.
  *
  * Le design (mise en page, typographie, structure du DOM/CSS) et
  * l'animation GSAP (timeline d'ouverture/fermeture, stagger des items,
@@ -68,6 +92,8 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
   displayItemNumbering = true,
   accentColor,
   closeOnClickAway = true,
+  extensionSlot = STAGGERED_MENU_SLOT,
+  maxExtensions,
 }) => {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const preLayersRef = useRef<HTMLDivElement | null>(null);
@@ -78,6 +104,18 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
   const itemEntranceTweenRef = useRef<gsap.core.Tween | null>(null);
   const busyRef = useRef(false);
   const prevOpenRef = useRef<boolean>(false);
+
+  // ─── Extensions des apps (composants libres) ─────────────────────────────
+  // Le contenu des extensions n'est chargé qu'à la première ouverture, puis conservé monté.
+  const slotName = extensionSlot || '';
+  const allEntries = useStaggeredMenuEntries(slotName || STAGGERED_MENU_SLOT, maxExtensions);
+  const entries = useMemo(() => (slotName ? allEntries : []), [slotName, allEntries]);
+  const [hasOpened, setHasOpened] = useState(isOpen);
+  if (isOpen && !hasOpened) setHasOpened(true);
+  const extensionState = useMemo<StaggeredMenuExtensionState>(
+    () => ({ closeMenu: () => onClose?.(), position, isOpen }),
+    [onClose, position, isOpen],
+  );
 
   // ─── Init: positionner hors-écran ────────────────────────────────────────
   useLayoutEffect(() => {
@@ -116,19 +154,21 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
 
     const itemEls = Array.from(panel.querySelectorAll('.sm-panel-itemLabel')) as HTMLElement[];
     const numberEls = Array.from(
-      panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item')
+      panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item'),
     ) as HTMLElement[];
     const socialTitle = panel.querySelector('.sm-socials-title') as HTMLElement | null;
     const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link')) as HTMLElement[];
+    const extEls = Array.from(panel.querySelectorAll('.sm-ext')) as HTMLElement[];
 
     const offscreen = position === 'left' ? -100 : 100;
-    const layerStates = layers.map(el => ({ el, start: offscreen }));
+    const layerStates = layers.map((el) => ({ el, start: offscreen }));
     const panelStart = offscreen;
 
     if (itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 });
     if (numberEls.length) gsap.set(numberEls, { ['--sm-num-opacity' as any]: 0 });
     if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
     if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
+    if (extEls.length) gsap.set(extEls, { y: 28, opacity: 0 });
 
     const tl = gsap.timeline({ paused: true });
 
@@ -144,7 +184,7 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
       panel,
       { xPercent: panelStart },
       { xPercent: 0, duration: panelDuration, ease: 'power4.out' },
-      panelInsertTime
+      panelInsertTime,
     );
 
     if (itemEls.length) {
@@ -154,14 +194,14 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
       tl.to(
         itemEls,
         { yPercent: 0, rotate: 0, duration: 1, ease: 'power4.out', stagger: { each: 0.1, from: 'start' } },
-        itemsStart
+        itemsStart,
       );
 
       if (numberEls.length) {
         tl.to(
           numberEls,
           { duration: 0.6, ease: 'power2.out', ['--sm-num-opacity' as any]: 1, stagger: { each: 0.08, from: 'start' } },
-          itemsStart + 0.1
+          itemsStart + 0.1,
         );
       }
     }
@@ -183,9 +223,29 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
               gsap.set(socialLinks, { clearProps: 'opacity' });
             },
           },
-          socialsStart + 0.04
+          socialsStart + 0.04,
         );
       }
+    }
+
+    if (extEls.length) {
+      // Les composants des apps entrent après les liens, avec le même décalage progressif. Les props de
+      // transformation sont retirées à l'arrivée : un transform résiduel créerait un contexte d'empilement
+      // qui piégerait les éléments fixes ou les popovers du composant.
+      tl.to(
+        extEls,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power3.out',
+          stagger: { each: 0.08, from: 'start' },
+          onComplete: () => {
+            gsap.set(extEls, { clearProps: 'opacity,transform' });
+          },
+        },
+        panelInsertTime + panelDuration * 0.35,
+      );
     }
 
     openTlRef.current = tl;
@@ -198,7 +258,9 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
     busyRef.current = true;
     const tl = buildOpenTimeline();
     if (tl) {
-      tl.eventCallback('onComplete', () => { busyRef.current = false; });
+      tl.eventCallback('onComplete', () => {
+        busyRef.current = false;
+      });
       tl.play(0);
     } else {
       busyRef.current = false;
@@ -230,7 +292,7 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
         if (itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 });
 
         const numberEls = Array.from(
-          panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item')
+          panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item'),
         ) as HTMLElement[];
         if (numberEls.length) gsap.set(numberEls, { ['--sm-num-opacity' as any]: 0 });
 
@@ -238,6 +300,9 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
         const socialLinks = Array.from(panel.querySelectorAll('.sm-socials-link')) as HTMLElement[];
         if (socialTitle) gsap.set(socialTitle, { opacity: 0 });
         if (socialLinks.length) gsap.set(socialLinks, { y: 25, opacity: 0 });
+
+        const extEls = Array.from(panel.querySelectorAll('.sm-ext')) as HTMLElement[];
+        if (extEls.length) gsap.set(extEls, { y: 28, opacity: 0 });
 
         busyRef.current = false;
       },
@@ -255,11 +320,18 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
     }
   }, [isOpen, playOpen, playClose]);
 
+  // ─── Panneau fermé = hors-écran : ni focus clavier ni lecteur d'écran sur son contenu ─────────────
+  useLayoutEffect(() => {
+    panelRef.current?.toggleAttribute('inert', !isOpen);
+  }, [isOpen]);
+
   // ─── Click-away ───────────────────────────────────────────────────────────
   React.useEffect(() => {
     if (!closeOnClickAway || !isOpen) return;
     const handleClickOutside = (event: MouseEvent) => {
-      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+      const target = event.target as Element | null;
+      if (target?.closest?.(KEEP_OPEN_SELECTOR)) return;
+      if (panelRef.current && !panelRef.current.contains(target as Node)) {
         onClose?.();
       }
     };
@@ -286,18 +358,9 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
       data-position={position}
     >
       {/* Couches de couleur animées derrière le panneau */}
-      <div
-        ref={preLayersRef}
-        className="sm-prelayers pointer-events-none"
-        style={{ zIndex: 9998 }}
-        aria-hidden="true"
-      >
+      <div ref={preLayersRef} className="sm-prelayers pointer-events-none" style={{ zIndex: 9998 }} aria-hidden="true">
         {preLayers.map((c, i) => (
-          <div
-            key={i}
-            className="sm-prelayer"
-            style={{ background: c }}
-          />
+          <div key={i} className="sm-prelayer" style={{ background: c }} />
         ))}
       </div>
 
@@ -310,29 +373,34 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
         aria-hidden={!isOpen}
       >
         <div className="sm-panel-inner">
+          <StaggeredMenuExtensionArea
+            area="top"
+            entries={entries}
+            slotName={slotName}
+            state={extensionState}
+            loadContent={hasOpened}
+          />
+
           {/* Base VIDE : sans `items`, aucun <ul> "No items" n'est rendu. */}
           {navItems.length > 0 && (
-            <ul
-              className="sm-panel-list"
-              role="list"
-              data-numbering={displayItemNumbering || undefined}
-            >
+            <ul className="sm-panel-list" role="list" data-numbering={displayItemNumbering || undefined}>
               {navItems.map((it, idx) => (
                 <li className="sm-panel-itemWrap" key={it.label + idx}>
-                  <a
-                    className="sm-panel-item"
-                    href={it.link}
-                    aria-label={it.ariaLabel}
-                    data-index={idx + 1}
-                  >
-                    <span className="sm-panel-itemLabel">
-                      {it.label}
-                    </span>
+                  <a className="sm-panel-item" href={it.link} aria-label={it.ariaLabel} data-index={idx + 1}>
+                    <span className="sm-panel-itemLabel">{it.label}</span>
                   </a>
                 </li>
               ))}
             </ul>
           )}
+
+          <StaggeredMenuExtensionArea
+            area="content"
+            entries={entries}
+            slotName={slotName}
+            state={extensionState}
+            loadContent={hasOpened}
+          />
 
           {displaySocials && socials.length > 0 && (
             <div className="sm-socials" aria-label="Social links">
@@ -340,12 +408,7 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
               <ul className="sm-socials-list" role="list">
                 {socials.map((s, i) => (
                   <li key={s.label + i} className="sm-socials-item">
-                    <a
-                      href={s.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="sm-socials-link"
-                    >
+                    <a href={s.link} target="_blank" rel="noopener noreferrer" className="sm-socials-link">
                       {s.label}
                     </a>
                   </li>
@@ -353,6 +416,14 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
               </ul>
             </div>
           )}
+
+          <StaggeredMenuExtensionArea
+            area="bottom"
+            entries={entries}
+            slotName={slotName}
+            state={extensionState}
+            loadContent={hasOpened}
+          />
         </div>
       </aside>
 
@@ -368,6 +439,12 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
 .sm-scope .sm-panel-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
 .sm-scope .sm-panel-list[data-numbering] { counter-reset: smItem; }
 .sm-scope .sm-panel-list[data-numbering] .sm-panel-item::after { counter-increment: smItem; content: counter(smItem, decimal-leading-zero); position: absolute; top: 0.1em; right: 3.2em; font-size: 18px; font-weight: 400; color: var(--sm-accent, #ff0000); letter-spacing: 0; pointer-events: none; user-select: none; opacity: var(--sm-num-opacity, 0); }
+.sm-scope .sm-ext-area { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.sm-scope .sm-ext-area[data-area='bottom'] { margin-top: auto; padding-top: 1.5rem; }
+.sm-scope .sm-socials ~ .sm-ext-area[data-area='bottom'] { margin-top: 0; padding-top: 0; }
+.sm-scope .sm-ext { display: flex; flex-direction: column; gap: 0.5rem; min-width: 0; }
+.sm-scope .sm-ext-title { margin: 0; font-size: 1rem; font-weight: 500; color: var(--sm-accent, #ff0000); }
+.sm-scope .sm-ext-slot { min-width: 0; }
 .sm-scope .sm-socials { margin-top: auto; padding-top: 2rem; display: flex; flex-direction: column; gap: 0.75rem; }
 .sm-scope .sm-socials-title { margin: 0; font-size: 1rem; font-weight: 500; color: var(--sm-accent, #ff0000); }
 .sm-scope .sm-socials-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: row; align-items: center; gap: 1rem; flex-wrap: wrap; }

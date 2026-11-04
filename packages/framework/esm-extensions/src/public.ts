@@ -44,6 +44,21 @@ export {
 } from './tool-window.js';
 export { registerToolWindow, type ToolWindowRegistration } from './tool-window-registration.js';
 export {
+  STAGGERED_MENU_SLOT,
+  STAGGERED_MENU_AREAS,
+  DEFAULT_STAGGERED_MENU_AREA,
+  type StaggeredMenuArea,
+  type StaggeredMenuEntryMeta,
+  type StaggeredMenuAssignedExtension,
+  type ResolvedStaggeredMenuEntry,
+  type ResolveStaggeredMenuEntriesOptions,
+  isStaggeredMenuArea,
+  isStaggeredMenuEntryMeta,
+  getStaggeredMenuEntryProblems,
+  resolveStaggeredMenuEntries,
+} from './staggered-menu-slot.js';
+export { registerStaggeredMenuEntry, type StaggeredMenuEntryRegistration } from './staggered-menu-registration.js';
+export {
   type NavBehavior,
   type NavBehaviorTarget,
   type NavSelectContext,

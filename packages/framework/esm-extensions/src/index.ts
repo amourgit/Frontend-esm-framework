@@ -3,6 +3,8 @@ export * from './helpers.js';
 export * from './nav-entry.js';
 export * from './tool-window.js';
 export * from './tool-window-registration.js';
+export * from './staggered-menu-slot.js';
+export * from './staggered-menu-registration.js';
 export * from './nav-behavior.js';
 export * from './modals.js';
 export * from './workspaces.js';

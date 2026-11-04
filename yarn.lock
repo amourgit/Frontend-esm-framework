@@ -1261,7 +1261,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-extensions@npm:^2.1.0, @egen-civitas/esm-extensions@npm:^2.2.0, @egen-civitas/esm-extensions@workspace:packages/framework/esm-extensions":
+"@egen-civitas/esm-extensions@npm:^2.1.0, @egen-civitas/esm-extensions@npm:^2.3.0, @egen-civitas/esm-extensions@workspace:packages/framework/esm-extensions":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-extensions@workspace:packages/framework/esm-extensions"
   dependencies:
@@ -1610,7 +1610,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-styleguide@npm:^3.0.0, @egen-civitas/esm-styleguide@npm:^3.1.0, @egen-civitas/esm-styleguide@workspace:packages/framework/esm-styleguide":
+"@egen-civitas/esm-styleguide@npm:^3.0.0, @egen-civitas/esm-styleguide@npm:^3.2.0, @egen-civitas/esm-styleguide@workspace:packages/framework/esm-styleguide":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-styleguide@workspace:packages/framework/esm-styleguide"
   dependencies:
@@ -1621,7 +1621,7 @@ __metadata:
     "@egen-civitas/esm-data-api": "npm:^2.0.0"
     "@egen-civitas/esm-error-handling": "npm:^1.0.2"
     "@egen-civitas/esm-expression-evaluator": "npm:^1.0.0"
-    "@egen-civitas/esm-extensions": "npm:^2.2.0"
+    "@egen-civitas/esm-extensions": "npm:^2.3.0"
     "@egen-civitas/esm-globals": "npm:^2.0.0"
     "@egen-civitas/esm-navigation": "npm:^1.0.2"
     "@egen-civitas/esm-react-utils": "npm:^3.0.0"
@@ -1671,7 +1671,7 @@ __metadata:
     "@egen-civitas/esm-config": ^2.0.0
     "@egen-civitas/esm-data-api": ^2.0.0
     "@egen-civitas/esm-error-handling": ^1.0.2
-    "@egen-civitas/esm-extensions": ^2.2.0
+    "@egen-civitas/esm-extensions": ^2.3.0
     "@egen-civitas/esm-globals": ^2.0.0
     "@egen-civitas/esm-navigation": ^1.0.2
     "@egen-civitas/esm-react-utils": ^3.0.0
@@ -1817,12 +1817,12 @@ __metadata:
     "@egen-civitas/esm-data-api": "npm:^2.0.0"
     "@egen-civitas/esm-error-handling": "npm:^1.0.2"
     "@egen-civitas/esm-expression-evaluator": "npm:^1.0.0"
-    "@egen-civitas/esm-extensions": "npm:^2.2.0"
+    "@egen-civitas/esm-extensions": "npm:^2.3.0"
     "@egen-civitas/esm-globals": "npm:^2.0.0"
     "@egen-civitas/esm-navigation": "npm:^1.0.2"
     "@egen-civitas/esm-react-utils": "npm:^3.0.0"
     "@egen-civitas/esm-state": "npm:^1.0.3"
-    "@egen-civitas/esm-styleguide": "npm:^3.1.0"
+    "@egen-civitas/esm-styleguide": "npm:^3.2.0"
     "@egen-civitas/esm-translations": "npm:^1.0.3"
     "@egen-civitas/esm-utils": "npm:^2.0.0"
     "@internationalized/date": "npm:^3.8.0"

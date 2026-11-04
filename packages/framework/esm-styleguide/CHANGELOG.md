@@ -1,5 +1,17 @@
 # @egen-civitas/esm-styleguide
 
+## 3.2.0
+
+### Minor Changes
+
+- 86b6c2c: `StaggeredMenuPanel` : bouton de fermeture discret (petit, translucide) dans le coin du panneau, en plus du clic à côté. Il est positionné par rapport au panneau, pas à l'écran : en haut à droite pour `position="right"`, en haut à gauche pour `position="left"`. Il apparaît une fois le panneau ouvert. Nouvelles props `showCloseButton` (défaut : affiché dès qu'`onClose` est fourni) et `closeButtonLabel`.
+- 0afcb05: `StaggeredMenuPanel` accepte des composants libres posés par les apps, comme les rails. Nouveau slot `staggered-menu-slot` (`STAGGERED_MENU_SLOT`) : une extension y déclare dans sa `meta` sa zone (`top`, `content`, `bottom`), son `order`, sa `priority`, `global` (visible quelle que soit l'app active ; sinon seulement quand son app est montée), `showTitle`, `titleKey`. Nouveaux exports : `registerStaggeredMenuEntry` (déclaration par le code), `resolveStaggeredMenuEntries`, `isStaggeredMenuEntryMeta`, `getStaggeredMenuEntryProblems`, `useStaggeredMenuEntries` et les types associés. Nouvelles props du panneau : `extensionSlot` (slot dédié ou `false`) et `maxExtensions` (limite par priorité). Le contenu est chargé à la première ouverture ; chaque composant reçoit `closeMenu`, `position` et `isOpen` en props ; un clic dans un menu/dialogue ouvert par un composant ne ferme plus le panneau (`closeOnClickAway`) ; le panneau fermé est `inert`. Aucun changement pour les usages existants.
+
+### Patch Changes
+
+- Updated dependencies [0afcb05]
+  - @egen-civitas/esm-extensions@2.3.0
+
 ## 3.1.0
 
 ### Minor Changes

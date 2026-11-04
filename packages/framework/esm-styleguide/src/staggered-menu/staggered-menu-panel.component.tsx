@@ -47,6 +47,13 @@ export interface StaggeredMenuPanelProps {
   extensionSlot?: string | false;
   /** Nombre maximal d'extensions affichées ; les moins prioritaires (`meta.priority`) sont écartées. */
   maxExtensions?: number;
+  /**
+   * Bouton de fermeture discret, dans le coin du panneau (haut-droite si `position="right"`, haut-gauche si
+   * `position="left"`), en plus du clic à côté. Défaut : affiché dès qu'`onClose` est fourni.
+   */
+  showCloseButton?: boolean;
+  /** Nom accessible du bouton de fermeture. */
+  closeButtonLabel?: string;
 }
 
 /**
@@ -94,6 +101,8 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
   closeOnClickAway = true,
   extensionSlot = STAGGERED_MENU_SLOT,
   maxExtensions,
+  showCloseButton = true,
+  closeButtonLabel = 'Fermer le menu',
 }) => {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const preLayersRef = useRef<HTMLDivElement | null>(null);
@@ -427,10 +436,36 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
         </div>
       </aside>
 
+      {/* Bouton de fermeture : cadre de même largeur que le panneau, donc positionné par rapport à lui
+          (pas à l'écran). Hors de l'<aside> pour ne pas défiler avec son contenu ni être inerte. */}
+      {showCloseButton && onClose && (
+        <div className="sm-close-frame" data-open={isOpen ? 'true' : 'false'}>
+          <button type="button" className="sm-close-btn" aria-label={closeButtonLabel} onClick={onClose}>
+            <svg
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+      )}
+
       <style>{`
 .sm-scope .staggered-menu-panel { position: fixed; top: 0; ${position === 'left' ? 'left: 0;' : 'right: 0;'} width: clamp(260px, 38vw, 420px); height: 100%; background: white; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6em 2em 2em 2em; overflow-y: auto; z-index: 50; }
 .sm-scope .sm-prelayers { position: fixed; top: 0; ${position === 'left' ? 'left: 0;' : 'right: 0;'} bottom: 0; width: clamp(260px, 38vw, 420px); pointer-events: none; z-index: 49; }
 .sm-scope .sm-prelayer { position: absolute; top: 0; right: 0; height: 100%; width: 100%; transform: translateX(0); }
+.sm-scope .sm-close-frame { position: fixed; top: 0; ${position === 'left' ? 'left: 0;' : 'right: 0;'} height: 0; width: clamp(260px, 38vw, 420px); z-index: 10000; pointer-events: none; visibility: hidden; opacity: 0; transition: opacity 0.2s ease, visibility 0s linear 0.2s; }
+.sm-scope .sm-close-frame[data-open='true'] { visibility: visible; opacity: 1; transition: opacity 0.3s ease 0.45s, visibility 0s linear 0.45s; }
+.sm-scope .sm-close-btn { position: absolute; top: 0.75rem; ${position === 'left' ? 'left: 0.75rem;' : 'right: 0.75rem;'} width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; border-radius: 999px; background: transparent; color: #000; opacity: 0.4; cursor: pointer; pointer-events: auto; transition: opacity 0.2s ease, background 0.2s ease; }
+.sm-scope .sm-close-btn:hover { opacity: 0.85; background: rgba(0, 0, 0, 0.06); }
+.sm-scope .sm-close-btn:focus-visible { opacity: 1; outline: 2px solid var(--sm-accent, #ff0000); outline-offset: 2px; }
 .sm-scope .sm-panel-inner { flex: 1; display: flex; flex-direction: column; gap: 1.25rem; }
 .sm-scope .sm-panel-itemWrap { position: relative; overflow: hidden; line-height: 1; }
 .sm-scope .sm-panel-item { position: relative; color: #000; font-weight: 600; font-size: 4rem; cursor: pointer; line-height: 1; letter-spacing: -2px; text-transform: uppercase; transition: background 0.25s, color 0.25s; display: inline-block; text-decoration: none; padding-right: 1.4em; }
@@ -455,7 +490,7 @@ export const StaggeredMenuPanel: React.FC<StaggeredMenuPanelProps> = ({
 .sm-scope .sm-socials-link:focus-visible { outline: 2px solid var(--sm-accent, #ff0000); outline-offset: 3px; }
 .sm-scope .sm-socials-link { font-size: 1.2rem; font-weight: 500; color: #111; text-decoration: none; position: relative; padding: 2px 0; display: inline-block; transition: color 0.3s ease, opacity 0.3s ease; }
 .sm-scope .sm-socials-link:hover { color: var(--sm-accent, #ff0000); }
-@media (max-width: 1024px) { .sm-scope .staggered-menu-panel { width: 100%; left: 0; right: 0; } .sm-scope .sm-prelayers { width: 100%; left: 0; right: 0; } }
+@media (max-width: 1024px) { .sm-scope .staggered-menu-panel { width: 100%; left: 0; right: 0; } .sm-scope .sm-prelayers { width: 100%; left: 0; right: 0; } .sm-scope .sm-close-frame { width: 100%; left: 0; right: 0; } }
 @media (max-width: 640px) { .sm-scope .staggered-menu-panel { width: 100%; left: 0; right: 0; } .sm-scope .sm-prelayers { width: 100%; left: 0; right: 0; } }
       `}</style>
     </div>

@@ -114,7 +114,7 @@ export const MenuToggleButton: React.FC<MenuToggleButtonProps> = ({
         gsap.set(btn, { color: menuButtonColor });
       }
     },
-    [openMenuButtonColor, menuButtonColor, changeMenuColorOnOpen]
+    [openMenuButtonColor, menuButtonColor, changeMenuColorOnOpen],
   );
 
   // ─── Animation texte cyclique Menu ↔ Close ────────────────────────────────

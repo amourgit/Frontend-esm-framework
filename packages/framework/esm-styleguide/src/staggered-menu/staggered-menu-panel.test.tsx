@@ -187,3 +187,41 @@ describe('StaggeredMenuPanel — closeOnClickAway', () => {
     expect(onClose).not.toHaveBeenCalled();
   });
 });
+
+describe('StaggeredMenuPanel — bouton de fermeture', () => {
+  it('ferme le panneau au clic sur le bouton', () => {
+    const onClose = vi.fn();
+    render(<StaggeredMenuPanel isOpen onClose={onClose} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Fermer le menu' }));
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('se place dans le cadre du panneau, du côté de son ouverture', () => {
+    const { container, rerender } = render(<StaggeredMenuPanel isOpen onClose={() => {}} position="right" />);
+    expect(container.querySelector('.sm-close-frame')?.parentElement?.getAttribute('data-position')).toBe('right');
+    expect(container.querySelector('style')?.textContent).toMatch(/\.sm-close-frame \{[^}]*right: 0;/);
+    expect(container.querySelector('style')?.textContent).toMatch(/\.sm-close-btn \{[^}]*right: 0\.75rem;/);
+
+    rerender(<StaggeredMenuPanel isOpen onClose={() => {}} position="left" />);
+    expect(container.querySelector('style')?.textContent).toMatch(/\.sm-close-frame \{[^}]*left: 0;/);
+    expect(container.querySelector('style')?.textContent).toMatch(/\.sm-close-btn \{[^}]*left: 0\.75rem;/);
+  });
+
+  it("suit l'état ouvert/fermé (masqué quand le panneau est fermé)", () => {
+    const { container, rerender } = render(<StaggeredMenuPanel isOpen={false} onClose={() => {}} />);
+    expect(container.querySelector('.sm-close-frame')?.getAttribute('data-open')).toBe('false');
+    rerender(<StaggeredMenuPanel isOpen onClose={() => {}} />);
+    expect(container.querySelector('.sm-close-frame')?.getAttribute('data-open')).toBe('true');
+  });
+
+  it('accepte un nom accessible, et se désactive (showCloseButton=false) ou manque sans onClose', () => {
+    const { container, rerender } = render(<StaggeredMenuPanel isOpen onClose={() => {}} closeButtonLabel="Close" />);
+    expect(screen.getByRole('button', { name: 'Close' })).toBeTruthy();
+
+    rerender(<StaggeredMenuPanel isOpen onClose={() => {}} showCloseButton={false} />);
+    expect(container.querySelector('.sm-close-btn')).toBeNull();
+
+    rerender(<StaggeredMenuPanel isOpen />);
+    expect(container.querySelector('.sm-close-btn')).toBeNull();
+  });
+});

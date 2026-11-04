@@ -96,4 +96,7 @@ interface StaggeredMenuExtensionState {
 />
 ```
 
+Le panneau a un **bouton de fermeture** discret dans son coin (haut-droite pour `position="right"`, haut-gauche pour
+`position="left"`), en plus du clic à côté ; `showCloseButton={false}` le retire, `closeButtonLabel` règle son nom accessible.
+
 `extensionSlot={false}` désactive les extensions. Par défaut, tous les panneaux partagent `staggered-menu-slot`.

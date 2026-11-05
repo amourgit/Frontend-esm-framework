@@ -1,5 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { isNavEntryMeta, TOPBAR_LEVEL2_NAV_SLOT, type NavEntryMeta } from '@egen-civitas/esm-extensions';
+import {
+  isNavEntryMeta,
+  TOPBAR_NAV_SLOT,
+  TOPBAR_LEVEL2_NAV_SLOT,
+  type NavEntryMeta,
+} from '@egen-civitas/esm-extensions';
 import { navigate } from '@egen-civitas/esm-navigation';
 import { useAssignedExtensions } from '@egen-civitas/esm-react-utils';
 import { translateFrom } from '@egen-civitas/esm-translations';
@@ -53,7 +58,7 @@ function useCurrentRoute(): string {
 
 /**
  * Contenu d'une option globale du rail gauche : liste les sous-options (entrées `NavEntryMeta`
- * de la `section`, déclarées par l'app sur le slot `topbar-level2-nav`), regroupées par `group`.
+ * de la `section`, déclarées par l'app sur le slot `topbar-nav-slot`, ou sur son ancien nom `topbar-level2-nav`), regroupées par `group`.
  * Un clic navigue vers la route de la sous-option : la zone centrale se met à jour, la zone
  * gauche reste ouverte.
  *
@@ -61,7 +66,16 @@ function useCurrentRoute(): string {
  * `meta.global: true` (voir `ToolWindowMeta`).
  */
 export function SectionNavPanel({ section }: SectionNavPanelProps) {
-  const assigned = useAssignedExtensions(TOPBAR_LEVEL2_NAV_SLOT);
+  // Les deux noms de slot sont lus (le second est l'ancien nom, encore utilisé par des apps déjà déployées).
+  const current = useAssignedExtensions(TOPBAR_NAV_SLOT);
+  const legacy = useAssignedExtensions(TOPBAR_LEVEL2_NAV_SLOT);
+  const assigned = useMemo(() => {
+    const seen = new Set<string>();
+    return [...current, ...legacy].filter((e) => {
+      const key = `${e.moduleName}::${e.name}`;
+      return seen.has(key) ? false : (seen.add(key), true);
+    });
+  }, [current, legacy]);
   const route = useCurrentRoute();
   const [selected, setSelected] = useState<string | null>(null);
 

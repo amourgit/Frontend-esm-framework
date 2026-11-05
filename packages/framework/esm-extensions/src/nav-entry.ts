@@ -1,16 +1,32 @@
 /** @module @category Extension */
 
 /**
- * Nom du slot sur lequel chaque app déclare ses entrées de navigation
- * (niveau 2 de la TopBar). Déclaré dans le `routes.json` de l'app :
- * `{ "slot": "topbar-level2-nav", "component": "navEntry", "meta": NavEntryMeta }`.
+ * Nom du slot sur lequel chaque app déclare ses entrées de navigation de la TopBar. Déclaré dans le
+ * `routes.json` de l'app : `{ "slot": "topbar-nav-slot", "component": "navEntry", "meta": NavEntryMeta }`.
+ *
+ * Le nom ne désigne aucun niveau : la TopBar est une pile de N niveaux et la navigation peut être placée dans
+ * n'importe lequel (c'est la config de la TopBar qui décide).
+ */
+export const TOPBAR_NAV_SLOT = 'topbar-nav-slot';
+
+/**
+ * Ancien nom du slot de navigation (`topbar-level2-nav`), de l'époque où la TopBar n'avait que deux niveaux.
+ * Toujours honoré pour les apps déjà déployées.
+ *
+ * @deprecated Déclarer les entrées sur {@link TOPBAR_NAV_SLOT}.
  */
 export const TOPBAR_LEVEL2_NAV_SLOT = 'topbar-level2-nav';
 
 /**
- * Métadonnées d'une entrée de navigation du niveau 2 de la TopBar.
+ * Tous les noms de slot de navigation, le nom officiel d'abord. Un lecteur (TopBar, panneau de section…) doit
+ * les lire TOUS et fusionner les entrées, tant que des apps déclarent encore l'ancien nom.
+ */
+export const TOPBAR_NAV_SLOTS: readonly string[] = [TOPBAR_NAV_SLOT, TOPBAR_LEVEL2_NAV_SLOT];
+
+/**
+ * Métadonnées d'une entrée de navigation de la TopBar.
  * Partagé par les apps (qui le déclarent dans `meta`) et par la TopBar
- * (qui le lit via `useExtensionSlotMeta<NavEntryMeta>(TOPBAR_LEVEL2_NAV_SLOT)`).
+ * (qui le lit sur tous les slots de {@link TOPBAR_NAV_SLOTS}).
  */
 export interface NavEntryMeta {
   /** Entrée de niveau 2 (ex. `informations`) ; regroupe les colonnes du méga-menu. */

@@ -48,7 +48,8 @@ lance tous les paquets en parallèle ; lancé seul, le fichier passe (5/5, ≈ 2
 **Le remède proposé par la doc (ajouter ces 3 entrées à `files`) ne suffit pas.** Le config lit aussi, à l'exécution :
 `dependencies.json`, `src/index.ts` (point d'entrée, en TypeScript), `src/assets/`, et
 `../../framework/esm-theme/src/themes` (chemin qui n'existe que dans le monorepo). Rendre `egen build` possible hors monorepo demande donc
-de publier les sources du shell et de remplacer ce chemin relatif : **décision de conception à prendre** (voir le rapport de session).
+de publier les sources du shell et de remplacer ce chemin relatif.
+**Statut : résolu** (décision du 2026-11-06 : le shell est publié avec ses sources de construction, le build final par cible reste chez le consommateur ; le paquet `esm-theme` et `esm-translations` publient aussi les fichiers lus par le config). Voir la PR « publier les sources de construction » et `docs/EGEN-FRAMEWORK-DEV.md` § A3.
 En contrepartie, `egen develop` et `egen start` n'ont pas ce problème : ils servent le `dist` précompilé (`develop.ts`, l.97).
 
 ## A4 — Qui produit `service-worker.js` ? (⚠️ → ✅)
@@ -56,7 +57,7 @@ En contrepartie, `egen develop` et `egen start` n'ont pas ce problème : ils ser
 Après `yarn build`, `packages/shell/esm-app-shell/dist` (287 fichiers) **ne contient pas de `service-worker.js`**.
 `rspack.config.js` n'a qu'un seul point d'entrée et aucun plugin d'émission de service worker ; `run.ts` enregistre pourtant
 `${spaPath}/service-worker.js`. Seul `tooling/egen/src/commands/develop.ts` référence ce fichier. En Web production, l'enregistrement
-échoue donc silencieusement, ou le fichier doit être fourni par le consommateur. **Non tranché** : à confirmer avec l'équipe.
+échoue donc silencieusement, ou le fichier doit être fourni par le consommateur. **Décision (2026-11-06)** : ne pas ressusciter Workbox dans cette réforme ; SW Web non supporté en l'état, désactivé en natif ; tâche dédiée Web à ouvrir. Détails dans `docs/EGEN-FRAMEWORK-DEV.md` § A4.
 (La doc décide qu'en natif le SW est désactivé ; le sujet ne concerne que le Web.)
 
 ## Écarts entre la doc de développement et le code (à reporter dans `EGEN-FRAMEWORK-DEV.md`)

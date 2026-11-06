@@ -1,7 +1,7 @@
 # EGEN Framework — Document de développement « Multiplateforme » (Web · Android · iOS)
 
 **Statut** : document de référence du dépôt `Frontend-esm-framework` pour la réforme multiplateforme.
-**Date de rédaction** : 2026-11-06 · **Base de code lue** : HEAD `fd3d468`.
+**Date de rédaction** : 2026-11-06 · **Base de code lue** : analyse sur `fd3d468` ; existence des chemins cités revérifiée sur `7f6775a` (écarts sur les fichiers concernés : mineurs).
 **Public** : développeurs du framework. Chaque tâche indique *où toucher*, *quoi faire*, *quoi ne pas faire*, *comment valider*.
 
 > **Honnêteté sur l'état des connaissances.** Tout ce qui est marqué ✅ a été lu dans le code. Tout ce qui est marqué ⚠️ est une hypothèse ou un point à confirmer *avant* d'écrire du code (chaque ⚠️ a une tâche de vérification). Les chemins de fichiers cités existent ; les numéros de ligne sont indicatifs (le code bouge).

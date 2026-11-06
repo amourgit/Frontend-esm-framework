@@ -256,7 +256,8 @@ describe('Interaction between configuration and extension systems', () => {
       });
     });
 
-    expect(screen.getByTestId('slot')).toHaveTextContent(/black/);
+    // La mise à jour du store temporaire se propage de façon asynchrone : on attend, on ne suppose pas.
+    await waitFor(() => expect(screen.getByTestId('slot')).toHaveTextContent(/black/));
     expect(screen.queryByText('green')).not.toBeInTheDocument();
   });
 

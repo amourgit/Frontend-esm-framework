@@ -1,7 +1,26 @@
 import { describe, expect, it } from 'vitest';
-import { isNavEntryInWorkspace, isNavEntryMeta, type NavEntryMeta } from './nav-entry';
+import {
+  isNavEntryInWorkspace,
+  isNavEntryMeta,
+  TOPBAR_LEVEL2_NAV_SLOT,
+  TOPBAR_NAV_SLOT,
+  TOPBAR_NAV_SLOTS,
+  type NavEntryMeta,
+} from './nav-entry';
 
 const base: NavEntryMeta = { section: 'annuaire', label: 'Contacts', route: 'annuaire/contacts' };
+
+describe('slots de navigation', () => {
+  it('le nom officiel ne désigne aucun niveau ; l’ancien nom reste inchangé (compatibilité)', () => {
+    expect(TOPBAR_NAV_SLOT).toBe('topbar-nav-slot');
+    expect(TOPBAR_NAV_SLOT).not.toMatch(/level\d/i);
+    expect(TOPBAR_LEVEL2_NAV_SLOT).toBe('topbar-level2-nav');
+  });
+
+  it('TOPBAR_NAV_SLOTS liste le nom officiel d’abord, puis l’ancien nom', () => {
+    expect(TOPBAR_NAV_SLOTS).toEqual([TOPBAR_NAV_SLOT, TOPBAR_LEVEL2_NAV_SLOT]);
+  });
+});
 
 describe('isNavEntryMeta', () => {
   it('accepte une entrée minimale, sans group (lien simple)', () => {

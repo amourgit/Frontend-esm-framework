@@ -20,6 +20,8 @@ export {
 export { type WorkspaceRegistration } from './workspaces.js';
 export { type ExtensionData, type ComponentConfig } from './types.js';
 export {
+  TOPBAR_NAV_SLOT,
+  TOPBAR_NAV_SLOTS,
   TOPBAR_LEVEL2_NAV_SLOT,
   NAV_ALL_WORKSPACES,
   type NavEntryMeta,

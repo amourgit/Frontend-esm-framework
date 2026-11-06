@@ -8,6 +8,7 @@
   "files": [
     "dist",
     "src",
+    "translations",
     "!src/**/*.test.*",
     "mock.ts",
     "mock-jest.ts"

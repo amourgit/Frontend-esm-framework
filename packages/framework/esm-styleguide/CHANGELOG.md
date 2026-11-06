@@ -1,5 +1,16 @@
 # @egen-civitas/esm-styleguide
 
+## 3.3.0
+
+### Minor Changes
+
+- 3d304d5: Slot de navigation de la TopBar sans numéro de niveau : nouvelle constante `TOPBAR_NAV_SLOT` (`topbar-nav-slot`) et `TOPBAR_NAV_SLOTS` (tous les noms à lire, officiel d'abord). `TOPBAR_LEVEL2_NAV_SLOT` (`topbar-level2-nav`) est conservée, marquée `@deprecated`, et reste honorée : `SectionNavPanel` lit les deux slots (sans doublon). Les apps migrent leur `routes.json` vers le nouveau nom quand elles veulent ; aucune rupture.
+
+### Patch Changes
+
+- Updated dependencies [3d304d5]
+  - @egen-civitas/esm-extensions@2.4.0
+
 ## 3.2.0
 
 ### Minor Changes

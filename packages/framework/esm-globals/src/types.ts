@@ -73,6 +73,12 @@ declare global {
     egenTenantMode?: 'off' | 'single' | 'multi';
 
     /**
+     * Cible de build, injectée dans le HTML par le Shell (pont build → window) pour les builds natifs uniquement.
+     * Absent ⇒ `'web'`. Fixée au build, jamais devinée au runtime. Lue par `@egen-civitas/esm-platform`.
+     */
+    egenTarget?: 'web' | 'android' | 'ios';
+
+    /**
      * Identifiant du tenant actif (mode "single") ou tenant par défaut.
      * Depuis EGEN_TENANT_ID.
      */

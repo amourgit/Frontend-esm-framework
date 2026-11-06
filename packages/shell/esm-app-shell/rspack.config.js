@@ -25,7 +25,7 @@ const { mkdirSync, readdirSync, statSync, readFileSync, writeFileSync } = requir
 const sass = require('sass-embedded');
 const semver = require('semver');
 const { removeTrailingSlash, getTimestamp } = require('./tools/helpers');
-const { resolveTarget } = require('./tools/targets');
+const { resolveTarget, targetWindowBridge } = require('./tools/targets');
 const { resolveBranding } = require('./tools/brand');
 
 const { name, version, dependencies } = require('./package.json');
@@ -266,6 +266,8 @@ module.exports = (env, argv = []) => {
     EGEN_ENV: egenEnvironment,
     EGEN_DEV_NO_AUTH: publicEnv.EGEN_DEV_NO_AUTH,
   });
+  const targetBridge = targetWindowBridge(target);
+  const egenTargetConfigDef = targetBridge ? JSON.stringify(targetBridge) : null;
   const egenPublicPath = target.publicPath;
   const egenFavicon = process.env.EGEN_FAVICON || `${egenPublicPath}/favicon.ico`;
   // `offline` du HTML pilote aujourd'hui le service worker ET les données hors ligne (séparés par la tâche E1).
@@ -590,6 +592,7 @@ module.exports = (env, argv = []) => {
           egenExtraAssets: egenJsCssAssets.map((fileName) => 'assets/' + basename(fileName)),
           egenAiConfigDef,
           egenTenantConfigDef,
+          egenTargetConfigDef,
         },
       }),
       new WebpackPwaManifest({

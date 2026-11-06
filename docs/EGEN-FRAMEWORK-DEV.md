@@ -104,14 +104,16 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 
 ### A3 — Contenu publié du package Shell · S
 - ✅ `esm-app-shell/package.json` déclare `"files": ["dist"]`, alors que `tooling/egen/src/utils/config.ts` fait `require('@egen-civitas/esm-app-shell/rspack.config.js')`.
-- ⚠️ À confirmer : `rspack.config.js`, `src/index.ejs`, `tools/` sont-ils réellement publiés ? (`npm pack --dry-run` ; `yarn verify:pack` existe déjà).
-- **Faire** : si absents, ajouter `rspack.config.js`, `src/index.ejs`, `tools/` au champ `files` (c'est ce qui rend `egen build --platform …` possible depuis `egen-distributions`).
-- **Validé quand** : un projet vide qui installe le package peut lancer `egen build`.
+- ✅ **Confirmé le 2026-11-06** (`npm pack --dry-run`, v2.8.2) : seuls `README.md`, `package.json` et `dist/` étaient publiés ; `rspack.config.js`, `src/index.ejs` et `tools/` étaient **absents** ⇒ `egen build` inutilisable hors monorepo.
+- ✅ **Le remède initial (ajouter ces 3 entrées) ne suffisait pas.** Le config lit aussi `dependencies.json`, `src/index.ts`, `src/assets/`, le dossier des thèmes (`esm-theme/src/themes`, absent du paquet `esm-theme`) et `esm-translations/translations` (absent du paquet `esm-translations`).
+- ✅ **Décision (2026-11-06)** : le shell est publié **avec ses sources de construction** (`dist` précompilé conservé pour `egen develop`/`start`) ; le build final spécifique à la cible reste **chez le consommateur** (`egen build`). Les chemins propres au monorepo sont résolus via les paquets. Installation hoistée requise.
+- ✅ **Fait** (PR « publier les sources de construction ») : `files` du shell, `esm-theme` (`src/themes`, export `./package.json`), `esm-translations` (`translations`), test `tools/publish-contract.test.ts`.
+- ✅ **Validé** : projet vide + tarballs locaux + `@egen-civitas/egen@2.2.0` ⇒ `egen build --importmap … --routes … --spa-path /app/ --api-url https://…` OK en 28 s ; `dist` du monorepo identique à la baseline.
 
 ### A4 — Service worker : qui produit `service-worker.js` ? · S
 - ✅ `run.ts` enregistre `${getEgenSpaBase()}service-worker.js` ; `rspack.config.js` n'a qu'un seul entry et aucun plugin d'émission de SW (seul reste `ignoreWarnings: InjectManifest…`). Le source existe : `src/service-worker/`.
-- **Faire** : vérifier si `dist/service-worker.js` existe après un build. Documenter qui le produit (`egen develop`, `serve-prod`, autre).
-- **Décision à consigner** : en **natif** le SW est désactivé (cf. E1). Le sujet SW ne concerne donc que le **Web** ; ne pas investir plus que la clarification.
+- ✅ **Constat (2026-11-06)** : après `yarn build`, `dist/` (287 fichiers) ne contient **pas** de `service-worker.js`. Personne ne le produit : `src/service-worker/` s'appuie sur `self.__WB_MANIFEST` (Workbox `InjectManifest`), mais aucun plugin ne l'injecte et aucun `workbox-*` n'est déclaré ; ce code ne peut pas être compilé (perdu à l'import initial du dépôt). `run.ts` enregistre donc un fichier inexistant en Web `EGEN_OFFLINE=enable`, et `egen develop --support-offline` lit `dist/service-worker.js` (`readFileSync`) sans qu'il existe.
+- ✅ **Décision (2026-11-06)** : **ne pas ressusciter Workbox dans cette réforme** (nouvelles dépendances runtime, N6 ; hors périmètre, N7). Le SW Web est **non supporté en l'état** ; en natif il est désactivé (E1). `src/service-worker/` est exclu du paquet publié. Une tâche dédiée Web (hors multiplateforme) devra soit restaurer la génération du SW, soit retirer le code mort et l'enregistrement.
 
 ---
 
@@ -144,6 +146,7 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
   - `EGEN_TARGET` inconnu → erreur (pas de repli silencieux) ;
   - `EGEN_ENV` ≠ `production` en natif → erreur.
 - **Piège connu ✅** : `EGEN_PUBLIC_PATH=''` retombe sur la valeur par défaut (`||`). Ne jamais passer de chaîne vide ; la constante native est `/app`.
+- ✅ **Écart levé** : `EGEN_ENV` et `EGEN_DEV_NO_AUTH` sont résolus dans `module.exports` (`resolveEnvironment`, `resolvePublicEnv` avec fichiers `.env*`) : l'appelant les injecte **résolus** dans l'objet passé à `resolveTarget` (sinon un `.env` pourrait réactiver le bypass en natif sans erreur de build). `isMeaningful*` est déplacée dans `tools/helpers.js` (une seule définition).
 - **Ne pas faire** : lire `process.env` dans `resolveTarget` ; ajouter une option sans test ; dupliquer la logique `isMeaningfulImportmap` (la **réutiliser**).
 - **Tests** : table de cas `web` (défauts identiques à l'existant — test de non-régression obligatoire), `android`, `ios`, chaque erreur.
 
@@ -157,7 +160,7 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 ### B3 — Pont build → `window` : `egenTarget` · S
 - **Fichiers** : `rspack.config.js` (nouveau `egenTargetConfigDef`), `src/index.ejs`, `esm-globals/src/types.ts` (interface `Window`).
 - **Faire** : sur le modèle **exact** des ponts `egenAiConfigDef` / `egenTenantConfigDef` : `Object.assign(window, {"egenTarget":"android"})` en `<script>` **avant** `initializeSpa`. Typer `egenTarget?: 'web'|'android'|'ios'` ; défaut absent ⇒ `web`.
-- **Test** : étendre le garde-fou existant `env-bridge.test.ts` (liste blanche des clés) avec `egenTarget`.
+- ✅ **Correction** : `env-bridge.test.ts` n'existe que dans `esm-ai-config` et ne couvre que `EGEN_AI_*` (aucun test sur le pont tenant). Le test de `egenTarget` est donc **créé** dans le shell (`tools/targets.test.ts`, liste blanche `['egenTarget']`, pas de nom sensible, valeur = la seule cible). Le pont n'est injecté qu'en natif (HTML Web identique, R2).
 - **Ne pas faire** : ajouter d'autres clés au pont sans les mettre dans la liste blanche (N3).
 
 ### B4 — Option `--platform` du CLI `egen` · M

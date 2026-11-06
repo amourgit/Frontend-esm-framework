@@ -1,6 +1,8 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { resolveTarget, buildNativeCsp, TARGETS, NATIVE_PUBLIC_PATH } = require('./targets');
+const { resolveTarget, targetWindowBridge, buildNativeCsp, TARGETS, NATIVE_PUBLIC_PATH } = require('./targets');
 
 type Env = Record<string, string | undefined>;
 
@@ -233,5 +235,38 @@ describe('resolveTarget — pureté', () => {
     const copy = { ...env };
     resolveTarget(env);
     expect(env).toEqual(copy);
+  });
+});
+
+describe('targetWindowBridge — pont build → window.egenTarget', () => {
+  /** Liste blanche des clés que ce pont a le droit d'écrire sur `window` (règle N3 : jamais de secret). */
+  const ALLOWED_KEYS = ['egenTarget'];
+  const SENSITIVE_NAME = /secret|private|password|token|api_?key/i;
+
+  it('web : rien n’est injecté (HTML Web inchangé ; l’absence de window.egenTarget vaut web)', () => {
+    expect(targetWindowBridge(resolveTarget({}))).toBeNull();
+  });
+
+  it.each(['android', 'ios'])('%s : injecte uniquement egenTarget', (platform) => {
+    expect(targetWindowBridge(resolveTarget(validNative({ EGEN_TARGET: platform })))).toEqual({ egenTarget: platform });
+  });
+
+  it('n’écrit que des clés de la liste blanche, sans nom sensible, et seulement la cible (aucune valeur d’environnement)', () => {
+    const env = validNative({ EGEN_API_URL: 'https://api.exemple.ga/egen', SOME_SECRET_TOKEN: 'valeur-sensible' });
+    const bridge = targetWindowBridge(resolveTarget(env));
+    for (const key of Object.keys(bridge)) {
+      expect(ALLOWED_KEYS).toContain(key);
+      expect(key).not.toMatch(SENSITIVE_NAME);
+    }
+    expect(JSON.stringify(bridge)).not.toContain('valeur-sensible');
+    expect(JSON.stringify(bridge)).not.toContain('api.exemple.ga');
+  });
+
+  it('index.ejs pose le pont AVANT initializeSpa et seulement s’il est défini', () => {
+    const ejs = readFileSync(resolve(__dirname, '../src/index.ejs'), 'utf8');
+    const bridge = ejs.indexOf('<%= egenTargetConfigDef %>');
+    expect(bridge).toBeGreaterThan(-1);
+    expect(ejs.slice(0, bridge)).toMatch(/<% if \(egenTargetConfigDef\) \{ %>\s*<script>[^]*$/);
+    expect(bridge).toBeLessThan(ejs.indexOf('initializeSpa('));
   });
 });

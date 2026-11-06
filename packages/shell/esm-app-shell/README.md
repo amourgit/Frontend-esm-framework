@@ -60,3 +60,19 @@ Un consommateur (comme `Frontend-esm-core` via `egen develop`/`egen start`, ou u
 ```
 
 `egen develop`/`egen start` (package `@egen-civitas/egen`) le fait déjà automatiquement à partir de `--sources` — voir son propre README pour le détail.
+
+## Reconstruire le shell chez le consommateur
+
+Le paquet publié contient **deux choses** :
+
+- `dist/` : le shell précompilé, servi tel quel par `egen develop` et `egen start` ;
+- les **sources de construction** (`rspack.config.js`, `dependencies.json`, `src/`, `tools/`), lues par `egen build`
+  pour produire un shell propre à une cible (chemin public, URL d'API, import map et routes figés, etc.).
+
+`egen build` écrit toujours dans son propre dossier de sortie (`--target`) : il n'écrase jamais le `dist/` du paquet.
+
+Prérequis côté consommateur : une installation **hoistée** (npm, ou Yarn avec `nodeLinker: node-modules`). Le config lit
+`../../../.env` et `../../../node_modules`, c'est-à-dire la racine du projet consommateur. La chaîne d'outils
+(`sass-embedded`, `css-loader`, `clean-webpack-plugin`…) vient de `@egen-civitas/egen`.
+
+Le contrat de publication est verrouillé par `tools/publish-contract.test.ts`.

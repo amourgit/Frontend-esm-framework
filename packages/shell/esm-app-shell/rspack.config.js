@@ -387,13 +387,13 @@ module.exports = (env, argv = []) => {
 
   // ── Thème EGEN : source UNIQUE de vérité ──────────────────────────────────
   // Les fichiers JSON de thème vivent exclusivement dans le package
-  // @egen-civitas/esm-theme (packages/framework/esm-theme/src/themes/). Le shell ne
+  // @egen-civitas/esm-theme (src/themes/, publié avec le paquet). Le shell ne
   // possède PAS sa propre copie : il la copie/sert depuis cette unique
   // source, pour qu'il soit structurellement impossible que le shell serve
   // une version périmée pendant qu'un⋅e développeur⋅se édite « le » JSON de
   // thème (cf. incident : les deux fichiers avaient divergé silencieusement,
   // le shell servant une valeur différente de celle éditée).
-  const themeSourceDir = resolve(__dirname, '../../framework/esm-theme/src/themes');
+  const themeSourceDir = resolve(dirname(require.resolve('@egen-civitas/esm-theme/package.json')), 'src', 'themes');
 
   return {
     entry: resolve(__dirname, 'src/index.ts'),

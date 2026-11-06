@@ -1,0 +1,590 @@
+# EGEN Framework — Document de développement « Multiplateforme » (Web · Android · iOS)
+
+**Statut** : document de référence du dépôt `Frontend-esm-framework` pour la réforme multiplateforme.
+**Date de rédaction** : 2026-11-06 · **Base de code lue** : HEAD `fd3d468`.
+**Public** : développeurs du framework. Chaque tâche indique *où toucher*, *quoi faire*, *quoi ne pas faire*, *comment valider*.
+
+> **Honnêteté sur l'état des connaissances.** Tout ce qui est marqué ✅ a été lu dans le code. Tout ce qui est marqué ⚠️ est une hypothèse ou un point à confirmer *avant* d'écrire du code (chaque ⚠️ a une tâche de vérification). Les chemins de fichiers cités existent ; les numéros de ligne sont indicatifs (le code bouge).
+
+---
+
+## 0. Contexte et décisions déjà prises
+
+| Décision | Conséquence pour le framework |
+|---|---|
+| Composition **au build** : les apps embarquées sont déclarées dès le départ, **aucun chargement à chaud** | Le Shell reste le seul orchestrateur ; pas de registre distant à l'exécution ; overrides d'import map **interdits** en natif |
+| **4 briques** : `egen-framework` → `egen-core` → `egen-distributions` → `egen-mobile` | Ce dépôt ne contient **ni apps métier, ni code natif, ni manifestes de produit** |
+| Host natif = **Capacitor** (dans `egen-mobile`), isolé derrière `@egen-civitas/esm-platform` | Le framework **ne dépend jamais** de `@capacitor/*` ; il définit un *contrat de Host* |
+| Le Web ne doit **pas régresser** | Toute nouvelle option a une valeur par défaut = comportement actuel |
+
+### Vocabulaire
+- **Cible (`target`)** : `web` | `android` | `ios`. Fixée **au build**, jamais devinée au runtime.
+- **Host** : enveloppe native (dans `egen-mobile`) qui charge le SPA et sert les capacités natives.
+- **Capacité** : service de plateforme nommé et versionné (`session`, `secureStorage`, `files`…).
+- **Artefact SPA** : dossier statique produit par `egen-distributions` (shell + apps + import map + routes + `build-manifest.json`).
+- **Lockdown** : mode natif où tout ce qui permet de charger/exécuter du code non prévu est désactivé.
+
+---
+
+## 1. Règles invariantes (à relire avant chaque PR)
+
+**À FAIRE**
+- **R1** Une seule base de code Shell. Les différences entre cibles vivent **uniquement** dans : `tools/targets.js` (build), `@egen-civitas/esm-platform` (runtime), et le Host (hors dépôt).
+- **R2** Valeurs par défaut = comportement Web actuel. Un build sans `EGEN_TARGET` doit produire **exactement** le même résultat qu'aujourd'hui.
+- **R3** Toute nouvelle variable de build passe par `targets.js` et est couverte par un test.
+- **R4** Toute interaction native passe par `esm-platform`. Les apps ne voient jamais le pont.
+- **R5** Toute erreur de plateforme est un `PlatformError` typé (jamais une `Error` générique, jamais une chaîne).
+- **R6** Tout changement public = **changeset** (`.changeset/*.md`) + semver correct.
+- **R7** Un nouveau package suit le **gabarit `esm-tenant`** (§ C1). Pas d'écart de structure.
+- **R8** Réutiliser l'existant avant de créer : `egenFetch`, `esm-state`, `esm-config`, pont `window.*` du shell, `composeMiddlewares`. Une abstraction nouvelle n'est acceptée que si elle a ≥ 2 usages réels.
+
+**À NE PAS FAIRE**
+- **N1** Aucun `if (platform === 'ios')` / `if (target === …)` en dehors de `esm-platform` et `targets.js`.
+- **N2** Aucun import de `@capacitor/*`, API Android ou iOS dans ce dépôt.
+- **N3** Aucun secret (clé privée, jeton, mot de passe, clé API privée) dans un bundle, un `.html`, un `.env` embarqué, ni dans la liste blanche des ponts `EGEN_*` → `window.*`.
+- **N4** Aucun sniffing de User-Agent pour détecter la plateforme.
+- **N5** Aucun stockage de jeton dans `localStorage` / IndexedDB en cible native.
+- **N6** Aucune dépendance runtime ajoutée sans justification écrite dans la PR (taille, maintenance, alternative existante).
+- **N7** Ne pas « corriger au passage » du code hors périmètre de la tâche.
+- **N8** Ne pas créer de configuration Rspack séparée par cible (un seul `rspack.config.js`).
+- **N9** Ne pas ajouter de package par capacité tant qu'aucune n'est partagée par ≥ 2 apps.
+
+---
+
+## 2. Carte des changements
+
+| Chantier | Paquets / fichiers touchés | Nature |
+|---|---|---|
+| **A** Baseline & vérités | `scripts/`, shell `package.json`, `src/service-worker/` | vérification + 1 script |
+| **B** Cible de build | `shell/esm-app-shell/{rspack.config.js, src/index.ejs, tools/targets.js}`, `tooling/egen/src/{cli.ts, utils/config.ts, commands/build.ts}` | modif + 1 fichier nouveau |
+| **C** `esm-platform` | `framework/esm-platform/**` (nouveau), `esm-framework/{package.json, src/index.ts, src/internal.ts, mock.tsx}`, shell `dependencies.json` | **nouveau package** + câblage |
+| **D** Auth & API | `esm-api/src/{egen-fetch.ts, current-user.ts, dev-auth-bypass.ts, config-schema.ts, index.ts}`, `esm-globals/src/types.ts` | modif |
+| **E** Hors ligne & stockage | `esm-offline/src/*`, `shell/src/{index.ts, run.ts}`, `esm-globals/src/types.ts` | modif |
+| **F** Composition & contrats | `esm-globals/src/types.ts` (`EgenAppRoutes`), `esm-routes/src/loaders/{pages.ts, components.ts}`, `esm-dynamic-loading/src/{import-maps.ts, route-maps.ts}`, `tooling/rspack-config/src/index.ts` | modif |
+| **G** Sécurité | `shell/{rspack.config.js, src/index.ejs, src/run.ts}`, `esm-api/src/dev-auth-bypass.ts`, tests de garde-fou | modif |
+| **H** Qualité & release | racine (`package.json`, `turbo.json`, `scripts/`, `.changeset/`), e2e | outillage |
+
+---
+
+## 3. Ordre d'exécution et dépendances
+
+```
+A (baseline) ──► B (targets) ──► B5 (CSP)  ┐
+      │              │                      ├─► H2 (e2e SPA statique)
+      │              └──► F1 (lockdown) ───┘
+      └──► C (esm-platform) ──► D (auth) ──► E (offline)
+                    └──► F2/F3 (contrat routes)
+```
+
+| Lot | Tâches | Bloque |
+|---|---|---|
+| **P0** | A1–A4, B1–B3, C1–C3 | tout le reste |
+| **P1** | B4–B7, C4–C7, D1–D4, F1–F2, G1–G2 | prototypes Host |
+| **P2** | C8–C10, D5–D6, E1–E4, F3–F4, G3–G4 | industrialisation |
+| **P3** | H1–H6 (en continu dès P0 pour H1/H3/H4) | — |
+
+Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à découper).
+
+---
+
+## CHANTIER A — Baseline et vérités (aucune modification fonctionnelle)
+
+### A1 — Baseline reproductible · S
+- **But** : savoir ce qui passe *avant* de toucher quoi que ce soit.
+- **Faire** : `yarn setup`, `yarn verify`, `yarn workspace @egen-civitas/esm-app-shell build:production`. Consigner dans `docs/baseline-2026-11.md` : versions Node/Yarn, durée, avertissements, tests rouges existants.
+- **Ne pas faire** : corriger les tests rouges ici ; les lister seulement.
+- **Validé quand** : un tiers refait les mêmes commandes et obtient le même résultat.
+
+### A2 — Inventaire réel du `dist` du Shell · M
+- **Fichier nouveau** : `scripts/inventory-dist.mjs`.
+- **Faire** : lister tous les fichiers de `packages/shell/esm-app-shell/dist` ; servir le dossier en statique sous `/app` ; charger la page avec Playwright (déjà en devDependency racine) ; enregistrer **toutes** les requêtes réseau ; sortir un rapport JSON `{ fichiersAttendus, fichiersRequêtés, 404, horsOrigine }`.
+- **Question à trancher** (⚠️ non vérifiée à ce jour) : quels fichiers sont chargés hors du `dist` (import map, routes registry, `service-worker.js`, thèmes, polices, chunks) ?
+- **Ne pas faire** : modifier le build pour « faire passer » le test ; le rapport décrit l'existant.
+- **Validé quand** : le rapport existe et sert de référence aux tâches B et H2.
+
+### A3 — Contenu publié du package Shell · S
+- ✅ `esm-app-shell/package.json` déclare `"files": ["dist"]`, alors que `tooling/egen/src/utils/config.ts` fait `require('@egen-civitas/esm-app-shell/rspack.config.js')`.
+- ⚠️ À confirmer : `rspack.config.js`, `src/index.ejs`, `tools/` sont-ils réellement publiés ? (`npm pack --dry-run` ; `yarn verify:pack` existe déjà).
+- **Faire** : si absents, ajouter `rspack.config.js`, `src/index.ejs`, `tools/` au champ `files` (c'est ce qui rend `egen build --platform …` possible depuis `egen-distributions`).
+- **Validé quand** : un projet vide qui installe le package peut lancer `egen build`.
+
+### A4 — Service worker : qui produit `service-worker.js` ? · S
+- ✅ `run.ts` enregistre `${getEgenSpaBase()}service-worker.js` ; `rspack.config.js` n'a qu'un seul entry et aucun plugin d'émission de SW (seul reste `ignoreWarnings: InjectManifest…`). Le source existe : `src/service-worker/`.
+- **Faire** : vérifier si `dist/service-worker.js` existe après un build. Documenter qui le produit (`egen develop`, `serve-prod`, autre).
+- **Décision à consigner** : en **natif** le SW est désactivé (cf. E1). Le sujet SW ne concerne donc que le **Web** ; ne pas investir plus que la clarification.
+
+---
+
+## CHANTIER B — Cible de build (`EGEN_TARGET`)
+
+### B1 — Module `tools/targets.js` (nouveau) · M
+- **Fichier** : `packages/shell/esm-app-shell/tools/targets.js` + `targets.test.ts` (même dossier, patron de `brand.test.ts`).
+- **Contrat** : `resolveTarget(env) → TargetConfig` (fonction **pure**, aucune lecture de `process.env` interne : on lui passe l'objet).
+
+```js
+// TargetConfig
+{
+  target: 'web' | 'android' | 'ios',
+  native: boolean,                 // target !== 'web'
+  publicPath: string,              // web: EGEN_PUBLIC_PATH || '/egen-civitas/spa' ; natif: '/app'
+  serviceWorker: boolean,          // web: = EGEN_OFFLINE==='enable' ; natif: false
+  offlineData: boolean,            // web: = EGEN_OFFLINE==='enable' ; natif: EGEN_OFFLINE_DATA !== 'disable'
+  importmapMode: 'inline' | 'url', // web: comme aujourd'hui ; natif: 'inline' OBLIGATOIRE
+  routesMode: 'inline' | 'url',    // idem
+  allowImportMapOverrides: boolean,// web: comme aujourd'hui ; natif: false
+  allowDevAuthBypass: boolean,     // web: comme aujourd'hui ; natif: false
+  requireAbsoluteApiUrl: boolean,  // natif: true
+  csp: string | null,              // web: null ; natif: chaîne CSP (cf. B5)
+}
+```
+- **Règles de validation** (le build **échoue** avec un message explicite) :
+  - natif + `EGEN_DEV_NO_AUTH=true` → erreur ;
+  - natif + `EGEN_API_URL` non absolue (`^https://`) → erreur ;
+  - natif + import map ou routes vides/`url` → erreur (un artefact natif doit être autonome) ;
+  - `EGEN_TARGET` inconnu → erreur (pas de repli silencieux) ;
+  - `EGEN_ENV` ≠ `production` en natif → erreur.
+- **Piège connu ✅** : `EGEN_PUBLIC_PATH=''` retombe sur la valeur par défaut (`||`). Ne jamais passer de chaîne vide ; la constante native est `/app`.
+- **Ne pas faire** : lire `process.env` dans `resolveTarget` ; ajouter une option sans test ; dupliquer la logique `isMeaningfulImportmap` (la **réutiliser**).
+- **Tests** : table de cas `web` (défauts identiques à l'existant — test de non-régression obligatoire), `android`, `ios`, chaque erreur.
+
+### B2 — Brancher `targets.js` dans `rspack.config.js` · M
+- **Fichier** : `packages/shell/esm-app-shell/rspack.config.js`.
+- **Où** : constantes en tête (`egenPublicPath`, `egenOffline`, `egenImportmapDef/Url`, `egenRoutesDef/Url`), `templateParameters` de `HtmlWebpackPlugin`, `DefinePlugin`.
+- **Faire** : appeler `resolveTarget(process.env)` **une fois** ; remplacer ces constantes par les champs du résultat ; ajouter au `DefinePlugin` : `process.env.EGEN_TARGET`. Ne rien changer à la logique MF, aux loaders, aux `CopyRspackPlugin`.
+- **Ne pas faire** : créer un second `rspack.config.js` (N8) ; toucher `shared` / `dependencies.json` ici.
+- **Validé quand** : (1) build sans `EGEN_TARGET` ⇒ `dist` **identique octet pour octet** (hors horodatage/hash) à la baseline A1 ; (2) `EGEN_TARGET=android` produit un `index.html` avec import map et routes inlinés et sans référence à `service-worker`.
+
+### B3 — Pont build → `window` : `egenTarget` · S
+- **Fichiers** : `rspack.config.js` (nouveau `egenTargetConfigDef`), `src/index.ejs`, `esm-globals/src/types.ts` (interface `Window`).
+- **Faire** : sur le modèle **exact** des ponts `egenAiConfigDef` / `egenTenantConfigDef` : `Object.assign(window, {"egenTarget":"android"})` en `<script>` **avant** `initializeSpa`. Typer `egenTarget?: 'web'|'android'|'ios'` ; défaut absent ⇒ `web`.
+- **Test** : étendre le garde-fou existant `env-bridge.test.ts` (liste blanche des clés) avec `egenTarget`.
+- **Ne pas faire** : ajouter d'autres clés au pont sans les mettre dans la liste blanche (N3).
+
+### B4 — Option `--platform` du CLI `egen` · M
+- **Fichiers** : `tooling/egen/src/cli.ts` (commande `build`, options ~l.228-320), `tooling/egen/src/commands/build.ts` (`BuildArgs`, `BuildConfig`), `tooling/egen/src/utils/config.ts` (`BuildOptions`, `setBundlerEnv`).
+- ✅ `--target` **existe déjà** et désigne le **dossier de sortie** : ne pas le réutiliser. Nom retenu : **`--platform web|android|ios`** (défaut `web`), clé `platform` dans `BuildConfig`.
+- **Faire** : `setBundlerEnv` mappe `platform` → `EGEN_TARGET` ; priorité habituelle `buildConfig.platform || args.platform`.
+- **Tests** : étendre `cli.test.ts` et `build.integration.test.ts` (build `--platform android` ⇒ HTML natif).
+- **Ne pas faire** : renommer l'option `--target` existante (rupture).
+
+### B5 — CSP et scripts inline · L
+- ✅ `index.ejs` contient des `<script>` inline : anti-FOUC thème, ponts `window.egen*`, `initializeSpa({...})`. Une CSP `script-src 'self'` les bloquerait.
+- **Faire (cible native uniquement)** : générer ces scripts en **fichiers émis** (`bootstrap.[hash].js`) référencés par `<script src>` ; poser une balise `<meta http-equiv="Content-Security-Policy" content="…">` issue de `targets.csp`.
+- **CSP de départ (proposition ⚠️ à valider sur appareil)** : `default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' <API_ORIGIN>; base-uri 'self'; form-action 'self'`. `'unsafe-inline'` pour les styles est à réexaminer (Carbon / style injection).
+- ⚠️ Vérifier l'absence d'`eval`/`new Function` dans le bundle de production (le `devtool` prod est `hidden-nosources-source-map` ✅, donc sans eval).
+- **Ne pas faire** : toucher le HTML Web (R2) ; autoriser `'unsafe-eval'`.
+- **Validé quand** : l'artefact natif s'exécute sous cette CSP sans violation en console (test e2e H2).
+
+### B6 — Chemins et origine · S
+- ✅ `initializeSpa` fixe `<base href>` et `__webpack_public_path__` **depuis `spaPath` au runtime**. ✅ `makeUrl()` accepte déjà une URL `http…` absolue et `egenBase` peut être absolu.
+- **Faire** : documenter (README shell) que `spaPath` natif = `/app` et que `apiUrl` natif est absolu ; ajouter un test `index.test` vérifiant `setupPaths` avec `apiUrl: 'https://api.exemple.ga/egen'`.
+- **Point d'attention ✅** : `run.ts` (~l.350) fait `new URL(`${window.egenBase}${restBaseUrl}/session`, window.location.origin)` — correct avec une base absolue ; à couvrir par un test.
+- **Ne pas faire** : introduire un second mécanisme de base de chemin.
+
+### B7 — Tests de build · M
+- Ajouter dans le shell des tests `vitest` : (a) snapshot de `TargetConfig` par cible ; (b) HTML généré natif ne contient ni `service-worker`, ni `<script>` inline exécutable, ni URL d'import map externe ; (c) HTML Web inchangé vs baseline.
+
+---
+
+## CHANTIER C — `@egen-civitas/esm-platform` (nouveau package)
+
+**Responsabilité unique** : exposer aux apps une API de capacités **indépendante de l'environnement**, et parler au Host par un protocole versionné. Il ne contient **aucun** code natif.
+
+### C1 — Création du package (gabarit `esm-tenant`) · M
+- **Créer** `packages/framework/esm-platform/` avec : `package.json`, `tsconfig.build.json`, `vitest.config.ts`, `src/index.ts`, `CHANGELOG.md` (laissé vide, géré par changesets), `README.md`.
+- **`package.json`** : recopier celui d'`esm-tenant` (champs `main/module/types/exports`, scripts `build/typescript/test/lint`, devDependencies identiques, `repository.directory` adapté). Version initiale `1.0.0`. `peerDependencies` : `rxjs 7.x` uniquement si des Observables sont exposés ; sinon aucune.
+- **Câblage (4 endroits, tous obligatoires)** :
+  1. `esm-framework/package.json` → dépendance `@egen-civitas/esm-platform`.
+  2. `esm-framework/src/index.ts` **et** `src/internal.ts` → `export * from '@egen-civitas/esm-platform';`.
+  3. `esm-framework/mock.tsx` (+ `mock-jest.tsx` si les mocks y sont dupliqués) → mock du package (cf. C9).
+  4. `shell/esm-app-shell/dependencies.json` → ajouter `"@egen-civitas/esm-platform"` (liste des dépendances **partagées MF**, singleton) et `package.json` du shell → dépendance.
+- ⚠️ Vérifier si `tsconfig.json` (`packages/framework/tsconfig.json`) ou `typedoc.json` référencent les packages explicitement ; si oui, y ajouter le nouveau.
+- **Ne pas faire** : exposer `esm-platform` autrement que via `esm-framework` aux apps ; oublier `dependencies.json` (sans cela, chaque app embarquerait **sa propre copie** ⇒ états divergents).
+- **Validé quand** : `yarn build` et `yarn verify` passent ; `import { getPlatform } from '@egen-civitas/esm-framework'` compile dans une app.
+
+### C2 — Types et contrats · M
+**Fichier** : `src/types.ts`. Contrats publics (illustration de la forme finale ; les signatures exactes sont en Annexe 2).
+- `PlatformEnvironment = 'web' | 'android' | 'ios'`.
+- `CapabilityName` : union fermée, étendue **par registre** (C6).
+- `PlatformError` (classe) : `code: 'UNAVAILABLE' | 'DENIED' | 'CANCELLED' | 'INVALID_ARGS' | 'TIMEOUT' | 'INCOMPATIBLE' | 'HOST_ERROR'`, `message`, `retryable: boolean`, `capability`, `method`.
+- `Platform` : `{ environment; has(cap): boolean; capabilities: {...}; ready: Promise<void> }`.
+- **Règle** : un appel de capacité retourne toujours une `Promise` et **rejette** avec `PlatformError` ; jamais de `null` ambigu.
+- **Ne pas faire** : un type « fourre-tout » `any` ; une capacité sans `has()` correspondant.
+
+### C3 — Détection de plateforme · S
+**Fichier** : `src/detect.ts`.
+- Lire **uniquement** `window.egenTarget` (posé au build, B3). Absent ⇒ `'web'`.
+- Vérification de cohérence : en natif, si `window.egenHostBridge` (C5) est absent après `ready` ⇒ `PlatformError('INCOMPATIBLE')` et état « Host manquant ».
+- **Ne pas faire** : UA sniffing (N4), `window.Capacitor`, `navigator.platform`.
+
+### C4 — Adaptateur Web · L
+**Dossier** : `src/adapters/web/`. Principe : **ne jamais simuler de la sécurité**.
+| Capacité | Comportement Web |
+|---|---|
+| `session` | fournisseur d'autorisation **vide** (le cookie reste le mécanisme, D1) |
+| `secureStorage` | `has() === false` ; appels ⇒ `UNAVAILABLE` (pas de faux coffre dans `localStorage`) |
+| `openExternal` | `window.open(url, '_blank', 'noopener,noreferrer')` après validation d'URL (`https:`/`mailto:`/`tel:`) |
+| `lifecycle` | `visibilitychange` → `resume`/`pause` |
+| `files.select` | `<input type="file">` éphémère |
+| `camera.capture` | `<input accept="image/*" capture>` ou `getUserMedia` (choisir un seul, documenter) |
+| `permissions` | API Permissions du navigateur si dispo, sinon `UNAVAILABLE` |
+| `push`, `biometric` | `UNAVAILABLE` en v1 |
+- **Tests** : un test par ligne ci-dessus (happy-dom).
+
+### C5 — Client de pont et protocole v1 · L
+**Dossier** : `src/bridge/`. Spécification complète en **Annexe 1**.
+- **Contrat de Host (côté web)** : le Host injecte **avant tout script de la page** l'objet `window.egenHostBridge = { send(json: string): void, subscribe(cb: (json: string) => void): void }`. Le framework ne connaît rien d'autre du natif (R2/N2).
+- **À implémenter** : sérialisation JSON stricte, génération d'`id` unique, table des requêtes en vol, expiration (défaut **30 s**, configurable par appel), handshake `hello` (négociation de version + liste des capacités), routage des événements Host→web, rejet de toute enveloppe invalide ou de version non supportée.
+- **Sécurité côté web** : aucune évaluation dynamique (`eval`, `new Function`) ; seuls les champs attendus sont lus ; toute réponse sans `id` connu est ignorée et journalisée (sans données utiles).
+- **Ne pas faire** : exposer le pont brut aux apps ; accepter des messages non JSON ; faire transiter des binaires volumineux (limite proposée ⚠️ **256 Ko** par message ; au-delà ⇒ référence/handle de fichier fournie par le Host).
+- **Tests** : handshake OK/KO, incompatibilité de version, timeout, réponses hors ordre, 64 appels concurrents, message malformé, réponse orpheline.
+
+### C6 — Registre de capacités et procédure d'ajout · M
+**Fichier** : `src/registry.ts`.
+- Un registre `capabilities` associe `nom → { version, méthodes, adaptateurWeb, adaptateurNatif }`.
+- **Procédure « ajouter une capacité »** (à copier dans le README du package) : (1) interface TS dans `types/<cap>.ts` ; (2) entrée dans le registre ; (3) adaptateur Web (même `UNAVAILABLE`) ; (4) adaptateur natif = simple appelant du pont ; (5) mock dans `testing/` ; (6) tests ; (7) changeset *minor* ; (8) ligne ajoutée au tableau des capacités du README. **Aucun autre fichier du framework ne doit être modifié.**
+- **Critère de réussite du design** : ajouter une capacité fictive dans un test ne modifie que ces fichiers.
+
+### C7 — Capacités v1 et priorités · XL (à découper en sous-tâches par capacité)
+| Prio | Capacité | Méthodes v1 | Remarque |
+|---|---|---|---|
+| **P0** | `session` | `getAuthorization()`, `setTokens()`, `clear()`, `refresh()` | **chemin critique** (chantier D) |
+| **P0** | `secureStorage` | `get`, `set`, `remove` (valeurs `string`) | sert à `session` côté Host ; pas de JSON implicite |
+| **P0** | `openExternal` | `open(url)` | allowlist de schémas (G3) |
+| **P0** | `lifecycle` | `onResume`, `onPause` (retournent une fonction de désabonnement) | corrige l'ébauche initiale (pas de fuite de callbacks) |
+| P1 | `permissions` | `check(name)`, `request(name)` | noms normalisés (`camera`, `microphone`, `notifications`, `files`) |
+| P1 | `files` | `select(opts)`, `download(url, name)` | retour = *handle*, pas de binaire inline |
+| P1 | `camera` | `capture(opts)` | retour = *handle* de fichier |
+| P2 | `push` | `register()`, `onMessage()` | jeton de push envoyé au backend par l'app |
+| P2 | `biometric` | `isAvailable()`, `authenticate(reason)` | déverrouillage local, **pas** une authentification serveur |
+- **Règle** : une capacité P1/P2 n'est implémentée côté framework que lorsqu'**une app l'utilise** (N9).
+
+### C8 — Erreurs, indisponibilité, repli · M
+- `has(cap)` doit être **fiable** : issu du handshake en natif, statique en Web.
+- Fournir un utilitaire `withFallback(cap, nativeFn, webFn)` **uniquement si** ≥ 2 usages réels existent (R8).
+- Message utilisateur : les apps affichent un texte i18n ; `PlatformError` ne porte **pas** de texte localisé.
+
+### C9 — Mocks et utilitaires de test · M
+- `esm-platform/src/testing/` : `createMockHost()` (simule `window.egenHostBridge`, programmable : latence, erreurs, versions) et `createMockPlatform(overrides)`.
+- Mettre à jour `esm-framework/mock.tsx` pour que les apps testent sans Host.
+- **Ne pas faire** : mock qui diffère du contrat (le mock est testé contre les mêmes tests de contrat que l'implémentation).
+
+### C10 — Documentation du package · S
+- `README.md` : contrat, tableau des capacités, procédure d'ajout, table des codes d'erreur, schéma du pont. Intégrer à TypeDoc (`typedoc.json`, `typedoc-plugin-file-categories`).
+
+---
+
+## CHANTIER D — Authentification et accès API
+
+**Problème ✅** : aujourd'hui la session repose sur le **cookie** : `egenFetch` ne pose aucune option `credentials` (défaut navigateur), le login passe par `refetchCurrentUser(username, password)` avec en-tête `Basic` (`esm-api/src/current-user.ts`). En natif, l'API est **cross-origin** : le cookie n'est ni fiable ni souhaitable. Les jetons doivent vivre dans le Host.
+
+> **Dépendance externe X-1 (backend, hors dépôt)** : le backend doit (a) accepter `Authorization: Bearer`, (b) émettre/rafraîchir des jetons, (c) autoriser l'origine locale en CORS (en-têtes `Authorization`, `X-Tenant-ID`, `Accept`, `Disable-WWW-Authenticate`). Le framework est écrit **contre une interface** ; le contrat précis de l'endpoint de jetons est à définir avec le backend (egen-kernel) — il n'est **pas** inventé ici.
+
+### D1 — Fournisseur d'autorisation dans `esm-api` · M
+- **Fichiers** : `esm-api/src/egen-fetch.ts`, nouveau `esm-api/src/authorization.ts`, `index.ts`/`public.ts` (exports).
+- **Faire** : `setAuthorizationProvider(fn: () => Promise<string | null>)` ; dans `egenFetch`, **avant** `window.fetch`, si un fournisseur est posé et qu'aucun en-tête `Authorization` n'est fourni par l'appelant ⇒ l'ajouter. Zone : après l'assemblage des en-têtes (`Accept`, `Disable-WWW-Authenticate`, `X-Tenant-ID`).
+- **Branchement** : `esm-platform` (cible native) appelle `setAuthorizationProvider(() => platform.session.getAuthorization())` au démarrage ; en Web **rien n'est posé** (R2).
+- **Ne pas faire** : stocker un jeton dans `esm-api` ; logguer l'en-tête ; modifier le comportement quand aucun fournisseur n'est posé.
+- **Tests** (`egen-fetch.test.ts`) : sans fournisseur = identique ; avec fournisseur = en-tête présent ; en-tête appelant prioritaire ; fournisseur qui rejette ⇒ la requête échoue avec `PlatformError` propagée.
+
+### D2 — Politique `credentials` · S
+- **Faire** : option de config `@egen-civitas/esm-api` → `credentials: 'same-origin' | 'include' | 'omit'` (fichier `config-schema.ts`). Défaut = **inchangé** (aucune valeur posée ⇒ défaut navigateur). `targets`/natif fixe `'omit'` via la configuration fournie au démarrage.
+- **Ne pas faire** : forcer `include` globalement (risque CORS/CSRF).
+
+### D3 — 401 : rafraîchissement unique puis repli · M
+- **Fichier** : `egen-fetch.ts`, branche « réponse non-ok » (là où `redirectAuthFailure` est évalué).
+- **Faire** : si fournisseur posé **et** statut 401 : appeler `platform.session.refresh()` **une seule fois** (verrou *single-flight* : N requêtes simultanées partagent le même rafraîchissement), rejouer la requête **une fois**, sinon appliquer le comportement existant (`redirectAuthFailure`/login).
+- **Ne pas faire** : boucle de relance ; rafraîchir sur 403 ; rejouer des requêtes non idempotentes sans garde (documenter : seules `GET/HEAD` sont rejouées par défaut ; `POST/PUT/DELETE` ⇒ opt-in explicite).
+- **Tests** : 5 requêtes concurrentes 401 ⇒ 1 seul `refresh` ; refresh KO ⇒ redirection login ; pas de double rejeu.
+
+### D4 — Session et login (côté framework) · M
+- **Fichier** : `current-user.ts`.
+- **Faire** : garder `refetchCurrentUser(username?, password?)` tel quel pour le Web. Ajouter un chemin natif : si un fournisseur d'autorisation est posé, `refetchCurrentUser()` interroge `sessionEndpoint` avec Bearer. Le **flux de login natif** (obtention des jetons) est orchestré par l'app de login du **core** (hors dépôt, dépendance X-2) via `platform.session.setTokens(...)`.
+- ⚠️ Confirmer, avec le backend, si `sessionEndpoint` accepte Bearer ; sinon définir l'endpoint équivalent (X-1).
+- **Ne pas faire** : passer le mot de passe au Host ; garder le `Basic` en natif si un flux de jetons existe.
+
+### D5 — URL d'API absolue · S
+- ✅ `makeUrl` supporte déjà `http…` ; `egenBase` accepte une base absolue ; couvrir par tests (`egen-fetch.test.ts`, test `index`). Vérifier tous les `new URL(..., window.location.origin)` du dépôt : `grep -rn "location.origin" packages/` ; chacun doit supporter une base absolue.
+
+### D6 — Tenant et en-têtes · S
+- `X-Tenant-ID` reste injecté par `egenFetch` ✅ (inchangé). Vérifier que la liste d'en-têtes envoyés est **exactement** celle autorisée en CORS (document de contrat X-1).
+
+---
+
+## CHANTIER E — Hors ligne, cache, stockage
+
+### E1 — Séparer « service worker » et « données hors ligne » · M
+- ✅ Aujourd'hui `offline` (`SpaConfig.offline` → `window.offlineEnabled`) gouverne à la fois le SW et l'activation des fonctions hors ligne.
+- **Faire** : (1) `grep -rn "offlineEnabled" packages/` — recenser **tous** les usages (⚠️ liste non établie) ; (2) ajouter `SpaConfig.serviceWorker?: boolean` (défaut = valeur d'`offline` ⇒ rétro-compatible) et `window.serviceWorkerEnabled` ; (3) dans `run.ts`, `setupOffline()` n'enregistre le SW que si `serviceWorkerEnabled`, mais active toujours la couche données si `offlineEnabled` ; (4) `index.ejs` : `initializeSpa({…, serviceWorker: <targets.serviceWorker>})`.
+- **Ne pas faire** : désactiver `offlineEnabled` en natif (cela couperait la sync de données).
+- **Tests** : Web (offline on) inchangé ; natif (offline on, SW off) : pas de `navigator.serviceWorker.register`, `esm-offline-db` actif.
+
+### E2 — Messages SW sans SW · S
+- `run.ts` : `precacheGlobalStaticDependencies`, `precacheImportMap`, `messageEgenServiceWorker` ne doivent faire **aucune** tentative si SW désactivé (no-op silencieux testé). Fichiers : `run.ts`, `esm-offline/src/service-worker-messaging.ts`.
+
+### E3 — Politique de stockage · M
+- ✅ Usages navigateur recensés : `localStorage` (thème, config, tenant, état, feature flags, historique), IndexedDB/Dexie (`esm-offline`).
+- **Faire** : rédiger `docs/stockage.md` : tableau *donnée → mécanisme → sensibilité → comportement en natif*. Règle : **aucune donnée sensible** hors Host. Les clés `egen:*` sont listées.
+- ⚠️ À valider sur appareils : persistance, quotas et purge d'IndexedDB/`localStorage` selon l'origine locale Android/iOS ; comportement après mise à jour de l'app.
+- **Ne pas faire** : migrer le stockage « par principe » avant d'avoir un constat sur appareil.
+
+### E4 — Connectivité · S
+- `navigator.onLine` est peu fiable dans un WebView. **Ne rien changer en P0-P1** : `subscribeConnectivity` reste. Si les tests appareils montrent des écarts, ajouter une capacité `network` (P2) alimentée par le Host.
+
+---
+
+## CHANTIER F — Composition et contrats entre briques
+
+### F1 — Lockdown natif (aucun code non prévu) · M
+- **Source unique** : ajouter dans `esm-globals` un helper `getEgenTarget(): 'web'|'android'|'ios'` (lit `window.egenTarget`, défaut `web`) et `isNativeTarget()`. `esm-platform/detect.ts` (C3) **réutilise** ce helper (pas de double lecture).
+- **Fichiers** : `esm-dynamic-loading/src/import-maps.ts` (lecture `import-map-override:*` et `DISABLED_KEY` dans `localStorage` ✅), `esm-dynamic-loading/src/route-maps.ts` (overrides, déjà limités à `devMode` ✅), `shell/src/run.ts` (`setupImportMapOverrides()` appelé au tout début de `run`, + bloc devtools lisant `egen:devtools`).
+- **Faire** : si `isNativeTarget()` ⇒ les fonctions de lecture/écriture d'overrides deviennent **no-op** (retournent vide) et journalisent un avertissement unique ; `setupImportMapOverrides()` ne fait rien.
+- **Ne pas faire** : supprimer ces fonctions du Web (R2) ; compter sur le seul « masquage » de l'UI devtools.
+- **Tests** : natif + clé `import-map-override:x` posée dans `localStorage` ⇒ ignorée ; Web ⇒ inchangé.
+
+### F2 — Contrat d'app : `platforms` et `requiredCapabilities` · L
+- ✅ Type : `EgenAppRoutes` dans `esm-globals/src/types.ts` (~l.443). Enregistrement : `registerApp(appName, routes)` dans `esm-routes/src/loaders/pages.ts` (~l.99), appelé par `setupApps()` de `run.ts` pour chaque entrée du registre de routes.
+- **Faire** :
+  1. Ajouter à `EgenAppRoutes` : `platforms?: Array<'web'|'android'|'ios'>` et `requiredCapabilities?: Array<CapabilityName>` (types importés **sans** créer de cycle : `CapabilityName` défini dans `esm-globals`, ré-exporté par `esm-platform`).
+  2. Dans `registerApp` (point d'entrée unique) : si `platforms` présent et ne contient pas la cible courante ⇒ **ne rien enregistrer** (ni pages, ni extensions, ni modals, ni workspaces) + `console.warn` structuré `{app, reason:'platform'}`.
+  3. Si une `requiredCapabilities` n'est pas disponible (`has()` faux) ⇒ même traitement, `reason:'capability'`. ⚠️ Ordre de démarrage : `esm-platform.ready` (handshake) doit être résolu **avant** `setupApps()` ; à ajouter dans la chaîne de `run()` (juste avant `.then(setupApps)`).
+  4. Champs absents ⇒ comportement **identique à aujourd'hui** (toutes plateformes, aucune capacité requise).
+- **Ne pas faire** : filtrer ailleurs (extensions, `components.ts`…) — un seul point de filtrage ; casser l'ordre d'enregistrement existant ; faire échouer tout le démarrage pour une app écartée (elle est écartée, pas fatale).
+- **Tests** : app sans champs ⇒ enregistrée ; `platforms:['ios']` en Web ⇒ écartée ; capacité manquante ⇒ écartée ; toutes ses extensions absentes des slots.
+
+### F3 — Schéma JSON de `routes.json` · S
+- ✅ Les `routes.json` pointent vers `https://egen.alpha.vercel.com/routes.schema.json` ; **aucun schéma n'est présent dans le dépôt** (recherche vide).
+- **Faire** : ajouter `packages/framework/esm-routes/schema/routes.schema.json` (source de vérité) couvrant les champs existants + `platforms` + `requiredCapabilities` + `frameworkRange` (F4) ; test de validation sur 2-3 `routes.json` réels du core ; publier avec le package (`files`).
+- **Ne pas faire** : introduire des champs non décrits dans le schéma.
+
+### F4 — Compatibilité vérifiable (fin du « mou ») · L
+- ✅ Constat : MF est configuré avec `strictVersion: false` et les apps déclarent des `peerDependencies` en `>=` ; une app incompatible **s'exécute quand même**.
+- **Faire (estampillage)** : `tooling/rspack-config/src/index.ts`, bloc `CopyRspackPlugin` du `routes.json` (transformer qui ajoute déjà `version`) : ajouter `frameworkRange` = `peerDependencies['@egen-civitas/esm-framework']` (si défini) et `platformProtocol` = plage supportée (constante exportée par `esm-platform`, ⚠️ à créer en C5).
+- **Faire (vérification au démarrage)** : dans `registerApp`, avant l'enregistrement, comparer `frameworkRange` à `process.env.FRAMEWORK_VERSION` (déjà défini ✅ par `DefinePlugin` du shell) avec `semver` (déjà dépendance du shell ✅). Non satisfait ⇒ app écartée (`reason:'framework'`), erreur **visible** dans `devtools`/logs.
+- **`build-manifest.json`** (produit par `egen-distributions`, hors dépôt) : le framework fournit **le type** `BuildManifest` (dans `esm-globals`) et une fonction `validateBuildManifest()` utilisée par le Host/shell au démarrage : `{ shellVersion, frameworkVersion, protocolVersion, apps:[{name, version, integrity}] }`.
+- **Ne pas faire** : passer `strictVersion: true` sur MF (casse l'écosystème existant) ; bloquer les apps sans `frameworkRange` (ancien format ⇒ toléré, avertissement).
+- **Tests** : plage satisfaite / non satisfaite / absente.
+
+---
+
+## CHANTIER G — Sécurité
+
+### G1 — Garde-fou des ponts `EGEN_*` → `window.*` · S
+- ✅ Listes blanches : `EGEN_AI_ENV_KEYS` et `EGEN_TENANT_ENV_TO_WINDOW_KEY` dans `rspack.config.js` ; test `env-bridge.test.ts`.
+- **Faire** : ajouter un test qui **échoue** si une clé ajoutée aux ponts contient (insensible à la casse) `SECRET`, `PRIVATE`, `PASSWORD`, `TOKEN`, `API_KEY` — sauf allowlist explicite commentée (ex. `JWKS` = clés **publiques**). Appliquer à `egenTarget`.
+- ⚠️ Revue manuelle demandée du `dist/index.html` réellement déployé : aucune valeur sensible ne doit y figurer. Les valeurs viennent des `.env` : la liste blanche protège les **noms**, pas les **valeurs**.
+
+### G2 — Bypass d'authentification inerte en natif · S
+- **Fichiers** : `esm-api/src/dev-auth-bypass.ts` (`isDevAuthBypassEnabled`, `initDevAuthBypass`), `shell/src/run.ts` (`applyDevNoAuthBypass`).
+- **Faire** : `isDevAuthBypassEnabled()` retourne **toujours `false`** si `isNativeTarget()` (même si `window.egenDevNoAuth === true` ou `process.env.EGEN_DEV_NO_AUTH === 'true'`). Le build échoue déjà côté `targets.js` (B1) ; ceci est la **seconde ceinture** runtime.
+- **Tests** : natif + `window.egenDevNoAuth=true` ⇒ bypass inactif.
+
+### G3 — Liens externes et navigation · S
+- **Faire** : (1) `openExternal` n'accepte que `https:`, `mailto:`, `tel:` (liste en constante) ; (2) audit : `grep -rn "window.open\|location.href\s*=" packages/` ; chaque occurrence qui sort de l'origine passe par `platform.openExternal` en natif ; (3) `navigate()` (esm-navigation) vers une URL externe : décision documentée (⚠️ comportement actuel non audité).
+- **Ne pas faire** : autoriser `javascript:` / `data:` / `file:`.
+
+### G4 — Journalisation sûre · S
+- Aucun jeton, en-tête `Authorization`, ni corps de requête dans les logs ni dans `EgenFetchError`. Test : provoquer une erreur avec fournisseur d'autorisation et vérifier l'absence du jeton dans `error.message`/`stack`/`responseBody`.
+
+---
+
+## CHANTIER H — Qualité, outillage, release
+
+### H1 — Conventions de test · S
+- `vitest` (déjà) ; un test par règle de validation et par chemin d'erreur ; couverture : chaque tâche ci-dessus liste ses cas. Les non-régressions Web sont des tests **explicites**, pas implicites.
+
+### H2 — E2E sur SPA statique (natif simulé) · L
+- **Fichier** : `e2e/` (racine, Playwright déjà installé). Servir un artefact assemblé minimal sous `/app` (origine ≠ API), avec un faux Host (`createMockHost`) injectant `window.egenHostBridge`.
+- **Scénarios** : (1) démarrage sans 404 ni requête hors origine hors API ; (2) CSP sans violation ; (3) handshake OK ⇒ apps filtrées par `platforms` ; (4) handshake KO ⇒ écran d'incompatibilité ; (5) 401 ⇒ 1 refresh ⇒ rejeu ; (6) overrides d'import map ignorés ; (7) Web sans Host : parcours existant inchangé.
+- **Limite assumée** : ne remplace pas les tests sur appareils (E3/phases prototypes).
+
+### H3 — Vérifications de publication · S
+- Étendre aux nouveaux paquets les scripts existants `verify:publint`, `verify:attw`, `verify:pack` (`scripts/verify-*.mjs`). `esm-platform` doit passer les trois.
+
+### H4 — Versions et changesets · S
+| Paquet | Bump | Raison |
+|---|---|---|
+| `esm-platform` | `1.0.0` initial (posé à la main), puis changesets | nouveau |
+| `esm-globals` | minor | `egenTarget`, `getEgenTarget`, champs `EgenAppRoutes`, `BuildManifest` |
+| `esm-api` | minor | `setAuthorizationProvider`, option `credentials`, 401→refresh |
+| `esm-routes` | minor | filtrage plateforme/capacité/framework |
+| `esm-dynamic-loading` | minor | lockdown |
+| `esm-offline` | minor | séparation SW/données (si modifié) |
+| `esm-app-shell` | minor | `targets.js`, CSP, `serviceWorker` |
+| `rspack-config` | minor | estampillage `frameworkRange` |
+| `egen` (CLI) | minor | `--platform` |
+| `esm-framework` | minor | ré-export `esm-platform` |
+- **Rappel ✅** : la publication passe par `changeset` ; `yarn release` exécute d'abord `scripts/ensure-shell-rebuild.mjs`. ⚠️ Lire ce script et confirmer qu'il rebuild le shell lorsque `esm-platform` change.
+
+### H5 — Documentation à tenir à jour · S
+- `README` de chaque paquet touché ; `docs/stockage.md` (E3) ; `docs/cibles-de-build.md` (tableau `TargetConfig`) ; `MIGRATION.md` : section « Cibles et plateformes » (comment une app déclare `platforms`/`requiredCapabilities`).
+
+### H6 — CI · M
+- Jobs : `verify` (lint/test/typescript) ; `build` des 3 cibles du shell (`EGEN_TARGET` web/android/ios) avec contrôle des règles de validation B1 ; `e2e` (H2) ; `verify:pack/publint/attw`. Un échec d'un job bloque la fusion.
+
+---
+
+## 4. Définition de « terminé » (toute tâche)
+
+- [ ] Code + tests unitaires verts ; **test de non-régression Web** présent si le comportement Web est effleuré.
+- [ ] `yarn verify` vert (lint, test, typescript) ; build des paquets touchés vert.
+- [ ] Changeset ajouté avec le bon type de bump.
+- [ ] README/docs mis à jour.
+- [ ] Aucun point **N1–N9** violé (cocher explicitement).
+- [ ] Les hypothèses ⚠️ levées sont **réécrites en ✅** dans ce document, avec la preuve (commande, sortie, date).
+
+### Modèle de description de PR
+```
+Tâche : <ID, ex. B2>
+Fichiers touchés : …
+Comportement Web : inchangé (preuve : test <nom>) / modifié (justification)
+Règles N1–N9 : respectées (cocher)
+Tests ajoutés : …
+Hypothèses ⚠️ levées : …
+```
+
+---
+
+## 5. Dépendances externes (hors de ce dépôt)
+
+| ID | Brique | Besoin | Bloque |
+|---|---|---|---|
+| **X-1** | Backend (egen-kernel) | Bearer, émission/refresh de jetons, CORS pour l'origine locale, endpoint de session compatible | D3, D4, tests appareils |
+| **X-2** | `egen-core` | Champs `platforms`/`requiredCapabilities` dans les `routes.json` ; versions des apps harmonisées (aujourd'hui `1.0.0` et `9.0.2`, scopes `@egen/` vs `@egen-civitas/`) ; app de login adaptée au flux de jetons | F2, D4 |
+| **X-3** | `egen-distributions` | Manifestes par cible ; génération du `build-manifest.json` ; étape `build:spa` (équivalent disque de `serve-prod.mjs`) | F4, H2 |
+| **X-4** | `egen-mobile` | Host Capacitor qui injecte `window.egenHostBridge`, implémente le protocole v1 et le handshake | C5, H2 (réel) |
+
+---
+
+## ANNEXE 1 — Protocole Host ↔ Shell, version 1
+
+**Transport** : chaînes JSON UTF-8 via `window.egenHostBridge.send(json)` (web→host) et `subscribe(cb)` (host→web).
+
+**Requête (web→host)**
+```json
+{ "p": "egen-host", "v": 1, "id": "b1f6…", "ns": "secureStorage", "m": "get", "a": { "key": "refresh" } }
+```
+**Réponse (host→web)**
+```json
+{ "p": "egen-host", "v": 1, "id": "b1f6…", "ok": true,  "r": "valeur" }
+{ "p": "egen-host", "v": 1, "id": "b1f6…", "ok": false, "e": { "code": "DENIED", "message": "…", "retryable": false } }
+```
+**Événement (host→web)**
+```json
+{ "p": "egen-host", "v": 1, "ev": "lifecycle.resume", "d": {} }
+```
+**Handshake** (premier message obligatoire)
+```json
+→ { "p":"egen-host","v":1,"id":"…","ns":"host","m":"hello","a":{"protocol":{"min":1,"max":1},"shell":"2.9.0","framework":"3.2.0"} }
+← { …,"ok":true,"r":{"protocol":1,"host":"1.0.0","platform":"android",
+      "capabilities":{"session":{"v":1},"secureStorage":{"v":1},"openExternal":{"v":1},"lifecycle":{"v":1}}} }
+```
+**Règles**
+1. Aucun appel de capacité avant un `hello` réussi.
+2. Plages de protocole sans recouvrement ⇒ `INCOMPATIBLE` : le Shell affiche un écran « mise à jour de l'application requise » (aucun démarrage partiel).
+3. Un message sans `p:"egen-host"`, avec `v` non supporté, non JSON, ou dont l'`id` est inconnu ⇒ ignoré et compté (métrique de debug), jamais exécuté.
+4. Le **Host** valide `ns`, `m` et `a` contre une liste blanche (par capacité et par version) et **vérifie l'origine** de la page émettrice ; le Shell ne fait pas confiance au Host pour la structure (validation symétrique).
+5. Codes d'erreur : `UNAVAILABLE`, `DENIED`, `CANCELLED`, `INVALID_ARGS`, `TIMEOUT`, `INCOMPATIBLE`, `HOST_ERROR`.
+6. Évolution : ajouter un champ optionnel = même version ; changer le sens d'un champ ou en supprimer = **nouvelle version majeure** du protocole ; le Host peut supporter plusieurs versions.
+
+## ANNEXE 2 — Signatures TypeScript (v1, contractuelles)
+
+```ts
+export type PlatformEnvironment = 'web' | 'android' | 'ios';
+export type PlatformErrorCode =
+  'UNAVAILABLE'|'DENIED'|'CANCELLED'|'INVALID_ARGS'|'TIMEOUT'|'INCOMPATIBLE'|'HOST_ERROR';
+
+export class PlatformError extends Error {
+  constructor(readonly code: PlatformErrorCode, message: string,
+              readonly opts?: { retryable?: boolean; capability?: string; method?: string }) { super(message); }
+}
+
+export type Unsubscribe = () => void;
+
+export interface SessionCapability {
+  getAuthorization(): Promise<string | null>;         // ex. "Bearer …" ; null = pas de session
+  setTokens(t: { access: string; refresh?: string; expiresAt?: number }): Promise<void>;
+  refresh(): Promise<boolean>;                         // true si nouveau jeton obtenu
+  clear(): Promise<void>;
+}
+export interface SecureStorageCapability {
+  get(key: string): Promise<string | null>;
+  set(key: string, value: string): Promise<void>;
+  remove(key: string): Promise<void>;
+}
+export interface OpenExternalCapability { open(url: string): Promise<void>; }
+export interface LifecycleCapability {
+  onResume(cb: () => void): Unsubscribe;
+  onPause(cb: () => void): Unsubscribe;
+}
+export interface PermissionsCapability {
+  check(name: PermissionName): Promise<'granted'|'denied'|'prompt'>;
+  request(name: PermissionName): Promise<'granted'|'denied'>;
+}
+export type PermissionName = 'camera'|'microphone'|'notifications'|'files';
+export interface FileHandle { id: string; name: string; size: number; mime: string; }
+export interface FilesCapability {
+  select(o?: { multiple?: boolean; accept?: string[] }): Promise<FileHandle[]>;
+  download(url: string, filename: string): Promise<void>;
+}
+export interface CameraCapability { capture(o?: { facing?: 'front'|'back' }): Promise<FileHandle>; }
+export interface PushCapability {
+  register(): Promise<{ token: string }>;
+  onMessage(cb: (m: unknown) => void): Unsubscribe;
+}
+export interface BiometricCapability {
+  isAvailable(): Promise<boolean>;
+  authenticate(reason: string): Promise<boolean>;
+}
+
+export interface Platform {
+  readonly environment: PlatformEnvironment;
+  readonly ready: Promise<void>;                       // handshake terminé (immédiat en Web)
+  has(cap: CapabilityName): boolean;
+  readonly session: SessionCapability;
+  readonly secureStorage: SecureStorageCapability;
+  readonly openExternal: OpenExternalCapability;
+  readonly lifecycle: LifecycleCapability;
+  readonly permissions: PermissionsCapability;
+  readonly files: FilesCapability;
+  readonly camera: CameraCapability;
+  readonly push: PushCapability;
+  readonly biometric: BiometricCapability;
+}
+export declare function getPlatform(): Platform;
+```
+*Une capacité absente (`has()` faux) existe toujours comme objet ; ses méthodes rejettent `UNAVAILABLE`.*
+
+## ANNEXE 3 — Index « où toucher » (fichier → tâches)
+
+| Fichier | Tâches |
+|---|---|
+| `shell/esm-app-shell/rspack.config.js` | B2, B3, B5, G1 |
+| `shell/esm-app-shell/tools/targets.js` (+test) | B1 |
+| `shell/esm-app-shell/src/index.ejs` | B3, B5, E1 |
+| `shell/esm-app-shell/src/index.ts` | B6, E1 |
+| `shell/esm-app-shell/src/run.ts` | E1, E2, F1, F2, G2 |
+| `shell/esm-app-shell/{package.json, dependencies.json}` | A3, C1 |
+| `tooling/egen/src/{cli.ts, commands/build.ts, utils/config.ts}` | B4 |
+| `tooling/rspack-config/src/index.ts` | F4 |
+| `framework/esm-globals/src/types.ts` | B3, E1, F1, F2, F4 |
+| `framework/esm-api/src/{egen-fetch.ts, authorization.ts, current-user.ts, config-schema.ts, dev-auth-bypass.ts}` | D1–D5, G2, G4 |
+| `framework/esm-routes/src/loaders/pages.ts` | F2, F4 |
+| `framework/esm-routes/schema/routes.schema.json` | F3 |
+| `framework/esm-dynamic-loading/src/{import-maps.ts, route-maps.ts}` | F1 |
+| `framework/esm-offline/src/{service-worker-messaging.ts, mode.ts…}` | E1, E2 |
+| `framework/esm-platform/**` | C1–C10 |
+| `framework/esm-framework/{package.json, src/index.ts, src/internal.ts, mock.tsx}` | C1, C9 |
+| `scripts/`, `e2e/`, `.changeset/`, `turbo.json` | A2, H2–H6 |
+
+## ANNEXE 4 — Questions ouvertes à lever (⚠️) — à fermer avant le lot P1
+
+1. Fichiers réellement chargés hors `dist` (A2) et contenu publié du package Shell (A3).
+2. Production effective de `service-worker.js` (A4).
+3. Liste complète des usages de `offlineEnabled` (E1).
+4. Endpoint de session et jetons côté backend (X-1).
+5. CSP : styles inline requis par Carbon ? (B5).
+6. Persistance IndexedDB/`localStorage` en WebView Android et WKWebView (E3).
+7. Comportement de `navigate()` vers une URL externe (G3).
+8. Cohérence de `scripts/ensure-shell-rebuild.mjs` avec le nouveau package (H4).
+9. Règles Apple 2.5.2 / 4.7.x et politique Google Play : relecture des textes **officiels** avant la décision finale de distribution.

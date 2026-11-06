@@ -6,18 +6,18 @@ import { EmptyCard } from './empty-card.component';
 
 describe('EmptyCard', () => {
   const defaultProps = {
-    displayText: 'medications',
-    headerTitle: 'Medications',
+    displayText: 'documents',
+    headerTitle: 'Documents',
   };
 
   it('renders the header title', () => {
     render(<EmptyCard {...defaultProps} />);
-    expect(screen.getByRole('heading', { name: /medications/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /documents/i })).toBeInTheDocument();
   });
 
   it('renders the empty state text with the display text', () => {
     render(<EmptyCard {...defaultProps} />);
-    expect(screen.getByText(/there are no medications to display/i)).toBeInTheDocument();
+    expect(screen.getByText(/there are no documents to display/i)).toBeInTheDocument();
   });
 
   it('does not render the action button when launchForm is not provided', () => {
@@ -28,7 +28,7 @@ describe('EmptyCard', () => {
   it('renders the action button when launchForm is provided', () => {
     const launchForm = vi.fn();
     render(<EmptyCard {...defaultProps} launchForm={launchForm} />);
-    expect(screen.getByRole('button', { name: /record medications/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /record documents/i })).toBeInTheDocument();
   });
 
   it('calls launchForm when the action button is clicked', async () => {
@@ -36,7 +36,7 @@ describe('EmptyCard', () => {
     const launchForm = vi.fn();
     render(<EmptyCard {...defaultProps} launchForm={launchForm} />);
 
-    const button = screen.getByRole('button', { name: /record medications/i });
+    const button = screen.getByRole('button', { name: /record documents/i });
     await user.click(button);
 
     expect(launchForm).toHaveBeenCalledTimes(1);

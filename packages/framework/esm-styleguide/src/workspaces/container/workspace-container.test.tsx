@@ -30,7 +30,7 @@ window.history.pushState({}, 'Workspace Container', '/workspace-container');
 
 vi.mock('single-spa-react/parcel', () => vi.fn().mockImplementation(() => <div>Parcel</div>));
 
-interface ClinicalFormWorkspaceProps extends DefaultWorkspaceProps {
+interface FormWorkspaceProps extends DefaultWorkspaceProps {
   entityUuid: string;
 }
 
@@ -38,7 +38,7 @@ describe('WorkspaceContainer in window mode', () => {
   beforeAll(() => {
     registerWorkspace({
       name: 'business-form',
-      title: 'clinicalForm',
+      title: 'formWorkspace',
       load: vi.fn(),
       moduleName: '@egen-civitas/foo',
       canHide: true,
@@ -46,7 +46,7 @@ describe('WorkspaceContainer in window mode', () => {
     });
 
     registerWorkspace({
-      name: 'order-basket',
+      name: 'shopping-cart',
       title: 'orderBasket',
       load: vi.fn(),
       moduleName: '@egen-civitas/bar',
@@ -61,9 +61,9 @@ describe('WorkspaceContainer in window mode', () => {
     act(() => launchWorkspace('business-form'));
 
     let header = screen.getByRole('banner');
-    expect(within(header).getByText('clinicalForm')).toBeInTheDocument();
+    expect(within(header).getByText('formWorkspace')).toBeInTheDocument();
 
-    act(() => launchWorkspace('order-basket'));
+    act(() => launchWorkspace('shopping-cart'));
 
     header = screen.getByRole('banner');
     expect(within(header).getByText('orderBasket')).toBeInTheDocument();
@@ -76,19 +76,19 @@ describe('WorkspaceContainer in window mode', () => {
     // behaves as expected, constraining the type of the `additionalProps` argument.
 
     act(() =>
-      launchWorkspace<ClinicalFormWorkspaceProps>('business-form', {
-        workspaceTitle: 'COVID Admission',
+      launchWorkspace<FormWorkspaceProps>('business-form', {
+        workspaceTitle: 'Opening form',
         entityUuid: '123',
       }),
     );
 
     const header = screen.getByRole('banner');
-    expect(within(header).getByText('COVID Admission')).toBeInTheDocument();
+    expect(within(header).getByText('Opening form')).toBeInTheDocument();
 
     const utils = renderHook(() => useWorkspaces());
-    act(() => utils.result.current.workspaces[0].setTitle('COVID Discharge'));
+    act(() => utils.result.current.workspaces[0].setTitle('Closing form'));
 
-    expect(within(header).getByText('COVID Discharge')).toBeInTheDocument();
+    expect(within(header).getByText('Closing form')).toBeInTheDocument();
 
     act(() =>
       utils.result.current.workspaces[0].setTitle('Space Ghost', <div data-testid="entity-name">Space Ghost</div>),
@@ -103,19 +103,19 @@ describe('WorkspaceContainer in window mode', () => {
     // In this line we are also testing that `launchWorkspace` allows arbitrary additional props
     // when no type argument is provided.
 
-    act(() => launchWorkspace('business-form', { workspaceTitle: 'COVID Admission', foo: 'bar' }));
+    act(() => launchWorkspace('business-form', { workspaceTitle: 'Opening form', foo: 'bar' }));
 
     const header = screen.getByRole('banner');
-    expect(within(header).getByText('COVID Admission')).toBeInTheDocument();
+    expect(within(header).getByText('Opening form')).toBeInTheDocument();
 
-    act(() => launchWorkspace('business-form', { workspaceTitle: 'COVID Discharge' }));
-    expect(within(header).getByText('COVID Discharge')).toBeInTheDocument();
+    act(() => launchWorkspace('business-form', { workspaceTitle: 'Closing form' }));
+    expect(within(header).getByText('Closing form')).toBeInTheDocument();
 
     const utils = renderHook(() => useWorkspaces());
     act(() => utils.result.current.workspaces[0].setTitle('Fancy Special Title'));
     expect(within(header).getByText('Fancy Special Title')).toBeInTheDocument();
 
-    act(() => launchWorkspace('business-form', { workspaceTitle: 'COVID Admission Again' }));
+    act(() => launchWorkspace('business-form', { workspaceTitle: 'Opening form Again' }));
     expect(within(header).getByText('Fancy Special Title')).toBeInTheDocument();
   });
 
@@ -161,7 +161,7 @@ describe('WorkspaceContainer in window mode', () => {
     act(() => launchWorkspace('business-form'));
 
     const header = screen.getByRole('banner');
-    expect(within(header).getByText('clinicalForm')).toBeInTheDocument();
+    expect(within(header).getByText('formWorkspace')).toBeInTheDocument();
     // eslint-disable-next-line testing-library/no-node-access
     expect(screen.getByRole('complementary').firstElementChild?.getAttribute('class')).not.toContain('maximizedWindow');
 
@@ -194,10 +194,10 @@ describe('WorkspaceContainer in window mode', () => {
     await user.type(input, 'howdy');
     await user.click(screen.getByRole('button', { name: 'Hide' }));
 
-    act(() => launchWorkspace('order-basket'));
+    act(() => launchWorkspace('shopping-cart'));
 
     container = screen.getByRole('complementary');
-    expect(within(container).getByText('order-basket')).toBeInTheDocument();
+    expect(within(container).getByText('shopping-cart')).toBeInTheDocument();
 
     act(() => launchWorkspace('business-form'));
 
@@ -230,11 +230,11 @@ describe('WorkspaceContainer in overlay mode', () => {
     const user = userEvent.setup();
 
     renderWorkspaceOverlay();
-    act(() => launchWorkspace('entity-search', { workspaceTitle: 'Make an appointment' }));
+    act(() => launchWorkspace('entity-search', { workspaceTitle: 'Create a record' }));
 
     expect(screen.getByRole('complementary')).toBeInTheDocument();
     expectToBeVisible(screen.getByRole('complementary'));
-    expect(screen.getByText('Make an appointment')).toBeInTheDocument();
+    expect(screen.getByText('Create a record')).toBeInTheDocument();
 
     const closeButton = screen.getByRole('button', { name: 'Close' });
     await user.click(closeButton);

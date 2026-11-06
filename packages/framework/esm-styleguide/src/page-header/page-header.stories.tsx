@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 import { PageHeader } from './page-header.component.js';
-import { AppointmentsPictogram } from '../pictograms/pictograms.js';
+import { HomePictogram } from '../pictograms/pictograms.js';
 
 const meta: Meta<typeof PageHeader> = {
   title: 'Components/PageHeader',
@@ -17,7 +17,7 @@ type Story = StoryObj<typeof PageHeader>;
 
 export const Default: Story = {
   args: {
-    title: 'Appointments',
-    illustration: <AppointmentsPictogram />,
+    title: 'Dashboard',
+    illustration: <HomePictogram />,
   },
 };

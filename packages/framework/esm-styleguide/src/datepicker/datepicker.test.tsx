@@ -67,15 +67,15 @@ describe('EgenDatePicker', () => {
 
   describe('labels and accessibility', () => {
     it('should work with aria-label when labelText is empty', () => {
-      render(<EgenDatePicker aria-label="Select appointment date" labelText="" />);
-      const group = screen.getByRole('group', { name: /Select appointment date/i });
+      render(<EgenDatePicker aria-label="Select start date" labelText="" />);
+      const group = screen.getByRole('group', { name: /Select start date/i });
       expect(group).toBeInTheDocument();
-      expect(screen.queryByText('Select appointment date')).not.toBeInTheDocument();
+      expect(screen.queryByText('Select start date')).not.toBeInTheDocument();
     });
 
     it('should render visible label when labelText is provided', () => {
-      render(<EgenDatePicker labelText="Appointment date" />);
-      const labelText = screen.getByText('Appointment date');
+      render(<EgenDatePicker labelText="Start date" />);
+      const labelText = screen.getByText('Start date');
       expect(labelText).toBeInTheDocument();
       expect(labelText).toHaveClass('cds--label');
       const group = screen.getByRole('group');

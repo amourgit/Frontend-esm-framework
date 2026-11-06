@@ -160,10 +160,8 @@ export const EgenDateRangePicker = vi.fn(({ id, labelText, value = [], onChange,
 /* esm-utils */
 export {
   getDefaultsFromConfigSchema,
-  selectPreferredName,
 } from '@egen-civitas/esm-utils';
 
-export const age = vi.fn((arg) => utils.age(arg));
 
 export function isVersionSatisfied() {
   return true;

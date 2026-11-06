@@ -10,7 +10,6 @@ export interface Person extends EgenResourceStrict {
   gender?: string;
   age?: number;
   birthdate?: string;
-  birthdateEstimated?: boolean;
   preferredName?: PersonName;
   preferredAddress?: PersonAddress;
   names?: Array<PersonName>;

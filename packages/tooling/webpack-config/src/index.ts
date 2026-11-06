@@ -25,7 +25,7 @@
  * Don't use `yarn link` or symlinks to work on it.
  *
  * After you `yarn build --watch`, do something like
- * `watch "cp -R dist /path/to/packages/esm-patient-chart-app/webpack"`
+ * `watch "cp -R dist /path/to/packages/esm-example-app/webpack"`
  * and then change the webpack line from
  * `module.exports = require('@egen-civitas/egen/default-webpack-config');`
  * to

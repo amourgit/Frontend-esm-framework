@@ -65,8 +65,6 @@ export const coreTranslations = {
   error: 'Error',
   errorCopy:
     'Sorry, there was a problem displaying this information. You can try to reload this page, or contact the site administrator and quote the error code above.',
-  errorLoadingLoginLocations:
-    'Unable to load login locations. Please try again or contact support if the problem persists.',
   female: 'Female',
   // Default value for the implementationName config property
   Framework: 'Framework',
@@ -88,7 +86,6 @@ export const coreTranslations = {
   scriptLoadingFailed: 'Error: Script failed to load',
   scriptLoadingError:
     'Failed to load overridden script from {{url}}. Please check that the bundled script is available at the expected URL. Click the button below to reset all import map overrides.',
-  searchForLocation: 'Search for a location',
   seeAll: 'See all',
   seeMoreGroups: 'See {{count}} more groups',
   selectAll: 'Select all',

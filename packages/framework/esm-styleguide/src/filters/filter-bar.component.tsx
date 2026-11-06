@@ -1600,7 +1600,7 @@ const DEMO_ARTICLES: DemoArticle[] = [
   { id: "4", title: "Réforme du système éducatif : ce qui change", status: "draft", category: "politique", subcategory: "institutions", tags: ["éducation"], views: 120, publishedAt: "2026-09-15", featured: false },
   { id: "5", title: "Les marchés locaux résistent à l'inflation", status: "published", category: "economie", subcategory: "marches", tags: ["budget"], views: 1560, publishedAt: "2026-07-30", featured: false },
   { id: "6", title: "Festival de musique urbaine à Port-Gentil", status: "published", category: "culture", subcategory: "musique", tags: [], views: 870, publishedAt: "2026-09-05", featured: false },
-  { id: "7", title: "Nouvelle campagne de vaccination lancée", status: "published", category: "politique", subcategory: "national", tags: ["santé"], views: 3400, publishedAt: "2026-06-18", featured: false },
+  { id: "7", title: "Nouvelle campagne de sensibilisation lancée", status: "published", category: "politique", subcategory: "national", tags: ["santé"], views: 3400, publishedAt: "2026-06-18", featured: false },
   { id: "8", title: "Championnat national de basketball : bilan", status: "archived", category: "sport", subcategory: "basketball", tags: [], views: 640, publishedAt: "2026-05-02", featured: false },
 ];
 

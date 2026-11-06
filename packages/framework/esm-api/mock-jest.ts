@@ -14,7 +14,6 @@ export const mockSessionStore = createGlobalStore<SessionStore>('mock-session-st
 });
 export const getSessionStore = jest.fn(() => mockSessionStore);
 export const restBaseUrl = '/ws/rest/v1';
-export const fhirBaseUrl = '/ws/fhir2/R4';
 export const clearCurrentUser = jest.fn();
 export const refetchCurrentUser = jest.fn();
 export const setUserLanguage = jest.fn();

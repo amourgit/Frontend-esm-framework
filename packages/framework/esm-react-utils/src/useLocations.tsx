@@ -17,7 +17,7 @@ import { getLocations, type Location } from '@egen-civitas/esm-data-api';
  * ```tsx
  * import { useLocations } from '@egen-civitas/esm-framework';
  * function LocationList() {
- *   const locations = useLocations('Login Location');
+ *   const locations = useLocations('Branch');
  *   return (
  *     <ul>
  *       {locations.map((loc) => <li key={loc.uuid}>{loc.display}</li>)}

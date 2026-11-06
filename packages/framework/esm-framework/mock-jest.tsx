@@ -159,10 +159,8 @@ export const EgenDateRangePicker = jest.fn(({ id, labelText, value = [], onChang
 /* esm-utils */
 export {
   getDefaultsFromConfigSchema,
-  selectPreferredName,
 } from '@egen-civitas/esm-utils';
 
-export const age = jest.fn((arg) => utils.age(arg));
 
 export function isVersionSatisfied() {
   return true;

@@ -19,7 +19,7 @@ export const Default: Story = {
 
 export const WithDefaultValue: Story = {
   args: {
-    labelText: 'Appointment date',
+    labelText: 'Start date',
     defaultValue: new Date(2025, 5, 15),
   },
 };

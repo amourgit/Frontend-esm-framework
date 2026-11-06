@@ -386,7 +386,7 @@ describe('workspace system', () => {
     });
     registerWorkspace({
       name: 'order-meds',
-      title: 'Order Medications',
+      title: 'Order Supplies',
       load: vi.fn(),
       canHide: true,
       type: 'order',

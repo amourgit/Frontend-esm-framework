@@ -35,10 +35,6 @@ export const iconIds = [
   'egen-icon-edit',
   'egen-icon-event-schedule',
   'egen-icon-events',
-  'egen-icon-gender-female',
-  'egen-icon-gender-male',
-  'egen-icon-gender-other',
-  'egen-icon-gender-unknown',
   'egen-icon-group',
   'egen-icon-group-access',
   'egen-icon-information',
@@ -329,39 +325,6 @@ export const EventsIcon = memo(
   }),
 );
 
-/**
- */
-export const GenderFemaleIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function GenderFemaleIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-gender-female" iconProps={props} />;
-  }),
-);
-/**
- */
-export const GenderMaleIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function GenderMaleIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-gender-male" iconProps={props} />;
-  }),
-);
-/**
- */
-export const GenderOtherIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function GenderOtherIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-gender-other" iconProps={props} />;
-  }),
-);
-/**
- */
-export const GenderUnknownIcon = memo(
-  forwardRef<SVGSVGElement, IconProps>(function GenderUnknownIcon(props, ref) {
-    return <Icon ref={ref} icon="egen-icon-gender-unknown" iconProps={props} />;
-  }),
-);
-
-/**
- */
-/**
- */
 export const GroupIcon = memo(
   forwardRef<SVGSVGElement, IconProps>(function GroupIcon(props, ref) {
     return <Icon ref={ref} icon="egen-icon-group" iconProps={props} />;
@@ -586,7 +549,7 @@ export const SwitcherIcon = memo(
 );
 
 /**
- * Order Basket, the UI to enter Orders for Medications, Referrals, Labs, Procedures and more
+ * Shopping cart, the UI to gather several items and confirm them in one go
  */
 export const ShoppingCartIcon = memo(
   forwardRef<SVGSVGElement, IconProps>(function ShoppingCartIcon(props, ref) {
@@ -595,7 +558,7 @@ export const ShoppingCartIcon = memo(
 );
 
 /**
- * Used as a button to add an item to the Order basket from a search
+ * Used as a button to add an item to the shopping cart from a search
  */
 export const ShoppingCartArrowDownIcon = memo(
   forwardRef<SVGSVGElement, IconProps>(function ShoppingCartArrowDownIcon(props, ref) {
@@ -615,7 +578,7 @@ export const StickyNoteAddIcon = memo(
 /**
  */
 /**
- * Used as a button to add an item to the Order basket from a search
+ * Used as a button to add an item to the shopping cart from a search
  */
 export const TableOfContentsIcon = memo(
   forwardRef<SVGSVGElement, IconProps>(function TableOfContentsIcon(props, ref) {

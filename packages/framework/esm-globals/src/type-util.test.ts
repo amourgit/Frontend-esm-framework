@@ -6,7 +6,7 @@ describe('isEgenAppRoutes', () => {
     expect(
       isEgenAppRoutes({
         backendDependencies: {
-          fhir2: '^2.0.0',
+          'data-service': '^2.0.0',
           'webservices.rest': '^1.4.0',
         },
         version: '1.2.0-pre.12345+build.8',

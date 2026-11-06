@@ -1,5 +1,4 @@
 /// <reference path="./intl-durationformat.d.ts" />
-export * from './age-helpers.js';
 export * from './dates/index.js';
 export * from './get-locale.js';
 export * from './is-online.js';

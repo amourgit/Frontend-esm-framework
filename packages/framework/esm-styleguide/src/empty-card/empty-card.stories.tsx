@@ -20,8 +20,8 @@ export const Default: Story = {
 
 export const WithLaunchForm: Story = {
   args: {
-    headerTitle: 'Medications',
-    displayText: 'medications',
+    headerTitle: 'Documents',
+    displayText: 'documents',
     launchForm: () => window.alert('Launch form clicked'),
   },
 };

@@ -61,14 +61,14 @@ describe('history', () => {
     window.location.href = 'https://egen.alpha.vercel.com/egen-civitas/spa/labs';
     dispatchRoutingEvent();
     expect(getHistory()).toEqual([mockReferrer, 'https://egen.alpha.vercel.com/egen-civitas/spa/labs']);
-    window.location.href = 'https://egen.alpha.vercel.com/pharmacy';
+    window.location.href = 'https://egen.alpha.vercel.com/catalog';
     dispatchRoutingEvent();
     window.location.href = 'https://egen.alpha.vercel.com/x-ray';
     dispatchRoutingEvent();
     expect(getHistory()).toEqual([
       mockReferrer,
       'https://egen.alpha.vercel.com/egen-civitas/spa/labs',
-      'https://egen.alpha.vercel.com/pharmacy',
+      'https://egen.alpha.vercel.com/catalog',
       'https://egen.alpha.vercel.com/x-ray',
     ]);
 

@@ -75,6 +75,12 @@
       Object.assign(window, <%= egenTenantConfigDef %>);
     </script>
 <% } %>
+<% if (egenTargetConfigDef) { %>
+    <script>
+      // Cible de build (natif uniquement) → window.egenTarget. Absent = web. Posé AVANT initializeSpa.
+      Object.assign(window, <%= egenTargetConfigDef %>);
+    </script>
+<% } %>
 <% if (egenCoreRoutes) { %>
   <script type="egen-routes"><%= egenCoreRoutes %></script>
 <% } %>

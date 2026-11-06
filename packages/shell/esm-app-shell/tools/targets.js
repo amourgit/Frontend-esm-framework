@@ -179,4 +179,17 @@ function resolveTarget(env) {
   });
 }
 
-module.exports = { resolveTarget, buildNativeCsp, TARGETS, NATIVE_PUBLIC_PATH };
+/**
+ * Pont build → runtime : clés posées sur `window` par le HTML, sur le modèle des ponts `egenAi*` / `egenTenant*`.
+ * Liste blanche : toute clé ajoutée ici doit être ajoutée au test (`targets.test.ts`) et ne jamais porter de secret (N3).
+ *
+ * Web : `null` (rien n'est injecté, le HTML Web reste identique, R2) ; l'absence de `window.egenTarget` vaut `web`.
+ *
+ * @param {Readonly<TargetConfig>} config
+ * @returns {{ egenTarget: 'android' | 'ios' } | null}
+ */
+function targetWindowBridge(config) {
+  return config.native ? { egenTarget: config.target } : null;
+}
+
+module.exports = { resolveTarget, targetWindowBridge, buildNativeCsp, TARGETS, NATIVE_PUBLIC_PATH };

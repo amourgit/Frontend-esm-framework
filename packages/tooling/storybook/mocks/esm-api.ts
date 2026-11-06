@@ -20,7 +20,6 @@ export function getSessionStore() {
 }
 
 export const restBaseUrl = '/ws/rest/v1';
-export const fhirBaseUrl = '/ws/fhir2/R4';
 
 export function setSessionLocation() {
   return Promise.resolve();

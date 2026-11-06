@@ -6,12 +6,8 @@ import style from './pictograms.module.scss';
 
 /** Array of all available Egen pictogram IDs that can be used with the Pictogram component. */
 export const pictogramIds = [
-  'egen-pict-appointments',
-  'egen-pict-assessment-1',
-  'egen-pict-assessment-2',
-  'egen-pict-facility',
+  'egen-pict-home',
   'egen-pict-payments-desk',
-  'egen-pict-registration',
   'egen-pict-service-queues',
   'egen-pict-stock-management',
   'egen-pict-transfer',
@@ -24,44 +20,9 @@ export type PictogramProps = {
   size?: number;
 };
 
-export const AppointmentsPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function AppointmentsPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-appointments" pictogramProps={props} />;
-  }),
-);
-
-/**
- * @deprecated use AppointmentsPictogram instead
- */
-export const AppointmentsAltPictogram = AppointmentsPictogram;
-
-export const Assessment1Pictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function Assessment1Pictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-assessment-1" pictogramProps={props} />;
-  }),
-);
-
-export const Assessment2Pictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function Assessment2Pictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-assessment-2" pictogramProps={props} />;
-  }),
-);
-
-export const FacilityPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function FacilityPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-facility" pictogramProps={props} />;
-  }),
-);
-
 export const PaymentsDeskPictogram = memo(
   forwardRef<SVGSVGElement, PictogramProps>(function PaymentsDeskPictogram(props, ref) {
     return <Pictogram ref={ref} pictogram="egen-pict-payments-desk" pictogramProps={props} />;
-  }),
-);
-
-export const RegistrationPictogram = memo(
-  forwardRef<SVGSVGElement, PictogramProps>(function RegistrationPictogram(props, ref) {
-    return <Pictogram ref={ref} pictogram="egen-pict-registration" pictogramProps={props} />;
   }),
 );
 
@@ -86,7 +47,11 @@ export const TransferPictogram = memo(
 // Pictogram aliases that are a little more aligned to specific use-cases
 // should all resolve to a defined React icon
 
-export const HomePictogram = FacilityPictogram;
+export const HomePictogram = memo(
+  forwardRef<SVGSVGElement, PictogramProps>(function HomePictogram(props, ref) {
+    return <Pictogram ref={ref} pictogram="egen-pict-home" pictogramProps={props} />;
+  }),
+);
 
 /**
  * This is a utility component that takes an `pictogram` and render it if the sprite for the pictogram

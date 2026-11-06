@@ -10,8 +10,6 @@ import { isProblemDetails, type ProblemDetails } from './problem-details.js';
 
 /** The base URL for the Egen REST API (e.g., '/ws/rest/v1'). */
 export const restBaseUrl = '/ws/rest/v1';
-/** The base URL for the Egen FHIR R4 API (e.g., '/ws/fhir2/R4'). */
-export const fhirBaseUrl = '/ws/fhir2/R4';
 /** The endpoint for session management operations. */
 export const sessionEndpoint = `${restBaseUrl}/session`;
 
@@ -152,14 +150,6 @@ export function egenFetch<T = any>(path: string, fetchInit: FetchConfig = {}): P
     const tenantId = getTenantId();
     if (tenantId) {
       fetchInit.headers['X-Tenant-ID'] = tenantId;
-    }
-  }
-
-  if (path.startsWith(fhirBaseUrl)) {
-    const urlUrl = new URL(url, window.location.toString());
-    if (!urlUrl.searchParams.has('_summary')) {
-      urlUrl.searchParams.set('_summary', 'data');
-      url = urlUrl.toString();
     }
   }
 

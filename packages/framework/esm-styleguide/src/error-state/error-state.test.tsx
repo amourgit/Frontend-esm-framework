@@ -15,9 +15,9 @@ describe('ErrorState', () => {
         statusText: 'Internal Server Error',
       },
     };
-    render(<ErrorState headerTitle="appointments" error={testError} />);
+    render(<ErrorState headerTitle="documents" error={testError} />);
 
-    expect(screen.getByRole('heading', { name: /appointments/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /documents/i })).toBeInTheDocument();
     expect(screen.getByText(/Error 500: Internal Server Error/i)).toBeInTheDocument();
     expect(
       screen.getByText(

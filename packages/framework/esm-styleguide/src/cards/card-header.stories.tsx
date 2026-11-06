@@ -21,11 +21,11 @@ export const Default: Story = {
 
 export const WithAction: Story = {
   args: {
-    title: 'Medications',
+    title: 'Documents',
   },
   render: (args) => (
     <CardHeader {...args}>
-      <Button kind="ghost" renderIcon={AddIcon} iconDescription="Add Medication">
+      <Button kind="ghost" renderIcon={AddIcon} iconDescription="Add document">
         Add
       </Button>
     </CardHeader>

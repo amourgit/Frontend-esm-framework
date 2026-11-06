@@ -34,10 +34,6 @@ export const DownloadIcon = () => <span>DownloadIcon</span>;
 export const EditIcon = () => <span>EditIcon</span>;
 export const EventScheduleIcon = () => <span>EventScheduleIcon</span>;
 export const EventsIcon = () => <span>EventsIcon</span>;
-export const GenderFemaleIcon = () => <span>GenderFemaleIcon</span>;
-export const GenderMaleIcon = () => <span>GenderMaleIcon</span>;
-export const GenderOtherIcon = () => <span>GenderOtherIcon</span>;
-export const GenderUnknownIcon = () => <span>GenderUnknownIcon</span>;
 export const GroupIcon = () => <span>GroupIcon</span>;
 export const GroupAccessIcon = () => <span>GroupAccessIcon</span>;
 export const Icon = () => <span>Icon</span>;
@@ -58,7 +54,6 @@ export const PedestrianFamilyIcon = () => <span>PedestrianFamilyIcon</span>;
 export const PenIcon = () => <span>PenIcon</span>;
 export const PrinterIcon = () => <span>PrinterIcon</span>;
 export const ProgramsIcon = () => <span>ProgramsIcon</span>;
-export const RadiologyIcon = () => <span>RadiologyIcon</span>;
 export const RenewIcon = () => <span>RenewIcon</span>;
 export const ReportIcon = () => <span>ReportIcon</span>;
 export const ResetIcon = () => <span>ResetIcon</span>;
@@ -178,14 +173,8 @@ export const ViewOffIcon = () => <span>ViewOffIcon</span>;
 export const WarningIcon = () => <span>WarningIcon</span>;
 
 // Pictogram stubs
-export const AppointmentsPictogram = () => <span>AppointmentsPictogram</span>;
-export const AppointmentsAltPictogram = () => <span>AppointmentsAltPictogram</span>;
-export const Assessment1Pictogram = () => <span>Assessment1Pictogram</span>;
-export const Assessment2Pictogram = () => <span>Assessment2Pictogram</span>;
-export const FacilityPictogram = () => <span>FacilityPictogram</span>;
 export const HomePictogram = () => <span>HomePictogram</span>;
 export const PaymentsDeskPictogram = () => <span>PaymentsDeskPictogram</span>;
-export const RegistrationPictogram = () => <span>RegistrationPictogram</span>;
 export const ServiceQueuesPictogram = () => <span>ServiceQueuesPictogram</span>;
 export const StockManagementPictogram = () => <span>StockManagementPictogram</span>;
 export const TransferPictogram = () => <span>TransferPictogram</span>;
@@ -224,34 +213,6 @@ export { CardHeader, ErrorCard, Pagination, PageHeader, PageHeaderContent } from
 export const EgenDatePicker = () => <span>EgenDatePicker</span>;
 export const EgenDateRangePicker = () => <span>EgenDateRangePicker</span>;
 
-export const LocationPicker = vi.fn(({ onChange, selectedLocationUuid }) => {
-  const locations = [
-    {
-      uuid: 'uuid_1',
-      name: 'location_1',
-    },
-    {
-      uuid: 'uuid_2',
-      name: 'location_2',
-    },
-  ];
-  return (
-    <div>
-      {locations.map((location) => (
-        <label key={location.uuid}>
-          <input
-            type="radio"
-            name="location"
-            value={location.uuid}
-            checked={location.uuid === selectedLocationUuid}
-            onChange={() => onChange(location.uuid)}
-          />
-          {location.name}
-        </label>
-      ))}
-    </div>
-  );
-});
 
 export const ClassificationTags = vi.fn(({ classifications }: { classifications: Array<Classification> }) => (
   <>

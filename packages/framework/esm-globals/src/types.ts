@@ -354,12 +354,12 @@ export type WorkspaceDefinition = {
    * @example
    *
    * {
-   *  name: 'order-basket',
+   *  name: 'shopping-cart',
    *  type: 'order',
    *  groups: ['entity-workspace-group']
    * }
    *
-   * This means that the 'order-basket' workspace can be opened independently, or only
+   * This means that the 'shopping-cart' workspace can be opened independently, or only
    * in the 'entity-workspace-group'.
    * If a workspace group is already open and a new workspace is launched, and the
    * groups in the newly launched workspace do not include the currently open group’s
@@ -406,7 +406,7 @@ export interface WorkspaceGroupDefinition2 {
    * - If defined without capture groups: workspaces close when URL doesn't match pattern
    * - If defined with capture groups: workspaces close when captured values change
    *
-   * @example "^/home/appointments" - static scope for appointments dashboard
+   * @example "^/home/projects" - static scope for projects dashboard
    * @example "^/entity/([^/]+)/detail" - dynamic scope by entity UUID
    */
   scopePattern?: string;

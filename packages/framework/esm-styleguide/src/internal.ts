@@ -9,7 +9,6 @@ export * from './empty-card/index.js';
 export * from './error-state/index.js';
 export * from './fields/index.js';
 export * from './icons/icons.js';
-export * from './location-picker/index.js';
 export * from './modals/index.js';
 export * from './notifications/index.js';
 export * from './notifications/actionable-notification.component.js';

@@ -10,7 +10,7 @@ Ce repo contient **3 familles de packages** :
 
 | Package | Rôle |
 |---|---|
-| `@egen-civitas/esm-globals` | Types FHIR, globals Single-SPA |
+| `@egen-civitas/esm-globals` | Types partagés, globals Single-SPA |
 | `@egen-civitas/esm-utils` | Utilitaires généraux |
 | `@egen-civitas/esm-state` | Store réactif (RxJS) |
 | `@egen-civitas/esm-translations` | Internationalisation (i18next) |
@@ -18,7 +18,7 @@ Ce repo contient **3 familles de packages** :
 | `@egen-civitas/esm-theme` | Moteur de thème dynamique (tokens CSS) |
 | `@egen-civitas/esm-navigation` | Router SPA |
 | `@egen-civitas/esm-api` | Couche HTTP (fetch + SWR) |
-| `@egen-civitas/esm-data-api` | Abstraction données (FHIR-ready) |
+| `@egen-civitas/esm-data-api` | Abstraction données (types de ressources génériques) |
 | `@egen-civitas/esm-error-handling` | Gestion des erreurs |
 | `@egen-civitas/esm-feature-flags` | Feature flags runtime |
 | `@egen-civitas/esm-context` | Contexte React partagé |
@@ -96,7 +96,7 @@ yarn add --dev @egen-civitas/egen
 ```tsx
 // mon-app/src/index.tsx
 import { defineConfigSchema, getConfig, subscribe } from '@egen-civitas/esm-framework';
-import { useConfig, usePatient } from '@egen-civitas/esm-framework';
+import { useConfig, useSession } from '@egen-civitas/esm-framework';
 
 export function start() {
   // Ton app Single-SPA

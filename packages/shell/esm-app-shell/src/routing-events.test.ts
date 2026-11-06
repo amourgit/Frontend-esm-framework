@@ -53,7 +53,7 @@ describe('routing-events', () => {
     dispatchSingleSpaEvent(
       makeEventDetail({
         totalAppChanges: 1,
-        oldUrl: 'http://localhost/home/appointments',
+        oldUrl: 'http://localhost/home/projects',
         newUrl: 'http://localhost/entity/abc-123/chart',
       }),
     );
@@ -67,7 +67,7 @@ describe('routing-events', () => {
     dispatchSingleSpaEvent(
       makeEventDetail({
         totalAppChanges: 0,
-        oldUrl: 'http://localhost/home/appointments',
+        oldUrl: 'http://localhost/home/projects',
         newUrl: 'http://localhost/home/service-queues',
       }),
     );
@@ -81,8 +81,8 @@ describe('routing-events', () => {
     dispatchSingleSpaEvent(
       makeEventDetail({
         totalAppChanges: 0,
-        oldUrl: 'http://localhost/home/appointments?tab=scheduled',
-        newUrl: 'http://localhost/home/appointments?tab=completed',
+        oldUrl: 'http://localhost/home/projects?tab=scheduled',
+        newUrl: 'http://localhost/home/projects?tab=completed',
       }),
     );
 

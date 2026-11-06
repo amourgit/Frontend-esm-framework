@@ -1343,6 +1343,7 @@ __metadata:
     eslint: "npm:^8.57.0"
     eslint-plugin-import: "npm:^2.31.0"
     eslint-plugin-jest-dom: "npm:^5.5.0"
+    eslint-plugin-playwright: "npm:^1.8.3"
     eslint-plugin-react-hooks: "npm:^4.6.2"
     eslint-plugin-testing-library: "npm:^7.1.1"
     fake-indexeddb: "npm:^4.0.2"
@@ -10977,6 +10978,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-playwright@npm:^1.8.3":
+  version: 1.8.3
+  resolution: "eslint-plugin-playwright@npm:1.8.3"
+  dependencies:
+    globals: "npm:^13.23.0"
+  peerDependencies:
+    eslint: ">=8.40.0"
+    eslint-plugin-jest: ">=25"
+  peerDependenciesMeta:
+    eslint-plugin-jest:
+      optional: true
+  checksum: 10/8a0b9f51ba1eb09e64e15452cc78ab7fc82a68e45a432185acc2851eb0ad67b683e9bb2ca9ac9791267608ca0ceb0fca2b551868d494831e1ed62b2c566c099e
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-react-hooks@npm:^4.6.2":
   version: 4.6.2
   resolution: "eslint-plugin-react-hooks@npm:4.6.2"
@@ -12138,7 +12154,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:^13.19.0":
+"globals@npm:^13.19.0, globals@npm:^13.23.0":
   version: 13.24.0
   resolution: "globals@npm:13.24.0"
   dependencies:

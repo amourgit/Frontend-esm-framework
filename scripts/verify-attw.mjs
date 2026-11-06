@@ -63,7 +63,7 @@ import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
-import { listPublishablePackages } from './shared/packages.mjs';
+import { listPublishablePackages, NOT_A_LIBRARY } from './shared/packages.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -79,6 +79,11 @@ let hadError = false;
 const skipped = [];
 
 for (const { dir, name, pkg } of packages) {
+  // Pas une librairie importable (ex. esm-app-shell) : rien à vérifier côté résolution de types.
+  if (NOT_A_LIBRARY.has(name)) {
+    console.log(`\n=== attw: ${name} ===\nIgnoré : pas une librairie importable (voir NOT_A_LIBRARY dans scripts/shared/packages.mjs).`);
+    continue;
+  }
   if (!existsSync(join(dir, 'dist'))) {
     skipped.push(name);
     continue;

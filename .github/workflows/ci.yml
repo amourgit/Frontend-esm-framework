@@ -41,6 +41,10 @@ jobs:
       - name: TypeScript check
         run: yarn workspaces foreach --all run typescript
 
+      # Garde-fou de l'automatisation « le shell est republié dès qu'un paquet qu'il embarque change ».
+      - name: Tests des scripts de release
+        run: node --test scripts/ensure-shell-rebuild.test.mjs
+
   verify-publish:
     name: Vérification pré-publication (publint + pack/install isolé)
     runs-on: ubuntu-latest

@@ -24,7 +24,8 @@ try {
 const { mkdirSync, readdirSync, statSync, readFileSync, writeFileSync } = require('node:fs');
 const sass = require('sass-embedded');
 const semver = require('semver');
-const { removeTrailingSlash, getTimestamp, isMeaningfulImportmap, isMeaningfulRoutesRegistry } = require('./tools/helpers');
+const { removeTrailingSlash, getTimestamp } = require('./tools/helpers');
+const { resolveTarget } = require('./tools/targets');
 const { resolveBranding } = require('./tools/brand');
 
 const { name, version, dependencies } = require('./package.json');
@@ -38,11 +39,9 @@ const { ModuleFederationPlugin } = container;
 
 const egenAddCookie = process.env.EGEN_ADD_COOKIE;
 const egenApiUrl = removeTrailingSlash(process.env.EGEN_API_URL || '/egen');
-const egenPublicPath = removeTrailingSlash(process.env.EGEN_PUBLIC_PATH || '/egen-civitas/spa');
 // Default proxy target is localhost. Set EGEN_PROXY_TARGET in .env to point to your EGEN backend.
 const egenProxyTarget = process.env.EGEN_PROXY_TARGET || 'http://localhost:8082/';
 const egenPageTitle = process.env.EGEN_PAGE_TITLE || 'Egen';
-const egenFavicon = process.env.EGEN_FAVICON || `${egenPublicPath}/favicon.ico`;
 // Métadonnées de l'application installable (PWA) — neutres par défaut, à fournir par le consommateur.
 const egenPageDescription = process.env.EGEN_PAGE_DESCRIPTION || egenPageTitle;
 const egenThemeColor = process.env.EGEN_THEME_COLOR || '#161616';
@@ -175,12 +174,7 @@ function resolveEnvironment(buildMode) {
   const fallback = process.env.NODE_ENV || buildMode || '';
   return fallback === 'development' ? 'development' : 'production';
 }
-const egenOffline = process.env.EGEN_OFFLINE === 'enable';
 const egenDefaultLocale = process.env.EGEN_ESM_DEFAULT_LOCALE || 'en';
-const egenImportmapDef = isMeaningfulImportmap(process.env.EGEN_ESM_IMPORTMAP) ? process.env.EGEN_ESM_IMPORTMAP : undefined;
-const egenImportmapUrl = process.env.EGEN_ESM_IMPORTMAP_URL || `${egenPublicPath}/importmap.json`;
-const egenRoutesDef = isMeaningfulRoutesRegistry(process.env.EGEN_ROUTES) ? process.env.EGEN_ROUTES : undefined;
-const egenRoutesUrl = process.env.EGEN_ROUTES_URL || `${egenPublicPath}/routes.registry.json`;
 const egenCoreApps = process.env.EGEN_ESM_CORE_APPS_DIR || resolve(__dirname, '../../apps');
 const egenConfigUrls = (process.env.EGEN_CONFIG_URLS || '')
   .split(';')
@@ -262,6 +256,24 @@ module.exports = (env, argv = []) => {
   // source de vérité pour EGEN_DEV_NO_AUTH plus bas (DefinePlugin) — plus
   // de valeur par défaut dupliquée en dur dans ce fichier.
   const publicEnv = resolvePublicEnv(__dirname, mode);
+
+  // Cible de build (web | android | ios) : seule source de vérité des différences entre cibles (tools/targets.js).
+  // Appelée ici, et non en tête de fichier, car la validation native a besoin de valeurs RÉSOLUES : EGEN_ENV
+  // (egenEnvironment) et EGEN_DEV_NO_AUTH (publicEnv, fichiers .env* compris), pas de process.env brut.
+  // Sans EGEN_TARGET, le résultat reproduit exactement le comportement Web antérieur.
+  const target = resolveTarget({
+    ...process.env,
+    EGEN_ENV: egenEnvironment,
+    EGEN_DEV_NO_AUTH: publicEnv.EGEN_DEV_NO_AUTH,
+  });
+  const egenPublicPath = target.publicPath;
+  const egenFavicon = process.env.EGEN_FAVICON || `${egenPublicPath}/favicon.ico`;
+  // `offline` du HTML pilote aujourd'hui le service worker ET les données hors ligne (séparés par la tâche E1).
+  const egenOffline = target.serviceWorker;
+  const egenImportmapDef = target.importmapMode === 'inline' ? process.env.EGEN_ESM_IMPORTMAP : undefined;
+  const egenImportmapUrl = process.env.EGEN_ESM_IMPORTMAP_URL || `${egenPublicPath}/importmap.json`;
+  const egenRoutesDef = target.routesMode === 'inline' ? process.env.EGEN_ROUTES : undefined;
+  const egenRoutesUrl = process.env.EGEN_ROUTES_URL || `${egenPublicPath}/routes.registry.json`;
 
   const coreImportmap = {
     imports: {},
@@ -655,6 +667,7 @@ module.exports = (env, argv = []) => {
         'process.env.BUILD_VERSION': JSON.stringify(`${version}-${timestamp}`),
         'process.env.FRAMEWORK_VERSION': JSON.stringify(frameworkVersion),
         'process.env.NODE_ENV': JSON.stringify(mode),
+        'process.env.EGEN_TARGET': JSON.stringify(target.target),
         // Flag de bypass auth pour les tests sans backend. Défaut et
         // hiérarchie de surcharge définis dans .env.defaults — voir
         // resolvePublicEnv() de @egen-civitas/rspack-config, calculé en

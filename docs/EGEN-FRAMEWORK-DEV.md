@@ -233,6 +233,14 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 | `permissions` | API Permissions du navigateur si dispo, sinon `UNAVAILABLE` |
 | `push`, `biometric` | `UNAVAILABLE` en v1 |
 - **Tests** : un test par ligne ci-dessus (happy-dom).
+- ✅ **Réalisé** (`esm-platform/src/adapters/web/`, une capacité par fichier, 56 tests dont des cas négatifs) et **choix consignés** :
+  - `session` : `has()` vrai ; `getAuthorization` → `null`, `refresh` → `false`, `clear` → no-op, `setTokens` → `UNAVAILABLE` (aucun jeton stocké dans le navigateur) ; aucun `setAuthorizationProvider` en Web (D1 : `fetch` reste synchrone).
+  - `files` : `select` seul (`<input type="file">` éphémère, `accept` validé, `FileHandle` sans binaire, `File` gardé dans un registre interne `getWebFile`/`releaseWebFile` jusqu'à C7) ; `download` **non fourni** en Web (l'attribut `download` est ignoré hors même origine) ⇒ `UNAVAILABLE`.
+  - `camera` : `<input accept="image/*" capture>` (pas `getUserMedia`) ; sur ordinateur `capture` est ignoré et l'utilisateur obtient un sélecteur d'images.
+  - `permissions` : fournie seulement si `navigator.permissions.query` existe ; `check` via l'API (`files` et noms inconnus du navigateur ⇒ `UNAVAILABLE`) ; `request` : `notifications` seulement (`default` ⇒ `denied`), `camera`/`microphone` ⇒ `UNAVAILABLE` (le navigateur demande à l'usage).
+  - `openExternal` : schémas `https:` / `mailto:` / `tel:` uniquement ; le message d'erreur ne reprend jamais l'URL.
+  - Limite connue : un navigateur qui n'émet pas l'événement `cancel` laisse la promesse de `files.select` en attente (pas d'heuristique sur le focus).
+  - En natif l'adaptateur Web n'est **jamais** utilisé (aucune capacité du navigateur ne fuit vers un Host absent).
 
 ### C5 — Client de pont et protocole v1 · L
 **Dossier** : `src/bridge/`. Spécification complète en **Annexe 1**.
@@ -621,7 +629,7 @@ Branche de référence : **`main`** · mise à jour : 2026-11-07.
 | C1 package `esm-platform` | **fait** | câblage complet : `esm-framework` (`package.json`, `index`, `internal`, `mock`, `mock-jest`), shell (`dependencies.json`, `package.json`), `tsconfig.typedoc.json` ; `import { getPlatform } from '@egen-civitas/esm-framework'` compile (test négatif vérifié) |
 | C2 types et erreurs | **fait** | contrats de l'annexe 2 ; `PlatformError` ; `CapabilityName` défini dans `esm-globals` (F2) |
 | C3 détection | **fait** | `window.egenTarget` uniquement ; `hasHostBridge()` ; `ready` rejette `INCOMPATIBLE` (« Host manquant ») en natif sans pont conforme ; pas de User-Agent ni de Capacitor |
-| C4 adaptateur Web | à faire | |
+| C4 adaptateur Web | **fait** | `src/adapters/web/` : session (vide), openExternal, lifecycle, files.select, camera, permissions ; secureStorage / push / biometric jamais simulés ; choix consignés dans la section C4 |
 | C5 client de pont | à faire | |
 | C6 registre de capacités | à faire | l'assembleur `assemblePlatform` (`src/capabilities.ts`) est le point unique de construction : adaptateurs et mocks s'y branchent |
 | C9 mocks | **partielle** | `createMockPlatform` + `getPlatform` dans `esm-framework/mock*` ; `createMockHost` avec C5 |

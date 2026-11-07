@@ -1,3 +1,4 @@
+import { createWebCapabilities } from './adapters/web/index.js';
 import { assemblePlatform } from './capabilities.js';
 import { getPlatformEnvironment, hasHostBridge } from './detect.js';
 import { PlatformError } from './errors.js';
@@ -23,13 +24,18 @@ function waitForHost(environment: PlatformEnvironment): Promise<void> {
 /**
  * Point d'accès unique des apps aux capacités de plateforme.
  *
- * La cible est fixée au build (`window.egenTarget`). Tant qu'aucun adaptateur n'est branché (C4 pour le Web, C5 pour le
- * natif), AUCUNE capacité n'est fournie : `has()` est faux partout et chaque méthode rejette `UNAVAILABLE`. C'est le
- * comportement sûr par défaut : rien n'est simulé.
+ * La cible est fixée au build (`window.egenTarget`). En Web, les capacités du navigateur sont fournies (adaptateur C4).
+ * En natif, tant que le client de pont (C5) n'est pas branché, AUCUNE capacité n'est fournie : `has()` est faux
+ * partout et chaque méthode rejette `UNAVAILABLE`. C'est le comportement sûr par défaut : rien n'est simulé.
  *
  * @category Platform
  */
 export function getPlatform(): Platform {
   const environment = getPlatformEnvironment();
-  return assemblePlatform({ environment, ready: () => waitForHost(environment) });
+  return assemblePlatform({
+    environment,
+    // Web : capacités du navigateur (C4). Natif : aucune tant que le client de pont (C5) n'est pas branché.
+    capabilities: environment === 'web' ? createWebCapabilities() : undefined,
+    ready: () => waitForHost(environment),
+  });
 }

@@ -57,7 +57,13 @@ afterEach(() => {
  * Le mock est testé contre LES MÊMES tests de contrat que l'implémentation (règle C9) : il ne peut pas diverger.
  */
 describe.each([
-  ['getPlatform()', () => getPlatform()],
+  [
+    'getPlatform() (natif sans adaptateur)',
+    () => {
+      window.egenTarget = 'android';
+      return getPlatform();
+    },
+  ],
   ['createMockPlatform()', () => createMockPlatform()],
 ])('contrat de capacités indisponibles — %s', (_label, make) => {
   it('expose exactement les capacités v1 comme objets, et aucune autre', () => {

@@ -279,7 +279,8 @@ describe('targetWindowBridge — pont build → window.egenTarget', () => {
     const ejs = readFileSync(resolve(__dirname, '../src/index.ejs'), 'utf8');
     const bridge = ejs.indexOf('<%= egenTargetConfigDef %>');
     expect(bridge).toBeGreaterThan(-1);
-    expect(ejs.slice(0, bridge)).toMatch(/<% if \(egenTargetConfigDef\) \{ %>\s*<script>[^]*$/);
+    // Inline en Web ; en natif le pont est dans bootstrap-head.js (`!egenBootstrap`, cf. tools/bootstrap.js).
+    expect(ejs.slice(0, bridge)).toMatch(/<% if \(egenTargetConfigDef && !egenBootstrap\) \{ %>\s*<script>[^]*$/);
     expect(bridge).toBeLessThan(ejs.indexOf('initializeSpa('));
   });
 });

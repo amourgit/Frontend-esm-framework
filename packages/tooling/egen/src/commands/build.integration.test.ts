@@ -96,11 +96,38 @@ describe('runBuild', () => {
     );
 
     const html = readIndex(target);
-    expect(html).toContain('"egenTarget":"android"');
+    const files = listFiles(target);
     expect(html).toContain('systemjs-importmap');
     expect(html).not.toContain('importmap.json');
     expect(html).not.toContain('routes.registry.json');
+    expect(html).not.toContain('service-worker');
     expect(html).toMatch(/src="\/app\/egen\.[a-f0-9]+\.js"/);
+
+    // CSP `script-src 'self'` : le démarrage (thème, pont window.egenTarget, initializeSpa) est dans des FICHIERS émis.
+    expect(html).toMatch(
+      /<meta http-equiv="Content-Security-Policy" content="[^"]*script-src 'self'[^"]*connect-src 'self' https:\/\/api\.exemple\.ga;/,
+    );
+    const head = files.find((f) => /^bootstrap-head\.[a-f0-9]{16}\.js$/.test(f));
+    const body = files.find((f) => /^bootstrap\.[a-f0-9]{16}\.js$/.test(f));
+    expect(head).toBeDefined();
+    expect(body).toBeDefined();
+    expect(html).toContain(`src="/app/${head}"`);
+    expect(html).toContain(`src="/app/${body}"`);
+    expect(readFileSync(join(target, head!), 'utf8')).toMatch(/egenTarget:\s*"android"/);
+    expect(readFileSync(join(target, body!), 'utf8')).toMatch(
+      /initializeSpa\(\{apiUrl:"https:\/\/api\.exemple\.ga\/egen",spaPath:"\/app"/,
+    );
+
+    // Aucun script exécutable inline (seuls les blocs de DONNÉES restent), aucun gestionnaire inline.
+    expect(html).not.toContain('initializeSpa(');
+    expect(html).not.toContain('Object.assign(window');
+    const inline = [...html.matchAll(/<script\b([^>]*)>/g)]
+      .map(([, attributes]) => attributes)
+      .filter(
+        (attributes) => !/\bsrc=/.test(attributes) && !/type="(systemjs-importmap|egen-routes)"/.test(attributes),
+      );
+    expect(inline).toEqual([]);
+    expect(html).not.toMatch(/\son[a-z]+\s*=/i);
   }, 90_000);
 
   it('rejects a native build whose configuration is not self-contained', async () => {

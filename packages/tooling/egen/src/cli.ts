@@ -308,6 +308,13 @@ export function buildCli(y: Argv) {
           describe: 'The environment to build for. e.g., development, production.',
           type: 'string',
         })
+        .option('platform', {
+          default: 'web',
+          choices: ['web', 'android', 'ios'],
+          describe:
+            'The target platform of the build. `android` and `ios` produce a self-contained, locked-down SPA for a native host (requires an absolute https API URL and inline importmap/routes).',
+          type: 'string',
+        })
         .option('asset', {
           default: [],
           describe:

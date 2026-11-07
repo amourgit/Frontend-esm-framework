@@ -82,6 +82,35 @@ describe('runBuild', () => {
     expect(html).toMatch(/egen\.[a-f0-9]+\.css/);
   }, 90_000);
 
+  it('builds a self-contained, locked-down SPA for a native platform', async () => {
+    const target = join(createTempDir(), 'dist');
+
+    await runBuild(
+      defaultArgs({
+        target,
+        platform: 'android',
+        apiUrl: 'https://api.exemple.ga/egen',
+        importmap: '{"imports":{"@egen/esm-home-app":"./home/app.js"}}',
+        routes: '{"@egen/esm-home-app":{"pages":[]}}',
+      }),
+    );
+
+    const html = readIndex(target);
+    expect(html).toContain('"egenTarget":"android"');
+    expect(html).toContain('systemjs-importmap');
+    expect(html).not.toContain('importmap.json');
+    expect(html).not.toContain('routes.registry.json');
+    expect(html).toMatch(/src="\/app\/egen\.[a-f0-9]+\.js"/);
+  }, 90_000);
+
+  it('rejects a native build whose configuration is not self-contained', async () => {
+    const target = join(createTempDir(), 'dist');
+
+    await expect(runBuild(defaultArgs({ target, platform: 'ios' }))).rejects.toThrow(
+      /Configuration invalide pour EGEN_TARGET=ios/,
+    );
+  }, 90_000);
+
   it('produces at least one hashed JS bundle named egen.<hash>.js', async () => {
     const target = join(createTempDir(), 'dist');
 

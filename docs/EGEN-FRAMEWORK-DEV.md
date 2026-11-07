@@ -601,6 +601,7 @@ Branche `feat/multiplateforme-p0` · mise à jour : 2026-11-06.
 | B1 `targets.js` | **fait** | 36 tests (web = comportement historique ; android/ios ; 8 erreurs ; cumul d'erreurs) |
 | B2 branchement `rspack.config.js` | **fait** | `dist` Web **identique octet pour octet** (376 fichiers) avant/après ; build android valide : import map et routes inline, `publicPath` `/app`, aucune URL `importmap.json`/`routes.registry.json` ; build android invalide : échec avec les 3 erreurs listées |
 | B3 pont `window.egenTarget` | **fait** | posé uniquement en natif (HTML web inchangé) ; clé typée dans `Window` |
+| B4 option `--platform` du CLI | **fait** | `cli.ts`, `build.ts` (`BuildArgs`/`BuildConfig`), `utils/config.ts` (`EGEN_TARGET`) ; pour une cible native le `--spa-path` n'est pas transmis (la cible impose `/app`) ; 3 tests unitaires + 2 tests d'intégration (build android valide / ios invalide) ; suite d'intégration `build` : 7/7 verts |
 | B7 tests de build | **partielle** | tests de `targets.js` faits ; test HTML natif (pas de `<script>` inline, etc.) à écrire avec B5 |
 | C1 package `esm-platform` | **fait** (écart) | câblé dans `esm-framework/src/index.ts`, `package.json` du framework et du shell, `dependencies.json` (partage MF). **Écarts** : `internal.ts` non modifié (`esm-tenant` n'y figure pas non plus) ; `mock.tsx` reporté à C9 |
 | C2 types et erreurs | **fait** | contrats de l'annexe 2 ; `PlatformError` ; `CapabilityName` placé dans `esm-globals` (source unique, évite un cycle avec F2) |

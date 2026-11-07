@@ -281,6 +281,8 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 > **Dépendance externe X-1 (backend, hors dépôt)** : le backend doit (a) accepter `Authorization: Bearer`, (b) émettre/rafraîchir des jetons, (c) autoriser l'origine locale en CORS (en-têtes `Authorization`, `X-Tenant-ID`, `Accept`, `Disable-WWW-Authenticate`). Le framework est écrit **contre une interface** ; le contrat précis de l'endpoint de jetons est à définir avec le backend (egen-kernel) — il n'est **pas** inventé ici.
 
 ### D1 — Fournisseur d'autorisation dans `esm-api` · M
+> **Réalisé** (voir § 6) : l'API est un objet `AuthorizationProvider { getAuthorization, refresh?, credentials? }` posé par `setAuthorizationProvider(provider | null)` — et non une simple fonction — pour regrouper D1, D2 et D3 en un seul enregistrement.
+
 - **Fichiers** : `esm-api/src/egen-fetch.ts`, nouveau `esm-api/src/authorization.ts`, `index.ts`/`public.ts` (exports).
 - **Faire** : `setAuthorizationProvider(fn: () => Promise<string | null>)` ; dans `egenFetch`, **avant** `window.fetch`, si un fournisseur est posé et qu'aucun en-tête `Authorization` n'est fourni par l'appelant ⇒ l'ajouter. Zone : après l'assemblage des en-têtes (`Accept`, `Disable-WWW-Authenticate`, `X-Tenant-ID`).
 - **Branchement** : `esm-platform` (cible native) appelle `setAuthorizationProvider(() => platform.session.getAuthorization())` au démarrage ; en Web **rien n'est posé** (R2).
@@ -288,6 +290,8 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 - **Tests** (`egen-fetch.test.ts`) : sans fournisseur = identique ; avec fournisseur = en-tête présent ; en-tête appelant prioritaire ; fournisseur qui rejette ⇒ la requête échoue avec `PlatformError` propagée.
 
 ### D2 — Politique `credentials` · S
+> **Réalisé autrement** : la politique est portée par `AuthorizationProvider.credentials` (natif : `'omit'`) et non par une option de config `esm-api`, car `getConfig` est asynchrone et rendrait l'appel à `fetch` asynchrone pour tout le monde, Web compris (violation de R2).
+
 - **Faire** : option de config `@egen-civitas/esm-api` → `credentials: 'same-origin' | 'include' | 'omit'` (fichier `config-schema.ts`). Défaut = **inchangé** (aucune valeur posée ⇒ défaut navigateur). `targets`/natif fixe `'omit'` via la configuration fournie au démarrage.
 - **Ne pas faire** : forcer `include` globalement (risque CORS/CSRF).
 
@@ -606,6 +610,13 @@ Branche `feat/multiplateforme-p0` · mise à jour : 2026-11-06.
 | C1 package `esm-platform` | **fait** (écart) | câblé dans `esm-framework/src/index.ts`, `package.json` du framework et du shell, `dependencies.json` (partage MF). **Écarts** : `internal.ts` non modifié (`esm-tenant` n'y figure pas non plus) ; `mock.tsx` reporté à C9 |
 | C2 types et erreurs | **fait** | contrats de l'annexe 2 ; `PlatformError` ; `CapabilityName` placé dans `esm-globals` (source unique, évite un cycle avec F2) |
 | C3 détection | **fait** | via `getEgenTarget()` d'`esm-globals` ; test « pas de User-Agent » |
+| D1 fournisseur d'autorisation | **fait** | `esm-api/src/authorization.ts` + `egen-fetch.ts` (**+77 lignes, 0 suppression** : le handler existant n'a pas été déplacé, pour faciliter la fusion avec `main`) ; sans fournisseur, `fetch` reste appelé de façon synchrone (test dédié) |
+| D2 politique `credentials` | **fait** (écart) | via `AuthorizationProvider.credentials` (voir note de la section D2) |
+| D3 401 → rafraîchissement unique → rejeu | **fait** | single-flight (5 requêtes simultanées ⇒ 1 `refresh`), pas de boucle, GET/HEAD par défaut, `replayOnUnauthorized` pour les autres, jamais si le jeton vient de l'appelant, échec ⇒ traitement historique (redirection) |
+| D4 session / login natif | à faire | dépend de X-1 (backend) et de `getPlatform()` (C5) : le branchement `setAuthorizationProvider(...)` se fera dans `esm-platform` |
+| D5 URL d'API absolue | **fait** | audit de `location.origin` (aucun blocage : `run.ts:350` supporte une base absolue ; `esm-ai-tools` n'utilise l'origine que comme base de résolution) + 4 tests |
+| G2 bypass inerte en natif | **fait** | `isDevAuthBypassEnabled()` retourne `false` en natif (+7 lignes) ; 6 tests dont non-régression Web |
+| G4 journalisation sûre | **partielle** | test « le jeton n'apparaît ni dans le message, ni dans la stack, ni dans le corps de l'erreur » fait ; revue des autres journaux à faire |
 | F1 helper `getEgenTarget` | **partielle** | helper fait ; lockdown (overrides d'import map) **à faire** |
 
 **Constats pendant l'implémentation (à retenir)**

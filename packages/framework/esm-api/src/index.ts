@@ -18,3 +18,4 @@ export { isDevAuthBypassEnabled, initDevAuthBypass, applyDevAuthBypassForLogin, 
 export * from './middleware.js';
 export * from './retry-middleware.js';
 export * from './problem-details.js';
+export { setAuthorizationProvider, type AuthorizationProvider } from './authorization.js';

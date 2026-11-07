@@ -65,6 +65,7 @@
 
 import { sessionStore, type SessionStore } from './current-user.js';
 import { sessionEndpoint } from './egen-fetch.js';
+import { isNativeTarget } from '@egen-civitas/esm-globals';
 
 // ─── Vérification d'activation ────────────────────────────────────────────────
 
@@ -80,6 +81,12 @@ import { sessionEndpoint } from './egen-fetch.js';
  * effectués directement depuis les sources.
  */
 export function isDevAuthBypassEnabled(): boolean {
+  // Cibles natives (Android / iOS) : le contournement d'authentification est TOUJOURS inerte, quels que soient
+  // `window.egenDevNoAuth` et `EGEN_DEV_NO_AUTH` (seconde ceinture ; le build natif refuse déjà cette option).
+  if (isNativeTarget()) {
+    return false;
+  }
+
   try {
     if (typeof window !== 'undefined' && window.egenDevNoAuth === true) {
       return true;

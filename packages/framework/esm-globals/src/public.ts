@@ -15,3 +15,4 @@ export {
 } from './events.js';
 export * from './types.js';
 export { getEgenTarget, isNativeTarget } from './target.js';
+export { hasCapability, setCapabilityResolver } from './capabilities.js';

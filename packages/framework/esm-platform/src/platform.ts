@@ -1,3 +1,4 @@
+import { setCapabilityResolver } from '@egen-civitas/esm-globals';
 import { createWebCapabilities } from './adapters/web/index.js';
 import { assemblePlatform } from './capabilities.js';
 import { getPlatformEnvironment, hasHostBridge } from './detect.js';
@@ -38,4 +39,18 @@ export function getPlatform(): Platform {
     capabilities: environment === 'web' ? createWebCapabilities() : undefined,
     ready: () => waitForHost(environment),
   });
+}
+
+/**
+ * Rend les capacités de la plateforme consultables par le reste du framework (filtrage `requiredCapabilities`
+ * des apps, F2) et retourne `platform.ready`.
+ *
+ * À appeler UNE fois au démarrage, AVANT l'enregistrement des apps. Le résolveur est posé immédiatement : si `ready`
+ * rejette (natif sans Host), `has()` reste faux partout — aucune capacité n'est jamais supposée.
+ *
+ * @category Platform
+ */
+export function registerPlatformCapabilities(platform: Platform = getPlatform()): Promise<void> {
+  setCapabilityResolver((capability) => platform.has(capability));
+  return platform.ready;
 }

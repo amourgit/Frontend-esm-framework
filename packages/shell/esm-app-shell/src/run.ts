@@ -21,6 +21,7 @@ import {
   provide,
   registerApp,
   registerDefaultCalendar,
+  registerPlatformCapabilities,
   registerEgenServiceWorker,
   renderActionableNotifications,
   renderInlineNotifications,
@@ -114,6 +115,17 @@ const REGISTRATION_PROMISES = Symbol('egen_registration_promises');
  * list of apps from the routes.registry.json file, which serves
  * as the registry of all apps in the application.
  */
+/**
+ * Rend les capacités de plateforme consultables AVANT l'enregistrement des apps (filtrage `requiredCapabilities`).
+ * Un Host manquant ou incompatible ne bloque pas le démarrage ici (l'écran d'incompatibilité relève de C5) :
+ * aucune capacité n'est alors supposée, donc les apps qui en exigent sont simplement écartées.
+ */
+function setupPlatform() {
+  return registerPlatformCapabilities().catch((error) => {
+    console.error('[egen] Les capacités de plateforme ne sont pas disponibles :', error);
+  });
+}
+
 async function setupApps() {
   await setupRouteMapOverrides();
   const routes = await getCurrentRouteMap();
@@ -503,6 +515,7 @@ export function run(configUrls: Array<string>) {
           ).then(() => undefined);
 
     return polyfillReady
+      .then(setupPlatform)
       .then(setupApps)
       .then(() => Promise.resolve(finishRegisteringAllApps()))
       .then(offlineEnabled ? setupOfflineCssClasses : undefined)

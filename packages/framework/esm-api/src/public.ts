@@ -21,3 +21,4 @@ export * from './egen-backend-dependencies.js';
 export * from './middleware.js';
 export * from './retry-middleware.js';
 export * from './problem-details.js';
+export { setAuthorizationProvider, type AuthorizationProvider } from './authorization.js';

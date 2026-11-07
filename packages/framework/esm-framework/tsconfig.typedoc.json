@@ -25,6 +25,7 @@
       "@egen-civitas/esm-navigation/src/public": ["../esm-navigation/src/public.ts"],
       "@egen-civitas/esm-offline": ["../esm-offline/src/index.ts"],
       "@egen-civitas/esm-offline/src/public": ["../esm-offline/src/public.ts"],
+      "@egen-civitas/esm-platform": ["../esm-platform/src/index.ts"],
       "@egen-civitas/esm-react-utils": ["../esm-react-utils/src/index.ts"],
       "@egen-civitas/esm-react-utils/src/public": ["../esm-react-utils/src/public.ts"],
       "@egen-civitas/esm-routes": ["../esm-routes/src/index.ts"],

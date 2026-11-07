@@ -101,6 +101,14 @@ function validateNative(env) {
     errors.push('EGEN_ESM_IMPORTMAP n’est pas du JSON valide.');
   }
 
+  // Aucune ressource de composition distante : même avec une version inline, une URL signalerait une intention
+  // (ou une configuration héritée) incompatible avec un artefact autonome, mieux vaut échouer que l'ignorer.
+  for (const name of ['EGEN_ESM_IMPORTMAP_URL', 'EGEN_ROUTES_URL']) {
+    if (env[name]) {
+      errors.push(`${name} est interdit pour une cible native (aucune ressource de composition distante).`);
+    }
+  }
+
   if (!isMeaningfulRoutesRegistry(env.EGEN_ROUTES)) {
     errors.push(
       'EGEN_ROUTES doit contenir un registre de routes non vide pour une cible native (un artefact natif est autonome : pas de mode « url »).',

@@ -10,6 +10,8 @@ export interface BuildOptions {
   routes?: RoutesDeclaration;
   apiUrl?: string;
   spaPath?: string;
+  /** Cible de build : web (défaut), android ou ios. Voir `tools/targets.js` du shell. */
+  platform?: 'web' | 'android' | 'ios';
   pageTitle?: string;
   supportOffline?: boolean;
   configUrls?: Array<string>;
@@ -31,7 +33,13 @@ export function setBundlerEnv(options: BuildOptions = {}) {
     variables.EGEN_PROXY_TARGET = options.backend;
   }
 
-  if (typeof options.spaPath === 'string') {
+  if (typeof options.platform === 'string') {
+    variables.EGEN_TARGET = options.platform;
+  }
+
+  // Cibles natives : le chemin public est IMPOSÉ par la cible (voir tools/targets.js du shell) ; on ne
+  // transmet donc pas le `--spa-path` (dont la valeur par défaut est celle du Web).
+  if (typeof options.spaPath === 'string' && (options.platform === undefined || options.platform === 'web')) {
     variables.EGEN_PUBLIC_PATH = options.spaPath;
   }
 

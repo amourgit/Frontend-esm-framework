@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NEVER } from 'rxjs';
 import type {} from '@egen-civitas/esm-globals';
 import * as utils from '@egen-civitas/esm-utils/mock';
+import { createMockPlatform } from '@egen-civitas/esm-platform/testing';
 import dayjs from 'dayjs';
 
 window.i18next = { ...window.i18next, language: 'en' };
@@ -61,6 +62,20 @@ export const goBackInHistory = jest.fn();
 /* esm-offline */
 export const useConnectivity = jest.fn().mockReturnValue(true);
 export const subscribeConnectivity = jest.fn();
+
+/* esm-platform : un Platform de test sans Host. Les erreurs et la détection restent les vraies implémentations ;
+ * `getPlatform` retourne un Platform dont aucune capacité n'est fournie (comme en production sans adaptateur).
+ * Pour simuler une capacité : `getPlatform.mockReturnValue(createMockPlatform({ capabilities: { … } }))`. */
+export {
+  PlatformError,
+  isPlatformError,
+  unavailable,
+  getPlatformEnvironment,
+  isNativePlatform,
+  hasHostBridge,
+} from '@egen-civitas/esm-platform';
+export { createMockPlatform };
+export const getPlatform = jest.fn(() => createMockPlatform());
 
 /* esm-styleguide */
 export const showNotification = jest.fn();

@@ -54,6 +54,13 @@ declare global {
      */
     i18next: i18n;
 
+    /**
+     * Cible de build de ce SPA. Posée au build par le pont EGEN_TARGET → window.egenTarget
+     * (esm-app-shell/rspack.config.js + src/index.ejs), UNIQUEMENT pour les cibles natives.
+     * Absente = "web". À lire via `getEgenTarget()` plutôt que directement.
+     */
+    egenTarget?: EgenTarget;
+
     // ── Tenant system globals ──────────────────────────────────────────────
     // Injectées par le shell (esm-app-shell/rspack.config.js + src/index.ejs)
     // à partir des variables EGEN_TENANT_* de .env, sur le modèle exact du
@@ -71,12 +78,6 @@ declare global {
      * @default "off"
      */
     egenTenantMode?: 'off' | 'single' | 'multi';
-
-    /**
-     * Cible de build, injectée dans le HTML par le Shell (pont build → window) pour les builds natifs uniquement.
-     * Absent ⇒ `'web'`. Fixée au build, jamais devinée au runtime. Lue par `@egen-civitas/esm-platform`.
-     */
-    egenTarget?: 'web' | 'android' | 'ios';
 
     /**
      * Identifiant du tenant actif (mode "single") ou tenant par défaut.
@@ -496,3 +497,17 @@ export interface ResourceLoader<T = any> {
   (): Promise<T>;
 }
 
+/** Cible de build du SPA : navigateur, ou enveloppe native Android / iOS. */
+export type EgenTarget = 'web' | 'android' | 'ios';
+
+/** Noms des capacités de plateforme (contrats détaillés dans `@egen-civitas/esm-platform`). */
+export type CapabilityName =
+  | 'session'
+  | 'secureStorage'
+  | 'openExternal'
+  | 'lifecycle'
+  | 'permissions'
+  | 'files'
+  | 'camera'
+  | 'push'
+  | 'biometric';

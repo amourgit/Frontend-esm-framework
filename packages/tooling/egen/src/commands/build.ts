@@ -15,6 +15,7 @@ export interface BuildArgs {
   importmap?: string;
   routes?: string;
   spaPath: string;
+  platform?: 'web' | 'android' | 'ios';
   fresh?: boolean;
   apiUrl: string;
   pageTitle: string;
@@ -36,6 +37,7 @@ export type BuildConfig = Partial<{
   importmap: string;
   routes: string;
   spaPath: string;
+  platform: 'web' | 'android' | 'ios';
   env: string;
   assets: Array<string>;
 }>;
@@ -121,6 +123,7 @@ export async function runBuild(args: BuildArgs) {
     pageTitle: buildConfig.pageTitle || args.pageTitle,
     supportOffline: buildConfig.supportOffline ?? args.supportOffline,
     spaPath: buildConfig.spaPath || args.spaPath,
+    platform: buildConfig.platform || args.platform,
     fresh: args.fresh ?? false,
     assets: args.assets || buildConfig.assets || [],
   });

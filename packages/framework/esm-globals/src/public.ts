@@ -14,3 +14,4 @@ export {
   subscribeSnackbarShown,
 } from './events.js';
 export * from './types.js';
+export { getEgenTarget, isNativeTarget } from './target.js';

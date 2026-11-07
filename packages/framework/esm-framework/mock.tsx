@@ -4,6 +4,7 @@ import { NEVER } from 'rxjs';
 import { vi } from 'vitest';
 import type {} from '@egen-civitas/esm-globals';
 import * as utils from '@egen-civitas/esm-utils/mock';
+import { createMockPlatform } from '@egen-civitas/esm-platform/testing';
 
 window.i18next = { ...window.i18next, language: 'en' };
 
@@ -62,6 +63,20 @@ export const goBackInHistory = vi.fn();
 /* esm-offline */
 export const useConnectivity = vi.fn().mockReturnValue(true);
 export const subscribeConnectivity = vi.fn();
+
+/* esm-platform : un Platform de test sans Host. Les erreurs et la détection restent les vraies implémentations ;
+ * `getPlatform` retourne un Platform dont aucune capacité n'est fournie (comme en production sans adaptateur).
+ * Pour simuler une capacité : `getPlatform.mockReturnValue(createMockPlatform({ capabilities: { … } }))`. */
+export {
+  PlatformError,
+  isPlatformError,
+  unavailable,
+  getPlatformEnvironment,
+  isNativePlatform,
+  hasHostBridge,
+} from '@egen-civitas/esm-platform';
+export { createMockPlatform };
+export const getPlatform = vi.fn(() => createMockPlatform());
 
 /* esm-styleguide */
 export const showNotification = vi.fn();

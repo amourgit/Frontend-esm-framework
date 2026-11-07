@@ -1,5 +1,11 @@
 /** @module @category Route Map */
-import { isEgenAppRoutes, isEgenRoutes, type EgenAppRoutes, type EgenRoutes } from '@egen-civitas/esm-globals';
+import {
+  isEgenAppRoutes,
+  isEgenRoutes,
+  isNativeTarget,
+  type EgenAppRoutes,
+  type EgenRoutes,
+} from '@egen-civitas/esm-globals';
 
 const OVERRIDE_PREFIX = 'egen-routes:';
 const CHANGE_EVENT = 'egen-routes:change';
@@ -271,7 +277,9 @@ export function setupRouteMapOverrides(): Promise<void> {
     return setupPromise;
   }
 
-  devMode = window.spaEnv === 'development';
+  // Cibles natives : les overrides sont TOUJOURS désactivés (aucun code non prévu ne doit pouvoir être chargé),
+  // même si `window.spaEnv` valait « development » (le build natif impose déjà la production : seconde ceinture).
+  devMode = window.spaEnv === 'development' && !isNativeTarget();
 
   if (devMode) {
     setupPromise = readOverrideMap().then((snapshot) => {

@@ -63,6 +63,12 @@
   >
   <script type="egen-routes" src="<%= egenRoutesUrl %>"></script>
 <% } %>
+<% if (egenTargetConfigDef) { %>
+    <script>
+      // Pont EGEN_TARGET (.env, build) → window.egenTarget (lu par @egen-civitas/esm-globals : getEgenTarget())
+      Object.assign(window, <%= egenTargetConfigDef %>);
+    </script>
+<% } %>
 <% if (egenAiConfigDef) { %>
     <script>
       // Pont EGEN_AI_* (.env, build) → window.egenAi* (lu par @egen-civitas/esm-ai-config au runtime)
@@ -73,12 +79,6 @@
     <script>
       // Pont EGEN_TENANT_* (.env, build) → window.egenTenant* (lu par @egen-civitas/esm-tenant au runtime)
       Object.assign(window, <%= egenTenantConfigDef %>);
-    </script>
-<% } %>
-<% if (egenTargetConfigDef) { %>
-    <script>
-      // Cible de build (natif uniquement) → window.egenTarget. Absent = web. Posé AVANT initializeSpa.
-      Object.assign(window, <%= egenTargetConfigDef %>);
     </script>
 <% } %>
 <% if (egenCoreRoutes) { %>

@@ -1,4 +1,5 @@
 export * from '@egen-civitas/esm-tenant';
+export * from '@egen-civitas/esm-platform';
 export * from '@egen-civitas/esm-api';
 export * from '@egen-civitas/esm-config';
 export * from '@egen-civitas/esm-context';

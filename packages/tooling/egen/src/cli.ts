@@ -308,6 +308,13 @@ export function buildCli(y: Argv) {
           describe: 'The environment to build for. e.g., development, production.',
           type: 'string',
         })
+        .option('platform', {
+          default: 'web',
+          choices: ['web', 'android', 'ios'],
+          describe:
+            'The target platform of the build. `android` and `ios` produce a self-contained, locked-down SPA for a native host (requires an absolute https API URL and inline importmap/routes).',
+          type: 'string',
+        })
         .option('asset', {
           default: [],
           describe:
@@ -321,6 +328,8 @@ export function buildCli(y: Argv) {
         configUrls: args['config-url'],
         configPaths: args['config-path'],
         assets: args['asset'],
+        // yargs ne type pas `choices` : la valeur est déjà restreinte à web | android | ios à l'exécution.
+        platform: args.platform as 'web' | 'android' | 'ios',
       }),
   );
 

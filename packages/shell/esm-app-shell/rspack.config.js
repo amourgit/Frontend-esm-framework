@@ -25,6 +25,7 @@ const { mkdirSync, readdirSync, statSync, readFileSync, writeFileSync } = requir
 const sass = require('sass-embedded');
 const semver = require('semver');
 const { removeTrailingSlash, getTimestamp } = require('./tools/helpers');
+const { resolveTarget } = require('./tools/targets');
 const { resolveBranding } = require('./tools/brand');
 
 const { name, version, dependencies } = require('./package.json');
@@ -38,11 +39,9 @@ const { ModuleFederationPlugin } = container;
 
 const egenAddCookie = process.env.EGEN_ADD_COOKIE;
 const egenApiUrl = removeTrailingSlash(process.env.EGEN_API_URL || '/egen');
-const egenPublicPath = removeTrailingSlash(process.env.EGEN_PUBLIC_PATH || '/egen-civitas/spa');
 // Default proxy target is localhost. Set EGEN_PROXY_TARGET in .env to point to your EGEN backend.
 const egenProxyTarget = process.env.EGEN_PROXY_TARGET || 'http://localhost:8082/';
 const egenPageTitle = process.env.EGEN_PAGE_TITLE || 'Egen';
-const egenFavicon = process.env.EGEN_FAVICON || `${egenPublicPath}/favicon.ico`;
 // Métadonnées de l'application installable (PWA) — neutres par défaut, à fournir par le consommateur.
 const egenPageDescription = process.env.EGEN_PAGE_DESCRIPTION || egenPageTitle;
 const egenThemeColor = process.env.EGEN_THEME_COLOR || '#161616';
@@ -175,48 +174,7 @@ function resolveEnvironment(buildMode) {
   const fallback = process.env.NODE_ENV || buildMode || '';
   return fallback === 'development' ? 'development' : 'production';
 }
-// Une chaine JS non vide est toujours truthy, donc process.env.EGEN_ESM_IMPORTMAP
-// valant "{}" ou '{"imports":{}}' (comme le font build:production/watch)
-// activait a tort la variante figee (Def) du template EJS au lieu de la
-// variante dynamique (Url) — meme quand l'intention etait "pas d'importmap
-// fournie au build, laisse le consommateur (egen develop, ou un vrai
-// backend) la fournir au runtime en servant importmap.json/routes.registry.json".
-// Une import map ou un registre de routes semantiquement vide est donc
-// traite comme une valeur absente — chaque predicat connait la vraie forme
-// attendue plutot que de deviner sur un simple "objet vide au niveau racine"
-// (qui aurait rate le cas reel '{"imports":{}}').
-function isMeaningfulImportmap(value) {
-  if (!value) {
-    return false;
-  }
-  try {
-    const parsed = JSON.parse(value);
-    return !!(parsed && parsed.imports && Object.keys(parsed.imports).length > 0);
-  } catch {
-    // JSON invalide : on ne devine pas, on considere la valeur comme significative
-    // (elle echouera plus tard, de facon plus explicite, au parsing cote client).
-    return true;
-  }
-}
-
-function isMeaningfulRoutesRegistry(value) {
-  if (!value) {
-    return false;
-  }
-  try {
-    const parsed = JSON.parse(value);
-    return !!(parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0);
-  } catch {
-    return true;
-  }
-}
-
-const egenOffline = process.env.EGEN_OFFLINE === 'enable';
 const egenDefaultLocale = process.env.EGEN_ESM_DEFAULT_LOCALE || 'en';
-const egenImportmapDef = isMeaningfulImportmap(process.env.EGEN_ESM_IMPORTMAP) ? process.env.EGEN_ESM_IMPORTMAP : undefined;
-const egenImportmapUrl = process.env.EGEN_ESM_IMPORTMAP_URL || `${egenPublicPath}/importmap.json`;
-const egenRoutesDef = isMeaningfulRoutesRegistry(process.env.EGEN_ROUTES) ? process.env.EGEN_ROUTES : undefined;
-const egenRoutesUrl = process.env.EGEN_ROUTES_URL || `${egenPublicPath}/routes.registry.json`;
 const egenCoreApps = process.env.EGEN_ESM_CORE_APPS_DIR || resolve(__dirname, '../../apps');
 const egenConfigUrls = (process.env.EGEN_CONFIG_URLS || '')
   .split(';')
@@ -298,6 +256,24 @@ module.exports = (env, argv = []) => {
   // source de vérité pour EGEN_DEV_NO_AUTH plus bas (DefinePlugin) — plus
   // de valeur par défaut dupliquée en dur dans ce fichier.
   const publicEnv = resolvePublicEnv(__dirname, mode);
+
+  // ── Cible de build (web | android | ios) — voir tools/targets.js ──────────────────────────────────
+  // Source UNIQUE des différences entre cibles. EGEN_DEV_NO_AUTH est lu depuis publicEnv (hiérarchie .env)
+  // et non depuis process.env seul, pour que la validation voie la valeur réellement embarquée.
+  const targetConfig = resolveTarget(
+    { ...process.env, EGEN_DEV_NO_AUTH: publicEnv.EGEN_DEV_NO_AUTH ?? process.env.EGEN_DEV_NO_AUTH },
+    { environment: egenEnvironment },
+  );
+  targetConfig.warnings.forEach((warning) => console.warn(`[egen-target] ${warning}`));
+  const egenPublicPath = targetConfig.publicPath;
+  const egenFavicon = process.env.EGEN_FAVICON || `${egenPublicPath}/favicon.ico`;
+  const egenOffline = targetConfig.offlineData;
+  const egenImportmapDef = targetConfig.importmapDef;
+  const egenImportmapUrl = targetConfig.importmapUrl;
+  const egenRoutesDef = targetConfig.routesDef;
+  const egenRoutesUrl = targetConfig.routesUrl;
+  // Pont EGEN_TARGET → window.egenTarget : posé UNIQUEMENT pour les cibles natives (absent = web, HTML web inchangé).
+  const egenTargetConfigDef = targetConfig.native ? JSON.stringify({ egenTarget: targetConfig.target }) : null;
 
   const coreImportmap = {
     imports: {},
@@ -614,6 +590,7 @@ module.exports = (env, argv = []) => {
           egenExtraAssets: egenJsCssAssets.map((fileName) => 'assets/' + basename(fileName)),
           egenAiConfigDef,
           egenTenantConfigDef,
+          egenTargetConfigDef,
         },
       }),
       new WebpackPwaManifest({
@@ -691,6 +668,7 @@ module.exports = (env, argv = []) => {
         'process.env.BUILD_VERSION': JSON.stringify(`${version}-${timestamp}`),
         'process.env.FRAMEWORK_VERSION': JSON.stringify(frameworkVersion),
         'process.env.NODE_ENV': JSON.stringify(mode),
+        'process.env.EGEN_TARGET': JSON.stringify(targetConfig.target),
         // Flag de bypass auth pour les tests sans backend. Défaut et
         // hiérarchie de surcharge définis dans .env.defaults — voir
         // resolvePublicEnv() de @egen-civitas/rspack-config, calculé en

@@ -79,6 +79,7 @@
     "@egen-civitas/esm-globals": "^2.0.0",
     "@egen-civitas/esm-navigation": "^1.0.0",
     "@egen-civitas/esm-offline": "^1.0.3",
+    "@egen-civitas/esm-platform": "^1.0.0",
     "@egen-civitas/esm-react-utils": "^3.0.0",
     "@egen-civitas/esm-routes": "^1.1.0",
     "@egen-civitas/esm-state": "^1.0.3",

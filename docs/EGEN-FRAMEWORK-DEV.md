@@ -588,3 +588,26 @@ export declare function getPlatform(): Platform;
 7. Comportement de `navigate()` vers une URL externe (G3).
 8. Cohérence de `scripts/ensure-shell-rebuild.mjs` avec le nouveau package (H4).
 9. Règles Apple 2.5.2 / 4.7.x et politique Google Play : relecture des textes **officiels** avant la décision finale de distribution.
+
+---
+
+## 6. Journal d'avancement
+
+Branche `feat/multiplateforme-p0` · mise à jour : 2026-11-06.
+
+| Tâche | État | Preuve / remarque |
+|---|---|---|
+| A1 Baseline | **partielle** | `yarn install`, `turbo build` (34 tâches) et `build:production` du shell OK ; `yarn verify` complet **non lancé** (eslint indisponible via `yarn` dans cet environnement) |
+| B1 `targets.js` | **fait** | 36 tests (web = comportement historique ; android/ios ; 8 erreurs ; cumul d'erreurs) |
+| B2 branchement `rspack.config.js` | **fait** | `dist` Web **identique octet pour octet** (376 fichiers) avant/après ; build android valide : import map et routes inline, `publicPath` `/app`, aucune URL `importmap.json`/`routes.registry.json` ; build android invalide : échec avec les 3 erreurs listées |
+| B3 pont `window.egenTarget` | **fait** | posé uniquement en natif (HTML web inchangé) ; clé typée dans `Window` |
+| B7 tests de build | **partielle** | tests de `targets.js` faits ; test HTML natif (pas de `<script>` inline, etc.) à écrire avec B5 |
+| C1 package `esm-platform` | **fait** (écart) | câblé dans `esm-framework/src/index.ts`, `package.json` du framework et du shell, `dependencies.json` (partage MF). **Écarts** : `internal.ts` non modifié (`esm-tenant` n'y figure pas non plus) ; `mock.tsx` reporté à C9 |
+| C2 types et erreurs | **fait** | contrats de l'annexe 2 ; `PlatformError` ; `CapabilityName` placé dans `esm-globals` (source unique, évite un cycle avec F2) |
+| C3 détection | **fait** | via `getEgenTarget()` d'`esm-globals` ; test « pas de User-Agent » |
+| F1 helper `getEgenTarget` | **partielle** | helper fait ; lockdown (overrides d'import map) **à faire** |
+
+**Constats pendant l'implémentation (à retenir)**
+- Dans `rspack.config.js`, les constantes dépendant de la cible ont dû être déplacées **dans** la fonction exportée (le mode, donc `EGEN_ENV`, n'y est connu qu'à l'exécution). Aucun effet sur le build Web (preuve ci-dessus).
+- `EGEN_DEV_NO_AUTH` est lu depuis `publicEnv` (hiérarchie `.env`) et non depuis `process.env` seul, pour que la validation voie la valeur réellement embarquée.
+- `prettier --check` signale déjà `rspack.config.js` et `tools/brand.js` sur `main` : non reformatés ici (règle N7).

@@ -1,5 +1,34 @@
 # @egen-civitas/esm-styleguide
 
+## 4.0.0
+
+### Major Changes
+
+- 5958a56: Framework neutre : suppression des derniers résidus hospitaliers (FHIR, patients, établissement de santé).
+
+  Retirés :
+
+  - `esm-api` : `fhirBaseUrl` et le traitement spécifique des URL FHIR (`_summary=data`) dans `egenFetch`.
+  - `esm-data-api` : type `FHIRLocationResource`.
+  - `esm-styleguide` : composant `LocationPicker` (basé sur l'API FHIR `Location` et le tag « Login Location ») ; pictogrammes médicaux `AppointmentsPictogram`, `AppointmentsAltPictogram`, `Assessment1Pictogram`, `Assessment2Pictogram`, `FacilityPictogram`, `RegistrationPictogram` (identifiants `egen-pict-appointments`, `-assessment-1`, `-assessment-2`, `-facility`, `-registration`) ; icônes `GenderFemaleIcon`, `GenderMaleIcon`, `GenderOtherIcon`, `GenderUnknownIcon`.
+  - `esm-translations` : clés `errorLoadingLoginLocations`, `searchForLocation` et clés orphelines patient/clinique (`Clinic`, `patientAvatarAlt`, `patientIdentifierSticker`, `patientLists`, `patientPhotoAlt`, `patientPhotoPlaceholder`, `seeMoreLists`) dans toutes les langues.
+
+  Ajouté : `HomePictogram` est désormais un pictogramme de maison neutre (`egen-pict-home`) au lieu d'un alias du bâtiment d'hôpital.
+
+  Vocabulaire neutre dans la documentation, les exemples, les stories et les tests (patient, médicaments, rendez-vous, pharmacie remplacés).
+
+### Patch Changes
+
+- Updated dependencies [669cbd6]
+- Updated dependencies [b3d9419]
+- Updated dependencies [5958a56]
+  - @egen-civitas/esm-globals@2.1.0
+  - @egen-civitas/esm-api@3.0.0
+  - @egen-civitas/esm-translations@1.0.4
+  - @egen-civitas/esm-data-api@3.0.0
+  - @egen-civitas/esm-react-utils@3.0.1
+  - @egen-civitas/esm-extensions@2.4.1
+
 ## 3.3.0
 
 ### Minor Changes

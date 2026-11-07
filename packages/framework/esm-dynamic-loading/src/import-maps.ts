@@ -1,5 +1,5 @@
 /** @module @category Import Map */
-import type { ImportMap } from '@egen-civitas/esm-globals';
+import { isNativeTarget, type ImportMap } from '@egen-civitas/esm-globals';
 
 const OVERRIDE_PREFIX = 'import-map-override:';
 const DISABLED_KEY = 'import-map-overrides-disabled';
@@ -266,7 +266,9 @@ export function setupImportMapOverrides() {
   }
   initialized = true;
 
-  devMode = window.spaEnv === 'development';
+  // Cibles natives : les overrides sont TOUJOURS désactivés (aucun code non prévu ne doit pouvoir être chargé),
+  // même si `window.spaEnv` valait « development » (le build natif impose déjà la production : seconde ceinture).
+  devMode = window.spaEnv === 'development' && !isNativeTarget();
 
   if (devMode) {
     initialOverrideSnapshot = readOverrideMap();

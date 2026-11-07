@@ -617,7 +617,7 @@ Branche `feat/multiplateforme-p0` · mise à jour : 2026-11-06.
 | D5 URL d'API absolue | **fait** | audit de `location.origin` (aucun blocage : `run.ts:350` supporte une base absolue ; `esm-ai-tools` n'utilise l'origine que comme base de résolution) + 4 tests |
 | G2 bypass inerte en natif | **fait** | `isDevAuthBypassEnabled()` retourne `false` en natif (+7 lignes) ; 6 tests dont non-régression Web |
 | G4 journalisation sûre | **partielle** | test « le jeton n'apparaît ni dans le message, ni dans la stack, ni dans le corps de l'erreur » fait ; revue des autres journaux à faire |
-| F1 helper `getEgenTarget` | **partielle** | helper fait ; lockdown (overrides d'import map) **à faire** |
+| F1 lockdown natif | **fait** | `getEgenTarget()` / `isNativeTarget()` dans `esm-globals` ; `import-maps.ts` et `route-maps.ts` : `devMode = spaEnv==='development' && !isNativeTarget()` ; 4 tests (android/ios ignorent les overrides même en development ; Web inchangé). **Constat** : les overrides étaient déjà inertes hors `development` ; le build natif impose `production`, donc ceci est la **seconde ceinture** |
 
 **Constats pendant l'implémentation (à retenir)**
 - Dans `rspack.config.js`, les constantes dépendant de la cible ont dû être déplacées **dans** la fonction exportée (le mode, donc `EGEN_ENV`, n'y est connu qu'à l'exécution). Aucun effet sur le build Web (preuve ci-dessus).

@@ -82,6 +82,38 @@ describe('runBuild', () => {
     expect(html).toMatch(/egen\.[a-f0-9]+\.css/);
   }, 90_000);
 
+  it('builds a self-contained, locked-down SPA for a native platform', async () => {
+    const target = join(createTempDir(), 'dist');
+
+    await runBuild(
+      defaultArgs({
+        target,
+        platform: 'android',
+        apiUrl: 'https://api.exemple.ga/egen',
+        importmap: '{"imports":{"@egen/esm-home-app":"./home/app.js"}}',
+        routes: '{"@egen/esm-home-app":{"pages":[]}}',
+      }),
+    );
+
+    const html = readIndex(target);
+    expect(html).toContain('"egenTarget":"android"');
+    expect(html).toContain('systemjs-importmap');
+    expect(html).not.toContain('importmap.json');
+    expect(html).not.toContain('routes.registry.json');
+    expect(html).toMatch(/src="\/app\/egen\.[a-f0-9]+\.js"/);
+  }, 90_000);
+
+  it('rejects a native build whose configuration is not self-contained', async () => {
+    const target = join(createTempDir(), 'dist');
+
+    // Sans API https absolue ni import map / routes inline, la cible native est refusée AVANT tout build,
+    // avec la liste des problèmes (voir tools/targets.js du shell).
+    const build = runBuild(defaultArgs({ target, platform: 'ios' }));
+    await expect(build).rejects.toThrow(/Build impossible pour la cible "ios"/);
+    await expect(build).rejects.toThrow(/EGEN_API_URL/);
+    await expect(build).rejects.toThrow(/EGEN_ESM_IMPORTMAP/);
+  }, 90_000);
+
   it('produces at least one hashed JS bundle named egen.<hash>.js', async () => {
     const target = join(createTempDir(), 'dist');
 

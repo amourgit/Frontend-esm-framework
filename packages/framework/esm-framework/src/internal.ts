@@ -9,6 +9,7 @@ export * from '@egen-civitas/esm-feature-flags';
 export * from '@egen-civitas/esm-globals';
 export * from '@egen-civitas/esm-navigation';
 export * from '@egen-civitas/esm-offline';
+export * from '@egen-civitas/esm-platform';
 export * from '@egen-civitas/esm-react-utils';
 export * from '@egen-civitas/esm-routes';
 export * from '@egen-civitas/esm-state';

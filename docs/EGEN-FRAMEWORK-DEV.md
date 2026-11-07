@@ -201,7 +201,7 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
   2. `esm-framework/src/index.ts` **et** `src/internal.ts` → `export * from '@egen-civitas/esm-platform';`.
   3. `esm-framework/mock.tsx` (+ `mock-jest.tsx` si les mocks y sont dupliqués) → mock du package (cf. C9).
   4. `shell/esm-app-shell/dependencies.json` → ajouter `"@egen-civitas/esm-platform"` (liste des dépendances **partagées MF**, singleton) et `package.json` du shell → dépendance.
-- ⚠️ Vérifier si `tsconfig.json` (`packages/framework/tsconfig.json`) ou `typedoc.json` référencent les packages explicitement ; si oui, y ajouter le nouveau.
+- ✅ **Vérifié** : `packages/framework/tsconfig.json` ne liste aucun package ; `esm-framework/tsconfig.typedoc.json` les liste explicitement (`esm-tenant` n'y figure pas, oubli préexistant non corrigé : N7) ⇒ `esm-platform` y est ajouté. `typedoc.json` n'en référence aucun.
 - **Ne pas faire** : exposer `esm-platform` autrement que via `esm-framework` aux apps ; oublier `dependencies.json` (sans cela, chaque app embarquerait **sa propre copie** ⇒ états divergents).
 - **Validé quand** : `yarn build` et `yarn verify` passent ; `import { getPlatform } from '@egen-civitas/esm-framework'` compile dans une app.
 
@@ -284,6 +284,8 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 > **Dépendance externe X-1 (backend, hors dépôt)** : le backend doit (a) accepter `Authorization: Bearer`, (b) émettre/rafraîchir des jetons, (c) autoriser l'origine locale en CORS (en-têtes `Authorization`, `X-Tenant-ID`, `Accept`, `Disable-WWW-Authenticate`). Le framework est écrit **contre une interface** ; le contrat précis de l'endpoint de jetons est à définir avec le backend (egen-kernel) — il n'est **pas** inventé ici.
 
 ### D1 — Fournisseur d'autorisation dans `esm-api` · M
+> **Réalisé** (voir § 6) : l'API est un objet `AuthorizationProvider { getAuthorization, refresh?, credentials? }` posé par `setAuthorizationProvider(provider | null)` — et non une simple fonction — pour regrouper D1, D2 et D3 en un seul enregistrement.
+
 - **Fichiers** : `esm-api/src/egen-fetch.ts`, nouveau `esm-api/src/authorization.ts`, `index.ts`/`public.ts` (exports).
 - **Faire** : `setAuthorizationProvider(fn: () => Promise<string | null>)` ; dans `egenFetch`, **avant** `window.fetch`, si un fournisseur est posé et qu'aucun en-tête `Authorization` n'est fourni par l'appelant ⇒ l'ajouter. Zone : après l'assemblage des en-têtes (`Accept`, `Disable-WWW-Authenticate`, `X-Tenant-ID`).
 - **Branchement** : `esm-platform` (cible native) appelle `setAuthorizationProvider(() => platform.session.getAuthorization())` au démarrage ; en Web **rien n'est posé** (R2).
@@ -291,6 +293,8 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 - **Tests** (`egen-fetch.test.ts`) : sans fournisseur = identique ; avec fournisseur = en-tête présent ; en-tête appelant prioritaire ; fournisseur qui rejette ⇒ la requête échoue avec `PlatformError` propagée.
 
 ### D2 — Politique `credentials` · S
+> **Réalisé autrement** : la politique est portée par `AuthorizationProvider.credentials` (natif : `'omit'`) et non par une option de config `esm-api`, car `getConfig` est asynchrone et rendrait l'appel à `fetch` asynchrone pour tout le monde, Web compris (violation de R2).
+
 - **Faire** : option de config `@egen-civitas/esm-api` → `credentials: 'same-origin' | 'include' | 'omit'` (fichier `config-schema.ts`). Défaut = **inchangé** (aucune valeur posée ⇒ défaut navigateur). `targets`/natif fixe `'omit'` via la configuration fournie au démarrage.
 - **Ne pas faire** : forcer `include` globalement (risque CORS/CSRF).
 
@@ -591,3 +595,46 @@ export declare function getPlatform(): Platform;
 7. Comportement de `navigate()` vers une URL externe (G3).
 8. Cohérence de `scripts/ensure-shell-rebuild.mjs` avec le nouveau package (H4).
 9. Règles Apple 2.5.2 / 4.7.x et politique Google Play : relecture des textes **officiels** avant la décision finale de distribution.
+
+---
+
+## 6. Journal d'avancement
+
+Branche de référence : **`main`** · mise à jour : 2026-11-07.
+
+> **Coordination (plusieurs sessions travaillent sur cette réforme).** Avant de commencer une tâche : (1) lire ce journal **sur `main`** ;
+> (2) lister `git branch -r` et les PR ouvertes ; (3) ne jamais réimplémenter une tâche déjà marquée « fait » : l'étendre. Une tâche n'est « fait »
+> qu'une fois fusionnée dans `main` avec ses tests et sa CI verte. Les écarts de conception se consignent ici, pas seulement dans la PR.
+
+| Tâche | État | Preuve / remarque |
+|---|---|---|
+| A1 Baseline | **fait** | `docs/baseline-2026-11.md` (install 2 min 14 s, build 3 min 03 s, tests 8 min 24 s). Défauts préexistants consignés : lint (corrigé #103, 5 paquets gardent d'anciennes erreurs), `build.integration.test.ts` fragile sous charge |
+| A2 Inventaire du `dist` | à faire | |
+| A3 Contenu publié du shell | **fait** | #104 : shell publié avec ses sources de construction ; `esm-theme` (`src/themes`) et `esm-translations` (`translations/`) complétés ; projet vide + `egen build` OK ; `tools/publish-contract.test.ts` |
+| A4 Service worker | **fait** (décision) | non produit par personne (Workbox perdu) ; non supporté en l'état, désactivé en natif ; tâche Web dédiée à ouvrir |
+| B1 `targets.js` | **fait** | #105 + intégration : contrat `TargetConfig` de la doc (`importmapMode`, `routesMode`, `csp`), `isMeaningful*` dans `helpers.js` (une seule définition), `EGEN_ENV` **obligatoire** et déjà résolu, URL d'import map/routes interdites en natif ; 74 tests |
+| B2 branchement `rspack.config.js` | **fait** | #105 : `dist` Web identique octet pour octet ; en natif `offline` du HTML = `serviceWorker` (faux) : aucune référence à un service worker |
+| B3 pont `window.egenTarget` | **fait** | natif uniquement (HTML Web inchangé) ; type `EgenTarget` dans `esm-globals` ; un seul pont dans `index.ejs` |
+| B4 option `--platform` du CLI | **fait** | `cli.ts`, `build.ts`, `utils/config.ts` ; `--spa-path` non transmis en natif ; tests unitaires et d'intégration (build android valide / ios invalide) |
+| B5 CSP et scripts inline | à faire | la CSP de départ est déjà produite par `resolveTarget` (`csp`), non émise dans le HTML |
+| B7 tests de build | **partielle** | `targets.js` couvert ; test du HTML natif (pas de `<script>` inline) à écrire avec B5 |
+| C1 package `esm-platform` | **fait** | câblage complet : `esm-framework` (`package.json`, `index`, `internal`, `mock`, `mock-jest`), shell (`dependencies.json`, `package.json`), `tsconfig.typedoc.json` ; `import { getPlatform } from '@egen-civitas/esm-framework'` compile (test négatif vérifié) |
+| C2 types et erreurs | **fait** | contrats de l'annexe 2 ; `PlatformError` ; `CapabilityName` défini dans `esm-globals` (F2) |
+| C3 détection | **fait** | `window.egenTarget` uniquement ; `hasHostBridge()` ; `ready` rejette `INCOMPATIBLE` (« Host manquant ») en natif sans pont conforme ; pas de User-Agent ni de Capacitor |
+| C4 adaptateur Web | à faire | |
+| C5 client de pont | à faire | |
+| C6 registre de capacités | à faire | l'assembleur `assemblePlatform` (`src/capabilities.ts`) est le point unique de construction : adaptateurs et mocks s'y branchent |
+| C9 mocks | **partielle** | `createMockPlatform` + `getPlatform` dans `esm-framework/mock*` ; `createMockHost` avec C5 |
+| D1 fournisseur d'autorisation | **fait** | `esm-api/src/authorization.ts` + `egen-fetch.ts` ; sans fournisseur, `fetch` reste appelé de façon synchrone (test dédié) |
+| D2 politique `credentials` | **fait** (écart) | via `AuthorizationProvider.credentials` (voir D2) |
+| D3 401 → rafraîchissement unique → rejeu | **fait** | single-flight, pas de boucle, GET/HEAD par défaut, `replayOnUnauthorized` |
+| D4 session / login natif | à faire | dépend de X-1 (backend) et de C5 : branchement `setAuthorizationProvider(...)` dans `esm-platform` |
+| D5 URL d'API absolue | **fait** | audit `location.origin` + 4 tests |
+| F1 lockdown natif | **fait** | `getEgenTarget()` / `isNativeTarget()` ; `import-maps.ts` et `route-maps.ts` (seconde ceinture : le build natif impose déjà `production`) |
+| G2 bypass inerte en natif | **fait** | `isDevAuthBypassEnabled()` faux en natif ; 6 tests |
+| G4 journalisation sûre | **partielle** | test « le jeton n'apparaît ni dans le message, ni dans la stack » fait ; revue des autres journaux à faire |
+
+**Constats à retenir**
+- Dans `rspack.config.js`, `resolveTarget` est appelé **dans** `module.exports` : le mode, donc `EGEN_ENV`, n'y est connu qu'à l'exécution. `EGEN_DEV_NO_AUTH` est lu depuis `publicEnv` (hiérarchie `.env`), pas depuis `process.env` seul.
+- `yarn lint` ne démarrait pas avant #103 ; en CI, la vérification pré-publication (`publint`, `attw`, pack/installation isolée) est le vrai garde-fou : la rejouer en **Node 22** (en Node 20 le message d'erreur de `verify:pack` diffère).
+- Deux sessions ont implémenté B1 à B3 en parallèle (branches `feat/multiplatform-p0` et `feat/multiplateforme-p0`) ; elles ont été réconciliées dans `integrate/multiplateforme-p0`. `prettier --check` signale déjà `tools/brand.js` sur `main` (N7).

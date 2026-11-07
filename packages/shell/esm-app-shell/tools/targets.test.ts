@@ -183,6 +183,19 @@ describe('resolveTarget — erreurs', () => {
     expect(() => resolveTarget(validNative({ EGEN_ROUTES: value }))).toThrow(/EGEN_ROUTES/);
   });
 
+  it.each(['EGEN_ESM_IMPORTMAP_URL', 'EGEN_ROUTES_URL'])(
+    'natif + %s → erreur, même si la version inline est fournie (aucune composition distante)',
+    (name) => {
+      expect(() => resolveTarget(validNative({ [name]: 'https://cdn.exemple.ga/x.json' }))).toThrow(new RegExp(name));
+    },
+  );
+
+  it('web + URL d’import map / routes : toujours permis (mode url historique)', () => {
+    expect(() =>
+      resolveTarget({ EGEN_ESM_IMPORTMAP_URL: 'https://cdn.exemple.ga/im.json', EGEN_ROUTES_URL: '/routes.json' }),
+    ).not.toThrow();
+  });
+
   it('natif + une URL d’import map ne remplace pas l’import map inline', () => {
     expect(() =>
       resolveTarget(

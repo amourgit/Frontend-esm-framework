@@ -22,4 +22,18 @@ describe('@egen-civitas/esm-framework/mock', () => {
     expect(mock.getHistory()).toEqual([history[0]]);
     expect(mock.navigate).toHaveBeenCalled();
   });
+
+  it('getPlatform() du mock : Platform de test sans Host, mêmes rejets que la production', async () => {
+    const platform = mock.getPlatform();
+    expect(platform.environment).toBe('web');
+    expect(platform.has('secureStorage')).toBe(false);
+    await expect(platform.secureStorage.get('k')).rejects.toBeInstanceOf(mock.PlatformError);
+    await expect(platform.secureStorage.get('k')).rejects.toMatchObject({ code: 'UNAVAILABLE' });
+  });
+
+  it('createMockPlatform() permet de simuler une capacité', async () => {
+    const platform = mock.createMockPlatform({ capabilities: { openExternal: { open: async () => {} } } });
+    expect(platform.has('openExternal')).toBe(true);
+    await expect(platform.openExternal.open('https://exemple.ga')).resolves.toBeUndefined();
+  });
 });

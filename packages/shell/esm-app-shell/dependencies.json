@@ -10,6 +10,7 @@
   "@egen-civitas/esm-api",
   "@egen-civitas/esm-config",
   "@egen-civitas/esm-react-utils",
+  "@egen-civitas/esm-platform",
   "@egen-civitas/esm-state",
   "@egen-civitas/esm-tenant",
   "rxjs",

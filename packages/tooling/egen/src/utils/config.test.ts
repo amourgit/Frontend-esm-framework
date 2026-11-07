@@ -2,6 +2,22 @@ import { describe, expect, it } from 'vitest';
 import { setBundlerEnv } from './config';
 
 describe('setBundlerEnv', () => {
+  it('sets EGEN_TARGET when platform is provided', () => {
+    setBundlerEnv({ platform: 'android' });
+    expect(process.env.EGEN_TARGET).toBe('android');
+  });
+
+  it('does not forward spaPath to EGEN_PUBLIC_PATH for native platforms (the target imposes it)', () => {
+    delete process.env.EGEN_PUBLIC_PATH;
+    setBundlerEnv({ platform: 'ios', spaPath: '/egen-civitas/spa/' });
+    expect(process.env.EGEN_PUBLIC_PATH).toBeUndefined();
+  });
+
+  it('keeps forwarding spaPath for the web platform', () => {
+    setBundlerEnv({ platform: 'web', spaPath: '/mon/spa/' });
+    expect(process.env.EGEN_PUBLIC_PATH).toBe('/mon/spa/');
+  });
+
   it('sets EGEN_PROXY_TARGET when backend is provided', () => {
     setBundlerEnv({ backend: 'https://example.com' });
     expect(process.env.EGEN_PROXY_TARGET).toBe('https://example.com');

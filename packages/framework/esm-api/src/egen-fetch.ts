@@ -7,6 +7,7 @@ import type { FetchResponse } from './types/index.js';
 import { getTenantId } from './tenant.js';
 import { defaultRedirectAuthFailureUrl, type EsmApiConfigObject } from './config-schema.js';
 import { isProblemDetails, type ProblemDetails } from './problem-details.js';
+import { getAuthorizationProvider, refreshAuthorization } from './authorization.js';
 
 /** The base URL for the Egen REST API (e.g., '/ws/rest/v1'). */
 export const restBaseUrl = '/ws/rest/v1';
@@ -160,8 +161,67 @@ export function egenFetch<T = any>(path: string, fetchInit: FetchConfig = {}): P
    */
   const requestStacktrace = Error();
 
+  /* Autorisation fournie par la plateforme (cibles natives uniquement). Sans fournisseur, rien ne change :
+   * le Web continue de s'appuyer sur le cookie de session et fetch est appelé de façon synchrone.
+   */
+  const authorizationProvider = getAuthorizationProvider();
+  const callerSetAuthorization = Object.keys(fetchInit.headers).some((key) => key.toLowerCase() === 'authorization');
+
+  if (authorizationProvider?.credentials && typeof fetchInit.credentials === 'undefined') {
+    fetchInit.credentials = authorizationProvider.credentials;
+  }
+
+  if (authorizationProvider && !callerSetAuthorization) {
+    return authorizationProvider.getAuthorization().then((authorization) => {
+      if (authorization) {
+        (fetchInit.headers as FetchHeaders).Authorization = authorization;
+      }
+      return sendRequest<T>(url, fetchInit, requestStacktrace, {
+        authorizationInjected: !!authorization,
+        isRetry: false,
+      });
+    });
+  }
+
+  return sendRequest<T>(url, fetchInit, requestStacktrace, { authorizationInjected: false, isRetry: false });
+}
+
+interface SendContext {
+  /** `true` si l'en-tête Authorization a été posé par egenFetch (et non par l'appelant). */
+  authorizationInjected: boolean;
+  /** `true` pour le rejeu unique effectué après un rafraîchissement d'autorisation. */
+  isRetry: boolean;
+}
+
+function sendRequest<T>(
+  url: string,
+  fetchInit: FetchConfig,
+  requestStacktrace: Error,
+  context: SendContext,
+): Promise<FetchResponse<T>> {
   return window.fetch(url, fetchInit as RequestInit).then(async (r) => {
     const response = r as FetchResponse<T>;
+
+    /* HTTP 401 avec un jeton que NOUS avons injecté : on tente UN rafraîchissement (partagé entre les requêtes
+     * simultanées) puis on rejoue UNE fois. Sinon (ou en cas d'échec) le traitement habituel ci-dessous s'applique.
+     * Seules les requêtes idempotentes (GET/HEAD) sont rejouées, sauf `replayOnUnauthorized: true`.
+     */
+    const authorizationProvider = getAuthorizationProvider();
+    if (
+      response.status === 401 &&
+      context.authorizationInjected &&
+      !context.isRetry &&
+      authorizationProvider?.refresh &&
+      isReplayable(fetchInit) &&
+      (await refreshAuthorization())
+    ) {
+      const refreshedAuthorization = await authorizationProvider.getAuthorization();
+      if (refreshedAuthorization) {
+        (fetchInit.headers as FetchHeaders).Authorization = refreshedAuthorization;
+        return sendRequest<T>(url, fetchInit, requestStacktrace, { authorizationInjected: true, isRetry: true });
+      }
+    }
+
     const { redirectAuthFailure, followRedirects } = await getConfig<EsmApiConfigObject>('@egen-civitas/esm-api');
     if (response.ok) {
       if (response.status === 204) {
@@ -251,6 +311,18 @@ export function egenFetch<T = any>(path: string, fetchInit: FetchConfig = {}): P
       }
     }
   });
+}
+
+/** Une requête peut être rejouée après un 401 si elle est idempotente, ou si l'appelant l'autorise explicitement. */
+function isReplayable(fetchInit: FetchConfig): boolean {
+  if (fetchInit.signal?.aborted) {
+    return false;
+  }
+  if (typeof ReadableStream !== 'undefined' && fetchInit.body instanceof ReadableStream) {
+    return false;
+  }
+  const method = (fetchInit.method || 'GET').toUpperCase();
+  return method === 'GET' || method === 'HEAD' || fetchInit.replayOnUnauthorized === true;
 }
 
 /**
@@ -344,6 +416,11 @@ export class EgenFetchError extends Error implements FetchError {
 export interface FetchConfig extends Omit<RequestInit, 'body' | 'headers'> {
   headers?: FetchHeaders;
   body?: FetchBody | string;
+  /**
+   * Cibles natives (fournisseur d'autorisation posé) : autorise à rejouer UNE fois une requête NON idempotente
+   * (POST, PUT, PATCH, DELETE) après un 401 suivi d'un rafraîchissement réussi. Défaut : `false`.
+   */
+  replayOnUnauthorized?: boolean;
 }
 
 type ResponseBody = string | FetchResponseJson;

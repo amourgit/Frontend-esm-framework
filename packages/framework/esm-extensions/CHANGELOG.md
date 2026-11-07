@@ -1,5 +1,16 @@
 # @egen-civitas/esm-extensions
 
+## 2.4.1
+
+### Patch Changes
+
+- Updated dependencies [669cbd6]
+- Updated dependencies [b3d9419]
+- Updated dependencies [5958a56]
+  - @egen-civitas/esm-globals@2.1.0
+  - @egen-civitas/esm-api@3.0.0
+  - @egen-civitas/esm-translations@1.0.4
+
 ## 2.4.0
 
 ### Minor Changes

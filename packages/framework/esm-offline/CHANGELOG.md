@@ -1,5 +1,14 @@
 # @egen-civitas/esm-offline
 
+## 1.0.4
+
+### Patch Changes
+
+- Updated dependencies [669cbd6]
+- Updated dependencies [5958a56]
+  - @egen-civitas/esm-globals@2.1.0
+  - @egen-civitas/esm-api@3.0.0
+
 ## 1.0.3
 
 ### Patch Changes

@@ -328,6 +328,8 @@ export function buildCli(y: Argv) {
         configUrls: args['config-url'],
         configPaths: args['config-path'],
         assets: args['asset'],
+        // yargs ne type pas `choices` : la valeur est déjà restreinte à web | android | ios à l'exécution.
+        platform: args.platform as 'web' | 'android' | 'ios',
       }),
   );
 

@@ -25,7 +25,7 @@ const { mkdirSync, readdirSync, statSync, readFileSync, writeFileSync } = requir
 const sass = require('sass-embedded');
 const semver = require('semver');
 const { removeTrailingSlash, getTimestamp } = require('./tools/helpers');
-const { resolveTarget } = require('./tools/targets');
+const { resolveTarget, targetWindowBridge } = require('./tools/targets');
 const { resolveBranding } = require('./tools/brand');
 
 const { name, version, dependencies } = require('./package.json');
@@ -257,23 +257,25 @@ module.exports = (env, argv = []) => {
   // de valeur par défaut dupliquée en dur dans ce fichier.
   const publicEnv = resolvePublicEnv(__dirname, mode);
 
-  // ── Cible de build (web | android | ios) — voir tools/targets.js ──────────────────────────────────
-  // Source UNIQUE des différences entre cibles. EGEN_DEV_NO_AUTH est lu depuis publicEnv (hiérarchie .env)
-  // et non depuis process.env seul, pour que la validation voie la valeur réellement embarquée.
-  const targetConfig = resolveTarget(
-    { ...process.env, EGEN_DEV_NO_AUTH: publicEnv.EGEN_DEV_NO_AUTH ?? process.env.EGEN_DEV_NO_AUTH },
-    { environment: egenEnvironment },
-  );
-  targetConfig.warnings.forEach((warning) => console.warn(`[egen-target] ${warning}`));
-  const egenPublicPath = targetConfig.publicPath;
+  // Cible de build (web | android | ios) : seule source de vérité des différences entre cibles (tools/targets.js).
+  // Appelée ici, et non en tête de fichier, car la validation native a besoin de valeurs RÉSOLUES : EGEN_ENV
+  // (egenEnvironment) et EGEN_DEV_NO_AUTH (publicEnv, fichiers .env* compris), pas de process.env brut.
+  // Sans EGEN_TARGET, le résultat reproduit exactement le comportement Web antérieur.
+  const target = resolveTarget({
+    ...process.env,
+    EGEN_ENV: egenEnvironment,
+    EGEN_DEV_NO_AUTH: publicEnv.EGEN_DEV_NO_AUTH,
+  });
+  const targetBridge = targetWindowBridge(target);
+  const egenTargetConfigDef = targetBridge ? JSON.stringify(targetBridge) : null;
+  const egenPublicPath = target.publicPath;
   const egenFavicon = process.env.EGEN_FAVICON || `${egenPublicPath}/favicon.ico`;
-  const egenOffline = targetConfig.offlineData;
-  const egenImportmapDef = targetConfig.importmapDef;
-  const egenImportmapUrl = targetConfig.importmapUrl;
-  const egenRoutesDef = targetConfig.routesDef;
-  const egenRoutesUrl = targetConfig.routesUrl;
-  // Pont EGEN_TARGET → window.egenTarget : posé UNIQUEMENT pour les cibles natives (absent = web, HTML web inchangé).
-  const egenTargetConfigDef = targetConfig.native ? JSON.stringify({ egenTarget: targetConfig.target }) : null;
+  // `offline` du HTML pilote aujourd'hui le service worker ET les données hors ligne (séparés par la tâche E1).
+  const egenOffline = target.serviceWorker;
+  const egenImportmapDef = target.importmapMode === 'inline' ? process.env.EGEN_ESM_IMPORTMAP : undefined;
+  const egenImportmapUrl = process.env.EGEN_ESM_IMPORTMAP_URL || `${egenPublicPath}/importmap.json`;
+  const egenRoutesDef = target.routesMode === 'inline' ? process.env.EGEN_ROUTES : undefined;
+  const egenRoutesUrl = process.env.EGEN_ROUTES_URL || `${egenPublicPath}/routes.registry.json`;
 
   const coreImportmap = {
     imports: {},
@@ -363,13 +365,13 @@ module.exports = (env, argv = []) => {
 
   // ── Thème EGEN : source UNIQUE de vérité ──────────────────────────────────
   // Les fichiers JSON de thème vivent exclusivement dans le package
-  // @egen-civitas/esm-theme (packages/framework/esm-theme/src/themes/). Le shell ne
+  // @egen-civitas/esm-theme (src/themes/, publié avec le paquet). Le shell ne
   // possède PAS sa propre copie : il la copie/sert depuis cette unique
   // source, pour qu'il soit structurellement impossible que le shell serve
   // une version périmée pendant qu'un⋅e développeur⋅se édite « le » JSON de
   // thème (cf. incident : les deux fichiers avaient divergé silencieusement,
   // le shell servant une valeur différente de celle éditée).
-  const themeSourceDir = resolve(__dirname, '../../framework/esm-theme/src/themes');
+  const themeSourceDir = resolve(dirname(require.resolve('@egen-civitas/esm-theme/package.json')), 'src', 'themes');
 
   return {
     entry: resolve(__dirname, 'src/index.ts'),
@@ -668,7 +670,7 @@ module.exports = (env, argv = []) => {
         'process.env.BUILD_VERSION': JSON.stringify(`${version}-${timestamp}`),
         'process.env.FRAMEWORK_VERSION': JSON.stringify(frameworkVersion),
         'process.env.NODE_ENV': JSON.stringify(mode),
-        'process.env.EGEN_TARGET': JSON.stringify(targetConfig.target),
+        'process.env.EGEN_TARGET': JSON.stringify(target.target),
         // Flag de bypass auth pour les tests sans backend. Défaut et
         // hiérarchie de surcharge définis dans .env.defaults — voir
         // resolvePublicEnv() de @egen-civitas/rspack-config, calculé en

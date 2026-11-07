@@ -1,158 +1,203 @@
 /**
- * Résolution de la CIBLE de build (web | android | ios).
+ * Résolution de la cible de build du Shell : `web` | `android` | `ios`.
  *
- * Fonction PURE : elle ne lit jamais `process.env` elle-même — l'appelant lui passe l'objet d'environnement.
- * C'est le SEUL endroit où les différences entre cibles sont décidées (cf. docs/EGEN-FRAMEWORK-DEV.md, B1).
- * Pour la cible `web`, chaque valeur reproduit exactement le comportement historique du `rspack.config.js`.
+ * C'est, avec `@egen-civitas/esm-platform` (runtime) et le Host (hors dépôt), le SEUL endroit où les différences
+ * entre cibles ont le droit de vivre (règle R1 de docs/EGEN-FRAMEWORK-DEV.md). Aucun autre fichier du build ne doit
+ * comparer `target` à une valeur : il lit un champ de `TargetConfig` (règle N1).
+ *
+ * `resolveTarget` est une fonction PURE : elle ne lit jamais `process.env`. L'appelant lui passe un objet dont les
+ * valeurs sont DÉJÀ résolues (cf. `rspack.config.js`) :
+ *  - `EGEN_ENV` : le résultat de `resolveEnvironment(mode)` (repli sur NODE_ENV / mode), pas la variable brute ;
+ *  - `EGEN_DEV_NO_AUTH` : la valeur de `resolvePublicEnv()` (fichiers `.env*` compris), pas `process.env` seul.
+ * Sans cela, un `.env` pourrait réactiver le bypass d'authentification dans un artefact natif sans que le build échoue.
+ *
+ * Par défaut (`EGEN_TARGET` absent ou vide) le résultat reproduit exactement le comportement Web antérieur (règle R2).
  */
-const { removeTrailingSlash } = require('./helpers');
+const { removeTrailingSlash, isMeaningfulImportmap, isMeaningfulRoutesRegistry } = require('./helpers');
 
-const TARGETS = ['web', 'android', 'ios'];
-const DEFAULT_WEB_PUBLIC_PATH = '/egen-civitas/spa';
+/** Cibles connues. Toute autre valeur est une erreur : pas de repli silencieux. */
+const TARGETS = Object.freeze(['web', 'android', 'ios']);
+
+/** Chemin public de l'artefact natif : constante, jamais lue dans l'environnement (cf. piège `EGEN_PUBLIC_PATH=''`). */
 const NATIVE_PUBLIC_PATH = '/app';
 
-// Une chaîne JS non vide est toujours truthy : un import map `{"imports":{}}` ou un registre `{}` est donc
-// traité comme ABSENT (cf. build:production du shell, qui les fournit vides pour que le consommateur les serve).
-function isMeaningfulImportmap(value) {
-  if (!value) {
-    return false;
-  }
-  try {
-    const parsed = JSON.parse(value);
-    return !!(parsed && parsed.imports && Object.keys(parsed.imports).length > 0);
-  } catch {
-    // JSON invalide : on ne devine pas, la valeur est considérée significative (l'échec sera explicite au parsing client).
-    return true;
-  }
+const WEB_DEFAULT_PUBLIC_PATH = '/egen-civitas/spa';
+
+/**
+ * CSP de départ de la cible native (proposition à valider sur appareil, cf. tâche B5).
+ * Les styles `'unsafe-inline'` sont à réexaminer (Carbon / injection de styles). `'unsafe-eval'` est interdit.
+ *
+ * @param {string} apiOrigin Origine de l'API (`https://api.exemple.ga`), déjà validée.
+ * @returns {string}
+ */
+function buildNativeCsp(apiOrigin) {
+  return [
+    "default-src 'none'",
+    "script-src 'self'",
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob:",
+    "font-src 'self'",
+    `connect-src 'self' ${apiOrigin}`,
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join('; ');
 }
 
-function isMeaningfulRoutesRegistry(value) {
-  if (!value) {
-    return false;
-  }
+function isParseableJson(value) {
   try {
-    const parsed = JSON.parse(value);
-    return !!(parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0);
-  } catch {
+    JSON.parse(value);
     return true;
+  } catch {
+    return false;
   }
 }
 
 /**
- * @param {Record<string, string | undefined>} env Variables d'environnement (EGEN_*).
- * @param {{ environment?: 'production' | 'development' | 'test' }} [options]
- *   `environment` : valeur déjà résolue de EGEN_ENV (cf. resolveEnvironment dans rspack.config.js).
- * @returns {{
- *   target: 'web' | 'android' | 'ios',
- *   native: boolean,
- *   publicPath: string,
- *   serviceWorker: boolean,
- *   offlineData: boolean,
- *   importmapDef: string | undefined,
- *   importmapUrl: string,
- *   routesDef: string | undefined,
- *   routesUrl: string,
- *   allowImportMapOverrides: boolean,
- *   allowDevAuthBypass: boolean,
- *   requireAbsoluteApiUrl: boolean,
- *   warnings: string[],
- * }}
- * @throws {Error} Si la combinaison cible/options est invalide (toutes les erreurs sont listées).
+ * Erreurs de validation propres à une cible native. Toutes sont collectées (et non la première seulement) afin
+ * qu'un build en échec indique d'un coup tout ce qu'il y a à corriger.
+ *
+ * @param {Record<string, string | undefined>} env
+ * @returns {{ errors: string[], apiOrigin: string | null }}
  */
-function resolveTarget(env, options = {}) {
-  const raw = (env.EGEN_TARGET || '').trim();
-  const target = raw === '' ? 'web' : raw;
+function validateNative(env) {
+  const errors = [];
+  let apiOrigin = null;
 
-  if (!TARGETS.includes(target)) {
-    throw new Error(`EGEN_TARGET="${raw}" inconnu. Valeurs autorisées : ${TARGETS.join(', ')}.`);
+  if (env.EGEN_ENV !== 'production') {
+    errors.push(
+      `EGEN_ENV doit valoir "production" pour une cible native (reçu : ${JSON.stringify(env.EGEN_ENV ?? null)}).`,
+    );
   }
 
-  const native = target !== 'web';
-  const warnings = [];
-  const errors = [];
+  if (
+    String(env.EGEN_DEV_NO_AUTH ?? '')
+      .trim()
+      .toLowerCase() === 'true'
+  ) {
+    errors.push(
+      'EGEN_DEV_NO_AUTH=true est interdit pour une cible native : le contournement de l’authentification ne doit jamais être embarqué.',
+    );
+  }
 
-  const offlineRequested = env.EGEN_OFFLINE === 'enable';
-  const importmapDef = isMeaningfulImportmap(env.EGEN_ESM_IMPORTMAP) ? env.EGEN_ESM_IMPORTMAP : undefined;
-  const routesDef = isMeaningfulRoutesRegistry(env.EGEN_ROUTES) ? env.EGEN_ROUTES : undefined;
+  const apiUrl = env.EGEN_API_URL ?? '';
+  if (!/^https:\/\//.test(apiUrl)) {
+    errors.push(
+      `EGEN_API_URL doit être une URL absolue en https:// pour une cible native (reçu : ${JSON.stringify(apiUrl || null)}).`,
+    );
+  } else {
+    try {
+      apiOrigin = new URL(apiUrl).origin;
+    } catch {
+      errors.push(`EGEN_API_URL n’est pas une URL valide (reçu : ${JSON.stringify(apiUrl)}).`);
+    }
+  }
 
-  if (!native) {
-    const publicPath = removeTrailingSlash(env.EGEN_PUBLIC_PATH || DEFAULT_WEB_PUBLIC_PATH);
-    return {
+  // Un artefact natif doit être autonome : import map et routes figées dans le HTML, jamais téléchargées.
+  if (!isMeaningfulImportmap(env.EGEN_ESM_IMPORTMAP)) {
+    errors.push(
+      'EGEN_ESM_IMPORTMAP doit contenir une import map non vide pour une cible native (un artefact natif est autonome : pas de mode « url »).',
+    );
+  } else if (!isParseableJson(env.EGEN_ESM_IMPORTMAP)) {
+    errors.push('EGEN_ESM_IMPORTMAP n’est pas du JSON valide.');
+  }
+
+  // Aucune ressource de composition distante : même avec une version inline, une URL signalerait une intention
+  // (ou une configuration héritée) incompatible avec un artefact autonome, mieux vaut échouer que l'ignorer.
+  for (const name of ['EGEN_ESM_IMPORTMAP_URL', 'EGEN_ROUTES_URL']) {
+    if (env[name]) {
+      errors.push(`${name} est interdit pour une cible native (aucune ressource de composition distante).`);
+    }
+  }
+
+  if (!isMeaningfulRoutesRegistry(env.EGEN_ROUTES)) {
+    errors.push(
+      'EGEN_ROUTES doit contenir un registre de routes non vide pour une cible native (un artefact natif est autonome : pas de mode « url »).',
+    );
+  } else if (!isParseableJson(env.EGEN_ROUTES)) {
+    errors.push('EGEN_ROUTES n’est pas du JSON valide.');
+  }
+
+  return { errors, apiOrigin };
+}
+
+/**
+ * @typedef {Object} TargetConfig
+ * @property {'web' | 'android' | 'ios'} target
+ * @property {boolean} native Vrai pour toute cible autre que `web`.
+ * @property {string} publicPath Sans slash final. Web : `EGEN_PUBLIC_PATH` ou `/egen-civitas/spa` ; natif : `/app`.
+ * @property {boolean} serviceWorker Web : `EGEN_OFFLINE === 'enable'` ; natif : toujours faux.
+ * @property {boolean} offlineData Web : `EGEN_OFFLINE === 'enable'` ; natif : sauf `EGEN_OFFLINE_DATA === 'disable'`.
+ * @property {'inline' | 'url'} importmapMode Web : `inline` si l'import map est significative, sinon `url` ; natif : `inline`.
+ * @property {'inline' | 'url'} routesMode Idem pour le registre de routes.
+ * @property {boolean} allowImportMapOverrides Web : vrai (comportement actuel, pas de restriction) ; natif : faux.
+ * @property {boolean} allowDevAuthBypass Web : vrai (comportement actuel) ; natif : faux.
+ * @property {boolean} requireAbsoluteApiUrl Natif : vrai.
+ * @property {string | null} csp Web : `null` ; natif : politique CSP.
+ */
+
+/**
+ * @param {Record<string, string | undefined>} env Valeurs déjà résolues (voir l'en-tête du fichier).
+ * @returns {Readonly<TargetConfig>}
+ * @throws {Error} si la cible est inconnue ou si une règle de validation native est violée.
+ */
+function resolveTarget(env) {
+  // Absent ou vide (`EGEN_TARGET=` dans un .env) = non fourni = web. Toute autre valeur doit être exacte.
+  const target = env.EGEN_TARGET ? env.EGEN_TARGET : 'web';
+
+  if (!TARGETS.includes(target)) {
+    throw new Error(`EGEN_TARGET inconnu : ${JSON.stringify(target)}. Valeurs acceptées : ${TARGETS.join(', ')}.`);
+  }
+
+  if (target === 'web') {
+    const offline = env.EGEN_OFFLINE === 'enable';
+    return Object.freeze({
       target,
-      native,
-      publicPath,
-      serviceWorker: offlineRequested,
-      offlineData: offlineRequested,
-      importmapDef,
-      importmapUrl: env.EGEN_ESM_IMPORTMAP_URL || `${publicPath}/importmap.json`,
-      routesDef,
-      routesUrl: env.EGEN_ROUTES_URL || `${publicPath}/routes.registry.json`,
+      native: false,
+      publicPath: removeTrailingSlash(env.EGEN_PUBLIC_PATH || WEB_DEFAULT_PUBLIC_PATH),
+      serviceWorker: offline,
+      offlineData: offline,
+      importmapMode: isMeaningfulImportmap(env.EGEN_ESM_IMPORTMAP) ? 'inline' : 'url',
+      routesMode: isMeaningfulRoutesRegistry(env.EGEN_ROUTES) ? 'inline' : 'url',
       allowImportMapOverrides: true,
       allowDevAuthBypass: true,
       requireAbsoluteApiUrl: false,
-      warnings,
-    };
+      csp: null,
+    });
   }
 
-  // ── Cible native : artefact autonome et verrouillé ──────────────────────────────────────────
-  if (env.EGEN_PUBLIC_PATH && removeTrailingSlash(env.EGEN_PUBLIC_PATH) !== NATIVE_PUBLIC_PATH) {
-    warnings.push(
-      `EGEN_PUBLIC_PATH="${env.EGEN_PUBLIC_PATH}" ignoré : la cible ${target} impose "${NATIVE_PUBLIC_PATH}".`,
-    );
-  }
-
-  if (env.EGEN_DEV_NO_AUTH === 'true') {
-    errors.push(`EGEN_DEV_NO_AUTH=true est interdit pour la cible ${target} (contournement d'authentification).`);
-  }
-
-  if (!/^https:\/\//i.test(env.EGEN_API_URL || '')) {
-    errors.push(
-      `EGEN_API_URL doit être une URL absolue https:// pour la cible ${target} (reçu : "${env.EGEN_API_URL ?? ''}").`,
-    );
-  }
-
-  if (!importmapDef) {
-    errors.push(
-      `EGEN_ESM_IMPORTMAP doit contenir un import map non vide (inline) pour la cible ${target} : l'artefact doit être autonome.`,
-    );
-  }
-
-  if (!routesDef) {
-    errors.push(
-      `EGEN_ROUTES doit contenir un registre de routes non vide (inline) pour la cible ${target} : l'artefact doit être autonome.`,
-    );
-  }
-
-  if (env.EGEN_ESM_IMPORTMAP_URL || env.EGEN_ROUTES_URL) {
-    errors.push(
-      `EGEN_ESM_IMPORTMAP_URL / EGEN_ROUTES_URL sont interdits pour la cible ${target} (aucune ressource de composition distante).`,
-    );
-  }
-
-  if (options.environment && options.environment !== 'production') {
-    errors.push(`La cible ${target} exige EGEN_ENV=production (reçu : "${options.environment}").`);
-  }
-
+  const { errors, apiOrigin } = validateNative(env);
   if (errors.length > 0) {
-    throw new Error(`Configuration invalide pour EGEN_TARGET=${target} :\n - ${errors.join('\n - ')}`);
+    throw new Error(
+      `Build impossible pour la cible "${target}" :\n${errors.map((message) => `  - ${message}`).join('\n')}`,
+    );
   }
 
-  return {
+  return Object.freeze({
     target,
-    native,
+    native: true,
     publicPath: NATIVE_PUBLIC_PATH,
-    // Les fichiers sont dans le binaire : aucun service worker. Les données hors ligne restent actives par défaut.
     serviceWorker: false,
     offlineData: env.EGEN_OFFLINE_DATA !== 'disable',
-    importmapDef,
-    importmapUrl: '',
-    routesDef,
-    routesUrl: '',
+    importmapMode: 'inline',
+    routesMode: 'inline',
     allowImportMapOverrides: false,
     allowDevAuthBypass: false,
     requireAbsoluteApiUrl: true,
-    warnings,
-  };
+    csp: buildNativeCsp(apiOrigin),
+  });
 }
 
-module.exports = { resolveTarget, isMeaningfulImportmap, isMeaningfulRoutesRegistry, TARGETS };
+/**
+ * Pont build → runtime : clés posées sur `window` par le HTML, sur le modèle des ponts `egenAi*` / `egenTenant*`.
+ * Liste blanche : toute clé ajoutée ici doit être ajoutée au test (`targets.test.ts`) et ne jamais porter de secret (N3).
+ *
+ * Web : `null` (rien n'est injecté, le HTML Web reste identique, R2) ; l'absence de `window.egenTarget` vaut `web`.
+ *
+ * @param {Readonly<TargetConfig>} config
+ * @returns {{ egenTarget: 'android' | 'ios' } | null}
+ */
+function targetWindowBridge(config) {
+  return config.native ? { egenTarget: config.target } : null;
+}
+
+module.exports = { resolveTarget, targetWindowBridge, buildNativeCsp, TARGETS, NATIVE_PUBLIC_PATH };

@@ -24,3 +24,39 @@ exports.getTimestamp = () => {
   const dd = padToTwoDigits;
   return `${today.getFullYear()}${dd(today.getMonth() + 1)}${dd(today.getDate())}`;
 };
+
+// Une chaine JS non vide est toujours truthy, donc process.env.EGEN_ESM_IMPORTMAP
+// valant "{}" ou '{"imports":{}}' (comme le font build:production/watch)
+// activait a tort la variante figee (Def) du template EJS au lieu de la
+// variante dynamique (Url) — meme quand l'intention etait "pas d'importmap
+// fournie au build, laisse le consommateur (egen develop, ou un vrai
+// backend) la fournir au runtime en servant importmap.json/routes.registry.json".
+// Une import map ou un registre de routes semantiquement vide est donc
+// traite comme une valeur absente — chaque predicat connait la vraie forme
+// attendue plutot que de deviner sur un simple "objet vide au niveau racine"
+// (qui aurait rate le cas reel '{"imports":{}}').
+exports.isMeaningfulImportmap = (value) => {
+  if (!value) {
+    return false;
+  }
+  try {
+    const parsed = JSON.parse(value);
+    return !!(parsed && parsed.imports && Object.keys(parsed.imports).length > 0);
+  } catch {
+    // JSON invalide : on ne devine pas, on considere la valeur comme significative
+    // (elle echouera plus tard, de facon plus explicite, au parsing cote client).
+    return true;
+  }
+};
+
+exports.isMeaningfulRoutesRegistry = (value) => {
+  if (!value) {
+    return false;
+  }
+  try {
+    const parsed = JSON.parse(value);
+    return !!(parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0);
+  } catch {
+    return true;
+  }
+};

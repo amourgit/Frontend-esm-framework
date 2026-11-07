@@ -20,7 +20,7 @@ import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { listPublishablePackages } from './shared/packages.mjs';
+import { listPublishablePackages, NOT_A_LIBRARY } from './shared/packages.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, '..');
@@ -51,13 +51,8 @@ const BUNDLER_ONLY = new Set([
   '@egen-civitas/esm-ai-extensions',
 ]);
 
-// esm-app-shell n'est pas une librairie : c'est un bundle applicatif navigateur
-// (sortie rspack avec noms de fichiers hashés), servi tel quel par le CLI egen,
-// jamais require()/import()é par du code. Il n'a délibérément aucun point
-// d'entrée JS ("main"/"exports") — inutile donc de tenter de l'importer ici.
-const NOT_A_LIBRARY = new Set([
-  '@egen-civitas/esm-app-shell',
-]);
+// Les paquets qui ne sont pas des librairies importables (ex. esm-app-shell, bundle applicatif navigateur servi tel quel
+// par le CLI egen, sans point d'entrée JS) viennent de scripts/shared/packages.mjs : SKIP ici, comme dans verify-attw.
 
 function run(cmd, args, opts = {}) {
   const result = spawnSync(cmd, args, { encoding: 'utf8', shell: true, ...opts });

@@ -1,146 +1,285 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { resolveTarget, isMeaningfulImportmap, isMeaningfulRoutesRegistry } = require('./targets');
+const { resolveTarget, targetWindowBridge, buildNativeCsp, TARGETS, NATIVE_PUBLIC_PATH } = require('./targets');
 
-const NATIVE_ENV = {
+type Env = Record<string, string | undefined>;
+
+const IMPORTMAP = '{"imports":{"@egen/x-app":"./x.js"}}';
+const ROUTES = '{"@egen/x-app":{"pages":[]}}';
+
+/** Environnement natif valide : chaque test d'erreur en retire/modifie exactement une valeur. */
+const validNative = (overrides: Env = {}): Env => ({
+  EGEN_TARGET: 'android',
+  EGEN_ENV: 'production',
   EGEN_API_URL: 'https://api.exemple.ga/egen',
-  EGEN_ESM_IMPORTMAP: '{"imports":{"@egen/esm-home-app":"./home/app.js"}}',
-  EGEN_ROUTES: '{"@egen/esm-home-app":{"pages":[]}}',
-};
-
-describe('isMeaningful*', () => {
-  it('traite les valeurs vides comme absentes', () => {
-    expect(isMeaningfulImportmap(undefined)).toBe(false);
-    expect(isMeaningfulImportmap('{"imports":{}}')).toBe(false);
-    expect(isMeaningfulImportmap('{"imports":{"a":"./a.js"}}')).toBe(true);
-    expect(isMeaningfulImportmap('{pas du json')).toBe(true);
-    expect(isMeaningfulRoutesRegistry('{}')).toBe(false);
-    expect(isMeaningfulRoutesRegistry('{"a":{}}')).toBe(true);
-  });
+  EGEN_ESM_IMPORTMAP: IMPORTMAP,
+  EGEN_ROUTES: ROUTES,
+  ...overrides,
 });
 
-describe('resolveTarget — web (non-régression : comportement historique)', () => {
-  it('défauts = valeurs actuelles du rspack.config.js', () => {
+describe('resolveTarget — web (non-régression : défauts identiques à l’existant)', () => {
+  it('sans aucune variable : comportement Web historique', () => {
     expect(resolveTarget({})).toEqual({
       target: 'web',
       native: false,
       publicPath: '/egen-civitas/spa',
       serviceWorker: false,
       offlineData: false,
-      importmapDef: undefined,
-      importmapUrl: '/egen-civitas/spa/importmap.json',
-      routesDef: undefined,
-      routesUrl: '/egen-civitas/spa/routes.registry.json',
+      importmapMode: 'url',
+      routesMode: 'url',
       allowImportMapOverrides: true,
       allowDevAuthBypass: true,
       requireAbsoluteApiUrl: false,
-      warnings: [],
+      csp: null,
     });
   });
 
-  it('EGEN_TARGET vide ou espaces = web', () => {
-    expect(resolveTarget({ EGEN_TARGET: '' }).target).toBe('web');
-    expect(resolveTarget({ EGEN_TARGET: '  ' }).target).toBe('web');
+  it.each([undefined, ''])('EGEN_TARGET=%j équivaut à web', (value) => {
+    expect(resolveTarget({ EGEN_TARGET: value }).target).toBe('web');
   });
 
-  it('retire le slash final et respecte EGEN_PUBLIC_PATH', () => {
-    const t = resolveTarget({ EGEN_PUBLIC_PATH: '/mon/spa/' });
-    expect(t.publicPath).toBe('/mon/spa');
-    expect(t.importmapUrl).toBe('/mon/spa/importmap.json');
+  it.each([
+    ['/egen-civitas/spa', '/egen-civitas/spa'],
+    ['/custom/spa/', '/custom/spa'],
+    ['/custom/spa///', '/custom/spa'],
+    ['/', ''],
+    ['', '/egen-civitas/spa'], // piège connu : la chaîne vide retombe sur le défaut
+    [undefined, '/egen-civitas/spa'],
+  ])('EGEN_PUBLIC_PATH=%j → publicPath %j', (input, expected) => {
+    expect(resolveTarget({ EGEN_PUBLIC_PATH: input }).publicPath).toBe(expected);
   });
 
-  it('EGEN_PUBLIC_PATH vide retombe sur le défaut (comportement historique)', () => {
-    expect(resolveTarget({ EGEN_PUBLIC_PATH: '' }).publicPath).toBe('/egen-civitas/spa');
+  it('EGEN_OFFLINE=enable active service worker ET données hors ligne ; toute autre valeur : aucun des deux', () => {
+    expect(resolveTarget({ EGEN_OFFLINE: 'enable' })).toMatchObject({ serviceWorker: true, offlineData: true });
+    for (const value of [undefined, '', 'disable', 'true', 'ENABLE']) {
+      expect(resolveTarget({ EGEN_OFFLINE: value })).toMatchObject({ serviceWorker: false, offlineData: false });
+    }
   });
 
-  it('EGEN_OFFLINE=enable active service worker ET données', () => {
-    const t = resolveTarget({ EGEN_OFFLINE: 'enable' });
-    expect(t.serviceWorker).toBe(true);
-    expect(t.offlineData).toBe(true);
-    expect(resolveTarget({ EGEN_OFFLINE: 'disable' }).serviceWorker).toBe(false);
+  it('EGEN_OFFLINE_DATA est ignoré en web', () => {
+    expect(resolveTarget({ EGEN_OFFLINE_DATA: 'disable', EGEN_OFFLINE: 'enable' }).offlineData).toBe(true);
   });
 
-  it("l'import map vide fourni par build:production est traité comme absent", () => {
-    const t = resolveTarget({ EGEN_ESM_IMPORTMAP: '{"imports":{}}', EGEN_ROUTES: '{}' });
-    expect(t.importmapDef).toBeUndefined();
-    expect(t.routesDef).toBeUndefined();
+  it.each([
+    [undefined, 'url'],
+    ['', 'url'],
+    ['{}', 'url'],
+    ['{"imports":{}}', 'url'], // forme réelle de build:production / watch
+    [IMPORTMAP, 'inline'],
+    ['pas du json', 'inline'], // on ne devine pas : le parsing échouera, de façon explicite, côté client
+  ])('import map %j → mode %s (même règle que isMeaningfulImportmap)', (value, mode) => {
+    expect(resolveTarget({ EGEN_ESM_IMPORTMAP: value }).importmapMode).toBe(mode);
   });
 
-  it('URLs explicites conservées', () => {
-    const t = resolveTarget({ EGEN_ESM_IMPORTMAP_URL: 'https://x/i.json', EGEN_ROUTES_URL: 'https://x/r.json' });
-    expect(t.importmapUrl).toBe('https://x/i.json');
-    expect(t.routesUrl).toBe('https://x/r.json');
+  it.each([
+    [undefined, 'url'],
+    ['{}', 'url'],
+    [ROUTES, 'inline'],
+  ])('routes %j → mode %s', (value, mode) => {
+    expect(resolveTarget({ EGEN_ROUTES: value }).routesMode).toBe(mode);
   });
 
-  it("n'applique AUCUNE validation native (dev bypass et API relative tolérés)", () => {
+  it('n’impose aucune validation native : bypass d’auth, API relative et EGEN_ENV=development restent permis', () => {
     expect(() =>
-      resolveTarget({ EGEN_DEV_NO_AUTH: 'true', EGEN_API_URL: '/egen' }, { environment: 'development' }),
+      resolveTarget({ EGEN_DEV_NO_AUTH: 'true', EGEN_API_URL: '/egen', EGEN_ENV: 'development' }),
     ).not.toThrow();
+  });
+
+  it('le résultat est figé (immuable)', () => {
+    const config = resolveTarget({});
+    expect(Object.isFrozen(config)).toBe(true);
   });
 });
 
-describe.each(['android', 'ios'])('resolveTarget — %s', (target) => {
-  it('produit une configuration native verrouillée', () => {
-    const t = resolveTarget({ ...NATIVE_ENV, EGEN_TARGET: target }, { environment: 'production' });
-    expect(t).toMatchObject({
-      target,
+describe.each(['android', 'ios'])('resolveTarget — %s', (platform) => {
+  const config = resolveTarget(validNative({ EGEN_TARGET: platform }));
+
+  it('produit la configuration native attendue', () => {
+    expect(config).toMatchObject({
+      target: platform,
       native: true,
       publicPath: '/app',
       serviceWorker: false,
       offlineData: true,
-      importmapUrl: '',
-      routesUrl: '',
+      importmapMode: 'inline',
+      routesMode: 'inline',
       allowImportMapOverrides: false,
       allowDevAuthBypass: false,
       requireAbsoluteApiUrl: true,
     });
-    expect(t.importmapDef).toBe(NATIVE_ENV.EGEN_ESM_IMPORTMAP);
-    expect(t.routesDef).toBe(NATIVE_ENV.EGEN_ROUTES);
+    expect(config.csp).toEqual(expect.any(String));
   });
 
-  it('EGEN_OFFLINE_DATA=disable coupe les données hors ligne', () => {
-    expect(resolveTarget({ ...NATIVE_ENV, EGEN_TARGET: target, EGEN_OFFLINE_DATA: 'disable' }).offlineData).toBe(false);
-  });
-
-  it('ignore (avec avertissement) un EGEN_PUBLIC_PATH différent de /app', () => {
-    const t = resolveTarget({ ...NATIVE_ENV, EGEN_TARGET: target, EGEN_PUBLIC_PATH: '/egen-civitas/spa' });
-    expect(t.publicPath).toBe('/app');
-    expect(t.warnings).toHaveLength(1);
-    expect(resolveTarget({ ...NATIVE_ENV, EGEN_TARGET: target, EGEN_PUBLIC_PATH: '/app/' }).warnings).toHaveLength(0);
-  });
-
-  it.each([
-    ['EGEN_DEV_NO_AUTH=true', { EGEN_DEV_NO_AUTH: 'true' }, /EGEN_DEV_NO_AUTH/],
-    ['API relative', { EGEN_API_URL: '/egen' }, /EGEN_API_URL/],
-    ['API http non sécurisée', { EGEN_API_URL: 'http://api.exemple.ga' }, /EGEN_API_URL/],
-    ['API absente', { EGEN_API_URL: undefined }, /EGEN_API_URL/],
-    ['import map vide', { EGEN_ESM_IMPORTMAP: '{"imports":{}}' }, /EGEN_ESM_IMPORTMAP/],
-    ['routes vides', { EGEN_ROUTES: '{}' }, /EGEN_ROUTES/],
-    ['import map par URL', { EGEN_ESM_IMPORTMAP_URL: 'https://x/i.json' }, /_URL/],
-    ['registre par URL', { EGEN_ROUTES_URL: 'https://x/r.json' }, /_URL/],
-  ])('échoue : %s', (_label, patch, message) => {
-    expect(() =>
-      resolveTarget({ ...NATIVE_ENV, EGEN_TARGET: target, ...patch }, { environment: 'production' }),
-    ).toThrow(message);
-  });
-
-  it('échoue hors production', () => {
-    expect(() => resolveTarget({ ...NATIVE_ENV, EGEN_TARGET: target }, { environment: 'development' })).toThrow(
-      /EGEN_ENV=production/,
-    );
-  });
-
-  it('liste TOUTES les erreurs en une seule fois', () => {
-    expect(() =>
-      resolveTarget({ EGEN_TARGET: target, EGEN_DEV_NO_AUTH: 'true' }, { environment: 'development' }),
-    ).toThrow(
-      /EGEN_DEV_NO_AUTH[\s\S]*EGEN_API_URL[\s\S]*EGEN_ESM_IMPORTMAP[\s\S]*EGEN_ROUTES[\s\S]*EGEN_ENV=production/,
-    );
+  it('android et ios ne diffèrent que par le nom de la cible', () => {
+    const other = resolveTarget(validNative({ EGEN_TARGET: platform === 'android' ? 'ios' : 'android' }));
+    expect({ ...other, target: platform }).toEqual(config);
   });
 });
 
-describe('resolveTarget — cible inconnue', () => {
-  it('échoue sans repli silencieux', () => {
-    expect(() => resolveTarget({ EGEN_TARGET: 'windows' })).toThrow(/inconnu/);
+describe('resolveTarget — natif : valeurs', () => {
+  it('ignore EGEN_PUBLIC_PATH (constante /app)', () => {
+    expect(resolveTarget(validNative({ EGEN_PUBLIC_PATH: '/autre' })).publicPath).toBe(NATIVE_PUBLIC_PATH);
+    expect(resolveTarget(validNative({ EGEN_PUBLIC_PATH: '' })).publicPath).toBe('/app');
+  });
+
+  it('ignore EGEN_OFFLINE : jamais de service worker', () => {
+    expect(resolveTarget(validNative({ EGEN_OFFLINE: 'enable' })).serviceWorker).toBe(false);
+  });
+
+  it('données hors ligne actives sauf EGEN_OFFLINE_DATA=disable', () => {
+    expect(resolveTarget(validNative()).offlineData).toBe(true);
+    expect(resolveTarget(validNative({ EGEN_OFFLINE_DATA: 'enable' })).offlineData).toBe(true);
+    expect(resolveTarget(validNative({ EGEN_OFFLINE_DATA: 'disable' })).offlineData).toBe(false);
+  });
+
+  it('la CSP autorise l’origine de l’API (et seulement elle) et n’autorise jamais eval ni script inline', () => {
+    const { csp } = resolveTarget(validNative({ EGEN_API_URL: 'https://api.exemple.ga:8443/egen/v1' }));
+    expect(csp).toContain("connect-src 'self' https://api.exemple.ga:8443;");
+    expect(csp).toContain("script-src 'self';");
+    expect(csp).not.toContain('unsafe-eval');
+    expect(csp).not.toMatch(/script-src[^;]*unsafe-inline/);
+    expect(csp).toBe(buildNativeCsp('https://api.exemple.ga:8443'));
+  });
+});
+
+describe('resolveTarget — erreurs', () => {
+  it.each(['Android', 'WEB', 'windows', 'desktop', ' android'])(
+    'EGEN_TARGET inconnu %j → erreur (pas de repli silencieux)',
+    (value) => {
+      expect(() => resolveTarget({ EGEN_TARGET: value })).toThrow(/EGEN_TARGET inconnu/);
+    },
+  );
+
+  it('la liste des cibles connues est exactement web, android, ios', () => {
+    expect([...TARGETS]).toEqual(['web', 'android', 'ios']);
+  });
+
+  it.each(['true', 'TRUE', ' true '])('natif + EGEN_DEV_NO_AUTH=%j → erreur', (value) => {
+    expect(() => resolveTarget(validNative({ EGEN_DEV_NO_AUTH: value }))).toThrow(/EGEN_DEV_NO_AUTH/);
+  });
+
+  it.each(['false', '', undefined])('natif + EGEN_DEV_NO_AUTH=%j → accepté', (value) => {
+    expect(() => resolveTarget(validNative({ EGEN_DEV_NO_AUTH: value }))).not.toThrow();
+  });
+
+  it.each([undefined, '', '/egen', 'http://api.exemple.ga', '//api.exemple.ga', 'api.exemple.ga'])(
+    'natif + EGEN_API_URL=%j → erreur (https:// absolu exigé)',
+    (value) => {
+      expect(() => resolveTarget(validNative({ EGEN_API_URL: value }))).toThrow(/EGEN_API_URL/);
+    },
+  );
+
+  it('natif + EGEN_API_URL https:// mais invalide → erreur', () => {
+    expect(() => resolveTarget(validNative({ EGEN_API_URL: 'https://' }))).toThrow(/EGEN_API_URL/);
+  });
+
+  it.each([undefined, '', '{}', '{"imports":{}}'])('natif + import map %j → erreur (artefact autonome)', (value) => {
+    expect(() => resolveTarget(validNative({ EGEN_ESM_IMPORTMAP: value }))).toThrow(/EGEN_ESM_IMPORTMAP/);
+  });
+
+  it.each([undefined, '', '{}'])('natif + routes %j → erreur (artefact autonome)', (value) => {
+    expect(() => resolveTarget(validNative({ EGEN_ROUTES: value }))).toThrow(/EGEN_ROUTES/);
+  });
+
+  it.each(['EGEN_ESM_IMPORTMAP_URL', 'EGEN_ROUTES_URL'])(
+    'natif + %s → erreur, même si la version inline est fournie (aucune composition distante)',
+    (name) => {
+      expect(() => resolveTarget(validNative({ [name]: 'https://cdn.exemple.ga/x.json' }))).toThrow(new RegExp(name));
+    },
+  );
+
+  it('web + URL d’import map / routes : toujours permis (mode url historique)', () => {
+    expect(() =>
+      resolveTarget({ EGEN_ESM_IMPORTMAP_URL: 'https://cdn.exemple.ga/im.json', EGEN_ROUTES_URL: '/routes.json' }),
+    ).not.toThrow();
+  });
+
+  it('natif + une URL d’import map ne remplace pas l’import map inline', () => {
+    expect(() =>
+      resolveTarget(
+        validNative({ EGEN_ESM_IMPORTMAP: undefined, EGEN_ESM_IMPORTMAP_URL: 'https://cdn.exemple.ga/im.json' }),
+      ),
+    ).toThrow(/EGEN_ESM_IMPORTMAP/);
+  });
+
+  it('natif + JSON invalide pour l’import map ou les routes → erreur (on ne peut pas se rattraper au runtime)', () => {
+    expect(() => resolveTarget(validNative({ EGEN_ESM_IMPORTMAP: '{pas du json' }))).toThrow(/JSON valide/);
+    expect(() => resolveTarget(validNative({ EGEN_ROUTES: '{pas du json' }))).toThrow(/JSON valide/);
+  });
+
+  it.each([undefined, '', 'development', 'test', 'prod'])(
+    'natif + EGEN_ENV=%j → erreur (la valeur doit déjà être résolue en "production")',
+    (value) => {
+      expect(() => resolveTarget(validNative({ EGEN_ENV: value }))).toThrow(/EGEN_ENV/);
+    },
+  );
+
+  it('signale toutes les violations d’un coup', () => {
+    expect.assertions(5);
+    try {
+      resolveTarget({ EGEN_TARGET: 'ios', EGEN_ENV: 'development', EGEN_DEV_NO_AUTH: 'true', EGEN_API_URL: '/egen' });
+    } catch (error) {
+      const message = (error as Error).message;
+      expect(message).toContain('"ios"');
+      expect(message).toContain('EGEN_ENV');
+      expect(message).toContain('EGEN_DEV_NO_AUTH');
+      expect(message).toContain('EGEN_API_URL');
+      expect(message).toContain('EGEN_ESM_IMPORTMAP');
+    }
+  });
+});
+
+describe('resolveTarget — pureté', () => {
+  it('ne lit pas process.env', () => {
+    const before = process.env.EGEN_TARGET;
+    process.env.EGEN_TARGET = 'ios'; // serait une erreur de validation si la fonction le lisait
+    try {
+      expect(resolveTarget({}).target).toBe('web');
+    } finally {
+      if (before === undefined) delete process.env.EGEN_TARGET;
+      else process.env.EGEN_TARGET = before;
+    }
+  });
+
+  it('ne modifie pas l’objet reçu', () => {
+    const env = validNative();
+    const copy = { ...env };
+    resolveTarget(env);
+    expect(env).toEqual(copy);
+  });
+});
+
+describe('targetWindowBridge — pont build → window.egenTarget', () => {
+  /** Liste blanche des clés que ce pont a le droit d'écrire sur `window` (règle N3 : jamais de secret). */
+  const ALLOWED_KEYS = ['egenTarget'];
+  const SENSITIVE_NAME = /secret|private|password|token|api_?key/i;
+
+  it('web : rien n’est injecté (HTML Web inchangé ; l’absence de window.egenTarget vaut web)', () => {
+    expect(targetWindowBridge(resolveTarget({}))).toBeNull();
+  });
+
+  it.each(['android', 'ios'])('%s : injecte uniquement egenTarget', (platform) => {
+    expect(targetWindowBridge(resolveTarget(validNative({ EGEN_TARGET: platform })))).toEqual({ egenTarget: platform });
+  });
+
+  it('n’écrit que des clés de la liste blanche, sans nom sensible, et seulement la cible (aucune valeur d’environnement)', () => {
+    const env = validNative({ EGEN_API_URL: 'https://api.exemple.ga/egen', SOME_SECRET_TOKEN: 'valeur-sensible' });
+    const bridge = targetWindowBridge(resolveTarget(env));
+    for (const key of Object.keys(bridge)) {
+      expect(ALLOWED_KEYS).toContain(key);
+      expect(key).not.toMatch(SENSITIVE_NAME);
+    }
+    expect(JSON.stringify(bridge)).not.toContain('valeur-sensible');
+    expect(JSON.stringify(bridge)).not.toContain('api.exemple.ga');
+  });
+
+  it('index.ejs pose le pont AVANT initializeSpa et seulement s’il est défini', () => {
+    const ejs = readFileSync(resolve(__dirname, '../src/index.ejs'), 'utf8');
+    const bridge = ejs.indexOf('<%= egenTargetConfigDef %>');
+    expect(bridge).toBeGreaterThan(-1);
+    expect(ejs.slice(0, bridge)).toMatch(/<% if \(egenTargetConfigDef\) \{ %>\s*<script>[^]*$/);
+    expect(bridge).toBeLessThan(ejs.indexOf('initializeSpa('));
   });
 });

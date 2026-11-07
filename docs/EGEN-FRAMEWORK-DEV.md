@@ -104,14 +104,16 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 
 ### A3 — Contenu publié du package Shell · S
 - ✅ `esm-app-shell/package.json` déclare `"files": ["dist"]`, alors que `tooling/egen/src/utils/config.ts` fait `require('@egen-civitas/esm-app-shell/rspack.config.js')`.
-- ⚠️ À confirmer : `rspack.config.js`, `src/index.ejs`, `tools/` sont-ils réellement publiés ? (`npm pack --dry-run` ; `yarn verify:pack` existe déjà).
-- **Faire** : si absents, ajouter `rspack.config.js`, `src/index.ejs`, `tools/` au champ `files` (c'est ce qui rend `egen build --platform …` possible depuis `egen-distributions`).
-- **Validé quand** : un projet vide qui installe le package peut lancer `egen build`.
+- ✅ **Confirmé le 2026-11-06** (`npm pack --dry-run`, v2.8.2) : seuls `README.md`, `package.json` et `dist/` étaient publiés ; `rspack.config.js`, `src/index.ejs` et `tools/` étaient **absents** ⇒ `egen build` inutilisable hors monorepo.
+- ✅ **Le remède initial (ajouter ces 3 entrées) ne suffisait pas.** Le config lit aussi `dependencies.json`, `src/index.ts`, `src/assets/`, le dossier des thèmes (`esm-theme/src/themes`, absent du paquet `esm-theme`) et `esm-translations/translations` (absent du paquet `esm-translations`).
+- ✅ **Décision (2026-11-06)** : le shell est publié **avec ses sources de construction** (`dist` précompilé conservé pour `egen develop`/`start`) ; le build final spécifique à la cible reste **chez le consommateur** (`egen build`). Les chemins propres au monorepo sont résolus via les paquets. Installation hoistée requise.
+- ✅ **Fait** (PR « publier les sources de construction ») : `files` du shell, `esm-theme` (`src/themes`, export `./package.json`), `esm-translations` (`translations`), test `tools/publish-contract.test.ts`.
+- ✅ **Validé** : projet vide + tarballs locaux + `@egen-civitas/egen@2.2.0` ⇒ `egen build --importmap … --routes … --spa-path /app/ --api-url https://…` OK en 28 s ; `dist` du monorepo identique à la baseline.
 
 ### A4 — Service worker : qui produit `service-worker.js` ? · S
 - ✅ `run.ts` enregistre `${getEgenSpaBase()}service-worker.js` ; `rspack.config.js` n'a qu'un seul entry et aucun plugin d'émission de SW (seul reste `ignoreWarnings: InjectManifest…`). Le source existe : `src/service-worker/`.
-- **Faire** : vérifier si `dist/service-worker.js` existe après un build. Documenter qui le produit (`egen develop`, `serve-prod`, autre).
-- **Décision à consigner** : en **natif** le SW est désactivé (cf. E1). Le sujet SW ne concerne donc que le **Web** ; ne pas investir plus que la clarification.
+- ✅ **Constat (2026-11-06)** : après `yarn build`, `dist/` (287 fichiers) ne contient **pas** de `service-worker.js`. Personne ne le produit : `src/service-worker/` s'appuie sur `self.__WB_MANIFEST` (Workbox `InjectManifest`), mais aucun plugin ne l'injecte et aucun `workbox-*` n'est déclaré ; ce code ne peut pas être compilé (perdu à l'import initial du dépôt). `run.ts` enregistre donc un fichier inexistant en Web `EGEN_OFFLINE=enable`, et `egen develop --support-offline` lit `dist/service-worker.js` (`readFileSync`) sans qu'il existe.
+- ✅ **Décision (2026-11-06)** : **ne pas ressusciter Workbox dans cette réforme** (nouvelles dépendances runtime, N6 ; hors périmètre, N7). Le SW Web est **non supporté en l'état** ; en natif il est désactivé (E1). `src/service-worker/` est exclu du paquet publié. Une tâche dédiée Web (hors multiplateforme) devra soit restaurer la génération du SW, soit retirer le code mort et l'enregistrement.
 
 ---
 
@@ -144,6 +146,7 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
   - `EGEN_TARGET` inconnu → erreur (pas de repli silencieux) ;
   - `EGEN_ENV` ≠ `production` en natif → erreur.
 - **Piège connu ✅** : `EGEN_PUBLIC_PATH=''` retombe sur la valeur par défaut (`||`). Ne jamais passer de chaîne vide ; la constante native est `/app`.
+- ✅ **Écart levé** : `EGEN_ENV` et `EGEN_DEV_NO_AUTH` sont résolus dans `module.exports` (`resolveEnvironment`, `resolvePublicEnv` avec fichiers `.env*`) : l'appelant les injecte **résolus** dans l'objet passé à `resolveTarget` (sinon un `.env` pourrait réactiver le bypass en natif sans erreur de build). `isMeaningful*` est déplacée dans `tools/helpers.js` (une seule définition).
 - **Ne pas faire** : lire `process.env` dans `resolveTarget` ; ajouter une option sans test ; dupliquer la logique `isMeaningfulImportmap` (la **réutiliser**).
 - **Tests** : table de cas `web` (défauts identiques à l'existant — test de non-régression obligatoire), `android`, `ios`, chaque erreur.
 
@@ -157,7 +160,7 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 ### B3 — Pont build → `window` : `egenTarget` · S
 - **Fichiers** : `rspack.config.js` (nouveau `egenTargetConfigDef`), `src/index.ejs`, `esm-globals/src/types.ts` (interface `Window`).
 - **Faire** : sur le modèle **exact** des ponts `egenAiConfigDef` / `egenTenantConfigDef` : `Object.assign(window, {"egenTarget":"android"})` en `<script>` **avant** `initializeSpa`. Typer `egenTarget?: 'web'|'android'|'ios'` ; défaut absent ⇒ `web`.
-- **Test** : étendre le garde-fou existant `env-bridge.test.ts` (liste blanche des clés) avec `egenTarget`.
+- ✅ **Correction** : `env-bridge.test.ts` n'existe que dans `esm-ai-config` et ne couvre que `EGEN_AI_*` (aucun test sur le pont tenant). Le test de `egenTarget` est donc **créé** dans le shell (`tools/targets.test.ts`, liste blanche `['egenTarget']`, pas de nom sensible, valeur = la seule cible). Le pont n'est injecté qu'en natif (HTML Web identique, R2).
 - **Ne pas faire** : ajouter d'autres clés au pont sans les mettre dans la liste blanche (N3).
 
 ### B4 — Option `--platform` du CLI `egen` · M
@@ -198,7 +201,7 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
   2. `esm-framework/src/index.ts` **et** `src/internal.ts` → `export * from '@egen-civitas/esm-platform';`.
   3. `esm-framework/mock.tsx` (+ `mock-jest.tsx` si les mocks y sont dupliqués) → mock du package (cf. C9).
   4. `shell/esm-app-shell/dependencies.json` → ajouter `"@egen-civitas/esm-platform"` (liste des dépendances **partagées MF**, singleton) et `package.json` du shell → dépendance.
-- ⚠️ Vérifier si `tsconfig.json` (`packages/framework/tsconfig.json`) ou `typedoc.json` référencent les packages explicitement ; si oui, y ajouter le nouveau.
+- ✅ **Vérifié** : `packages/framework/tsconfig.json` ne liste aucun package ; `esm-framework/tsconfig.typedoc.json` les liste explicitement (`esm-tenant` n'y figure pas, oubli préexistant non corrigé : N7) ⇒ `esm-platform` y est ajouté. `typedoc.json` n'en référence aucun.
 - **Ne pas faire** : exposer `esm-platform` autrement que via `esm-framework` aux apps ; oublier `dependencies.json` (sans cela, chaque app embarquerait **sa propre copie** ⇒ états divergents).
 - **Validé quand** : `yarn build` et `yarn verify` passent ; `import { getPlatform } from '@egen-civitas/esm-framework'` compile dans une app.
 
@@ -230,6 +233,14 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 | `permissions` | API Permissions du navigateur si dispo, sinon `UNAVAILABLE` |
 | `push`, `biometric` | `UNAVAILABLE` en v1 |
 - **Tests** : un test par ligne ci-dessus (happy-dom).
+- ✅ **Réalisé** (`esm-platform/src/adapters/web/`, une capacité par fichier, 56 tests dont des cas négatifs) et **choix consignés** :
+  - `session` : `has()` vrai ; `getAuthorization` → `null`, `refresh` → `false`, `clear` → no-op, `setTokens` → `UNAVAILABLE` (aucun jeton stocké dans le navigateur) ; aucun `setAuthorizationProvider` en Web (D1 : `fetch` reste synchrone).
+  - `files` : `select` seul (`<input type="file">` éphémère, `accept` validé, `FileHandle` sans binaire, `File` gardé dans un registre interne `getWebFile`/`releaseWebFile` jusqu'à C7) ; `download` **non fourni** en Web (l'attribut `download` est ignoré hors même origine) ⇒ `UNAVAILABLE`.
+  - `camera` : `<input accept="image/*" capture>` (pas `getUserMedia`) ; sur ordinateur `capture` est ignoré et l'utilisateur obtient un sélecteur d'images.
+  - `permissions` : fournie seulement si `navigator.permissions.query` existe ; `check` via l'API (`files` et noms inconnus du navigateur ⇒ `UNAVAILABLE`) ; `request` : `notifications` seulement (`default` ⇒ `denied`), `camera`/`microphone` ⇒ `UNAVAILABLE` (le navigateur demande à l'usage).
+  - `openExternal` : schémas `https:` / `mailto:` / `tel:` uniquement ; le message d'erreur ne reprend jamais l'URL.
+  - Limite connue : un navigateur qui n'émet pas l'événement `cancel` laisse la promesse de `files.select` en attente (pas d'heuristique sur le focus).
+  - En natif l'adaptateur Web n'est **jamais** utilisé (aucune capacité du navigateur ne fuit vers un Host absent).
 
 ### C5 — Client de pont et protocole v1 · L
 **Dossier** : `src/bridge/`. Spécification complète en **Annexe 1**.
@@ -597,29 +608,41 @@ export declare function getPlatform(): Platform;
 
 ## 6. Journal d'avancement
 
-Branche `feat/multiplateforme-p0` · mise à jour : 2026-11-06.
+Branche de référence : **`main`** · mise à jour : 2026-11-07.
+
+> **Coordination (plusieurs sessions travaillent sur cette réforme).** Avant de commencer une tâche : (1) lire ce journal **sur `main`** ;
+> (2) lister `git branch -r` et les PR ouvertes ; (3) ne jamais réimplémenter une tâche déjà marquée « fait » : l'étendre. Une tâche n'est « fait »
+> qu'une fois fusionnée dans `main` avec ses tests et sa CI verte. Les écarts de conception se consignent ici, pas seulement dans la PR.
 
 | Tâche | État | Preuve / remarque |
 |---|---|---|
-| A1 Baseline | **partielle** | `yarn install`, `turbo build` (34 tâches) et `build:production` du shell OK ; `yarn verify` complet **non lancé** (eslint indisponible via `yarn` dans cet environnement) |
-| B1 `targets.js` | **fait** | 36 tests (web = comportement historique ; android/ios ; 8 erreurs ; cumul d'erreurs) |
-| B2 branchement `rspack.config.js` | **fait** | `dist` Web **identique octet pour octet** (376 fichiers) avant/après ; build android valide : import map et routes inline, `publicPath` `/app`, aucune URL `importmap.json`/`routes.registry.json` ; build android invalide : échec avec les 3 erreurs listées |
-| B3 pont `window.egenTarget` | **fait** | posé uniquement en natif (HTML web inchangé) ; clé typée dans `Window` |
-| B4 option `--platform` du CLI | **fait** | `cli.ts`, `build.ts` (`BuildArgs`/`BuildConfig`), `utils/config.ts` (`EGEN_TARGET`) ; pour une cible native le `--spa-path` n'est pas transmis (la cible impose `/app`) ; 3 tests unitaires + 2 tests d'intégration (build android valide / ios invalide) ; suite d'intégration `build` : 7/7 verts |
-| B7 tests de build | **partielle** | tests de `targets.js` faits ; test HTML natif (pas de `<script>` inline, etc.) à écrire avec B5 |
-| C1 package `esm-platform` | **fait** (écart) | câblé dans `esm-framework/src/index.ts`, `package.json` du framework et du shell, `dependencies.json` (partage MF). **Écarts** : `internal.ts` non modifié (`esm-tenant` n'y figure pas non plus) ; `mock.tsx` reporté à C9 |
-| C2 types et erreurs | **fait** | contrats de l'annexe 2 ; `PlatformError` ; `CapabilityName` placé dans `esm-globals` (source unique, évite un cycle avec F2) |
-| C3 détection | **fait** | via `getEgenTarget()` d'`esm-globals` ; test « pas de User-Agent » |
-| D1 fournisseur d'autorisation | **fait** | `esm-api/src/authorization.ts` + `egen-fetch.ts` (**+77 lignes, 0 suppression** : le handler existant n'a pas été déplacé, pour faciliter la fusion avec `main`) ; sans fournisseur, `fetch` reste appelé de façon synchrone (test dédié) |
-| D2 politique `credentials` | **fait** (écart) | via `AuthorizationProvider.credentials` (voir note de la section D2) |
-| D3 401 → rafraîchissement unique → rejeu | **fait** | single-flight (5 requêtes simultanées ⇒ 1 `refresh`), pas de boucle, GET/HEAD par défaut, `replayOnUnauthorized` pour les autres, jamais si le jeton vient de l'appelant, échec ⇒ traitement historique (redirection) |
-| D4 session / login natif | à faire | dépend de X-1 (backend) et de `getPlatform()` (C5) : le branchement `setAuthorizationProvider(...)` se fera dans `esm-platform` |
-| D5 URL d'API absolue | **fait** | audit de `location.origin` (aucun blocage : `run.ts:350` supporte une base absolue ; `esm-ai-tools` n'utilise l'origine que comme base de résolution) + 4 tests |
-| G2 bypass inerte en natif | **fait** | `isDevAuthBypassEnabled()` retourne `false` en natif (+7 lignes) ; 6 tests dont non-régression Web |
-| G4 journalisation sûre | **partielle** | test « le jeton n'apparaît ni dans le message, ni dans la stack, ni dans le corps de l'erreur » fait ; revue des autres journaux à faire |
-| F1 lockdown natif | **fait** | `getEgenTarget()` / `isNativeTarget()` dans `esm-globals` ; `import-maps.ts` et `route-maps.ts` : `devMode = spaEnv==='development' && !isNativeTarget()` ; 4 tests (android/ios ignorent les overrides même en development ; Web inchangé). **Constat** : les overrides étaient déjà inertes hors `development` ; le build natif impose `production`, donc ceci est la **seconde ceinture** |
+| A1 Baseline | **fait** | `docs/baseline-2026-11.md` (install 2 min 14 s, build 3 min 03 s, tests 8 min 24 s). Défauts préexistants consignés : lint (corrigé #103, 5 paquets gardent d'anciennes erreurs), `build.integration.test.ts` fragile sous charge |
+| A2 Inventaire du `dist` | à faire | |
+| A3 Contenu publié du shell | **fait** | #104 : shell publié avec ses sources de construction ; `esm-theme` (`src/themes`) et `esm-translations` (`translations/`) complétés ; projet vide + `egen build` OK ; `tools/publish-contract.test.ts` |
+| A4 Service worker | **fait** (décision) | non produit par personne (Workbox perdu) ; non supporté en l'état, désactivé en natif ; tâche Web dédiée à ouvrir |
+| B1 `targets.js` | **fait** | #105 + intégration : contrat `TargetConfig` de la doc (`importmapMode`, `routesMode`, `csp`), `isMeaningful*` dans `helpers.js` (une seule définition), `EGEN_ENV` **obligatoire** et déjà résolu, URL d'import map/routes interdites en natif ; 74 tests |
+| B2 branchement `rspack.config.js` | **fait** | #105 : `dist` Web identique octet pour octet ; en natif `offline` du HTML = `serviceWorker` (faux) : aucune référence à un service worker |
+| B3 pont `window.egenTarget` | **fait** | natif uniquement (HTML Web inchangé) ; type `EgenTarget` dans `esm-globals` ; un seul pont dans `index.ejs` |
+| B4 option `--platform` du CLI | **fait** | `cli.ts`, `build.ts`, `utils/config.ts` ; `--spa-path` non transmis en natif ; tests unitaires et d'intégration (build android valide / ios invalide) |
+| B5 CSP et scripts inline | à faire | la CSP de départ est déjà produite par `resolveTarget` (`csp`), non émise dans le HTML |
+| B7 tests de build | **partielle** | `targets.js` couvert ; test du HTML natif (pas de `<script>` inline) à écrire avec B5 |
+| C1 package `esm-platform` | **fait** | câblage complet : `esm-framework` (`package.json`, `index`, `internal`, `mock`, `mock-jest`), shell (`dependencies.json`, `package.json`), `tsconfig.typedoc.json` ; `import { getPlatform } from '@egen-civitas/esm-framework'` compile (test négatif vérifié) |
+| C2 types et erreurs | **fait** | contrats de l'annexe 2 ; `PlatformError` ; `CapabilityName` défini dans `esm-globals` (F2) |
+| C3 détection | **fait** | `window.egenTarget` uniquement ; `hasHostBridge()` ; `ready` rejette `INCOMPATIBLE` (« Host manquant ») en natif sans pont conforme ; pas de User-Agent ni de Capacitor |
+| C4 adaptateur Web | **fait** | `src/adapters/web/` : session (vide), openExternal, lifecycle, files.select, camera, permissions ; secureStorage / push / biometric jamais simulés ; choix consignés dans la section C4 |
+| C5 client de pont | à faire | |
+| C6 registre de capacités | à faire | l'assembleur `assemblePlatform` (`src/capabilities.ts`) est le point unique de construction : adaptateurs et mocks s'y branchent |
+| C9 mocks | **partielle** | `createMockPlatform` + `getPlatform` dans `esm-framework/mock*` ; `createMockHost` avec C5 |
+| D1 fournisseur d'autorisation | **fait** | `esm-api/src/authorization.ts` + `egen-fetch.ts` ; sans fournisseur, `fetch` reste appelé de façon synchrone (test dédié) |
+| D2 politique `credentials` | **fait** (écart) | via `AuthorizationProvider.credentials` (voir D2) |
+| D3 401 → rafraîchissement unique → rejeu | **fait** | single-flight, pas de boucle, GET/HEAD par défaut, `replayOnUnauthorized` |
+| D4 session / login natif | à faire | dépend de X-1 (backend) et de C5 : branchement `setAuthorizationProvider(...)` dans `esm-platform` |
+| D5 URL d'API absolue | **fait** | audit `location.origin` + 4 tests |
+| F1 lockdown natif | **fait** | `getEgenTarget()` / `isNativeTarget()` ; `import-maps.ts` et `route-maps.ts` (seconde ceinture : le build natif impose déjà `production`) |
+| G2 bypass inerte en natif | **fait** | `isDevAuthBypassEnabled()` faux en natif ; 6 tests |
+| G4 journalisation sûre | **partielle** | test « le jeton n'apparaît ni dans le message, ni dans la stack » fait ; revue des autres journaux à faire |
 
-**Constats pendant l'implémentation (à retenir)**
-- Dans `rspack.config.js`, les constantes dépendant de la cible ont dû être déplacées **dans** la fonction exportée (le mode, donc `EGEN_ENV`, n'y est connu qu'à l'exécution). Aucun effet sur le build Web (preuve ci-dessus).
-- `EGEN_DEV_NO_AUTH` est lu depuis `publicEnv` (hiérarchie `.env`) et non depuis `process.env` seul, pour que la validation voie la valeur réellement embarquée.
-- `prettier --check` signale déjà `rspack.config.js` et `tools/brand.js` sur `main` : non reformatés ici (règle N7).
+**Constats à retenir**
+- Dans `rspack.config.js`, `resolveTarget` est appelé **dans** `module.exports` : le mode, donc `EGEN_ENV`, n'y est connu qu'à l'exécution. `EGEN_DEV_NO_AUTH` est lu depuis `publicEnv` (hiérarchie `.env`), pas depuis `process.env` seul.
+- `yarn lint` ne démarrait pas avant #103 ; en CI, la vérification pré-publication (`publint`, `attw`, pack/installation isolée) est le vrai garde-fou : la rejouer en **Node 22** (en Node 20 le message d'erreur de `verify:pack` diffère).
+- Deux sessions ont implémenté B1 à B3 en parallèle (branches `feat/multiplatform-p0` et `feat/multiplateforme-p0`) ; elles ont été réconciliées dans `integrate/multiplateforme-p0`. `prettier --check` signale déjà `tools/brand.js` sur `main` (N7).

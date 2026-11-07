@@ -4,6 +4,16 @@ import { join } from 'node:path';
 const CATEGORIES = ['framework', 'shell', 'tooling'];
 
 /**
+ * Paquets publiés qui ne sont PAS des librairies importables : aucun point d'entrée JS (`main`/`exports`)
+ * volontairement. Les vérifications qui supposent une librairie (import réel, résolution des types) les ignorent.
+ *
+ * `esm-app-shell` : bundle applicatif navigateur (sortie rspack aux noms hashés), servi tel quel par le CLI egen,
+ * et qui publie aussi ses sources de construction (`rspack.config.js`, `src/`, `tools/`) pour `egen build`.
+ * Ces sources `.ts` font croire à attw qu'il s'agit d'un paquet typé dont l'import racine devrait se résoudre.
+ */
+export const NOT_A_LIBRARY = new Set(['@egen-civitas/esm-app-shell']);
+
+/**
  * Énumère tous les packages publiables du monorepo (private !== true),
  * dans packages/{framework,shell,tooling}/*.
  *

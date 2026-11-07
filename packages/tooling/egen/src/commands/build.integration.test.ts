@@ -106,9 +106,12 @@ describe('runBuild', () => {
   it('rejects a native build whose configuration is not self-contained', async () => {
     const target = join(createTempDir(), 'dist');
 
-    await expect(runBuild(defaultArgs({ target, platform: 'ios' }))).rejects.toThrow(
-      /Configuration invalide pour EGEN_TARGET=ios/,
-    );
+    // Sans API https absolue ni import map / routes inline, la cible native est refusée AVANT tout build,
+    // avec la liste des problèmes (voir tools/targets.js du shell).
+    const build = runBuild(defaultArgs({ target, platform: 'ios' }));
+    await expect(build).rejects.toThrow(/Build impossible pour la cible "ios"/);
+    await expect(build).rejects.toThrow(/EGEN_API_URL/);
+    await expect(build).rejects.toThrow(/EGEN_ESM_IMPORTMAP/);
   }, 90_000);
 
   it('produces at least one hashed JS bundle named egen.<hash>.js', async () => {

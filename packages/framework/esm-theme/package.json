@@ -5,7 +5,8 @@
   "description": "Dynamic, schema-agnostic theme engine with priority-based JSON loading, light/dark resolution and per-app scoped overrides for EGEN SPA",
   "main": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "src/themes"
   ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,6 +14,9 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./package.json": {
+      "default": "./package.json"
     }
   },
   "scripts": {

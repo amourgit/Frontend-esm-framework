@@ -634,7 +634,7 @@ Branche de référence : **`main`** · mise à jour : 2026-11-07.
 | C2 types et erreurs | **fait** | contrats de l'annexe 2 ; `PlatformError` ; `CapabilityName` défini dans `esm-globals` (F2) |
 | C3 détection | **fait** | `window.egenTarget` uniquement ; `hasHostBridge()` ; `ready` rejette `INCOMPATIBLE` (« Host manquant ») en natif sans pont conforme ; pas de User-Agent ni de Capacitor |
 | C4 adaptateur Web | **fait** | `src/adapters/web/` : session (vide), openExternal, lifecycle, files.select, camera, permissions ; secureStorage / push / biometric jamais simulés ; choix consignés dans la section C4 |
-| C5 client de pont | à faire | |
+| C5 client de pont | **en cours** (session du 2026-11-08, branche `feat/c5-pont-host`) | ne pas démarrer en parallèle |
 | C6 registre de capacités | à faire | l'assembleur `assemblePlatform` (`src/capabilities.ts`) est le point unique de construction : adaptateurs et mocks s'y branchent |
 | C9 mocks | **partielle** | `createMockPlatform` + `getPlatform` dans `esm-framework/mock*` ; `createMockHost` avec C5 |
 | D1 fournisseur d'autorisation | **fait** | `esm-api/src/authorization.ts` + `egen-fetch.ts` ; sans fournisseur, `fetch` reste appelé de façon synchrone (test dédié) |

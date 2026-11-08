@@ -1,5 +1,28 @@
 # @egen-civitas/esm-translations
 
+## 1.0.4
+
+### Patch Changes
+
+- b3d9419: Le shell peut être reconstruit par cible chez le consommateur (`egen build`).
+
+  - `esm-app-shell` : publie `rspack.config.js`, `dependencies.json`, `src/` et `tools/` en plus de `dist/` (le `dist/` précompilé reste servi tel quel par `egen develop`). Le dossier des thèmes est résolu via le paquet `@egen-civitas/esm-theme` au lieu d'un chemin propre au monorepo.
+  - `esm-theme` : publie `src/themes/` et exporte `./package.json`.
+  - `esm-translations` : publie `translations/` (fichiers de langue importés par le shell).
+
+- 5958a56: Framework neutre : suppression des derniers résidus hospitaliers (FHIR, patients, établissement de santé).
+
+  Retirés :
+
+  - `esm-api` : `fhirBaseUrl` et le traitement spécifique des URL FHIR (`_summary=data`) dans `egenFetch`.
+  - `esm-data-api` : type `FHIRLocationResource`.
+  - `esm-styleguide` : composant `LocationPicker` (basé sur l'API FHIR `Location` et le tag « Login Location ») ; pictogrammes médicaux `AppointmentsPictogram`, `AppointmentsAltPictogram`, `Assessment1Pictogram`, `Assessment2Pictogram`, `FacilityPictogram`, `RegistrationPictogram` (identifiants `egen-pict-appointments`, `-assessment-1`, `-assessment-2`, `-facility`, `-registration`) ; icônes `GenderFemaleIcon`, `GenderMaleIcon`, `GenderOtherIcon`, `GenderUnknownIcon`.
+  - `esm-translations` : clés `errorLoadingLoginLocations`, `searchForLocation` et clés orphelines patient/clinique (`Clinic`, `patientAvatarAlt`, `patientIdentifierSticker`, `patientLists`, `patientPhotoAlt`, `patientPhotoPlaceholder`, `seeMoreLists`) dans toutes les langues.
+
+  Ajouté : `HomePictogram` est désormais un pictogramme de maison neutre (`egen-pict-home`) au lieu d'un alias du bâtiment d'hôpital.
+
+  Vocabulaire neutre dans la documentation, les exemples, les stories et les tests (patient, médicaments, rendez-vous, pharmacie remplacés).
+
 ## 1.0.3
 
 ### Patch Changes

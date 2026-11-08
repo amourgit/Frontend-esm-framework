@@ -39,7 +39,11 @@ jobs:
         run: yarn test
 
       - name: TypeScript check
-        run: yarn workspaces foreach --all run typescript
+        # Une vingtaine de workspaces appellent `tsc` dans leur script `typescript` sans déclarer `typescript` dans
+        # leurs dépendances : yarn ne le résout alors QUE s'il existe dans le PATH. L'image ubuntu-latest n'a plus de
+        # `tsc` global (migration d'image) -> « command not found: tsc » en 1 s. On expose le binaire hoisté à la
+        # racine, comme sur un poste de développeur. (Dette à solder : déclarer `typescript` dans chaque workspace.)
+        run: PATH="$PWD/node_modules/.bin:$PATH" yarn workspaces foreach --all run typescript
 
       # Garde-fou de l'automatisation « le shell est republié dès qu'un paquet qu'il embarque change ».
       - name: Tests des scripts de release

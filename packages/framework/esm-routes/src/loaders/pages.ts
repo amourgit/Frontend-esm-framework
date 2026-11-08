@@ -12,6 +12,7 @@ import {
 } from '@egen-civitas/esm-globals';
 import { getFeatureFlag } from '@egen-civitas/esm-feature-flags';
 import { routeRegex } from './helpers.js';
+import { getAppUnavailability } from './availability.js';
 import {
   tryRegisterExtension,
   tryRegisterFeatureFlag,
@@ -98,6 +99,16 @@ function wrapPageActivityFn(
  */
 export function registerApp(appName: string, routes: EgenAppRoutes) {
   if (appName && routes && typeof routes === 'object') {
+    // Point de filtrage UNIQUE : une app non éligible (plateforme / capacité) est écartée avant tout enregistrement.
+    const unavailability = getAppUnavailability(routes);
+    if (unavailability) {
+      console.warn(`[egen] L'application ${appName} n'est pas enregistrée dans cet environnement.`, {
+        app: appName,
+        ...unavailability,
+      });
+      return;
+    }
+
     registerModuleWithConfigSystem(appName);
 
     const availableExtensions: Array<ExtensionDefinition> = routes.extensions ?? [];

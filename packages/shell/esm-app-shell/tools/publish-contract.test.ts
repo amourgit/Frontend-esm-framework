@@ -19,6 +19,10 @@ function packedFiles(pkgDir: string): string[] {
   return report.files.map((f: { path: string }) => f.path);
 }
 
+// `npm pack --dry-run` est synchrone et dépasse régulièrement les 5 s par défaut de vitest sur un runner chargé
+// (vu en CI et en local) : ces tests mesurent le contenu d'un tarball, pas la vitesse de npm.
+const PACK_TIMEOUT_MS = 60_000;
+
 const frameworkDir = (name: string) => resolve(__dirname, '../../../framework', name);
 
 describe('contrat de publication du shell (reconstruction par le consommateur)', () => {
@@ -47,11 +51,19 @@ describe('contrat de publication du shell (reconstruction par le consommateur)',
     expect(shellFiles.filter((f) => /\.test\.[jt]sx?$/.test(f))).toEqual([]);
   });
 
-  it('esm-theme publie le thème par défaut copié dans chaque build', () => {
-    expect(packedFiles(frameworkDir('esm-theme'))).toContain('src/themes/theme.default.json');
-  });
+  it(
+    'esm-theme publie le thème par défaut copié dans chaque build',
+    () => {
+      expect(packedFiles(frameworkDir('esm-theme'))).toContain('src/themes/theme.default.json');
+    },
+    PACK_TIMEOUT_MS,
+  );
 
-  it('esm-translations publie les fichiers de langue importés par le shell', () => {
-    expect(packedFiles(frameworkDir('esm-translations'))).toContain('translations/en.json');
-  });
+  it(
+    'esm-translations publie les fichiers de langue importés par le shell',
+    () => {
+      expect(packedFiles(frameworkDir('esm-translations'))).toContain('translations/en.json');
+    },
+    PACK_TIMEOUT_MS,
+  );
 });

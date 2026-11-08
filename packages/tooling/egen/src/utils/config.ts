@@ -113,6 +113,12 @@ export function loadBundlerConfig(options: BuildOptions = {}) {
   setBundlerEnv(options);
 
   const require = createRequire(import.meta.url);
+
+  // La config rspack lit `process.env` à l'ÉVALUATION du module (constantes de tête) : Node met les modules CJS en
+  // cache, donc un second appel dans le même processus (mode watch, usage programmatique, tests) réutiliserait
+  // silencieusement les valeurs du premier (apiUrl, configUrls…), malgré `setBundlerEnv` ci-dessus.
+  delete require.cache[require.resolve('@egen-civitas/esm-app-shell/rspack.config.js')];
+
   const config:
     | ((env: Record<string | number | symbol, unknown>) => RspackConfig)
     | RspackConfig = require('@egen-civitas/esm-app-shell/rspack.config.js');

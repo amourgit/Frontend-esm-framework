@@ -450,6 +450,17 @@ export interface FeatureFlagDefinition {
 export interface EgenAppRoutes {
   /** The version of this frontend module. */
   version?: string;
+  /**
+   * Plateformes sur lesquelles cette app peut être enregistrée (`web`, `android`, `ios`).
+   * Absent (ou liste vide) = toutes les plateformes. Une app non éligible n'est pas enregistrée (ni pages,
+   * ni extensions, ni modals, ni workspaces) : elle est écartée, le démarrage n'échoue pas.
+   */
+  platforms?: Array<EgenTarget>;
+  /**
+   * Capacités de plateforme dont cette app ne peut pas se passer (ex. `camera`). Si l'une d'elles est
+   * indisponible dans l'environnement courant, l'app n'est pas enregistrée. Absent = aucune exigence.
+   */
+  requiredCapabilities?: Array<CapabilityName>;
   /** A list of backend modules necessary for this frontend module and the corresponding required versions. */
   backendDependencies?: Record<string, string>;
   /** A list of backend modules that may enable optional functionality in this frontend module if available and the corresponding required versions. */

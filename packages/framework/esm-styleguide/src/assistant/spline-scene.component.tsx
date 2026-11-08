@@ -1,6 +1,7 @@
 'use client';
 
 import React, { Suspense, lazy, useState } from 'react';
+import { isNativeTarget } from '@egen-civitas/esm-globals';
 
 // Spline (runtime WebGL ~ plusieurs centaines de Ko) est chargé à la demande : importer le
 // styleguide ne doit JAMAIS déclencher de téléchargement ni d'effet de bord réseau.
@@ -19,7 +20,8 @@ const preloaded = new Set<string>();
  * (ouverture de l'assistant, idle…) — jamais au chargement du module.
  */
 export function preloadSplineScene(url: string): void {
-  if (typeof document === 'undefined' || preloaded.has(url)) return;
+  // Natif : la scène n'est jamais affichée (voir `SplineScene`), donc jamais téléchargée.
+  if (typeof document === 'undefined' || isNativeTarget() || preloaded.has(url)) return;
   preloaded.add(url);
   const link = document.createElement('link');
   link.rel = 'preload';
@@ -31,6 +33,14 @@ export function preloadSplineScene(url: string): void {
 
 export function SplineScene({ scene, className = 'w-full h-full', onLoad }: SplineSceneProps) {
   const [isLoaded, setIsLoaded] = useState(false);
+
+  // Cible NATIVE : la CSP (`script-src 'self'`, sans `unsafe-eval` ni `wasm-unsafe-eval`) interdit le runtime Spline,
+  // qui génère du code à l'exécution (`Function(...)`) et compile du WebAssembly ; la scène est de plus une ressource
+  // distante hors `connect-src`. On n'affaiblit pas la CSP pour un décor : en natif le composant ne charge RIEN et
+  // rend un conteneur vide de même taille. Web inchangé.
+  if (isNativeTarget()) {
+    return <div className={`relative ${className} overflow-hidden`} data-egen-3d="unavailable" data-testid="spline-unavailable" aria-hidden="true" />;
+  }
 
   return (
     <div className={`relative ${className} overflow-hidden`}>

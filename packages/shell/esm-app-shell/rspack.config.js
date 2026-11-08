@@ -27,6 +27,7 @@ const semver = require('semver');
 const { removeTrailingSlash, getTimestamp } = require('./tools/helpers');
 const { resolveTarget, targetWindowBridge } = require('./tools/targets');
 const { resolveBranding } = require('./tools/brand');
+const { buildHeadBootstrap, buildBodyBootstrap, bootstrapFileName, EmitAssetsPlugin } = require('./tools/bootstrap');
 
 const { name, version, dependencies } = require('./package.json');
 const sharedDependencies = require('./dependencies.json');
@@ -276,6 +277,27 @@ module.exports = (env, argv = []) => {
   const egenImportmapUrl = process.env.EGEN_ESM_IMPORTMAP_URL || `${egenPublicPath}/importmap.json`;
   const egenRoutesDef = target.routesMode === 'inline' ? process.env.EGEN_ROUTES : undefined;
   const egenRoutesUrl = process.env.EGEN_ROUTES_URL || `${egenPublicPath}/routes.registry.json`;
+
+  // Cible native : la CSP `script-src 'self'` interdit les scripts et gestionnaires inline. Les scripts de démarrage
+  // (thème, ponts window.egen*, initializeSpa) sont donc ÉMIS comme fichiers ; index.ejs ne les référence que si
+  // `egenBootstrap` est défini. Web : `null`, HTML strictement inchangé (R2).
+  let egenBootstrap = null;
+  let bootstrapFiles = [];
+  if (target.native) {
+    const headSource = buildHeadBootstrap({ bridges: [egenTargetConfigDef, egenAiConfigDef, egenTenantConfigDef] });
+    const bodySource = buildBodyBootstrap({
+      apiUrl: egenApiUrl,
+      spaPath: egenPublicPath,
+      env: egenEnvironment,
+      offline: egenOffline,
+      configUrls: egenConfigUrls,
+    });
+    egenBootstrap = { head: bootstrapFileName('head', headSource), body: bootstrapFileName('body', bodySource) };
+    bootstrapFiles = [
+      { name: egenBootstrap.head, source: headSource },
+      { name: egenBootstrap.body, source: bodySource },
+    ];
+  }
 
   const coreImportmap = {
     imports: {},
@@ -593,8 +615,11 @@ module.exports = (env, argv = []) => {
           egenAiConfigDef,
           egenTenantConfigDef,
           egenTargetConfigDef,
+          egenBootstrap,
+          egenCsp: target.csp,
         },
       }),
+      target.native && new EmitAssetsPlugin(bootstrapFiles),
       new WebpackPwaManifest({
         name: egenPageTitle,
         short_name: egenPageTitle,

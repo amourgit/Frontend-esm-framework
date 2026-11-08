@@ -35,6 +35,8 @@ describe('contrat de publication du shell (reconstruction par le consommateur)',
     'src/index.ejs',
     'src/run.ts',
     'tools/brand.js',
+    'tools/targets.js',
+    'tools/bootstrap.js',
     'tools/helpers.js',
     'src/assets/favicon.ico',
   ])('publie %s', (file) => {

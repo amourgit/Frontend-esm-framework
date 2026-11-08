@@ -2,7 +2,8 @@
 <html lang="<%= egenDefaultLocale %>" data-default-lang="<%= egenDefaultLocale %>">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <% if (egenCsp) { %><meta http-equiv="Content-Security-Policy" content="<%= egenCsp %>">
+    <% } %><meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><%= egenPageTitle %></title>
     <link
       rel="shortcut icon"
@@ -17,7 +18,7 @@
       n'a plus aucun fallback statique de valeurs en SCSS — seul cet
       attribut + le moteur JS déterminent le rendu.
     -->
-    <script>
+    <% if (!egenBootstrap) { %><script>
       (function () {
         try {
           var stored = window.localStorage.getItem('egen-theme-mode');
@@ -27,7 +28,7 @@
           document.documentElement.setAttribute('data-theme', 'dark');
         }
       })();
-    </script>
+    </script><% } else { %><script src="<%= egenPublicPath %>/<%= egenBootstrap.head %>"></script><% } %>
     <meta name="importmap-type" content="systemjs-importmap">
     <link rel="stylesheet" href="<%= egenPublicPath %>/<%= egenCssFilename %>">
     <%= htmlWebpackPlugin.tags.headTags %>
@@ -63,19 +64,19 @@
   >
   <script type="egen-routes" src="<%= egenRoutesUrl %>"></script>
 <% } %>
-<% if (egenTargetConfigDef) { %>
+<% if (egenTargetConfigDef && !egenBootstrap) { %>
     <script>
       // Pont EGEN_TARGET (.env, build) → window.egenTarget (lu par @egen-civitas/esm-globals : getEgenTarget())
       Object.assign(window, <%= egenTargetConfigDef %>);
     </script>
 <% } %>
-<% if (egenAiConfigDef) { %>
+<% if (egenAiConfigDef && !egenBootstrap) { %>
     <script>
       // Pont EGEN_AI_* (.env, build) → window.egenAi* (lu par @egen-civitas/esm-ai-config au runtime)
       Object.assign(window, <%= egenAiConfigDef %>);
     </script>
 <% } %>
-<% if (egenTenantConfigDef) { %>
+<% if (egenTenantConfigDef && !egenBootstrap) { %>
     <script>
       // Pont EGEN_TENANT_* (.env, build) → window.egenTenant* (lu par @egen-civitas/esm-tenant au runtime)
       Object.assign(window, <%= egenTenantConfigDef %>);
@@ -126,7 +127,7 @@
         <p>Something went wrong. Please try reloading.</p>
         <p>Contact your system administrator if the problem persists.</p>
         <div id="buttons">
-          <button class="cds--btn cds--btn--primary" onclick="location.reload()">Reload</button>
+          <button class="cds--btn cds--btn--primary" <% if (!egenBootstrap) { %>onclick="location.reload()"<% } else { %>data-egen-action="reload"<% } %>>Reload</button>
         </div>
         <div class="cds--snippet cds--snippet--single" >
           <div tabindex="0"  class="cds--snippet-container"
@@ -135,14 +136,14 @@
               <code data-var="message"></code>
             </pre>
           </div>
-          <button data-copy-btn class="cds--copy-btn" type="button" tabindex="0" onclick="copyText(this.parentElement)">
+          <button data-copy-btn class="cds--copy-btn" type="button" tabindex="0" <% if (!egenBootstrap) { %>onclick="copyText(this.parentElement)"<% } else { %>data-egen-action="copy"<% } %>>
             <span class="cds--assistive-text cds--copy-btn__feedback">Copied!</span>
             <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="cds--snippet__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M14,5v9H5V5h9m0-1H5A1,1,0,0,0,4,5v9a1,1,0,0,0,1,1h9a1,1,0,0,0,1-1V5a1,1,0,0,0-1-1Z"></path><path d="M2,9H1V2A1,1,0,0,1,2,1H9V2H2Z"></path></svg>
           </button>
         </div>
       </div>
     </template>
-    <script>
+    <% if (!egenBootstrap) { %><script>
       initializeSpa({
         apiUrl: "<%= egenApiUrl %>",
         spaPath: "<%= egenPublicPath %>",
@@ -150,6 +151,6 @@
         offline: <%= egenOffline %>,
         configUrls: [<%= egenConfigUrls %>],
       });
-    </script>
+    </script><% } else { %><script src="<%= egenPublicPath %>/<%= egenBootstrap.body %>"></script><% } %>
   </body>
 </html>

@@ -1,5 +1,41 @@
 # @egen-civitas/esm-app-shell
 
+## 2.9.0
+
+### Minor Changes
+
+- d1d2d7d: Contrat d'app multiplateforme (F2) : `EgenAppRoutes.platforms` et `requiredCapabilities`. `registerApp` écarte (sans rien enregistrer) une app non éligible à la plateforme ou dont une capacité requise manque. `esm-globals` : `setCapabilityResolver` / `hasCapability`. `esm-platform` : `registerPlatformCapabilities()`. Shell : capacités rendues consultables avant l'enregistrement des apps. Sans champs dans `routes.json`, comportement inchangé.
+- b3d9419: Le shell peut être reconstruit par cible chez le consommateur (`egen build`).
+
+  - `esm-app-shell` : publie `rspack.config.js`, `dependencies.json`, `src/` et `tools/` en plus de `dist/` (le `dist/` précompilé reste servi tel quel par `egen develop`). Le dossier des thèmes est résolu via le paquet `@egen-civitas/esm-theme` au lieu d'un chemin propre au monorepo.
+  - `esm-theme` : publie `src/themes/` et exporte `./package.json`.
+  - `esm-translations` : publie `translations/` (fichiers de langue importés par le shell).
+
+- ef3c97f: Cible de build `EGEN_TARGET` (`web` par défaut | `android` | `ios`).
+
+  - `esm-app-shell` : nouveau module `tools/targets.js` (`resolveTarget`, fonction pure) branché dans `rspack.config.js`. Sans `EGEN_TARGET`, le build Web est inchangé (dist identique octet pour octet). En natif, le build échoue si `EGEN_ENV` ≠ `production`, si `EGEN_DEV_NO_AUTH=true`, si `EGEN_API_URL` n'est pas en `https://` absolu, ou si l'import map / les routes ne sont pas fournies inline. Pont `window.egenTarget` (natif uniquement), posé avant `initializeSpa`.
+
+- 478e80c: Cible native : démarrage compatible avec la CSP `script-src 'self'`.
+
+  - `esm-app-shell` : en natif, le thème anti-FOUC, les ponts `window.egen*` et `initializeSpa` sont émis comme fichiers (`bootstrap-head.<hash>.js`, `bootstrap.<hash>.js`) ; les `onclick` du gabarit d'erreur deviennent `data-egen-action` ; la `<meta>` CSP issue de la cible est posée. Le HTML Web est inchangé (octet pour octet). Les sources `tools/targets.js` et `tools/bootstrap.js` sont publiées pour `egen build`.
+  - `esm-styleguide` : `SplineScene` (runtime 3D, qui génère du code et compile du WebAssembly) ne charge rien en natif et rend un conteneur vide ; `preloadSplineScene` ne télécharge plus rien en natif. Web inchangé.
+
+### Patch Changes
+
+- Updated dependencies [d1d2d7d]
+- Updated dependencies [669cbd6]
+- Updated dependencies [b3d9419]
+- Updated dependencies [5958a56]
+- Updated dependencies [478e80c]
+  - @egen-civitas/esm-globals@2.1.0
+  - @egen-civitas/esm-platform@1.1.0
+  - @egen-civitas/esm-api@3.0.0
+  - @egen-civitas/esm-framework@4.0.0
+  - @egen-civitas/esm-theme@1.1.0
+  - @egen-civitas/esm-styleguide@4.0.0
+  - @egen-civitas/esm-react-utils@3.0.1
+  - @egen-civitas/esm-offline@1.0.4
+
 ## 2.8.2
 
 ### Patch Changes

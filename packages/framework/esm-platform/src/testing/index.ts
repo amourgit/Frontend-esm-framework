@@ -25,3 +25,4 @@ export function createMockPlatform(options: MockPlatformOptions = {}): Platform 
   const { environment = 'web', capabilities, ready = Promise.resolve() } = options;
   return assemblePlatform({ environment, capabilities, ready: () => ready });
 }
+export { createMockHost, type MockHost, type MockHostOptions } from './mock-host.js';

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NEVER } from 'rxjs';
 import type {} from '@egen-civitas/esm-globals';
 import * as utils from '@egen-civitas/esm-utils/mock';
-import { createMockPlatform } from '@egen-civitas/esm-platform/testing';
+import { createMockHost, createMockPlatform } from '@egen-civitas/esm-platform/testing';
 import dayjs from 'dayjs';
 
 window.i18next = { ...window.i18next, language: 'en' };
@@ -73,8 +73,12 @@ export {
   getPlatformEnvironment,
   isNativePlatform,
   hasHostBridge,
+  getHostBridge,
+  createBridgeClient,
 } from '@egen-civitas/esm-platform';
-export { createMockPlatform };
+export { createMockPlatform, createMockHost };
+/* Handshake avec le Host : jamais effectué dans un test unitaire ; `createMockHost()` simule `window.egenHostBridge`. */
+export const getHostInfo = jest.fn(() => null);
 export const getPlatform = jest.fn(() => createMockPlatform());
 
 /* esm-styleguide */

@@ -511,7 +511,26 @@ export interface ResourceLoader<T = any> {
 /** Cible de build du SPA : navigateur, ou enveloppe native Android / iOS. */
 export type EgenTarget = 'web' | 'android' | 'ios';
 
-/** Noms des capacités de plateforme (contrats détaillés dans `@egen-civitas/esm-platform`). */
+/**
+ * Capacités ajoutées APRÈS la v1 : chaque capacité s'y déclare par fusion de déclaration, depuis
+ * `@egen-civitas/esm-platform` (procédure « ajouter une capacité », tâche C6), sans modifier ce fichier :
+ *
+ * ```ts
+ * declare module '@egen-civitas/esm-globals' {
+ *   interface EgenCapabilityExtensions {
+ *     maNouvelleCapacite: true;
+ *   }
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/no-empty-interface
+export interface EgenCapabilityExtensions {}
+
+/**
+ * Nom d'une capacité de plateforme : les 9 capacités de la v1 (union fermée) plus celles déclarées dans
+ * {@link EgenCapabilityExtensions}. Défini ici (et non dans `esm-platform`) pour que le filtrage des apps
+ * (`requiredCapabilities`, F2) ne dépende pas de `esm-platform`.
+ */
 export type CapabilityName =
   | 'session'
   | 'secureStorage'
@@ -521,4 +540,5 @@ export type CapabilityName =
   | 'files'
   | 'camera'
   | 'push'
-  | 'biometric';
+  | 'biometric'
+  | keyof EgenCapabilityExtensions;

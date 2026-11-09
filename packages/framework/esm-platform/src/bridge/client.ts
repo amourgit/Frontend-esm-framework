@@ -1,10 +1,10 @@
 import type { CapabilityName } from '@egen-civitas/esm-globals';
 import { PlatformError, type PlatformErrorCode } from '../errors.js';
+import { isKnownCapability } from '../registry.js';
 import type { PlatformEnvironment, Unsubscribe } from '../types.js';
 import {
   DEFAULT_TIMEOUT_MS,
   HOST_PROTOCOL_NAME,
-  KNOWN_CAPABILITIES,
   KNOWN_ERROR_CODES,
   MAX_MESSAGE_LENGTH,
   SUPPORTED_PROTOCOL,
@@ -249,7 +249,7 @@ export function createBridgeClient(options: BridgeClientOptions): BridgeClient {
       for (const [name, descriptor] of Object.entries(value.capabilities)) {
         const version = (descriptor as { v?: unknown } | null)?.v;
         // Capacité inconnue de ce client = ignorée (compatibilité ascendante) ; descripteur invalide = ignoré.
-        if (KNOWN_CAPABILITIES.has(name) && Number.isInteger(version) && (version as number) >= 1) {
+        if (isKnownCapability(name) && Number.isInteger(version) && (version as number) >= 1) {
           capabilities[name as CapabilityName] = { v: version as number };
         }
       }

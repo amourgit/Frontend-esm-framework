@@ -1,9 +1,9 @@
 import { setCapabilityResolver } from '@egen-civitas/esm-globals';
-import { createWebCapabilities } from './adapters/web/index.js';
 import { assemblePlatform } from './capabilities.js';
 import { getHostBridge, getPlatformEnvironment } from './detect.js';
 import { PlatformError } from './errors.js';
 import { createNativeCapabilities, getNativeClient } from './native.js';
+import { createWebCapabilities, isHostVersionSufficient } from './registry.js';
 import type { Platform, PlatformEnvironment } from './types.js';
 
 function hostMissing(environment: PlatformEnvironment): PlatformError {
@@ -46,7 +46,8 @@ export function getPlatform(): Platform {
     environment,
     capabilities: createNativeCapabilities(client),
     ready: () => client.hello().then(() => undefined),
-    available: (capability) => client.hostInfo?.capabilities[capability] !== undefined,
+    // Annoncée par le Host ET dans une version suffisante pour l'adaptateur de ce framework (registre).
+    available: (capability) => isHostVersionSufficient(capability, client.hostInfo?.capabilities[capability]?.v),
   });
 }
 

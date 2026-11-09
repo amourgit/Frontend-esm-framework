@@ -44,6 +44,10 @@ function defaultArgs(overrides: Partial<BuildArgs> = {}): BuildArgs {
   };
 }
 
+// Délai de CHAQUE test (240_000 ms, écrit en littéral pour que Prettier garde le motif `it(nom, fn, délai)`) : chaque
+// test lance un VRAI build rspack du shell, ~23 s sur une machine au repos mais plus de 90 s quand turbo exécute les
+// tests de tous les paquets en parallèle (mesuré : 2 tests sur 7 dépassaient l'ancien délai de 90 s, alors que le même
+// fichier passe 7/7 seul). Un délai trop court donne un échec sans rapport avec le code ; un vrai blocage reste détecté.
 function readIndex(target: string): string {
   return readFileSync(join(target, 'index.html'), 'utf8');
 }
@@ -80,7 +84,7 @@ describe('runBuild', () => {
 
     // There should be a stylesheet link to the egen CSS
     expect(html).toMatch(/egen\.[a-f0-9]+\.css/);
-  }, 90_000);
+  }, 240_000);
 
   it('builds a self-contained, locked-down SPA for a native platform', async () => {
     const target = join(createTempDir(), 'dist');
@@ -128,7 +132,7 @@ describe('runBuild', () => {
       );
     expect(inline).toEqual([]);
     expect(html).not.toMatch(/\son[a-z]+\s*=/i);
-  }, 90_000);
+  }, 240_000);
 
   it('rejects a native build whose configuration is not self-contained', async () => {
     const target = join(createTempDir(), 'dist');
@@ -139,7 +143,7 @@ describe('runBuild', () => {
     await expect(build).rejects.toThrow(/Build impossible pour la cible "ios"/);
     await expect(build).rejects.toThrow(/EGEN_API_URL/);
     await expect(build).rejects.toThrow(/EGEN_ESM_IMPORTMAP/);
-  }, 90_000);
+  }, 240_000);
 
   it('produces at least one hashed JS bundle named egen.<hash>.js', async () => {
     const target = join(createTempDir(), 'dist');
@@ -149,7 +153,7 @@ describe('runBuild', () => {
     const files = listFiles(target);
     const egenBundle = files.find((f) => /^egen\.[a-f0-9]+\.js$/.test(f));
     expect(egenBundle).toBeDefined();
-  }, 90_000);
+  }, 240_000);
 
   it('produces at least one CSS file', async () => {
     const target = join(createTempDir(), 'dist');
@@ -159,7 +163,7 @@ describe('runBuild', () => {
     const files = listFiles(target);
     const cssFile = files.find((f) => f.endsWith('.css'));
     expect(cssFile).toBeDefined();
-  }, 90_000);
+  }, 240_000);
 
   it('copies config files from configPaths to the target directory', async () => {
     const dir = createTempDir();
@@ -172,7 +176,7 @@ describe('runBuild', () => {
     const copiedConfig = join(target, 'my-config.json');
     expect(existsSync(copiedConfig)).toBe(true);
     expect(JSON.parse(readFileSync(copiedConfig, 'utf8'))).toEqual({ setting: 'value' });
-  }, 90_000);
+  }, 240_000);
 
   it('resolves a hashed importmap filename when the exact file does not exist', async () => {
     const dir = createTempDir();
@@ -189,5 +193,5 @@ describe('runBuild', () => {
     // The build should succeed and the hashed importmap file should still be present
     expect(existsSync(join(target, 'importmap.abc123.json'))).toBe(true);
     expect(existsSync(join(target, 'index.html'))).toBe(true);
-  }, 90_000);
+  }, 240_000);
 });

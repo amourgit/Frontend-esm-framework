@@ -1,4 +1,3 @@
-import type { CapabilityName } from '@egen-civitas/esm-globals';
 import type { PlatformErrorCode } from '../errors.js';
 
 /**
@@ -75,18 +74,6 @@ export const KNOWN_ERROR_CODES: ReadonlySet<string> = new Set<PlatformErrorCode>
   'TIMEOUT',
   'INCOMPATIBLE',
   'HOST_ERROR',
-]);
-
-export const KNOWN_CAPABILITIES: ReadonlySet<string> = new Set<CapabilityName>([
-  'session',
-  'secureStorage',
-  'openExternal',
-  'lifecycle',
-  'permissions',
-  'files',
-  'camera',
-  'push',
-  'biometric',
 ]);
 
 export function isSupportedProtocolVersion(version: unknown): version is number {

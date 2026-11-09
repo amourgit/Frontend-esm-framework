@@ -72,21 +72,43 @@ export interface BiometricCapability {
 }
 
 /**
- * Point d'accès unique des apps aux capacités de plateforme.
- * Une capacité indisponible (`has()` faux) existe toujours comme objet : ses méthodes rejettent `UNAVAILABLE`.
+ * Forme (interface TypeScript) de chaque capacité, indexée par son nom. Les 9 capacités de la v1 y sont déclarées ;
+ * une nouvelle capacité s'y ajoute par FUSION DE DÉCLARATION depuis son propre fichier (procédure « ajouter une
+ * capacité » du README), sans modifier celui-ci :
+ *
+ * ```ts
+ * declare module './types.js' {
+ *   interface CapabilityInterfaces {
+ *     maCapacite: MaCapaciteCapability;
+ *   }
+ * }
+ * ```
+ *
+ * Le nom doit aussi être déclaré dans `EgenCapabilityExtensions` (`@egen-civitas/esm-globals`) pour être un
+ * `CapabilityName` valide.
  */
-export interface Platform {
+export interface CapabilityInterfaces {
+  session: SessionCapability;
+  secureStorage: SecureStorageCapability;
+  openExternal: OpenExternalCapability;
+  lifecycle: LifecycleCapability;
+  permissions: PermissionsCapability;
+  files: FilesCapability;
+  camera: CameraCapability;
+  push: PushCapability;
+  biometric: BiometricCapability;
+}
+
+/** Ce qui est commun à toute plateforme, indépendamment des capacités. */
+export interface PlatformCore {
   readonly environment: PlatformEnvironment;
   /** Résolue quand le handshake avec le Host est terminé (immédiatement en Web). */
   readonly ready: Promise<void>;
   has(capability: CapabilityName): boolean;
-  readonly session: SessionCapability;
-  readonly secureStorage: SecureStorageCapability;
-  readonly openExternal: OpenExternalCapability;
-  readonly lifecycle: LifecycleCapability;
-  readonly permissions: PermissionsCapability;
-  readonly files: FilesCapability;
-  readonly camera: CameraCapability;
-  readonly push: PushCapability;
-  readonly biometric: BiometricCapability;
 }
+
+/**
+ * Point d'accès unique des apps aux capacités de plateforme.
+ * Une capacité indisponible (`has()` faux) existe toujours comme objet : ses méthodes rejettent `UNAVAILABLE`.
+ */
+export type Platform = PlatformCore & { readonly [K in keyof CapabilityInterfaces]: CapabilityInterfaces[K] };

@@ -2,6 +2,7 @@ import { createBridgeClient, type BridgeClient, type HostInfo } from './bridge/c
 import type { HostBridge } from './bridge/protocol.js';
 import type { CapabilityOverrides } from './capabilities.js';
 import { getHostBridge } from './detect.js';
+import { createNativeCapabilitiesFromRegistry } from './registry.js';
 import type { PlatformEnvironment } from './types.js';
 
 /** Un client de pont par pont : ses abonnements et son handshake sont partagés par tous les `getPlatform()` de la page. */
@@ -31,12 +32,13 @@ export function getNativeClient(bridge: HostBridge, environment: PlatformEnviron
 }
 
 /**
- * Capacités natives implémentées par le framework, branchées sur le client de pont. VIDE tant que les adaptateurs
- * natifs (tâche C7) ne sont pas écrits : `has()` reste faux partout, même si le Host annonce la capacité — on ne
- * promet jamais ce que le framework ne sait pas encore appeler.
+ * Capacités natives implémentées par le framework, branchées sur le client de pont : celles dont l'entrée du registre
+ * (`registry.ts`) déclare un adaptateur `native`. AUCUNE tant que les adaptateurs natifs (tâche C7) ne sont pas écrits :
+ * `has()` reste faux partout, même si le Host annonce la capacité — on ne promet jamais ce que le framework ne sait
+ * pas encore appeler.
  */
-export function createNativeCapabilities(_client: BridgeClient): CapabilityOverrides {
-  return {};
+export function createNativeCapabilities(client: BridgeClient): CapabilityOverrides {
+  return createNativeCapabilitiesFromRegistry(client);
 }
 
 /**

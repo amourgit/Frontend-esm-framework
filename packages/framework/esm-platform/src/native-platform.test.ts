@@ -50,14 +50,18 @@ describe('getPlatform() natif — handshake avec le Host', () => {
     await expect(getPlatform().ready).rejects.toMatchObject({ code: 'INCOMPATIBLE' });
   });
 
-  it("tant que les adaptateurs natifs (C7) n'existent pas, aucune capacité n'est disponible — même annoncée par le Host", async () => {
+  it("une capacité est disponible si le Host l'annonce ET si le framework sait l'appeler (adaptateur natif)", async () => {
     window.egenTarget = 'android';
-    createMockHost({ capabilities: { secureStorage: { v: 1 }, session: { v: 1 } } }).install();
+    // `camera` : annoncée mais sans adaptateur natif (N9, pas encore utilisée) ; `lifecycle` : adaptateur natif P0, non annoncée.
+    createMockHost({ capabilities: { secureStorage: { v: 1 }, session: { v: 1 }, camera: { v: 1 } } }).install();
     const platform = getPlatform();
     await platform.ready;
 
-    expect(platform.has('secureStorage')).toBe(false);
-    await expect(platform.secureStorage.get('k')).rejects.toMatchObject({ code: 'UNAVAILABLE' });
+    expect(platform.has('secureStorage')).toBe(true);
+    expect(platform.has('session')).toBe(true);
+    expect(platform.has('camera')).toBe(false); // annoncée mais non implémentée
+    expect(platform.has('lifecycle')).toBe(false); // implémentée mais non annoncée
+    await expect(platform.camera.capture()).rejects.toMatchObject({ code: 'UNAVAILABLE' });
   });
 
   it('registerPlatformCapabilities() attend le handshake natif', async () => {

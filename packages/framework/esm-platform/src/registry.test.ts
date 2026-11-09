@@ -89,10 +89,16 @@ describe('registre : les 9 capacités v1', () => {
     for (const name of V1) expect(getCapabilityDefinition(name)?.version).toBe(1);
   });
 
-  it('seules les capacités que le navigateur sait fournir ont un adaptateur Web ; aucune n’a d’adaptateur natif (C7)', () => {
+  it('seules les capacités que le navigateur sait fournir ont un adaptateur Web ; les natifs P0 (C7) sont les 4 premiers livrés', () => {
     const withWeb = V1.filter((name) => getCapabilityDefinition(name)?.web);
     expect(withWeb.sort()).toEqual(['camera', 'files', 'lifecycle', 'openExternal', 'permissions', 'session']);
-    expect(V1.filter((name) => getCapabilityDefinition(name)?.native)).toEqual([]);
+    // N9 : une capacité native n'est écrite que lorsqu'une app l'utilise — P0 d'abord, le reste à la demande.
+    expect(V1.filter((name) => getCapabilityDefinition(name)?.native).sort()).toEqual([
+      'lifecycle',
+      'openExternal',
+      'secureStorage',
+      'session',
+    ]);
     // Jamais de faux coffre, de push ni de biométrie simulés en Web.
     for (const name of ['secureStorage', 'push', 'biometric'])
       expect(getCapabilityDefinition(name)?.web).toBeUndefined();

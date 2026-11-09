@@ -104,6 +104,7 @@ que ceux listés ci-dessous : le critère est vérifié par `src/registry.test.t
 | Adaptateur Web | C4 | fait |
 | Client de pont / protocole v1 (`createBridgeClient`, handshake, `getHostInfo`) | C5 | fait |
 | Registre et procédure d'ajout d'une capacité | C6 | fait |
+| Adaptateurs natifs P0 : `session`, `secureStorage`, `openExternal`, `lifecycle` | C7 | fait (P1/P2 à la demande d'une app) |
 
 ## Tester sans Host
 `createMockHost()` (`@egen-civitas/esm-platform/testing`) simule `window.egenHostBridge` : handshake automatique, méthodes

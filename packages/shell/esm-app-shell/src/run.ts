@@ -21,6 +21,7 @@ import {
   provide,
   registerApp,
   registerDefaultCalendar,
+  getPlatform,
   registerPlatformCapabilities,
   registerEgenServiceWorker,
   renderActionableNotifications,
@@ -52,12 +53,13 @@ import {
   type Config,
   type StyleguideConfigObject,
 } from '@egen-civitas/esm-framework/src/internal';
-import { initDevAuthBypass, isDevAuthBypassEnabled } from '@egen-civitas/esm-api';
+import { initDevAuthBypass, isDevAuthBypassEnabled, setAuthorizationProvider } from '@egen-civitas/esm-api';
 import { setupI18n } from './locale.js';
 import './routing-events.js';
 import './events.js';
 import { appName, getCoreExtensions } from './ui/index.js';
 import { setupCoreConfig } from './core-config.js';
+import { bindPlatformSession } from './native-session.js';
 
 // =============================================================================
 //  Bypass d'authentification pour tests sans backend
@@ -404,6 +406,10 @@ export function run(configUrls: Array<string>) {
   // initialisation d'app — pour que le config override et la session fictive
   // soient en place avant que les modules ne les lisent.
   applyDevNoAuthBypass();
+
+  // Natif : le fournisseur d'autorisation (jeton du Host) doit être posé AVANT tout appel réseau, car
+  // `setupApiModule()` lance `refetchCurrentUser()` immédiatement. Inerte en Web. Voir native-session.ts.
+  bindPlatformSession(getPlatform(), setAuthorizationProvider);
 
   setupImportMapOverrides();
 

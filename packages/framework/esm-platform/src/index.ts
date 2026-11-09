@@ -10,3 +10,5 @@ export * from './types.js';
 export * from './errors.js';
 export * from './detect.js';
 export { getPlatform, registerPlatformCapabilities } from './platform.js';
+export { getHostInfo } from './native.js';
+export * from './bridge/index.js';

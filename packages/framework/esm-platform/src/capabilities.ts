@@ -67,6 +67,11 @@ export interface AssemblePlatformOptions {
   capabilities?: CapabilityOverrides;
   /** Appelée à CHAQUE lecture de `platform.ready` (évite un rejet non observé si personne ne l'attend). */
   ready: () => Promise<void>;
+  /**
+   * Filtre dynamique en plus de la présence d'un adaptateur : une capacité n'est disponible que si elle est fournie
+   * ET que ce prédicat l'accepte (natif : le Host l'a annoncée au handshake). Défaut : toujours vrai.
+   */
+  available?: (capability: CapabilityName) => boolean;
 }
 
 /**
@@ -74,7 +79,12 @@ export interface AssemblePlatformOptions {
  * elles. Point unique de construction, partagé par `getPlatform()`, les adaptateurs (C4, C5) et les mocks (C9) : ils
  * ne peuvent donc pas diverger du contrat.
  */
-export function assemblePlatform({ environment, capabilities = {}, ready }: AssemblePlatformOptions): Platform {
+export function assemblePlatform({
+  environment,
+  capabilities = {},
+  ready,
+  available,
+}: AssemblePlatformOptions): Platform {
   const base = createUnavailableCapabilities();
   const provided = new Set(Object.keys(capabilities) as CapabilityName[]);
   const merged = {} as Record<CapabilityName, unknown>;
@@ -87,7 +97,7 @@ export function assemblePlatform({ environment, capabilities = {}, ready }: Asse
     get ready() {
       return ready();
     },
-    has: (capability) => provided.has(capability),
+    has: (capability) => provided.has(capability) && (available?.(capability) ?? true),
     ...(merged as CapabilityMap),
   };
 }

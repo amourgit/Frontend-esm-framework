@@ -36,4 +36,15 @@ describe('@egen-civitas/esm-framework/mock', () => {
     expect(platform.has('openExternal')).toBe(true);
     await expect(platform.openExternal.open('https://exemple.ga')).resolves.toBeUndefined();
   });
+
+  it('createMockHost() simule le Host : handshake et appels de capacités', async () => {
+    const host = mock.createMockHost({
+      capabilities: { secureStorage: { v: 1 } },
+      handlers: { 'secureStorage.get': () => 'v' },
+    });
+    const client = mock.createBridgeClient({ bridge: host.bridge, environment: 'android' });
+    await client.hello();
+    await expect(client.call('secureStorage', 'get', { key: 'k' })).resolves.toBe('v');
+    expect(mock.getHostInfo()).toBeNull();
+  });
 });

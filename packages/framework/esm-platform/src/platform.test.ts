@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import type { CapabilityName } from '@egen-civitas/esm-globals';
 import { getPlatform, hasHostBridge, isPlatformError, PlatformError } from './index';
-import { createMockPlatform } from './testing';
+import { createMockHost, createMockPlatform } from './testing';
 import type { Platform } from './types';
 
 type AnyRecord = Record<string, (...args: unknown[]) => unknown>;
@@ -160,9 +160,9 @@ describe('getPlatform() — environnement et handshake', () => {
     },
   );
 
-  it('natif avec un pont conforme ({ send, subscribe }) : ready se résout', async () => {
+  it('natif avec un Host conforme : ready se résout après le handshake', async () => {
     window.egenTarget = 'android';
-    (window as unknown as Record<string, unknown>).egenHostBridge = { send: () => {}, subscribe: () => {} };
+    createMockHost().install();
     await expect(getPlatform().ready).resolves.toBeUndefined();
   });
 

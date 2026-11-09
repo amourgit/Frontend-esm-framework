@@ -52,5 +52,17 @@ le reste reste `UNAVAILABLE`. Le mock et l'implémentation passent les **mêmes*
 | `getPlatform()` sûr par défaut (aucune capacité simulée) | C1 | fait |
 | `createMockPlatform` | C9 | partiel (`createMockHost` à faire avec C5) |
 | Adaptateur Web | C4 | fait |
-| Client de pont / protocole v1 | C5 | à faire |
+| Client de pont / protocole v1 (`createBridgeClient`, handshake, `getHostInfo`) | C5 | fait |
 | Registre et procédure d'ajout d'une capacité | C6 | à faire |
+
+## Tester sans Host
+`createMockHost()` (`@egen-civitas/esm-platform/testing`) simule `window.egenHostBridge` : handshake automatique, méthodes
+programmables (`handlers: { 'secureStorage.get': () => 'valeur' }`), latence, silence (tests de timeout), version de
+protocole incompatible, messages bruts arbitraires. Il rejoue le **contrat** du protocole v1, pas du code natif.
+
+```ts
+const host = createMockHost({ capabilities: { secureStorage: { v: 1 } }, handlers: { 'secureStorage.get': () => 'v' } });
+host.install(); // window.egenHostBridge
+window.egenTarget = 'android';
+await getPlatform().ready; // handshake
+```

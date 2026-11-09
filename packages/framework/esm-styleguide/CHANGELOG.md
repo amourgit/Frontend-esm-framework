@@ -1,5 +1,22 @@
 # @egen-civitas/esm-styleguide
 
+## 4.1.0
+
+### Minor Changes
+
+- 74f778d: Conformité à la TopBar neutre du core (niveaux déclarés par les apps).
+
+  - `esm-extensions` : nouveau `TOPBAR_SLOT` (`topbar-slot`, seul slot d'extension de la TopBar) et types `TopBarPlacementMeta` / `TopBarRegion` / `TopBarContentRegion` pour la déclaration `meta.topbar` (niveau, rang, région, ordre, before/after). Retrait de `TOPBAR_LEVEL2_NAV_SLOT` et `TOPBAR_NAV_SLOTS` : le slot de navigation est uniquement `TOPBAR_NAV_SLOT` (`topbar-nav-slot`).
+  - `esm-styleguide` : `SectionNavPanel` ne lit plus l'ancien slot `topbar-level2-nav`.
+  - `esm-framework` : mocks alignés. `esm-app-shell` : documentation du layout-sync sans notion de niveau figé.
+
+### Patch Changes
+
+- Updated dependencies [340f5fe]
+- Updated dependencies [74f778d]
+  - @egen-civitas/esm-globals@2.2.0
+  - @egen-civitas/esm-extensions@2.5.0
+
 ## 4.0.0
 
 ### Major Changes

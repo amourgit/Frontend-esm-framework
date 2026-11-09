@@ -203,7 +203,7 @@ html[data-workbench-resizing] {
   will-change: contents;
 }
 
-// TopBar : hauteur AUTOMATIQUE (niveau 1 + niveau 2 inclus). La hauteur réelle
+// TopBar : hauteur AUTOMATIQUE (tous les niveaux déclarés inclus). La hauteur réelle
 // est mesurée par le shell (layout-sync.ts) et publiée dans
 // --egen-navbar-height ; 3rem n'est qu'un minimum avant le montage de la barre.
 // Le contenu de la barre (menus déroulants) peut déborder vers le bas : elle

@@ -10,26 +10,12 @@
 export const TOPBAR_NAV_SLOT = 'topbar-nav-slot';
 
 /**
- * Ancien nom du slot de navigation (`topbar-level2-nav`), de l'époque où la TopBar n'avait que deux niveaux.
- * Toujours honoré pour les apps déjà déployées.
- *
- * @deprecated Déclarer les entrées sur {@link TOPBAR_NAV_SLOT}.
- */
-export const TOPBAR_LEVEL2_NAV_SLOT = 'topbar-level2-nav';
-
-/**
- * Tous les noms de slot de navigation, le nom officiel d'abord. Un lecteur (TopBar, panneau de section…) doit
- * les lire TOUS et fusionner les entrées, tant que des apps déclarent encore l'ancien nom.
- */
-export const TOPBAR_NAV_SLOTS: readonly string[] = [TOPBAR_NAV_SLOT, TOPBAR_LEVEL2_NAV_SLOT];
-
-/**
  * Métadonnées d'une entrée de navigation de la TopBar.
  * Partagé par les apps (qui le déclarent dans `meta`) et par la TopBar
- * (qui le lit sur tous les slots de {@link TOPBAR_NAV_SLOTS}).
+ * (qui le lit sur {@link TOPBAR_NAV_SLOT}).
  */
 export interface NavEntryMeta {
-  /** Entrée de niveau 2 (ex. `informations`) ; regroupe les colonnes du méga-menu. */
+  /** Section de navigation (ex. `informations`) ; regroupe les colonnes du méga-menu. */
   section: string;
   /**
    * Colonne du méga-menu (ex. `news`). Facultative : une entrée sans `group` est un lien simple.

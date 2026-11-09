@@ -54,19 +54,16 @@ describe('SectionNavPanel', () => {
     expect(screen.queryByText('Sans route')).not.toBeInTheDocument();
   });
 
-  it('lit le slot officiel ET l’ancien nom du slot, sans doublon', () => {
-    vi.mocked(useAssignedExtensions).mockImplementation((slot: string) => {
-      if (slot === 'topbar-nav-slot') return [entry('neuf', { ...nav('informations/a'), label: 'Nouveau' })];
-      if (slot === 'topbar-level2-nav') {
-        return [
-          entry('ancien', { ...nav('informations/b'), label: 'Ancien' }),
-          entry('neuf', { ...nav('informations/a'), label: 'Nouveau' }), // même extension vue deux fois
-        ];
-      }
-      return [];
-    });
+  it('ne lit plus l’ancien slot `topbar-level2-nav`', () => {
+    vi.mocked(useAssignedExtensions).mockImplementation((slot: string) =>
+      slot === 'topbar-nav-slot'
+        ? [entry('neuf', { ...nav('informations/a'), label: 'Nouveau' })]
+        : slot === 'topbar-level2-nav'
+          ? [entry('ancien', { ...nav('informations/b'), label: 'Ancien' })]
+          : [],
+    );
     render(<SectionNavPanel section="informations" />);
-    expect(screen.getAllByRole('button').map((b) => b.textContent)).toEqual(['Nouveau', 'Ancien']);
+    expect(screen.getAllByRole('button').map((b) => b.textContent)).toEqual(['Nouveau']);
   });
 
   it("n'affiche rien quand la section n'a aucune sous-option", () => {

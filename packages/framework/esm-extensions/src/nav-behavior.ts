@@ -3,7 +3,7 @@ import { createGlobalStore } from '@egen-civitas/esm-state';
 
 /**
  * Cible d'un comportement de navigation : une entrée (le lien d'un menu, identifiée par le nom de
- * son extension dans `routes.json`) ou une section (le bouton de niveau 2, identifié par `section`).
+ * son extension dans `routes.json`) ou une section (le bouton de section, identifié par `section`).
  */
 export type NavBehaviorTarget = { entry: string } | { section: string };
 
@@ -38,7 +38,7 @@ const keyOf = (target: NavBehaviorTarget): string =>
   'entry' in target ? `entry:${target.entry}` : `section:${target.section}`;
 
 /**
- * Déclare le comportement d'un bouton de navigation du niveau 2 de la TopBar, à appeler au
+ * Déclare le comportement d'un bouton de navigation de la TopBar, à appeler au
  * démarrage de l'app (`startupApp`). Sans comportement déclaré, la TopBar applique sa logique
  * globale. Un seul comportement par cible : le dernier enregistré l'emporte.
  *

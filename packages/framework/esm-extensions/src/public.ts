@@ -21,13 +21,17 @@ export { type WorkspaceRegistration } from './workspaces.js';
 export { type ExtensionData, type ComponentConfig } from './types.js';
 export {
   TOPBAR_NAV_SLOT,
-  TOPBAR_NAV_SLOTS,
-  TOPBAR_LEVEL2_NAV_SLOT,
   NAV_ALL_WORKSPACES,
   type NavEntryMeta,
   isNavEntryMeta,
   isNavEntryInWorkspace,
 } from './nav-entry.js';
+export {
+  TOPBAR_SLOT,
+  type TopBarPlacementMeta,
+  type TopBarRegion,
+  type TopBarContentRegion,
+} from './topbar-slot.js';
 export {
   SHELL_RAIL_LEFT_SLOT,
   SHELL_RAIL_BOTTOM_SLOT,

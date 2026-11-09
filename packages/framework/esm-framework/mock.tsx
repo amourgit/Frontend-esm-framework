@@ -94,8 +94,7 @@ export const getNavBehavior = vi.fn();
 // Constantes et validateurs purs : on garde les vraies implémentations (aucune raison de les simuler).
 export {
   TOPBAR_NAV_SLOT,
-  TOPBAR_NAV_SLOTS,
-  TOPBAR_LEVEL2_NAV_SLOT,
+  TOPBAR_SLOT,
   NAV_ALL_WORKSPACES,
   isNavEntryMeta,
   isNavEntryInWorkspace,

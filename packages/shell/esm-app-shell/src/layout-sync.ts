@@ -4,7 +4,7 @@
  *  - TopBar  (`#egen-top-nav-app-container`) -> `--egen-navbar-height`
  *  - Footer  (`#egen-footer-app-container`)  -> `--egen-footer-height`
  *
- * Pourquoi : la TopBar peut avoir 2 niveaux (niveau 1 + navigation niveau 2) et
+ * Pourquoi : la TopBar est une pile de N niveaux déclarés par les apps et
  * le footer une hauteur libre. Les deux conteneurs ont une hauteur automatique
  * (ils suivent leur contenu) ; la zone de scroll `#egen-scroll-region` occupe
  * exactement l'espace entre les deux et coupe le contenu net à chaque frontière.

@@ -645,8 +645,8 @@ Branche de référence : **`main`** · mise à jour : 2026-11-07.
 | D1 fournisseur d'autorisation | **fait** | `esm-api/src/authorization.ts` + `egen-fetch.ts` ; sans fournisseur, `fetch` reste appelé de façon synchrone (test dédié) |
 | D2 politique `credentials` | **fait** (écart) | via `AuthorizationProvider.credentials` (voir D2) |
 | D3 401 → rafraîchissement unique → rejeu | **fait** | single-flight, pas de boucle, GET/HEAD par défaut, `replayOnUnauthorized` |
-| C7 capacités natives P0 (`session`, `secureStorage`, `openExternal`, `lifecycle`) | **en cours** (session du 2026-11-09, branche `feat/c7-natives-p0`) | ne pas démarrer en parallèle ; P1/P2 restent « à la demande d'une app » (N9) |
-| D4 session / login natif (côté framework : branchement `setAuthorizationProvider` ↔ `platform.session`) | **en cours** (même branche) | le flux de login lui-même (app du core) et l'endpoint de jetons dépendent de X-1 |
+| C7 capacités natives P0 (`session`, `secureStorage`, `openExternal`, `lifecycle`) | **implémenté — PR en cours** (branche `feat/c7-natives-p0`) | `esm-platform/src/adapters/native/` : simples APPELANTS du client de pont, branchés par `native:` dans le registre (C6). Le Host est une frontière de confiance : ses réponses sont validées (en-tête d'autorisation = ASCII visible, sans CR/LF, ≤ 8 Ko ; types stricts ; réponse invalide ⇒ `HOST_ERROR` sans reprendre la valeur) ; les arguments sont validés **avant** envoi (jeton jamais dans un message d'erreur ; seuls les champs connus de `setTokens` partent ; `openExternal` applique la liste blanche `https:`/`mailto:`/`tel:` côté Shell). 55 tests de bout en bout via `getPlatform()` + `createMockHost`. P1/P2 (`permissions`, `files`, `camera`, `push`, `biometric`) : à la demande d'une app (N9) ; contrat Host en annexe 5 |
+| D4 session / login natif (côté framework) | **implémenté (côté Shell) — PR en cours** (même branche) | `shell/src/native-session.ts` (`bindPlatformSession`) posé **de façon synchrone au tout début de `run()`**. **Constat qui a dicté la conception** : `setupApiModule()` lance `refetchCurrentUser()` immédiatement, donc avant la fin du handshake ; un fournisseur posé dans `setupPlatform` (après) aurait envoyé le premier appel de session **sans jeton**. Le fournisseur attend donc `platform.ready` lui-même ; sans capacité `session` annoncée ⇒ pas d'en-tête (rien n'est simulé) ; handshake en échec ⇒ aucune requête API n'est envoyée ; `credentials: 'omit'`. **Reste (X-1/X-2)** : endpoint de jetons et refresh côté backend, flux de login de l'app du core, test sur appareil |
 | D5 URL d'API absolue | **fait** | audit `location.origin` + 4 tests |
 | F1 lockdown natif | **fait** | `getEgenTarget()` / `isNativeTarget()` ; `import-maps.ts` et `route-maps.ts` (seconde ceinture : le build natif impose déjà `production`) |
 | F2 contrat d'app `platforms` / `requiredCapabilities` | **fait** (fusionné #109, CI verte) | champs ajoutés à `EgenAppRoutes` ; filtrage **unique** dans `registerApp` (`esm-routes/src/loaders/availability.ts`) : app écartée sans rien enregistrer (ni config, ni extensions), avertissement structuré `{app, reason}` ; champs absents = comportement historique. **Écart de conception** : la disponibilité des capacités passe par un résolveur posé dans la couche la plus basse (`esm-globals` : `setCapabilityResolver` / `hasCapability`, aucune capacité supposée par défaut) pour que `esm-routes` ne dépende pas d'`esm-platform` ; `esm-platform` expose `registerPlatformCapabilities()` et le shell l'appelle (`setupPlatform`) **avant** `setupApps`. Un Host manquant ne bloque pas le démarrage (journalisé) : l'écran d'incompatibilité reste à faire avec C5. Tests : 8 + 3 (`esm-routes`), 3 (`esm-globals`), 2 (`esm-platform`) |
@@ -660,3 +660,27 @@ Branche de référence : **`main`** · mise à jour : 2026-11-07.
 - Dans `rspack.config.js`, `resolveTarget` est appelé **dans** `module.exports` : le mode, donc `EGEN_ENV`, n'y est connu qu'à l'exécution. `EGEN_DEV_NO_AUTH` est lu depuis `publicEnv` (hiérarchie `.env`), pas depuis `process.env` seul.
 - `yarn lint` ne démarrait pas avant #103 ; en CI, la vérification pré-publication (`publint`, `attw`, pack/installation isolée) est le vrai garde-fou : la rejouer en **Node 22** (en Node 20 le message d'erreur de `verify:pack` diffère).
 - Deux sessions ont implémenté B1 à B3 en parallèle (branches `feat/multiplatform-p0` et `feat/multiplateforme-p0`) ; elles ont été réconciliées dans `integrate/multiplateforme-p0`. `prettier --check` signale déjà `tools/brand.js` sur `main` (N7).
+
+## ANNEXE 5 — Contrat des capacités P0 côté Host (pour `egen-mobile`)
+
+Tout appel passe par une enveloppe de l'annexe 1 (`ns` = capacité, `m` = méthode, `a` = arguments). **Le Host doit valider `a`
+lui-même** (le Shell valide aussi, mais le Shell n'est pas une frontière de confiance pour le Host) et vérifier l'origine de la page.
+Un Host n'annonce (`capabilities` du `hello`) que ce qu'il implémente, avec `v` ≥ 1.
+
+| `ns.m` | `a` | Résultat `r` | Remarques |
+|---|---|---|---|
+| `session.getAuthorization` | — | `string` (valeur d'en-tête `Authorization`, ex. `"Bearer …"`) ou `null` | ASCII visible, sans CR/LF, ≤ 8192 car. : sinon le Shell rejette `HOST_ERROR`. `null` = pas de session |
+| `session.setTokens` | `{ access: string, refresh?: string, expiresAt?: number }` | — | `expiresAt` en ms epoch ; stocker dans Keychain / Keystore, **jamais** dans le WebView |
+| `session.refresh` | — | `boolean` | `true` ⇒ un nouveau jeton est disponible (le Shell rejouera une fois) ; **booléen strict** |
+| `session.clear` | — | — | efface les jetons |
+| `secureStorage.get` | `{ key: string }` | `string` ou `null` | clé de 1 à 256 car. |
+| `secureStorage.set` | `{ key: string, value: string }` | — | valeurs `string` uniquement |
+| `secureStorage.remove` | `{ key: string }` | — | |
+| `openExternal.open` | `{ url: string }` | — | URL déjà normalisée ; schémas `https:`, `mailto:`, `tel:` **uniquement** — à revalider |
+
+**Événements Host → Shell (capacité `lifecycle`)** : `lifecycle.resume` (app revenue au premier plan) et `lifecycle.pause` (passée
+en arrière-plan), sans donnée. Le Shell ne fait aucun appel : le Host les pousse quand l'état change.
+
+**Erreurs** : `{ ok:false, e:{ code, message, retryable } }` avec `code` parmi `UNAVAILABLE`, `DENIED` (refus utilisateur ou système),
+`CANCELLED`, `INVALID_ARGS`, `TIMEOUT`, `INCOMPATIBLE`, `HOST_ERROR`. Un code inconnu est converti en `HOST_ERROR` par le Shell.
+Ne jamais inclure un jeton ou une valeur du coffre dans `message`.

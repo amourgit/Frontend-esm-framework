@@ -1,4 +1,10 @@
 import type { BridgeClient } from './bridge/client.js';
+import {
+  createNativeLifecycle,
+  createNativeOpenExternal,
+  createNativeSecureStorage,
+  createNativeSession,
+} from './adapters/native/index.js';
 import { createWebCamera } from './adapters/web/camera.js';
 import { createWebFiles } from './adapters/web/files.js';
 import { createWebLifecycle } from './adapters/web/lifecycle.js';
@@ -104,30 +110,35 @@ export function createNativeCapabilitiesFromRegistry(
 }
 
 // ── Capacités v1 ─────────────────────────────────────────────────────────────────────────────
-// Les adaptateurs natifs (`native`) sont l'objet de la tâche C7 (une capacité à la fois, quand une app l'utilise, N9).
+// Adaptateurs natifs (C7) : P0 faits (`session`, `secureStorage`, `openExternal`, `lifecycle`). Les autres le seront un à la fois,
+// quand une app les utilise (N9) ; sans `native`, la capacité reste indisponible en natif même si le Host l'annonce.
 
 registerCapability('session', {
   version: 1,
   methods: { getAuthorization: 'async', setTokens: 'async', refresh: 'async', clear: 'async' },
   web: createWebSession,
+  native: createNativeSession,
 });
 
 registerCapability('secureStorage', {
   version: 1,
   methods: { get: 'async', set: 'async', remove: 'async' },
   // Pas d'adaptateur Web : jamais de faux coffre dans le navigateur.
+  native: createNativeSecureStorage,
 });
 
 registerCapability('openExternal', {
   version: 1,
   methods: { open: 'async' },
   web: createWebOpenExternal,
+  native: createNativeOpenExternal,
 });
 
 registerCapability('lifecycle', {
   version: 1,
   methods: { onResume: 'subscribe', onPause: 'subscribe' },
   web: createWebLifecycle,
+  native: createNativeLifecycle,
 });
 
 registerCapability('permissions', {

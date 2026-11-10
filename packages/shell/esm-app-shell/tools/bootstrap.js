@@ -61,18 +61,19 @@ function buildHeadBootstrap({ bridges = [] } = {}) {
  * Script chargé en fin de `<body>`, APRÈS les bundles : écouteur des actions du gabarit d'erreur, puis
  * `initializeSpa(...)`. Mêmes valeurs que le bloc inline Web ; les chaînes sont échappées par `JSON.stringify`.
  *
- * @param {{ apiUrl: string, spaPath: string, env: string, offline: boolean, configUrls: string }} options
+ * @param {{ apiUrl: string, spaPath: string, env: string, offline: boolean, serviceWorker?: boolean, configUrls: string }} options
+ *   `serviceWorker` : omis, il n'est pas émis et `initializeSpa` le fait suivre `offline` (comportement historique).
  *   `configUrls` : liste déjà formatée (`"a","b"`), comme `egenConfigUrls` côté Web.
  * @returns {string}
  */
-function buildBodyBootstrap({ apiUrl, spaPath, env, offline, configUrls }) {
+function buildBodyBootstrap({ apiUrl, spaPath, env, offline, serviceWorker, configUrls }) {
   return `${ACTIONS_SCRIPT}
 initializeSpa({
   apiUrl: ${JSON.stringify(apiUrl)},
   spaPath: ${JSON.stringify(spaPath)},
   env: ${JSON.stringify(env)},
   offline: ${offline ? 'true' : 'false'},
-  configUrls: [${configUrls}],
+${serviceWorker === undefined ? '' : `  serviceWorker: ${serviceWorker ? 'true' : 'false'},\n`}  configUrls: [${configUrls}],
 });
 `;
 }

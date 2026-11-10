@@ -60,6 +60,7 @@ import './events.js';
 import { appName, getCoreExtensions } from './ui/index.js';
 import { setupCoreConfig } from './core-config.js';
 import { bindPlatformSession } from './native-session.js';
+import { setupOfflineMode } from './offline-setup.js';
 
 // =============================================================================
 //  Bypass d'authentification pour tests sans backend
@@ -314,9 +315,12 @@ function registerCoreExtensions() {
 
 async function setupOffline() {
   try {
-    await registerEgenServiceWorker(`${window.getEgenSpaBase()}service-worker.js`);
-    await activateOfflineCapability();
-    setupOfflineStaticDependencyPrecaching();
+    await setupOfflineMode({
+      serviceWorkerEnabled: window.serviceWorkerEnabled,
+      registerServiceWorker: () => registerEgenServiceWorker(`${window.getEgenSpaBase()}service-worker.js`),
+      activateOfflineCapability,
+      startStaticDependencyPrecaching: setupOfflineStaticDependencyPrecaching,
+    });
   } catch (error) {
     console.error('Error while setting up offline mode.', error);
     showNotification({

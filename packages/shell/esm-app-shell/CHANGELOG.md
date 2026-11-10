@@ -1,5 +1,19 @@
 # @egen-civitas/esm-app-shell
 
+## 2.10.0
+
+### Minor Changes
+
+- 522d154: Capacités natives P0 (C7) : `session`, `secureStorage`, `openExternal` et `lifecycle` branchées sur le client de pont, avec validation des réponses du Host (en-tête d'autorisation sans CR/LF, types stricts) et des arguments avant envoi. Session native (D4) : le Shell pose, de façon synchrone au début de `run()`, un fournisseur d'autorisation d'`egenFetch` qui attend le handshake ; sans effet en Web.
+- a5d28d9: Service worker séparé des données hors ligne (E1) : `SpaConfig.serviceWorker` (défaut : la valeur de `offline`, comportement inchangé) et `window.serviceWorkerEnabled`. Une cible native garde le mode hors ligne des données (`offline`) sans service worker (fichiers embarqués) ; auparavant elle coupait les deux. Web : HTML et comportement inchangés.
+
+### Patch Changes
+
+- Updated dependencies [522d154]
+- Updated dependencies [a5d28d9]
+  - @egen-civitas/esm-platform@1.3.0
+  - @egen-civitas/esm-globals@2.3.0
+
 ## 2.9.1
 
 ### Patch Changes

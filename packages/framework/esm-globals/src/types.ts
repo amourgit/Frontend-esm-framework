@@ -29,6 +29,8 @@ declare global {
      * This is used to determine whether offline functionality is present or not.
      */
     offlineEnabled: boolean;
+    /** `true` si un service worker est installé. Distinct de `offlineEnabled` (données hors ligne) : voir `SpaConfig.serviceWorker`. */
+    serviceWorkerEnabled: boolean;
     /**
      * Gets the API base path, e.g. /egen
      */
@@ -177,10 +179,19 @@ export interface SpaConfig {
    */
   configUrls?: Array<string>;
   /**
-   * Defines if offline should be supported by installing a service worker.
-   * @default true
+   * Active le mode hors ligne : données locales, éléments d'interface sensibles à la connectivité (pages et extensions
+   * `online` / `offline`), événements de connectivité. Installe aussi un service worker sauf si `serviceWorker` est
+   * précisé.
+   * @default false
    */
   offline?: boolean;
+  /**
+   * Installe un service worker (cache des ressources, précache des dépendances statiques). Indépendant de `offline` :
+   * une cible native embarque ses fichiers dans le binaire, n'a pas besoin de service worker, mais garde le mode hors
+   * ligne des données.
+   * @default la valeur de `offline` (comportement historique : l'un entraînait l'autre)
+   */
+  serviceWorker?: boolean;
 }
 
 /** @internal */

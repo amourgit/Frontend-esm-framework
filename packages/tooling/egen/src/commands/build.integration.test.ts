@@ -121,6 +121,8 @@ describe('runBuild', () => {
     expect(readFileSync(join(target, body!), 'utf8')).toMatch(
       /initializeSpa\(\{apiUrl:"https:\/\/api\.exemple\.ga\/egen",spaPath:"\/app"/,
     );
+    // E1 : en natif, les données hors ligne restent actives (offline) mais SANS service worker (fichiers embarqués).
+    expect(readFileSync(join(target, body!), 'utf8')).toMatch(/offline:!0,serviceWorker:!1/);
 
     // Aucun script exécutable inline (seuls les blocs de DONNÉES restent), aucun gestionnaire inline.
     expect(html).not.toContain('initializeSpa(');

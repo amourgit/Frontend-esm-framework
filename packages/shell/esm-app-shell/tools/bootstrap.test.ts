@@ -112,6 +112,26 @@ describe('buildBodyBootstrap', () => {
     expect(initializeSpa.mock.calls[0][0].offline).toBe(true);
   });
 
+  it("serviceWorker : omis, il n'est pas émis (initializeSpa le fait suivre offline) ; explicite, il est un booléen littéral", () => {
+    const run1 = vi.fn();
+    run(buildBodyBootstrap({ ...base, offline: true }), { initializeSpa: run1, document: { addEventListener() {} } });
+    expect(run1.mock.calls[0][0]).not.toHaveProperty('serviceWorker');
+
+    const run2 = vi.fn();
+    run(buildBodyBootstrap({ ...base, offline: true, serviceWorker: false }), {
+      initializeSpa: run2,
+      document: { addEventListener() {} },
+    });
+    expect(run2.mock.calls[0][0]).toMatchObject({ offline: true, serviceWorker: false });
+
+    const run3 = vi.fn();
+    run(buildBodyBootstrap({ ...base, offline: false, serviceWorker: true }), {
+      initializeSpa: run3,
+      document: { addEventListener() {} },
+    });
+    expect(run3.mock.calls[0][0]).toMatchObject({ offline: false, serviceWorker: true });
+  });
+
   it('échappe les chaînes (aucune injection de code par une valeur de configuration)', () => {
     const initializeSpa = vi.fn();
     const hostile = '"});alert(1);({"';

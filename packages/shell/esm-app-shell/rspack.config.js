@@ -271,8 +271,9 @@ module.exports = (env, argv = []) => {
   const egenTargetConfigDef = targetBridge ? JSON.stringify(targetBridge) : null;
   const egenPublicPath = target.publicPath;
   const egenFavicon = process.env.EGEN_FAVICON || `${egenPublicPath}/favicon.ico`;
-  // `offline` du HTML pilote aujourd'hui le service worker ET les données hors ligne (séparés par la tâche E1).
-  const egenOffline = target.serviceWorker;
+  // `offline` = données hors ligne et UI sensible à la connectivité ; `serviceWorker` = cache des ressources. Séparés (E1) :
+  // une cible native garde les données hors ligne sans service worker. Web : les deux valent EGEN_OFFLINE (HTML inchangé).
+  const egenOffline = target.offlineData;
   const egenImportmapDef = target.importmapMode === 'inline' ? process.env.EGEN_ESM_IMPORTMAP : undefined;
   const egenImportmapUrl = process.env.EGEN_ESM_IMPORTMAP_URL || `${egenPublicPath}/importmap.json`;
   const egenRoutesDef = target.routesMode === 'inline' ? process.env.EGEN_ROUTES : undefined;
@@ -290,6 +291,7 @@ module.exports = (env, argv = []) => {
       spaPath: egenPublicPath,
       env: egenEnvironment,
       offline: egenOffline,
+      serviceWorker: target.serviceWorker,
       configUrls: egenConfigUrls,
     });
     egenBootstrap = { head: bootstrapFileName('head', headSource), body: bootstrapFileName('body', bodySource) };

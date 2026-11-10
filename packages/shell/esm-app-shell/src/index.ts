@@ -106,9 +106,15 @@ function initializeSpa(config: SpaConfig) {
       shareScope['@egen-civitas/esm-framework'] = shareScope['@egen-civitas/esm-framework/src/internal'];
     }
 
-    const { configUrls = [], offline = false } = config;
+    // `serviceWorker` est indépendant de `offline` ; absent, il suit `offline` (comportement historique).
+    const { configUrls = [], offline = false, serviceWorker = offline } = config;
     Object.defineProperty(window, 'offlineEnabled', {
       value: offline,
+      writable: false,
+      configurable: false,
+    });
+    Object.defineProperty(window, 'serviceWorkerEnabled', {
+      value: serviceWorker,
       writable: false,
       configurable: false,
     });

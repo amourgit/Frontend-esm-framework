@@ -1,5 +1,16 @@
 # @egen-civitas/esm-platform
 
+## 1.3.0
+
+### Minor Changes
+
+- 522d154: Capacités natives P0 (C7) : `session`, `secureStorage`, `openExternal` et `lifecycle` branchées sur le client de pont, avec validation des réponses du Host (en-tête d'autorisation sans CR/LF, types stricts) et des arguments avant envoi. Session native (D4) : le Shell pose, de façon synchrone au début de `run()`, un fournisseur d'autorisation d'`egenFetch` qui attend le handshake ; sans effet en Web.
+
+### Patch Changes
+
+- Updated dependencies [a5d28d9]
+  - @egen-civitas/esm-globals@2.3.0
+
 ## 1.2.0
 
 ### Minor Changes

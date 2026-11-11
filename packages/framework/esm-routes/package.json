@@ -6,7 +6,8 @@
   "type": "module",
   "main": "dist/index.js",
   "files": [
-    "dist"
+    "dist",
+    "schema"
   ],
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +15,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./routes.schema.json": "./schema/routes.schema.json"
   },
   "source": true,
   "sideEffects": false,
@@ -69,6 +71,7 @@
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",
+    "ajv": "^8.17.1",
     "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "dayjs": "^1.11.13",

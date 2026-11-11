@@ -1,0 +1,23 @@
+{
+  "$schema": "https://egen.alpha.vercel.com/routes.schema.json",
+  "pages": [
+    {
+      "component": "root",
+      "routeRegex": "^(?!(?:login|logout|change-password)/?)",
+      "online": true,
+      "offline": true,
+      "containerDomId": "egen-ai-assistant-app-container"
+    }
+  ],
+  "extensions": [
+    {
+      "name": "notifications",
+      "slot": "shell-rail-right-slot",
+      "component": "notificationsPanel",
+      "online": true,
+      "offline": true,
+      "order": 10,
+      "meta": { "title": "Notifications", "titleKey": "notifications", "icon": "Bell", "order": 10 }
+    }
+  ]
+}

@@ -44,6 +44,7 @@ import { TsCheckerRspackPlugin } from 'ts-checker-rspack-plugin';
 // eslint-disable-next-line no-restricted-imports
 import { isArray, merge, mergeWith } from 'lodash';
 import { inc } from 'semver';
+import { stampRoutes } from './routes-stamp';
 import rspack, {
   container,
   CopyRspackPlugin,
@@ -624,11 +625,10 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
               from: routes,
               transform: {
                 transformer: (content) =>
-                  JSON.stringify(
-                    Object.assign({}, JSON.parse(content.toString()), {
-                      version: mode === production ? version : inc(version, 'prerelease', 'local'),
-                    }),
-                  ),
+                  stampRoutes(content, {
+                    version: mode === production ? version : inc(version, 'prerelease', 'local'),
+                    peerDependencies,
+                  }),
               },
             },
           ],

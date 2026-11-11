@@ -16,3 +16,5 @@ export {
 export * from './types.js';
 export { getEgenTarget, isNativeTarget } from './target.js';
 export { hasCapability, setCapabilityResolver } from './capabilities.js';
+export { validateBuildManifest } from './build-manifest.js';
+export type { BuildManifest, BuildManifestApp, BuildManifestValidation } from './build-manifest.js';

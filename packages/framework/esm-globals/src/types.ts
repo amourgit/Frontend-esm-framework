@@ -462,6 +462,12 @@ export interface EgenAppRoutes {
   /** The version of this frontend module. */
   version?: string;
   /**
+   * Plage de versions du framework (`@egen-civitas/esm-framework`) avec laquelle cette app a été construite, estampillée
+   * au build à partir de ses `peerDependencies`. Au démarrage, une app dont la plage n'est pas satisfaite par le framework
+   * du shell est écartée (journalisée) au lieu de s'exécuter de travers. Absente = ancien format : toléré.
+   */
+  frameworkRange?: string;
+  /**
    * Plateformes sur lesquelles cette app peut être enregistrée (`web`, `android`, `ios`).
    * Absent (ou liste vide) = toutes les plateformes. Une app non éligible n'est pas enregistrée (ni pages,
    * ni extensions, ni modals, ni workspaces) : elle est écartée, le démarrage n'échoue pas.

@@ -63,4 +63,25 @@ describe('registerApp — filtrage plateforme / capacité (F2)', () => {
     expect(registerModuleWithConfigSystem).toHaveBeenCalledWith('@egen/camera-app');
     expect(tryRegisterExtension).toHaveBeenCalledTimes(1);
   });
+
+  it("n'enregistre RIEN pour une app dont la plage de framework n'est pas satisfaite, journalise la raison", () => {
+    vi.stubEnv('FRAMEWORK_VERSION', '4.0.0');
+    registerApp('@egen/vieille-app', { ...routesWithExtension, frameworkRange: '^3.0.0' } as never);
+
+    expect(registerModuleWithConfigSystem).not.toHaveBeenCalled();
+    expect(tryRegisterExtension).not.toHaveBeenCalled();
+    expect(console.warn).toHaveBeenCalledWith(
+      expect.stringContaining('@egen/vieille-app'),
+      expect.objectContaining({ reason: 'framework', required: '^3.0.0', current: '4.0.0' }),
+    );
+    vi.unstubAllEnvs();
+  });
+
+  it('enregistre une app dont la plage de framework est satisfaite', () => {
+    vi.stubEnv('FRAMEWORK_VERSION', '4.0.0');
+    registerApp('@egen/app-compatible', { ...routesWithExtension, frameworkRange: '>=3.0.0' } as never);
+
+    expect(registerModuleWithConfigSystem).toHaveBeenCalledWith('@egen/app-compatible');
+    vi.unstubAllEnvs();
+  });
 });

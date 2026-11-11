@@ -56,4 +56,48 @@ describe('getAppUnavailability', () => {
   it('la plateforme est vérifiée avant les capacités', () => {
     expect(getAppUnavailability({ platforms: ['ios'], requiredCapabilities: ['camera'] })?.reason).toBe('platform');
   });
+
+  describe('compatibilité avec le framework (F4)', () => {
+    it('plage satisfaite : app disponible', () => {
+      expect(getAppUnavailability({ frameworkRange: '>=3.0.0' }, '4.0.0')).toBeNull();
+      expect(getAppUnavailability({ frameworkRange: '^4.0.0' }, '4.2.1')).toBeNull();
+    });
+
+    it('plage non satisfaite : app écartée avec la plage exigée et la version courante', () => {
+      expect(getAppUnavailability({ frameworkRange: '^5.0.0' }, '4.0.0')).toEqual({
+        reason: 'framework',
+        required: '^5.0.0',
+        current: '4.0.0',
+      });
+    });
+
+    it('une préversion du framework satisfait une plage compatible', () => {
+      expect(getAppUnavailability({ frameworkRange: '>=3.0.0' }, '4.0.0-next.3')).toBeNull();
+    });
+
+    it('plage absente (ancien format) : toléré', () => {
+      expect(getAppUnavailability({}, '4.0.0')).toBeNull();
+      expect(getAppUnavailability({ frameworkRange: '' }, '4.0.0')).toBeNull();
+    });
+
+    it('version du framework indisponible (hors bundle) : non vérifiable, donc non bloquant', () => {
+      expect(getAppUnavailability({ frameworkRange: '^99.0.0' }, undefined)).toBeNull();
+    });
+
+    it('plage illisible : app écartée (échec fermé)', () => {
+      expect(getAppUnavailability({ frameworkRange: 'pas une plage' }, '4.0.0')?.reason).toBe('framework');
+    });
+
+    it('ordre : plateforme, puis framework, puis capacités', () => {
+      expect(
+        getAppUnavailability(
+          { platforms: ['ios'], frameworkRange: '^9.0.0', requiredCapabilities: ['camera'] },
+          '4.0.0',
+        )?.reason,
+      ).toBe('platform');
+      expect(
+        getAppUnavailability({ frameworkRange: '^9.0.0', requiredCapabilities: ['camera'] }, '4.0.0')?.reason,
+      ).toBe('framework');
+    });
+  });
 });

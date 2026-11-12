@@ -687,3 +687,55 @@ en arrière-plan), sans donnée. Le Shell ne fait aucun appel : le Host les pous
 **Erreurs** : `{ ok:false, e:{ code, message, retryable } }` avec `code` parmi `UNAVAILABLE`, `DENIED` (refus utilisateur ou système),
 `CANCELLED`, `INVALID_ARGS`, `TIMEOUT`, `INCOMPATIBLE`, `HOST_ERROR`. Un code inconnu est converti en `HOST_ERROR` par le Shell.
 Ne jamais inclure un jeton ou une valeur du coffre dans `message`.
+
+---
+
+## 7. Point de reprise (2026-11-11) — lire ceci en premier
+
+### 7.1 État exact du dépôt
+- **PR ouvertes** : **#120** (F3, schéma JSON de `routes.json`, branche `feat/f3-schema-routes`) et **#121** (G1 + G3, branche `feat/g1-g3-liens-et-ponts`) : CI en cours, **fusion automatique** lancée (voir 7.4). **#119** = PR de release du bot (aucun check : voir 7.4, « release »).
+- **Fusionnés et publiés sur npm** : B1–B5, B7, C1–C7 (P0), D1–D5 (côté framework), E1, F1, F2, F4, G2, + CI réparée (#110). Versions npm vérifiées après #116 : `esm-globals` 2.3.0, `esm-platform` 1.3.0, `esm-app-shell` 2.10.0.
+- **Branche distante `feat/g1-garde-fou-ponts`** : une autre session y a seulement réservé G1 (un commit de journal, **aucun code**). G1 est livré par #121 ⇒ cette réservation est caduque ; ne pas recoder G1.
+- `main` a évolué en parallèle (autres sessions : réforme TopBar du core, refonte du système de design du thème). **Toujours** `git fetch` + lire ce journal sur `main` avant de commencer.
+
+### 7.2 Reprendre EXACTEMENT ici
+**① E3 — politique de stockage (en cours, inventaire fait, un constat sécurité à traiter)**
+1. **Constat** : `esm-tenant/src/context/resolver.ts` (l. ~116-140) lit un JWT dans `localStorage`/`sessionStorage` sous les clés `egen:session:token` et `token` pour résoudre le tenant. **En natif, la règle N5 interdit un jeton dans le stockage du WebView** (les jetons vivent dans le Host : capacité `session`, C7/D4).
+2. **À faire** : (a) lire `resolver.ts` l. 105-160 et ses tests ; (b) en natif (`isNativeTarget()`), ne **jamais** lire ces clés : obtenir l'information de tenant autrement (claim déjà exposé par le Host via `platform.session`, ou configuration du build `EGEN_TENANT_*`) — **décider avec le backend (X-1)** ce que le jeton apporte exactement avant d'inventer ; (c) tests (natif ignore les clés ; Web inchangé) ; (d) écrire `docs/stockage.md` : tableau *clé / mécanisme / package / sensibilité / comportement en natif*.
+3. **Pour refaire l'inventaire** (sortie perdue entre deux sessions) :
+   `grep -rn "localStorage\|sessionStorage\|indexedDB\|Dexie" --include=*.ts --include=*.tsx packages | grep -v "node_modules\|/dist/\|\.test\.\|mock"`
+4. **Ne pas** migrer le stockage « par principe » avant un constat sur appareil (persistance/quotas d'IndexedDB et `localStorage` en WebView Android/WKWebView : **toujours non testé**).
+
+**② H7 — dette TypeScript (à faire APRÈS fusion de #120 et #121, sinon conflits de manifestes)** : ~24 workspaces appellent `tsc` sans déclarer `typescript`. Liste : parcourir `packages/*/*/package.json` dont `scripts.typescript` existe et `typescript` absent des 3 sections de dépendances. Ajouter `"typescript": "^5.8.3"` en `devDependencies`, `yarn install` (met à jour `yarn.lock`), puis **retirer** le contournement `PATH=...` de `.github/workflows/ci.yml` (étape *TypeScript check*) et vérifier en retirant `npm-global` du PATH local.
+
+**③ H2 — e2e SPA statique « natif simulé »** (Playwright est déjà installé à la racine) : servir un artefact assemblé minimal sous `/app` (origine ≠ API) avec `createMockHost` (`esm-platform/testing`) injecté comme `window.egenHostBridge`. Scénarios : démarrage sans 404 ni requête hors origine hors API ; CSP sans violation ; handshake OK ⇒ apps filtrées par `platforms` ; handshake KO ⇒ écran d'incompatibilité **(pas encore écrit : c'est le reste de C5/F2 côté UI)** ; 401 ⇒ 1 refresh ⇒ rejeu ; overrides d'import map ignorés ; Web sans Host inchangé.
+
+**④ Écran d'incompatibilité du Host** : aujourd'hui un Host manquant/incompatible est seulement journalisé (`setupPlatform` dans `shell/src/run.ts`). À faire : écran bloquant explicite (« mise à jour de l'application requise »).
+
+**⑤ H3 / H4 / H5 / H6** : voir les sections H du document ; H3 (publint/attw/pack) est déjà exercé par le job CI « Vérification pré-publication ».
+
+### 7.3 Ce qui dépend d'autres briques (hors de ce dépôt)
+| ID | Besoin | État |
+|---|---|---|
+| X-1 backend | Bearer, jetons, refresh, CORS pour l'origine locale, endpoint de session compatible | **non fait** — bloque le test de bout en bout de D3/D4 |
+| X-2 `egen-core` | `platforms`/`requiredCapabilities` dans les `routes.json`, versions harmonisées (`1.0.0` vs `9.0.2`), app de login pour le flux de jetons | non fait |
+| X-3 `egen-distributions` | manifestes par cible, `build-manifest.json` (type et validateur prêts : `validateBuildManifest`), étape `build:spa` | non créé |
+| X-4 `egen-mobile` | Host Capacitor : injecte `window.egenHostBridge`, protocole v1 + annexe 5 | non créé |
+
+### 7.4 Recette de travail (l'environnement d'agent est jetable : tout est ici)
+- **Yarn 4.10.3** : `repo.yarnpkg.com` est bloqué ⇒ `npm i @yarnpkg/cli-dist@4.10.3` dans un dossier à part, puis `node <dossier>/node_modules/@yarnpkg/cli-dist/bin/yarn.js …`.
+- **`tsc`** : le poste d'agent avait un `tsc` global qui **masquait** le défaut H7 ; tester avec `npm-global` retiré du PATH.
+- **Clone `--depth 1` mono-branche** : `git fetch origin <branche>` ne crée pas la référence distante ⇒ `git fetch origin +refs/heads/X:refs/remotes/origin/X`.
+- **Journaux de CI illisibles** (domaine de stockage bloqué) : seules les **annotations** le sont ⇒ pour diagnostiquer, une branche jetable dont le workflow fait `echo "::error title=diag::$(…)"`.
+- **PR créées par le bot** (release) : pas de checks ⇒ pousser un **commit vide** sur la branche `changeset-release/main` avec le jeton de l'utilisateur déclenche la CI ; attendre la fin du workflow `Release` de `main` **avant** (il régénère la PR), puis fusionner, puis vérifier `npm view` des versions.
+- **Fusion automatique** (script d'agent, à recréer) : boucle sur `GET /commits/<sha>/check-runs` ; si un check est en échec ⇒ s'arrêter ; si ≥ 2 checks terminés en succès (*Build & Test*, *Vérification pré-publication*) ⇒ `PUT /pulls/<n>/merge` (`merge_method: merge`).
+- **Tests d'intégration `egen`** : toujours lancer le **fichier complet** (un test qui ne passe qu'isolé est un test qui fuit).
+- **Comparer le HTML Web avant/après** : masquer les hash de 16 hexadécimaux des bundles.
+
+### 7.5 Règles permanentes (décisions de l'utilisateur)
+1. **Fusionner sans demander** toute PR dont la CI est verte ; **résoudre puis fusionner** les rouges.
+2. **Réserver** une tâche dans ce journal (sur `main`) avant de la coder ; ne pas démarrer une tâche « en cours ».
+3. Une tâche n'est **« fait »** qu'une fois **fusionnée, CI verte**. Mettre ce journal à jour à chaque fusion.
+4. **Web inchangé** : prouver la non-régression (test ou comparaison de `dist`) ; ne jamais reformater un fichier que `prettier` signalait déjà non conforme (règle N7).
+5. Réponses courtes, bilan de fin de session ; **réutiliser l'existant** (`isVersionSatisfied`, registre de capacités, etc.).
+6. Le **token GitHub** collé dans la conversation est exposé : **à révoquer** et à remplacer par un jeton à permissions minimales.

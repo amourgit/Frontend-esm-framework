@@ -10,6 +10,7 @@
 //    navigate({ to })
 // =============================================================================
 
+import { isNativeTarget } from '@egen-civitas/esm-globals';
 import { navigate } from '@egen-civitas/esm-navigation';
 import { showNotification, showSnackbar, showModal } from '@egen-civitas/esm-styleguide';
 import { egenFetch } from '@egen-civitas/esm-api';
@@ -351,6 +352,15 @@ export const switchTenantTool: AIToolDefinition = {
       const slug = String(ctx.args.tenantSlug).trim();
       if (!isValidTenantSlug(slug)) {
         return { success: false, error: `Identifiant d'établissement invalide : « ${slug} ».`, durationMs: 0 };
+      }
+      // Natif : naviguer vers un sous-domaine distant chargerait du code distant non revu DANS le WebView de l'app
+      // (et la ferait disparaître). Le changement d'établissement par sous-domaine n'existe qu'en Web.
+      if (isNativeTarget()) {
+        return {
+          success: false,
+          error: "Le changement d'établissement par sous-domaine n'est pas disponible dans l'application mobile.",
+          durationMs: 0,
+        };
       }
       const hostname = window.location.hostname;
       // Domaine racine : priorité au rootDomain explicitement configuré

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://egen.alpha.vercel.com/routes.schema.json",
+  "backendDependencies": {
+    "webservices.rest": ">=2.2.0"
+  },
+  "pages": [
+    {
+      "component": "root",
+      "routeRegex": "^(?!(?:login|logout|change-password)/?)",
+      "online": true,
+      "offline": true,
+      "containerDomId": "egen-top-nav-app-container"
+    },
+    {
+      "component": "redirect",
+      "routeRegex": "^$",
+      "online": true,
+      "offline": true
+    }
+  ],
+  "extensions": [
+    {
+      "name": "default-user-panel",
+      "slot": "user-panel-slot",
+      "component": "userPanel",
+      "online": true,
+      "offline": true,
+      "order": 0
+    },
+    {
+      "name": "change-language",
+      "slot": "user-panel-slot",
+      "component": "changeLanguageLink",
+      "online": true,
+      "offline": true,
+      "order": 1
+    },
+    {
+      "name": "workspace-selector-menu",
+      "slot": "staggered-menu-slot",
+      "component": "workspaceSelectorMenu",
+      "online": true,
+      "offline": true,
+      "meta": {
+        "title": "Espace",
+        "area": "top",
+        "order": 0,
+        "priority": 100,
+        "global": true,
+        "showTitle": true
+      }
+    },
+    {
+      "name": "link",
+      "component": "linkComponent",
+      "online": true,
+      "offline": true
+    },
+    {
+      "name": "breadcrumb-item",
+      "component": "breadcrumbItem",
+      "online": true,
+      "offline": true
+    }
+  ],
+  "modals": [
+    {
+      "name": "change-language-modal",
+      "component": "changeLanguageModal"
+    }
+  ]
+}

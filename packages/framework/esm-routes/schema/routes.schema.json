@@ -1,0 +1,173 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://egen.alpha.vercel.com/routes.schema.json",
+  "title": "EGEN — routes.json d'une application",
+  "description": "Contrat déclaratif d'une application EGEN : pages, extensions, modals, workspaces, dépendances backend, et conditions de disponibilité (plateformes, capacités, framework). Source de vérité : `EgenAppRoutes` (@egen-civitas/esm-globals). Toute clé ajoutée à ce type doit l'être ici.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "version": {
+      "type": "string",
+      "description": "Version du module frontend. Estampillée au build : ne pas l'écrire à la main."
+    },
+    "frameworkRange": {
+      "type": "string",
+      "description": "Plage de versions de @egen-civitas/esm-framework avec laquelle l'app est construite (peerDependency). Estampillée au build ; une app dont la plage n'est pas satisfaite par le framework du shell est écartée au démarrage. Absente = ancien format, toléré."
+    },
+    "platforms": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "enum": ["web", "android", "ios"] },
+      "description": "Plateformes sur lesquelles l'app peut être enregistrée. Absent ou liste vide = toutes."
+    },
+    "requiredCapabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9]*$" },
+      "description": "Capacités de plateforme indispensables (ex. camera). Si l'une manque, l'app n'est pas enregistrée. Le jeu de noms est extensible (registre de capacités d'esm-platform) : seul le format est contrôlé ici."
+    },
+    "backendDependencies": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "Modules backend nécessaires et versions requises."
+    },
+    "optionalBackendDependencies": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          { "type": "string" },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["version"],
+            "properties": {
+              "version": { "type": "string" },
+              "feature": { "$ref": "#/definitions/featureFlag" }
+            }
+          }
+        ]
+      },
+      "description": "Modules backend qui activent des fonctions optionnelles si présents."
+    },
+    "pages": { "type": "array", "items": { "$ref": "#/definitions/page" } },
+    "extensions": { "type": "array", "items": { "$ref": "#/definitions/extension" } },
+    "featureFlags": { "type": "array", "items": { "$ref": "#/definitions/featureFlag" } },
+    "modals": { "type": "array", "items": { "$ref": "#/definitions/modal" } },
+    "workspaces": { "type": "array", "items": { "$ref": "#/definitions/workspace" } },
+    "workspaceGroups": { "type": "array", "items": { "$ref": "#/definitions/workspaceGroup" } },
+    "workspaceGroups2": { "type": "array", "items": { "$ref": "#/definitions/workspaceGroup2" } },
+    "workspaceWindows2": { "type": "array", "items": { "$ref": "#/definitions/workspaceWindow2" } },
+    "workspaces2": { "type": "array", "items": { "$ref": "#/definitions/workspace2" } }
+  },
+  "definitions": {
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["component"],
+      "properties": {
+        "component": { "type": "string" },
+        "route": { "type": ["string", "boolean"] },
+        "routeRegex": { "type": "string" },
+        "featureFlag": { "type": "string" },
+        "online": { "type": "boolean" },
+        "offline": { "type": "boolean" },
+        "containerDomId": { "type": "string" }
+      },
+      "oneOf": [{ "required": ["route"] }, { "required": ["routeRegex"] }]
+    },
+    "extension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "component"],
+      "properties": {
+        "name": { "type": "string" },
+        "component": { "type": "string" },
+        "slot": { "type": "string" },
+        "slots": { "type": "array", "items": { "type": "string" } },
+        "online": { "type": "boolean" },
+        "offline": { "type": "boolean" },
+        "order": { "type": "number" },
+        "privileges": {
+          "oneOf": [{ "type": "string" }, { "type": "array", "items": { "type": "string" } }]
+        },
+        "displayExpression": { "type": "string" },
+        "featureFlag": { "type": "string" },
+        "meta": { "type": "object" }
+      }
+    },
+    "featureFlag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["flagName", "label", "description"],
+      "properties": {
+        "flagName": { "type": "string" },
+        "label": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "modal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "component"],
+      "properties": { "name": { "type": "string" }, "component": { "type": "string" } }
+    },
+    "workspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "title", "type", "groups", "component"],
+      "properties": {
+        "name": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string" },
+        "canHide": { "type": "boolean" },
+        "canMaximize": { "type": "boolean" },
+        "width": { "enum": ["narrow", "wider", "extra-wide"] },
+        "preferredWindowSize": { "enum": ["maximized", "hidden", "normal"] },
+        "groups": { "type": "array", "items": { "type": "string" } },
+        "component": { "type": "string" }
+      }
+    },
+    "workspaceGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": { "name": { "type": "string" }, "members": { "type": "array", "items": { "type": "string" } } }
+    },
+    "workspaceGroup2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string" },
+        "closeable": { "type": "boolean" },
+        "overlay": { "type": "boolean" },
+        "persistence": { "enum": ["app-wide", "closable"] },
+        "scopePattern": { "type": "string" }
+      }
+    },
+    "workspaceWindow2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "group"],
+      "properties": {
+        "name": { "type": "string" },
+        "group": { "type": "string" },
+        "icon": { "type": "string" },
+        "canMaximize": { "type": "boolean" },
+        "order": { "type": "number" },
+        "width": { "enum": ["narrow", "wider", "extra-wide"] }
+      }
+    },
+    "workspace2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "component", "window"],
+      "properties": {
+        "name": { "type": "string" },
+        "component": { "type": "string" },
+        "window": { "type": "string" }
+      }
+    }
+  }
+}

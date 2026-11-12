@@ -1591,6 +1591,7 @@ __metadata:
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.21"
     "@vitest/coverage-v8": "npm:^4.1.2"
+    ajv: "npm:^8.17.1"
     concurrently: "npm:^9.2.1"
     cross-env: "npm:^10.1.0"
     dayjs: "npm:^1.11.13"
@@ -7921,7 +7922,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ajv@npm:^8.0.0, ajv@npm:^8.20.0":
+"ajv@npm:^8.0.0, ajv@npm:^8.17.1, ajv@npm:^8.20.0":
   version: 8.20.0
   resolution: "ajv@npm:8.20.0"
   dependencies:

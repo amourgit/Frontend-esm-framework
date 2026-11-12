@@ -1,0 +1,46 @@
+{
+  "$schema": "https://egen.alpha.vercel.com/routes.schema.json",
+  "pages": [
+    {
+      "component": "root",
+      "route": "home",
+      "online": true,
+      "offline": false
+    }
+  ],
+  "extensions": [
+    {
+      "name": "home-nav-accueil",
+      "slot": "topbar-nav-slot",
+      "component": "navEntry",
+      "online": true,
+      "offline": false,
+      "order": 0,
+      "meta": {
+        "section": "home",
+        "sectionLabel": "Accueil",
+        "label": "Accueil",
+        "route": "home"
+      }
+    },
+    {
+      "name": "home-app-toolbar",
+      "slot": "topbar-l2-left-slot",
+      "component": "appToolbar",
+      "online": true,
+      "offline": false,
+      "order": 0
+    },
+    {
+      "name": "home-social-links-section",
+      "slot": "home-sections",
+      "component": "homeSocialLinksSection",
+      "online": true,
+      "offline": false,
+      "order": 90,
+      "meta": {
+        "title": "Nous suivre"
+      }
+    }
+  ]
+}

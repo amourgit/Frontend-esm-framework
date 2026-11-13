@@ -717,7 +717,7 @@ Ne jamais inclure un jeton ou une valeur du coffre dans `message`.
 
 **④ Écran d'incompatibilité du Host — FAIT (fusionné #124, CI verte)** : aujourd'hui un Host manquant/incompatible est seulement journalisé (`setupPlatform` dans `shell/src/run.ts`). À faire : écran bloquant explicite (« mise à jour de l'application requise »).
 
-**⑤ H3 / H4 FAITS (publint et attw verts sur tous les paquets, `esm-platform` inclus ; changesets E3 #127 ; `ensure-shell-rebuild --check` couvre `esm-platform`/`esm-tenant`, déjà dépendances du shell). H5 : implémenté dans la PR `docs/h5-cibles-migration` (`docs/cibles-de-build.md`, `MIGRATION.md` § 3, READMEs `esm-tenant` et shell). Reste H6 (CI : build des 3 cibles avec contrôle des règles B1)** : voir les sections H du document ; H3 (publint/attw/pack) est déjà exercé par le job CI « Vérification pré-publication ».
+**⑤ H3 / H4 FAITS (publint et attw verts sur tous les paquets, `esm-platform` inclus ; changesets E3 #127 ; `ensure-shell-rebuild --check` couvre `esm-platform`/`esm-tenant`, déjà dépendances du shell). H5 : implémenté dans la PR `docs/h5-cibles-migration` (`docs/cibles-de-build.md`, `MIGRATION.md` § 3, READMEs `esm-tenant` et shell). H6 FAIT (fusionné #129 : `yarn verify:targets` construit web/android/ios, contrôle les artefacts et vérifie que 6 violations B1 font échouer le build ; branché dans le job CI « Cibles de build et E2E natif simulé »). H5 fusionné (#128). Phase H terminée ; reste #119 (release du bot), puis X-1 à X-4 (dépendances externes)** : voir les sections H du document ; H3 (publint/attw/pack) est déjà exercé par le job CI « Vérification pré-publication ».
 
 ### 7.3 Ce qui dépend d'autres briques (hors de ce dépôt)
 | ID | Besoin | État |

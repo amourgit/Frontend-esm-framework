@@ -1,5 +1,16 @@
 # @egen-civitas/esm-tenant
 
+## 1.1.0
+
+### Minor Changes
+
+- 5cbc37e: Sécurité (E3, règle N5) : en cible native, la stratégie de résolution `jwt` ne lit plus jamais de jeton dans `localStorage` / `sessionStorage` du WebView (les jetons vivent dans le Host). Le tenant vient alors des autres stratégies (`static`, `subdomain`…). `@egen-civitas/esm-globals` (`^2.1.0`) devient peer dépendance (`isNativeTarget`). Web inchangé.
+
+### Patch Changes
+
+- Updated dependencies [cc6cd1a]
+  - @egen-civitas/esm-globals@2.4.0
+
 ## 1.0.2
 
 ### Patch Changes

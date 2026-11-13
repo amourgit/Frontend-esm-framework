@@ -1,5 +1,17 @@
 # @egen-civitas/esm-routes
 
+## 1.3.0
+
+### Minor Changes
+
+- 12be954: Schéma JSON de `routes.json` (F3) publié avec le package (`@egen-civitas/esm-routes/routes.schema.json`) : pages, extensions, modals, workspaces, feature flags, dépendances backend, et les champs du contrat multiplateforme (`platforms`, `requiredCapabilities`, `frameworkRange`). Rejette les clés inconnues.
+- cc6cd1a: Compatibilité vérifiable entre apps et framework (F4) : `routes.json` est estampillé avec `frameworkRange` (peerDependency valide sur `esm-framework`) ; `registerApp` écarte au démarrage, en le journalisant, une app dont la plage n'est pas satisfaite par le framework du shell. `esm-globals` : type `BuildManifest` et `validateBuildManifest()`. Une app sans `frameworkRange` (ancien format) reste acceptée.
+
+### Patch Changes
+
+- Updated dependencies [cc6cd1a]
+  - @egen-civitas/esm-globals@2.4.0
+
 ## 1.2.0
 
 ### Minor Changes

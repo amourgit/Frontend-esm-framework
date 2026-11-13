@@ -11,8 +11,8 @@ const shell = join(root, 'packages/shell/esm-app-shell');
 export const API_ORIGIN = 'https://api.test.local';
 
 const target = process.argv[2] ?? 'android';
-if (!['android', 'web'].includes(target)) {
-  console.error(`[e2e] cible inconnue : ${target} (android | web)`);
+if (!['android', 'ios', 'web'].includes(target)) {
+  console.error(`[e2e] cible inconnue : ${target} (android | ios | web)`);
   process.exit(1);
 }
 const out = join(root, 'e2e/.artifact', target);
@@ -34,7 +34,7 @@ const env = {
   EGEN_ESM_IMPORTMAP: JSON.stringify({ imports }),
   EGEN_ROUTES: JSON.stringify(routes),
   // Web : pas de EGEN_TARGET (comportement antérieur, règle R2) et API relative, comme en production Web.
-  ...(target === 'web' ? { EGEN_API_URL: '/egen' } : { EGEN_TARGET: 'android', EGEN_API_URL: API_ORIGIN }),
+  ...(target === 'web' ? { EGEN_API_URL: '/egen' } : { EGEN_TARGET: target, EGEN_API_URL: API_ORIGIN }),
 };
 if (target === 'web') delete env.EGEN_TARGET;
 

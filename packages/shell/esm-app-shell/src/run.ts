@@ -60,6 +60,7 @@ import './events.js';
 import { appName, getCoreExtensions } from './ui/index.js';
 import { setupCoreConfig } from './core-config.js';
 import { bindPlatformSession } from './native-session.js';
+import { HostIncompatibleError, isHostIncompatible, renderHostIncompatibleScreen } from './host-incompatible.js';
 import { setupOfflineMode } from './offline-setup.js';
 
 // =============================================================================
@@ -126,6 +127,10 @@ const REGISTRATION_PROMISES = Symbol('egen_registration_promises');
 function setupPlatform() {
   return registerPlatformCapabilities().catch((error) => {
     console.error('[egen] Les capacités de plateforme ne sont pas disponibles :', error);
+    // Host natif manquant ou incompatible : on n'enregistre AUCUNE app, le démarrage s'arrête sur un écran bloquant.
+    if (isHostIncompatible(error)) {
+      throw error instanceof HostIncompatibleError ? error : new HostIncompatibleError(error.message);
+    }
   });
 }
 
@@ -195,6 +200,10 @@ async function runShell() {
 
 function handleInitFailure(e: Error) {
   console.error(e);
+  if (isHostIncompatible(e)) {
+    renderHostIncompatibleScreen(e);
+    return;
+  }
   renderFatalErrorPage(e);
 }
 

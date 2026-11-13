@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { resolveActiveTenantId, persistActiveTenant, clearPersistedTenant, storeHeaderTenantId } from '../context/resolver';
 
 // =============================================================================
@@ -171,6 +171,51 @@ describe('resolveActiveTenantId — jwt', () => {
   it('retourne undefined si aucun token présent', () => {
     const result = resolveActiveTenantId({ mode: 'multi', resolutionOrder: ['jwt'] });
     expect(result).toBeUndefined();
+  });
+});
+
+describe('resolveActiveTenantId — jwt en natif (règle N5)', () => {
+  const tokenKeys = ['egen:session:token', 'token'];
+
+  afterEach(() => {
+    delete (window as any).egenTarget;
+    vi.restoreAllMocks();
+  });
+
+  it.each(['android', 'ios'])("n'ouvre jamais les clés de jeton du stockage en cible %s", (target) => {
+    (window as any).egenTarget = target;
+    const payload = btoa(JSON.stringify({ tenantId: 'acme' }));
+    const jwt = `eyJhbGciOiJIUzI1NiJ9.${payload}.signature`;
+    window.localStorage.setItem('egen:session:token', jwt);
+    window.sessionStorage.setItem('egen:session:token', jwt);
+    window.localStorage.setItem('token', jwt);
+    const reads: string[] = [];
+    const lsGet = vi.spyOn(Storage.prototype, 'getItem').mockImplementation((k: string) => {
+      reads.push(k);
+      return null;
+    });
+
+    const result = resolveActiveTenantId({ mode: 'multi', resolutionOrder: ['jwt'] });
+
+    expect(result).toBeUndefined();
+    expect(reads.filter((k) => tokenKeys.includes(k))).toEqual([]);
+    lsGet.mockRestore();
+  });
+
+  it('web (cible absente) : comportement inchangé', () => {
+    const payload = btoa(JSON.stringify({ tenantId: 'acme' }));
+    window.localStorage.setItem('egen:session:token', `eyJhbGciOiJIUzI1NiJ9.${payload}.signature`);
+    expect(resolveActiveTenantId({ mode: 'multi', resolutionOrder: ['jwt'] })).toEqual({
+      tenantId: 'acme',
+      source: 'jwt',
+    });
+  });
+
+  it('natif : les autres stratégies (static) restent utilisables', () => {
+    (window as any).egenTarget = 'android';
+    expect(
+      resolveActiveTenantId({ mode: 'multi', resolutionOrder: ['jwt', 'static'], defaultTenantId: 'mef' }),
+    ).toEqual({ tenantId: 'mef', source: 'static' });
   });
 });
 

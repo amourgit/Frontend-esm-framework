@@ -1717,6 +1717,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-tenant@workspace:packages/framework/esm-tenant"
   dependencies:
+    "@egen-civitas/esm-globals": "npm:^2.1.0"
     "@egen-civitas/esm-state": "npm:^1.0.0"
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.21"
@@ -1728,6 +1729,7 @@ __metadata:
     typescript: "npm:^5.8.3"
     vitest: "npm:^4.1.2"
   peerDependencies:
+    "@egen-civitas/esm-globals": ^2.1.0
     "@egen-civitas/esm-state": ^1.0.0
     react: ^18.0.0
     rxjs: 7.x

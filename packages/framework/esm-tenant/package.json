@@ -31,11 +31,13 @@
     "@egen-civitas/esm-state": "^1.0.0"
   },
   "peerDependencies": {
+    "@egen-civitas/esm-globals": "^2.1.0",
     "@egen-civitas/esm-state": "^1.0.0",
     "react": "^18.0.0",
     "rxjs": "7.x"
   },
   "devDependencies": {
+    "@egen-civitas/esm-globals": "^2.1.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@vitest/coverage-v8": "^4.1.2",

@@ -20,6 +20,7 @@
 //  7. static     — config globale window / env
 // ============================================================================
 
+import { isNativeTarget } from '@egen-civitas/esm-globals';
 import type { TenantId, TenantResolutionStrategy, TenantSystemConfig } from '../types.js';
 import { isLocalhostOrIp, inferRootDomain, extractSubdomain } from '../utils/domain-utils.js';
 
@@ -118,6 +119,9 @@ function resolveByHeader(storageKey: string): TenantId | undefined {
  * (c'est le rôle du backend, à chaque requête authentifiée).
  */
 function resolveByJwt(jwtConfig?: TenantSystemConfig['jwtConfig']): TenantId | undefined {
+  // Natif : règle N5 — aucun jeton dans le stockage du WebView (les jetons vivent dans le Host, capacité
+  // `session`). On ne lit donc JAMAIS ces clés ; le tenant vient des autres stratégies (static, subdomain…).
+  if (isNativeTarget()) return undefined;
   const claim = jwtConfig?.claim ?? 'tenantId';
   const token = readTokenFromStorage();
   if (!token) return undefined;

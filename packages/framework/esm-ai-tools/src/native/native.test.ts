@@ -248,6 +248,24 @@ describe('switchTenantTool', () => {
     });
   }
 
+  it.each(['android', 'ios'] as const)("%s : refuse de naviguer vers un sous-domaine distant (code distant dans le WebView)", async (target) => {
+    window.egenTarget = target;
+    try {
+      const { setupTenantSystem } = await import('@egen-civitas/esm-tenant');
+      setupTenantSystem({ mode: 'multi', rootDomain: 'egen.gabon.gov.ga' });
+      setHostname('mef.egen.gabon.gov.ga');
+
+      const result = await switchTenantTool.execute({ args: { tenantSlug: 'lycee-lb' } } as any);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain("application mobile");
+      expect(result.data).toBeUndefined();
+      expect((window.location as { href?: string }).href).toBeUndefined(); // jamais assigné : aucune navigation
+    } finally {
+      delete (window as { egenTarget?: unknown }).egenTarget;
+    }
+  });
+
   it('utilise le rootDomain explicitement configuré (setupTenantSystem) plutôt que l\'heuristique', async () => {
     const { setupTenantSystem } = await import('@egen-civitas/esm-tenant');
     setupTenantSystem({ mode: 'multi', rootDomain: 'egen.gabon.gov.ga' });

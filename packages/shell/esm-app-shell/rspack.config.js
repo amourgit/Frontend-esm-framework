@@ -26,6 +26,7 @@ const sass = require('sass-embedded');
 const semver = require('semver');
 const { removeTrailingSlash, getTimestamp } = require('./tools/helpers');
 const { resolveTarget, targetWindowBridge } = require('./tools/targets');
+const { assertSafeBridgeKeys } = require('./tools/env-bridge');
 const { resolveBranding } = require('./tools/brand');
 const { buildHeadBootstrap, buildBodyBootstrap, bootstrapFileName, EmitAssetsPlugin } = require('./tools/bootstrap');
 
@@ -66,7 +67,7 @@ const egenBranding = resolveBranding(process.env, { defaultAssetsDir: resolve(__
  * underscores sont supprimés — comportement hérité, pas idéal mais il faut
  * rester cohérent des deux côtés).
  */
-// Liste EXACTE des variables lues par esm-ai-config/src/defaults.ts (garde-fou : env-bridge.test.ts).
+// Liste EXACTE des variables lues par esm-ai-config/src/defaults.ts (garde-fou : tools/env-bridge.js — le build échoue).
 // Tout ce qui est ajouté ici est embarqué en clair dans le bundle navigateur : jamais de secret.
 const EGEN_AI_ENV_KEYS = [
   'EGEN_AI_ENABLED',
@@ -92,6 +93,8 @@ const EGEN_AI_ENV_KEYS = [
   'EGEN_AI_CHANNEL_ALLOWED_HOSTS',
   'EGEN_AI_DEBUG',
 ];
+
+assertSafeBridgeKeys('EGEN_AI_*', EGEN_AI_ENV_KEYS);
 
 function egenAiWindowKey(envKey) {
   return `egenAi${envKey.replace(/^EGEN_AI_/, '').replace(/_([A-Z])/g, (_, l) => l.toUpperCase())}`;
@@ -130,6 +133,11 @@ const EGEN_TENANT_ENV_TO_WINDOW_KEY = {
   EGEN_TENANT_JWT_CLAIM: 'egenTenantJwtClaim',
   EGEN_TENANT_ROOT_DOMAIN: 'egenTenantRootDomain',
 };
+
+assertSafeBridgeKeys('EGEN_TENANT_*', [
+  ...Object.keys(EGEN_TENANT_ENV_TO_WINDOW_KEY),
+  ...Object.values(EGEN_TENANT_ENV_TO_WINDOW_KEY),
+]);
 
 const egenTenantWindowOverrides = Object.entries(EGEN_TENANT_ENV_TO_WINDOW_KEY).reduce((acc, [envKey, winKey]) => {
   if (process.env[envKey] !== undefined) {

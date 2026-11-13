@@ -54,6 +54,7 @@
   },
   "peerDependencies": {
     "@egen-civitas/esm-api": "^3.0.0",
+    "@egen-civitas/esm-globals": "^2.0.0",
     "@egen-civitas/esm-state": "^1.0.3",
     "rxjs": "7.x",
     "swr": "2.x"
@@ -63,6 +64,7 @@
     "@egen-civitas/esm-ai-context": "^1.0.3",
     "@egen-civitas/esm-ai-events": "^1.2.0",
     "@egen-civitas/esm-api": "^3.0.0",
+    "@egen-civitas/esm-globals": "^2.3.0",
     "@egen-civitas/esm-state": "^1.0.3",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",

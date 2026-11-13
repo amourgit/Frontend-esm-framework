@@ -92,7 +92,29 @@ export function MonComposant() {
 
 ---
 
-## 3. Avantages de cette architecture
+## 3. Cibles et plateformes (web, android, ios)
+
+Le shell peut être construit pour le Web ou pour une application native (WebView dans un Host). Une app métier choisit **où** elle s'exécute dans son `routes.json` (schéma : `packages/framework/esm-routes/schema/routes.schema.json`).
+
+```json
+{
+  "$schema": "https://egen.alpha.vercel.com/routes.schema.json",
+  "platforms": ["web", "android"],
+  "requiredCapabilities": ["camera"],
+  "pages": [{ "component": "root", "route": "scan" }]
+}
+```
+
+- **`platforms`** : cibles sur lesquelles l'app est enregistrée (`web`, `android`, `ios`). Absent ou vide = toutes. Une app non éligible est écartée (ni pages, ni extensions, ni modals, ni workspaces) et journalisée ; le démarrage n'échoue pas. **Le Web est une cible comme une autre** : une app qui liste `platforms` doit y inclure `web`.
+- **`requiredCapabilities`** : capacités de plateforme indispensables (`session`, `secureStorage`, `openExternal`, `lifecycle`, `permissions`, `files`, `camera`, `push`, `biometric`…). Si l'une manque dans l'environnement courant, l'app n'est pas enregistrée.
+- **`frameworkRange`** : estampillé au build à partir des `peerDependencies` ; ne pas l'écrire à la main. Une app dont la plage n'est pas satisfaite par le framework du shell est écartée.
+- En natif, tester la présence d'une capacité (`platform.has('camera')`) plutôt que la cible ; ne jamais lire de jeton dans `localStorage`/`sessionStorage` (voir `docs/stockage.md`).
+
+Détail des cibles de build : `docs/cibles-de-build.md`.
+
+---
+
+## 4. Avantages de cette architecture
 
 1. **Isolation stricte** : Le framework évolue de manière autonome sans risquer de casser des projets métier spécifiques.
 2. **Réutilisabilité multi-projets** : Plusieurs équipes ou projets peuvent partager le même core framework via NPM.

@@ -31,6 +31,10 @@ Dans l'architecture actuelle (`Frontend-esm-framework` / `Frontend-esm-core` sé
 | `EGEN_ROUTES_URL` | URL à fetcher au runtime si pas de valeur figée. | `${spaPath}/routes.registry.json` |
 | `EGEN_ESM_CORE_APPS_DIR` | Dossier scanné pour la surcharge locale (dev uniquement). | `../../apps` relatif à ce package |
 
+## Cibles de build (web, android, ios)
+
+`EGEN_TARGET` choisit la cible (défaut `web`, comportement antérieur inchangé). En natif, le build exige notamment `EGEN_ENV=production`, une `EGEN_API_URL` en `https://`, une import map et des routes **inline** non vides, et pose une CSP stricte. Un Host natif manquant ou incompatible affiche un écran bloquant « mise à jour requise ». Détail : `docs/cibles-de-build.md`.
+
 ## Identité visuelle : neutre par défaut, fournie par le projet client
 
 Le shell est **générique** : il n'embarque aucun logo ni aucune identité de marque. Il livre seulement un favicon et une icône d'application installable (PWA) volontairement neutres (`src/assets/favicon.ico` et `src/assets/icon-512.png`). Le projet client fournit les siens, sans rien modifier dans le framework :

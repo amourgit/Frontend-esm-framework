@@ -717,7 +717,7 @@ Ne jamais inclure un jeton ou une valeur du coffre dans `message`.
 
 **④ Écran d'incompatibilité du Host — FAIT (fusionné #124, CI verte)** : aujourd'hui un Host manquant/incompatible est seulement journalisé (`setupPlatform` dans `shell/src/run.ts`). À faire : écran bloquant explicite (« mise à jour de l'application requise »).
 
-**⑤ H3 / H4 / H5 / H6** (H4 en cours : changesets E3 et écran d'incompatibilité ajoutés par la PR `chore/changesets-e3-host`) : voir les sections H du document ; H3 (publint/attw/pack) est déjà exercé par le job CI « Vérification pré-publication ».
+**⑤ H3 / H4 FAITS (publint et attw verts sur tous les paquets, `esm-platform` inclus ; changesets E3 #127 ; `ensure-shell-rebuild --check` couvre `esm-platform`/`esm-tenant`, déjà dépendances du shell). H5 : implémenté dans la PR `docs/h5-cibles-migration` (`docs/cibles-de-build.md`, `MIGRATION.md` § 3, READMEs `esm-tenant` et shell). Reste H6 (CI : build des 3 cibles avec contrôle des règles B1)** : voir les sections H du document ; H3 (publint/attw/pack) est déjà exercé par le job CI « Vérification pré-publication ».
 
 ### 7.3 Ce qui dépend d'autres briques (hors de ce dépôt)
 | ID | Besoin | État |

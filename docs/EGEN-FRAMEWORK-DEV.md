@@ -717,7 +717,7 @@ Ne jamais inclure un jeton ou une valeur du coffre dans `message`.
 
 **④ Écran d'incompatibilité du Host — FAIT (fusionné #124, CI verte)** : aujourd'hui un Host manquant/incompatible est seulement journalisé (`setupPlatform` dans `shell/src/run.ts`). À faire : écran bloquant explicite (« mise à jour de l'application requise »).
 
-**⑤ H3 / H4 / H5 / H6** : voir les sections H du document ; H3 (publint/attw/pack) est déjà exercé par le job CI « Vérification pré-publication ».
+**⑤ H3 / H4 / H5 / H6** (H4 en cours : changesets E3 et écran d'incompatibilité ajoutés par la PR `chore/changesets-e3-host`) : voir les sections H du document ; H3 (publint/attw/pack) est déjà exercé par le job CI « Vérification pré-publication ».
 
 ### 7.3 Ce qui dépend d'autres briques (hors de ce dépôt)
 | ID | Besoin | État |

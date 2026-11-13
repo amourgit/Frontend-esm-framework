@@ -47,7 +47,7 @@ jobs:
         run: node --test scripts/ensure-shell-rebuild.test.mjs
 
   e2e-natif:
-    name: E2E natif simulé (H2)
+    name: Cibles de build et E2E natif simulé (H2, H6)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -68,11 +68,10 @@ jobs:
       - name: Build all packages
         run: yarn build
 
-      - name: Build de l'artefact natif de test (android)
-        run: yarn e2e:build android
-
-      - name: Build de l'artefact web de test (scénario 7)
-        run: yarn e2e:build web
+      - name: Cibles de build web/android/ios et règles B1 (H6)
+        # Construit les 3 cibles, contrôle les artefacts (CSP, pont egenTarget, aucun script distant/inline) et vérifie
+        # que les violations des règles natives font échouer le build. Laisse les artefacts web et android pour l'e2e.
+        run: yarn verify:targets
 
       - name: Install Chromium
         run: yarn playwright install --with-deps chromium

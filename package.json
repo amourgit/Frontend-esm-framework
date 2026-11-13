@@ -28,7 +28,8 @@
     "verify:attw": "node scripts/verify-attw.mjs",
     "verify:pack": "node scripts/verify-pack-install.mjs",
     "e2e:build": "node e2e/build-artifact.mjs",
-    "e2e": "playwright test --config e2e/playwright.config.mjs"
+    "e2e": "playwright test --config e2e/playwright.config.mjs",
+    "verify:targets": "node scripts/verify-build-targets.mjs"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",

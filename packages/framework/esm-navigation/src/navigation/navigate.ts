@@ -1,7 +1,8 @@
 /** @module @category Navigation */
 import { navigateToUrl } from 'single-spa';
 import { interpolateUrl } from './interpolate-string.js';
-import type {} from '@egen-civitas/esm-globals';
+import { isNativeTarget } from '@egen-civitas/esm-globals';
+import { getPlatform } from '@egen-civitas/esm-platform';
 
 function trimTrailingSlash(str: string) {
   return str.replace(/\/$/, '');
@@ -53,6 +54,15 @@ export function navigate({ to, templateParams }: NavigateOptions): void {
 
   if (isSpaPath) {
     navigateToUrl(target);
+  } else if (isNativeTarget() && /^[a-z][a-z0-9+.-]*:/i.test(target)) {
+    // Natif : `location.assign` vers une URL absolue REMPLACERAIT le SPA dans le WebView (l'app disparaît et du code
+    // distant non revu s'y exécuterait). La sortie passe par le Host, qui n'autorise que https:, mailto: et tel: ;
+    // tout autre schéma (javascript:, data:, file:…) est refusé et journalisé.
+    getPlatform()
+      .openExternal.open(target)
+      .catch((error: unknown) =>
+        console.error(`[egen-navigation] Navigation externe refusée vers "${target}" :`, error),
+      );
   } else {
     window.location.assign(target);
   }

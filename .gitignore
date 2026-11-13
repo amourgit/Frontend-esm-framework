@@ -96,3 +96,6 @@ e2e/storageState.json
 packages/framework/esm-ai-framework/mock.js
 packages/framework/esm-ai-framework/mock.d.ts
 packages/framework/esm-ai-framework/mock.d.ts.map
+
+# Artefact natif construit pour l'e2e (H2)
+e2e/.artifact/

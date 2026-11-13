@@ -1,4 +1,4 @@
-// Serveur statique minimal pour l'artefact natif : sert `root` sous `/app` (chemin public natif constant).
+// Serveur statique minimal pour un artefact du shell : sert `root` sous `base` (natif : `/app` ; web : `/egen-civitas/spa`).
 import { createServer } from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
@@ -21,7 +21,7 @@ const TYPES = {
  * (fixtures ajoutées à l'artefact sans le modifier).
  * @returns {Promise<{ origin: string, requests: string[], close: () => Promise<void> }>}
  */
-export async function startStaticServer({ root, extra = {} }) {
+export async function startStaticServer({ root, extra = {}, base = '/app' }) {
   const requests = [];
   const server = createServer(async (req, res) => {
     const url = new URL(req.url ?? '/', 'http://localhost');
@@ -29,11 +29,11 @@ export async function startStaticServer({ root, extra = {} }) {
     const path = decodeURIComponent(url.pathname);
     let file = extra[path];
     if (!file) {
-      if (!path.startsWith('/app/') && path !== '/app') {
+      if (!path.startsWith(`${base}/`) && path !== base) {
         res.writeHead(404).end('not found');
         return;
       }
-      const relative = normalize(path.slice('/app'.length)).replace(/^(\.\.[/\\])+/, '');
+      const relative = normalize(path.slice(base.length)).replace(/^(\.\.[/\\])+/, '');
       // Repli SPA : une URL de route (sans extension) sert index.html ; une ressource absente reste un vrai 404.
       file = join(root, relative === '/' || relative === '.' || !extname(relative) ? 'index.html' : relative);
     }

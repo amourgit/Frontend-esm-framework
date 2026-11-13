@@ -1,5 +1,20 @@
 # @egen-civitas/esm-ai-tools
 
+## 1.5.0
+
+### Minor Changes
+
+- 42d5a4e: Sécurité (G1, G3) : le build du shell échoue si un nom des ponts `EGEN_AI_*` / `EGEN_TENANT_*` évoque un secret. En natif, `navigate()` envoie les URL absolues par `platform.openExternal` au lieu de remplacer le SPA dans le WebView, et `switch_tenant` (changement d'établissement par sous-domaine) est refusé. Web inchangé.
+
+### Patch Changes
+
+- Updated dependencies [5cbc37e]
+- Updated dependencies [cc6cd1a]
+- Updated dependencies [42d5a4e]
+  - @egen-civitas/esm-tenant@1.1.0
+  - @egen-civitas/esm-globals@2.4.0
+  - @egen-civitas/esm-navigation@1.1.0
+
 ## 1.4.4
 
 ### Patch Changes

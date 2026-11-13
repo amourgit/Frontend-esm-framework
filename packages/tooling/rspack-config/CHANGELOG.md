@@ -1,5 +1,11 @@
 # @egen-civitas/rspack-config
 
+## 1.2.0
+
+### Minor Changes
+
+- cc6cd1a: Compatibilité vérifiable entre apps et framework (F4) : `routes.json` est estampillé avec `frameworkRange` (peerDependency valide sur `esm-framework`) ; `registerApp` écarte au démarrage, en le journalisant, une app dont la plage n'est pas satisfaite par le framework du shell. `esm-globals` : type `BuildManifest` et `validateBuildManifest()`. Une app sans `frameworkRange` (ancien format) reste acceptée.
+
 ## 1.1.0
 
 ### Minor Changes

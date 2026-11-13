@@ -69,7 +69,10 @@ jobs:
         run: yarn build
 
       - name: Build de l'artefact natif de test (android)
-        run: yarn e2e:build
+        run: yarn e2e:build android
+
+      - name: Build de l'artefact web de test (scénario 7)
+        run: yarn e2e:build web
 
       - name: Install Chromium
         run: yarn playwright install --with-deps chromium

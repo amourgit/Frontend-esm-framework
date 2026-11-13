@@ -713,7 +713,7 @@ Ne jamais inclure un jeton ou une valeur du coffre dans `message`.
 
 **③ H2 — e2e SPA statique « natif simulé »** (Playwright est déjà installé à la racine) : servir un artefact assemblé minimal sous `/app` (origine ≠ API) avec `createMockHost` (`esm-platform/testing`) injecté comme `window.egenHostBridge`. Scénarios : démarrage sans 404 ni requête hors origine hors API ; CSP sans violation ; handshake OK ⇒ apps filtrées par `platforms` ; handshake KO ⇒ écran d'incompatibilité **(pas encore écrit : c'est le reste de C5/F2 côté UI)** ; 401 ⇒ 1 refresh ⇒ rejeu ; overrides d'import map ignorés ; Web sans Host inchangé.
 
-**④ Écran d'incompatibilité du Host** : aujourd'hui un Host manquant/incompatible est seulement journalisé (`setupPlatform` dans `shell/src/run.ts`). À faire : écran bloquant explicite (« mise à jour de l'application requise »).
+**④ Écran d'incompatibilité du Host — RÉSERVÉ, en cours (session 2026-11-13, branche `feat/host-incompatible-screen`)** : aujourd'hui un Host manquant/incompatible est seulement journalisé (`setupPlatform` dans `shell/src/run.ts`). À faire : écran bloquant explicite (« mise à jour de l'application requise »).
 
 **⑤ H3 / H4 / H5 / H6** : voir les sections H du document ; H3 (publint/attw/pack) est déjà exercé par le job CI « Vérification pré-publication ».
 

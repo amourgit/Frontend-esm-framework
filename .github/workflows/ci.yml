@@ -46,6 +46,37 @@ jobs:
       - name: Tests des scripts de release
         run: node --test scripts/ensure-shell-rebuild.test.mjs
 
+  e2e-natif:
+    name: E2E natif simulé (H2)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build all packages
+        run: yarn build
+
+      - name: Build de l'artefact natif de test (android)
+        run: yarn e2e:build
+
+      - name: Install Chromium
+        run: yarn playwright install --with-deps chromium
+
+      - name: E2E (Host simulé)
+        run: yarn e2e
+
   verify-publish:
     name: Vérification pré-publication (publint + pack/install isolé)
     runs-on: ubuntu-latest

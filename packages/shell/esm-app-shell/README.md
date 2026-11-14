@@ -35,6 +35,10 @@ Dans l'architecture actuelle (`Frontend-esm-framework` / `Frontend-esm-core` sé
 
 `EGEN_TARGET` choisit la cible (défaut `web`, comportement antérieur inchangé). En natif, le build exige notamment `EGEN_ENV=production`, une `EGEN_API_URL` en `https://`, une import map et des routes **inline** non vides, et pose une CSP stricte. Un Host natif manquant ou incompatible affiche un écran bloquant « mise à jour requise ». Détail : `docs/cibles-de-build.md`.
 
+### Chemins et origine (B6)
+
+`setupPaths` (`src/paths.ts`) pose `egenBase` (= `apiUrl`) et `spaBase` (= `spaPath`) en lecture seule. **Natif** : `spaPath` vaut toujours `/app` et `apiUrl` doit être **absolue** (`https://…`), car l'origine du WebView n'est pas celle de l'API ; le build refuse une `EGEN_API_URL` qui ne l'est pas. **Web** : `apiUrl` reste relative (`/egen`), même origine. `resolveApiUrl()` construit les URL d'API absolues à partir de cette base (aucun second mécanisme de base de chemin).
+
 ## Identité visuelle : neutre par défaut, fournie par le projet client
 
 Le shell est **générique** : il n'embarque aucun logo ni aucune identité de marque. Il livre seulement un favicon et une icône d'application installable (PWA) volontairement neutres (`src/assets/favicon.ico` et `src/assets/icon-512.png`). Le projet client fournit les siens, sans rien modifier dans le framework :

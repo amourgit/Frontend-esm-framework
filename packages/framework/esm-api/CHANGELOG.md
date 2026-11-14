@@ -1,5 +1,11 @@
 # @egen-civitas/esm-api
 
+## 3.0.1
+
+### Patch Changes
+
+- b9d38a5: Un handshake natif refusé (`PlatformError` `INCOMPATIBLE`) n'est plus signalé comme erreur globale non interceptée par la récupération de la session : le shell affiche déjà son écran bloquant. Les autres échecs de session restent signalés.
+
 ## 3.0.0
 
 ### Major Changes

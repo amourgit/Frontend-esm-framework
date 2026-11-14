@@ -1,5 +1,11 @@
 # @egen-civitas/esm-platform
 
+## 1.3.1
+
+### Patch Changes
+
+- 97e3565: Documentation (C10) : table des codes d'erreur et schéma du pont Host ↔ WebView (protocole v1) dans le README ; état d'avancement des mocks corrigé.
+
 ## 1.3.0
 
 ### Minor Changes

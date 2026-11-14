@@ -592,6 +592,26 @@ describe('refetchCurrentUser', () => {
 
     expect(mockReportError).toHaveBeenCalled();
   });
+
+  it('ne signale pas comme erreur globale un handshake natif refusé (INCOMPATIBLE)', async () => {
+    mockReportError.mockClear();
+    const incompatible = Object.assign(new Error('Host manquant'), { name: 'PlatformError', code: 'INCOMPATIBLE' });
+    mockEgenFetch.mockRejectedValue(incompatible);
+
+    await expect(refetchCurrentUser()).rejects.toBe(incompatible);
+
+    expect(mockReportError).not.toHaveBeenCalled();
+    expect(sessionStore.getState().loaded).toBe(true);
+  });
+
+  it('signale toujours une autre PlatformError (TIMEOUT)', async () => {
+    mockReportError.mockClear();
+    mockEgenFetch.mockRejectedValue(Object.assign(new Error('t'), { name: 'PlatformError', code: 'TIMEOUT' }));
+
+    await expect(refetchCurrentUser()).rejects.toBeInstanceOf(Error);
+
+    expect(mockReportError).toHaveBeenCalled();
+  });
 });
 
 describe('setSessionLocation', () => {

@@ -1,5 +1,11 @@
 # @egen-civitas/esm-feature-flags
 
+## 1.0.3
+
+### Patch Changes
+
+- f56b2de: Premiers tests du paquet (enregistrement, persistance, restauration, abonnement, nettoyage) ; aucun changement de comportement.
+
 ## 1.0.2
 
 ### Patch Changes

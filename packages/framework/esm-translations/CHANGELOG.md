@@ -1,5 +1,11 @@
 # @egen-civitas/esm-translations
 
+## 1.0.5
+
+### Patch Changes
+
+- f56b2de: `translations/en.json` réaligné sur `src/translations.ts` (`openAnyway` : « Open anyway »). Premiers tests du paquet : le dictionnaire reste identique à `en.json`, `getCoreTranslation` et `translateFrom`.
+
 ## 1.0.4
 
 ### Patch Changes

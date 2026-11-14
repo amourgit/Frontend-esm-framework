@@ -1,5 +1,15 @@
 # @egen-civitas/esm-app-shell
 
+## 2.11.1
+
+### Patch Changes
+
+- ab4991b: Chemins (B6) : `setupPaths` est isolé dans `src/paths.ts` (comportement inchangé) avec `resolveApiUrl()` pour l'URL de session ; documentation du chemin `/app` et de l'URL d'API absolue en natif.
+- Updated dependencies [97e3565]
+- Updated dependencies [b9d38a5]
+  - @egen-civitas/esm-platform@1.3.1
+  - @egen-civitas/esm-api@3.0.1
+
 ## 2.11.0
 
 ### Minor Changes

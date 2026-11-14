@@ -60,6 +60,7 @@ import './events.js';
 import { appName, getCoreExtensions } from './ui/index.js';
 import { setupCoreConfig } from './core-config.js';
 import { bindPlatformSession } from './native-session.js';
+import { resolveApiUrl } from './paths.js';
 import { HostIncompatibleError, isHostIncompatible, renderHostIncompatibleScreen } from './host-incompatible.js';
 import { setupOfflineMode } from './offline-setup.js';
 
@@ -374,7 +375,7 @@ async function precacheGlobalStaticDependencies() {
 
   // By default, cache the session endpoint.
   // This ensures that a lot of user/session related functions also work offline.
-  const sessionPathUrl = new URL(`${window.egenBase}${restBaseUrl}/session`, window.location.origin).href;
+  const sessionPathUrl = resolveApiUrl(`${restBaseUrl}/session`);
 
   await messageEgenServiceWorker({
     type: 'registerDynamicRoute',

@@ -172,6 +172,32 @@ describe('appels de capacités', () => {
     expect(error.message.length).toBeLessThanOrEqual(500);
   });
 
+  it('G4 : aucun argument d’appel (jeton) ne se retrouve dans les erreurs, leur pile ou leur sérialisation', async () => {
+    const SECRET = 'Bearer SECRET-TOKEN-123';
+    const { client } = setup({
+      handlers: {
+        'secureStorage.get': () => {
+          throw Object.assign(new Error('refus du Host'), { code: 'DENIED' });
+        },
+      },
+    });
+    await client.hello();
+
+    const failures = [
+      // Hôte qui refuse
+      await rejection(client.call('secureStorage', 'get', { token: SECRET })),
+      // Arguments trop volumineux
+      await rejection(client.call('secureStorage', 'set', { token: SECRET.repeat(MAX_MESSAGE_LENGTH) })),
+      // Arguments non sérialisables
+      await rejection(client.call('secureStorage', 'set', { token: SECRET, self: (() => { const o: Record<string, unknown> = {}; o.o = o; return o; })() })),
+    ];
+
+    for (const error of failures) {
+      const everything = [error.message, error.stack ?? '', JSON.stringify({ ...error })].join('\n');
+      expect(everything).not.toContain('SECRET-TOKEN');
+    }
+  });
+
   it('les réponses arrivant dans le désordre sont associées au bon appel', async () => {
     const releases: Record<string, () => void> = {};
     const gate = (name: string) =>

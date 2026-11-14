@@ -64,6 +64,38 @@ describe('getPlatform() natif — handshake avec le Host', () => {
     await expect(platform.camera.capture()).rejects.toMatchObject({ code: 'UNAVAILABLE' });
   });
 
+  it('has() est faux AVANT le handshake (rien n’est supposé), puis suit ce que le Host annonce', async () => {
+    window.egenTarget = 'android';
+    createMockHost({ capabilities: { secureStorage: { v: 1 } } }).install();
+    const platform = getPlatform();
+
+    expect(platform.has('secureStorage')).toBe(false);
+    await platform.ready;
+    expect(platform.has('secureStorage')).toBe(true);
+  });
+
+  it('has() est faux pour une capacité annoncée dans une version inutilisable (0) ou invalide', async () => {
+    window.egenTarget = 'android';
+    createMockHost({
+      capabilities: { secureStorage: { v: 0 }, session: { v: 'x' }, lifecycle: { v: 1 } } as never,
+    }).install();
+    const platform = getPlatform();
+    await platform.ready;
+
+    expect(platform.has('secureStorage')).toBe(false);
+    expect(platform.has('session')).toBe(false);
+    expect(platform.has('lifecycle')).toBe(true);
+  });
+
+  it('has() reste faux partout quand le handshake échoue (Host incompatible)', async () => {
+    window.egenTarget = 'android';
+    createMockHost({ protocol: 99, capabilities: { secureStorage: { v: 1 } } }).install();
+    const platform = getPlatform();
+
+    await expect(platform.ready).rejects.toMatchObject({ code: 'INCOMPATIBLE' });
+    expect(platform.has('secureStorage')).toBe(false);
+  });
+
   it('registerPlatformCapabilities() attend le handshake natif', async () => {
     window.egenTarget = 'android';
     const host = createMockHost();

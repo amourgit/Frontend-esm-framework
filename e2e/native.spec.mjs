@@ -33,7 +33,7 @@ test.afterAll(async () => {
 
 /** Ouvre une page avec sondes (CSP, requêtes hors origine) et API simulée. `unauthorizedOnce` : 1er appel en 401. */
 async function open(page, { host, unauthorizedOnce = false, path = '/app/' } = {}) {
-  const probe = { apiCalls: [], offOrigin: [], consoleErrors: [] };
+  const probe = { apiCalls: [], offOrigin: [], consoleErrors: [], pageErrors: [] };
   const cors = { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*' };
   let rejected = false;
 
@@ -52,6 +52,7 @@ async function open(page, { host, unauthorizedOnce = false, path = '/app/' } = {
     if (origin !== server.origin && origin !== API && !request.url().startsWith('data:')) probe.offOrigin.push(request.url());
   });
   page.on('console', (message) => message.type() === 'error' && probe.consoleErrors.push(message.text()));
+  page.on('pageerror', (error) => probe.pageErrors.push(String(error)));
   await page.addInitScript(() => {
     window.__csp = [];
     document.addEventListener('securitypolicyviolation', (e) => window.__csp.push(`${e.violatedDirective} ${e.blockedURI}`));
@@ -113,6 +114,8 @@ test.describe('cible android, Host incompatible', () => {
     expect(await installed(page)).toEqual([]);
     expect(probe.apiCalls).toEqual([]);
     expect(await page.evaluate(() => window.__csp)).toEqual([]);
+    // L'écran bloquant est la seule réaction : l'échec de session ne remonte pas en erreur globale non interceptée.
+    expect(probe.pageErrors).toEqual([]);
   });
 
   test('(4b) Host absent : même écran', async ({ page }) => {

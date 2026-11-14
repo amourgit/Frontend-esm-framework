@@ -428,6 +428,14 @@ export async function setUserProperties(
   return refetchCurrentUser();
 }
 
+/**
+ * `true` pour l'échec de handshake natif (`PlatformError` de code `INCOMPATIBLE`). Reconnu par structure : `esm-api`
+ * ne dépend pas d'`esm-platform`.
+ */
+function isHostIncompatibleError(error: Error): boolean {
+  return error.name === 'PlatformError' && (error as Error & { code?: unknown }).code === 'INCOMPATIBLE';
+}
+
 function handleSessionResponse(result: Promise<FetchResponse<Session>>) {
   return new Promise<SessionStore>((resolve, reject) => {
     result
@@ -468,7 +476,11 @@ function handleSessionResponse(result: Promise<FetchResponse<Session>>) {
         console.warn(
           `[ESM] Session fetch failed (attempt ${consecutiveSessionFetchFailures}): ${wrappedError.message}`,
         );
-        reportError(wrappedError);
+        // Handshake natif refusé (`PlatformError` `INCOMPATIBLE`) : le shell affiche déjà son écran bloquant « mise à jour
+        // requise ». Le signaler aussi comme erreur globale non interceptée ne ferait que du bruit.
+        if (!isHostIncompatibleError(wrappedError)) {
+          reportError(wrappedError);
+        }
 
         // CRITICAL: set loaded:true so components stop triggering new fetches.
         // authenticated:false causes Single-SPA to redirect to the login page,

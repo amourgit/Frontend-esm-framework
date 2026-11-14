@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import type { CapabilityName } from '@egen-civitas/esm-globals';
 import { getPlatform, hasHostBridge, isPlatformError, PlatformError } from './index';
 import { createMockHost, createMockPlatform } from './testing';
+import { createWebCapabilities } from './registry';
 import type { Platform } from './types';
 
 type AnyRecord = Record<string, (...args: unknown[]) => unknown>;
@@ -177,6 +178,16 @@ describe('getPlatform() — environnement et handshake', () => {
     (window as unknown as Record<string, unknown>).egenHostBridge = bridge;
     expect(hasHostBridge()).toBe(false);
     await expect(getPlatform().ready).rejects.toMatchObject({ code: 'INCOMPATIBLE' });
+  });
+
+  it('web : has() est statique (capacités du navigateur), identique avant et après ready', async () => {
+    const platform = getPlatform();
+    const before = CAPABILITIES.filter((name) => platform.has(name));
+
+    await platform.ready;
+
+    expect(CAPABILITIES.filter((name) => platform.has(name))).toEqual(before);
+    expect(before.sort()).toEqual(Object.keys(createWebCapabilities()).sort());
   });
 
   it('en Web, un pont présent ne change rien (la cible vient du build, pas de la détection)', async () => {

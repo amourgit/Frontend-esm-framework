@@ -47,11 +47,14 @@ export function registerContext<T extends NonNullable<object> = NonNullable<obje
  */
 export function unregisterContext(namespace: string) {
   contextStore.setState((state) => {
-    if (namespace in state) {
-      delete state[namespace];
+    if (!(namespace in state)) {
+      return state;
     }
-    return state;
-  });
+    // Nouvel objet (et non une mutation en place) : sinon le store ne voit aucun changement et les abonnés ne sont jamais
+    // prévenus que l'espace de noms a disparu (ils reçoivent alors `null`).
+    const { [namespace]: _removed, ...rest } = state;
+    return rest;
+  }, true);
 }
 
 /**
@@ -115,12 +118,15 @@ export function subscribeToContext<T extends NonNullable<object> = NonNullable<o
   namespace: string,
   callback: ContextCallback<T>,
 ) {
-  let previous = getContext<T>(namespace);
+  // On compare des RÉFÉRENCES du store : `getContext()` renvoie une copie, qui serait toujours « différente » et
+  // provoquerait une notification parasite au premier changement d'un autre espace de noms.
+  const read = (state: EgenAppContext): Readonly<T> | null => (namespace in state ? (state[namespace] as T) : null);
+  let previous = read(contextStore.getState());
 
   callback(snapshot(previous));
 
   return contextStore.subscribe((state) => {
-    const current: Readonly<T> | null = namespace in state ? (state[namespace] as T) : null;
+    const current = read(state);
 
     if (current !== previous) {
       previous = current;

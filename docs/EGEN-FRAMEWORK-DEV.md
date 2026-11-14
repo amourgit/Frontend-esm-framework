@@ -626,7 +626,7 @@ Branche de référence : **`main`** · mise à jour : 2026-11-07.
 | Tâche | État | Preuve / remarque |
 |---|---|---|
 | A1 Baseline | **fait** | `docs/baseline-2026-11.md` (install 2 min 14 s, build 3 min 03 s, tests 8 min 24 s). Défauts préexistants consignés : lint (corrigé #103, 5 paquets gardent d'anciennes erreurs), `build.integration.test.ts` fragile sous charge |
-| A2 Inventaire du `dist` | à faire | |
+| A2 Inventaire du `dist` | **implémenté — PR `docs/a2-inventaire-dist`** | `docs/inventaire-dist.md` + `scripts/inventory-dist.mjs` (reproductible) : shell seul 33,0 Mo / 384 fichiers ; **12,2 Mo de `.map` livrés en natif**, **5,2 Mo de runtime Spline (`.wasm`) émis alors que `SplineScene` n'y est neutralisé qu'à l'exécution**, aucun service worker. Pistes consignées, non appliquées. |
 | A3 Contenu publié du shell | **fait** | #104 : shell publié avec ses sources de construction ; `esm-theme` (`src/themes`) et `esm-translations` (`translations/`) complétés ; projet vide + `egen build` OK ; `tools/publish-contract.test.ts` |
 | A4 Service worker | **fait** (décision) | non produit par personne (Workbox perdu) ; non supporté en l'état, désactivé en natif ; tâche Web dédiée à ouvrir |
 | B1 `targets.js` | **fait** | #105 + intégration : contrat `TargetConfig` de la doc (`importmapMode`, `routesMode`, `csp`), `isMeaningful*` dans `helpers.js` (une seule définition), `EGEN_ENV` **obligatoire** et déjà résolu, URL d'import map/routes interdites en natif ; 74 tests |

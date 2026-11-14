@@ -100,11 +100,49 @@ que ceux listés ci-dessous : le critère est vérifié par `src/registry.test.t
 | Erreurs typées | C2 | fait |
 | Détection de la cible, cohérence du Host (`hasHostBridge`, `ready`) | C3 | fait |
 | `getPlatform()` sûr par défaut (aucune capacité simulée) | C1 | fait |
-| `createMockPlatform` | C9 | partiel (`createMockHost` à faire avec C5) |
+| `createMockPlatform`, `createMockHost` | C9 | fait |
 | Adaptateur Web | C4 | fait |
 | Client de pont / protocole v1 (`createBridgeClient`, handshake, `getHostInfo`) | C5 | fait |
 | Registre et procédure d'ajout d'une capacité | C6 | fait |
 | Adaptateurs natifs P0 : `session`, `secureStorage`, `openExternal`, `lifecycle` | C7 | fait (P1/P2 à la demande d'une app) |
+
+## Codes d'erreur
+
+Toute capacité **rejette** avec `PlatformError` (jamais `null`, jamais une `Error` générique, jamais de texte localisé : les apps traduisent à partir du `code`). Champs : `code`, `message`, `retryable`, `capability`, `method`.
+
+| Code | Sens | Rejouable |
+|---|---|---|
+| `UNAVAILABLE` | La capacité n'existe pas dans cet environnement (Web, Host qui ne l'annonce pas). Tester `platform.has('…')` avant. | non |
+| `DENIED` | L'utilisateur ou le système a refusé (permission, biométrie…). | non |
+| `CANCELLED` | L'utilisateur a annulé l'opération. | non |
+| `INVALID_ARGS` | Arguments invalides côté appelant (nom d'appel, JSON non sérialisable, message trop volumineux : passer par une référence de fichier). | non |
+| `TIMEOUT` | Le Host n'a pas répondu dans le délai (30 s par défaut, réglable par appel). Une réponse tardive est ignorée. | **oui** |
+| `INCOMPATIBLE` | Handshake refusé : Host manquant, version de protocole non supportée, réponse incohérente. **Définitif** : le shell affiche l'écran « mise à jour requise ». | non |
+| `HOST_ERROR` | Échec du Host ou de l'envoi ; tout code inconnu du Host est ramené à celui-ci, avec un message tronqué (contenu non fiable). | selon `retryable` |
+
+Aucun argument d'appel (jeton compris) n'apparaît dans le message, la pile ou la sérialisation d'une `PlatformError` (règle G4, testée).
+
+## Pont Host ↔ WebView (protocole v1)
+
+Le Host injecte **avant tout script de la page** `window.egenHostBridge`, et le framework ne connaît rien d'autre du natif :
+
+```ts
+interface HostBridge {
+  send(json: string): void;                        // web → Host
+  subscribe(callback: (json: string) => void): void; // Host → web (appelé une seule fois par le client)
+}
+```
+
+Tous les messages sont du **JSON texte** de 256 Ko au plus, avec `p: "egen-host"` et la version `v` (le client sait parler `1`) :
+
+| Sens | Forme | Rôle |
+|---|---|---|
+| web → Host | `{ p, v, id, ns, m, a? }` | appel `ns.m(a)` ; `id` corrèle la réponse |
+| Host → web | `{ p, v, id, ok: true, r? }` | succès |
+| Host → web | `{ p, v, id, ok: false, e: { code?, message?, retryable? } }` | échec (contenu **non fiable**, validé côté client) |
+| Host → web | `{ p, v, ev, d? }` | événement (abonnements) |
+
+Le handshake est l'appel `host.hello` (`{ protocol: { min, max }, framework? }`) : le Host répond sa version de protocole, son nom, la plateforme et les capacités qu'il fournit (`{ nom: { v } }`). Toute valeur hors contrat (type, version, capacité inconnue) est ignorée ou rejetée `INCOMPATIBLE`, jamais interprétée. Un message qui n'est pas du protocole (JSON invalide, autre `p`, trop long) est ignoré sans exception.
 
 ## Tester sans Host
 `createMockHost()` (`@egen-civitas/esm-platform/testing`) simule `window.egenHostBridge` : handshake automatique, méthodes

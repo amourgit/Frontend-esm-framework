@@ -744,6 +744,9 @@ Ne jamais inclure un jeton ou une valeur du coffre dans `message`.
 - **Fusion automatique** (script d'agent, à recréer) : boucle sur `GET /commits/<sha>/check-runs` ; si un check est en échec ⇒ s'arrêter ; si ≥ 2 checks terminés en succès (*Build & Test*, *Vérification pré-publication*) ⇒ `PUT /pulls/<n>/merge` (`merge_method: merge`).
 - **Tests d'intégration `egen`** : toujours lancer le **fichier complet** (un test qui ne passe qu'isolé est un test qui fuit).
 - **Comparer le HTML Web avant/après** : masquer les hash de 16 hexadécimaux des bundles.
+- **Échec de CI intermittent** : lire les annotations (les journaux sont bloqués). Si c'est un test d'intégration d'`esm-framework` (`extension-config`), c'est un faux échec de délai : attendre la fin du run puis `POST /actions/runs/<id>/rerun-failed-jobs`. Depuis la PR `test/extension-config-timeout`, `setup-tests.ts` fixe `asyncUtilTimeout` à 5 s pour que cela n'arrive plus.
+- **Chromium sans CDN Playwright** : `npm i @sparticuz/chromium playwright-core`, puis `EGEN_E2E_CHROMIUM=<chemin renvoyé par chromium.executablePath()>` pour `yarn e2e`.
+- **Vérifier une publication npm** : le registre est l'autorité (`https://registry.npmjs.org/<paquet>`, `dist-tags.latest`) ; `npm view` peut rester en cache plusieurs minutes. La publication d'une release s'étale sur plusieurs minutes.
 
 ### 7.5 Règles permanentes (décisions de l'utilisateur)
 1. **Fusionner sans demander** toute PR dont la CI est verte ; **résoudre puis fusionner** les rouges.

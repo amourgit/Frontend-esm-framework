@@ -15,8 +15,13 @@ console.error = (...args: any[]) => {
 
 import { afterAll, afterEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { cleanup } from '@testing-library/react';
+import { cleanup, configure } from '@testing-library/react';
 import type {} from '@egen-civitas/esm-globals';
+
+// Les tests d'intégration (extensions, configuration, magasins liés) dépendent d'enchaînements asynchrones : le délai par
+// défaut de `waitFor`/`findBy*` (1 s) est trop court sous la charge de la CI et produisait des échecs intermittents
+// (ex. extension-config.test.tsx). Un test qui réussit n'attend jamais plus que nécessaire.
+configure({ asyncUtilTimeout: 5000 });
 
 declare global {
   interface Window {

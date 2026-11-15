@@ -5,7 +5,7 @@ Aucun ADR « À DÉCIDER » ne peut rester ouvert quand la phase qu'il bloque d�
 
 ---
 
-## ADR-001 — Licence : TokiForge (AGPL-3.0) dans un framework MPL-2.0 — **À DÉCIDER** (bloque DS-3 et toute release)
+## ADR-001 — Licence : TokiForge (AGPL-3.0) dans un framework MPL-2.0 — **Acceptée : option A (accepter l'AGPL)**
 
 **Constat.** `@tokiforge/core` et `@tokiforge/react` sont sous AGPL-3.0 (vérifié : `package.json` et `LICENSE` du dépôt). Le framework EGEN est sous MPL-2.0. Le shell est servi à des utilisateurs finaux (usage en réseau) et peut être embarqué dans des applications natives (chantier multiplateforme).
 
@@ -17,11 +17,13 @@ Aucun ADR « À DÉCIDER » ne peut rester ouvert quand la phase qu'il bloque d�
 - **C.** Contribuer en amont/forker sous une licence compatible, si les titulaires des droits l'acceptent.
 - **D.** Ne pas dépendre de TokiForge (contredit le cahier des charges §11).
 
-**Recommandation.** Établir qui détient les droits sur TokiForge avant DS-3. Le développement sur la branche est possible (dépendance réversible) ; **aucune publication (`publish-next`, `release`) ni fusion sur `main` avant décision.**
+**Décision (propriétaire du dépôt) : option A, AGPL acceptée.** Conséquences à traiter en DS-9 : mention de licence dans les paquets concernés, fichier de notices, vérification que l'offre de code source est satisfaite pour le shell servi aux utilisateurs.
+
+*Recommandation initiale (conservée pour mémoire).* Établir qui détient les droits sur TokiForge avant DS-3. Le développement sur la branche est possible (dépendance réversible) ; **aucune publication (`publish-next`, `release`) ni fusion sur `main` avant décision.**
 
 ---
 
-## ADR-002 — Contrat de nommage des variables CSS — **Proposée** (tranchée au spike de DS-3)
+## ADR-002 — Contrat de nommage des variables CSS — **Acceptée : option B (préfixe `--egen-*`)**
 
 **Constat.** Le contrat actuel est `--colors-primary-500`, `--border-radius-md`, `--panel-card-background`… (plus de 700 références dans le styleguide, apps, Tailwind). TokiForge nomme toujours `--${prefix}-${chemin}` ; un préfixe vide donne `---colors-primary-500`.
 
@@ -30,7 +32,7 @@ Aucun ADR « À DÉCIDER » ne peut rester ouvert quand la phase qu'il bloque d�
 - **B.** Adopter un préfixe (`--egen-colors-primary-500`) : migration mécanique scriptée de tous les consommateurs (styleguide, Tailwind, apps du Core) ; rupture assumée en version majeure.
 - **C.** Émettre les deux jeux : **interdit** (cahier des charges : pas de double système, pas de synchronisation).
 
-**Recommandation.** A si l'amont l'accepte ou si l'enveloppe tient en quelques lignes prouvées par le test de parité ; sinon B, scripté et appliqué en une seule fois.
+**Décision : B.** Toutes les variables générées par le thème deviennent `--egen-<chemin>` (ex. `--egen-colors-primary-500`). Migration **scriptée et rejouable** de tous les consommateurs (`scripts/migrate-theme-vars.mjs`), avec liste blanche dérivée du thème (aucune variable tierce — `--cds-*`, locales — n'est touchée) et test de parité contre le golden de DS-1.
 
 ---
 
@@ -57,9 +59,9 @@ Conserver **`@egen-civitas/esm-theme`**, publié en **2.0.0**, comme *couche d'i
 
 ---
 
-## ADR-006 — Suppression radicale de l'ancien moteur — **Proposée**
+## ADR-006 — Suppression radicale de l'ancien moteur — **Acceptée (sans délai)**
 
-Un seul système (cahier des charges §0) : en **DS-8**, suppression du chargeur, de l'aplatisseur, de l'injecteur, de la fusion et du singleton actuels une fois les consommateurs migrés et la parité prouvée ; pas d'alias de compatibilité prolongé ; changeset **major**. Le format `theme.default.json` reste lisible (migration de format seulement si DS-2 la justifie).
+**Décision du propriétaire : l'ancien moteur fait main est éradiqué sans attendre.** Il n'est conservé que le temps strictement nécessaire à produire le golden de DS-1 puis à migrer les consommateurs, dans cette même branche. Un seul système (cahier des charges §0) : en **DS-8**, suppression du chargeur, de l'aplatisseur, de l'injecteur, de la fusion et du singleton actuels une fois les consommateurs migrés et la parité prouvée ; pas d'alias de compatibilité prolongé ; changeset **major**. Le format `theme.default.json` reste lisible (migration de format seulement si DS-2 la justifie).
 
 ---
 

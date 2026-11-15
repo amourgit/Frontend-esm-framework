@@ -39,10 +39,10 @@ Dépendances : DS-0 → DS-1 → DS-2 → DS-3 → DS-4 → DS-5 → DS-6 → DS
 **Rollback.** Suppression du dossier `model/`.
 
 ## DS-3 — Adaptateur EGEN → TokiForge et génération du CSS
-**Prérequis.** ADR-001 et ADR-002 tranchés. **N6** : justification écrite de la dépendance (taille du point d'entrée `@tokiforge/core/runtime`, maintenance, alternative écartée).
+**Prérequis.** ADR-001 (AGPL acceptée) et ADR-002 (préfixe `--egen-*`) tranchés ✔. **N6** : justification écrite de la dépendance (taille du point d'entrée `@tokiforge/core/runtime`, maintenance, alternative écartée).
 **Périmètre.** `esm-theme/src/tokiforge/` (nouveau), `package.json` (dépendance).
 **Tâches.**
-1. **Spike (1 jour max)** : préfixe/nommage (ADR-002), nœuds `{ value }`, comportement sur les tableaux (familles de polices), ombres, nombres.
+1. **Spike** : préfixe `egen` (ADR-002), nœuds `{ value }`, comportement sur les tableaux (familles de polices), ombres, nombres.
 2. `toDesignTokens(document, mode)` : adaptateur EGEN → format TokiForge.
 3. Génération des 3 blocs (`:root`, `[data-theme="light"]`, `[data-theme="dark"]`) via `TokenExporter.exportCSS` (échappement et validation de sélecteur **fournis par TokiForge**, ceux de l'ancien injecteur ne sont pas repris).
 4. Contrôles couleur et contraste par `ColorUtils`/`AccessibilityUtils`.

@@ -5,8 +5,8 @@ Une phase n'est cochée qu'avec ses tests verts **et** la CI verte.
 
 | Phase | Titre | Statut | Verrou | Validée le |
 |-------|-------|--------|--------|------------|
-| DS-0 | Décisions et garde-fous | [ ] todo | — | — |
-| DS-1 | Filet de sécurité : caractériser l'existant | [ ] todo | — | — |
+| DS-0 | Décisions et garde-fous | [x] done | — | 2026-11-15 |
+| DS-1 | Filet de sécurité : caractériser l'existant | [x] done | — | 2026-11-15 |
 | DS-2 | Modèle de thème EGEN | [ ] todo | — | — |
 | DS-3 | Adaptateur EGEN → TokiForge et génération du CSS | [ ] todo | — | — |
 | DS-4 | Orchestration EGEN sur TokiForge | [ ] todo | — | — |

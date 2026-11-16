@@ -1,14 +1,10 @@
 /** @module @category UI */
 
 /**
- * Concatène des classes CSS en ignorant les valeurs falsy (`undefined`,
- * `null`, `false`, chaîne vide). Pratique pour composer des classes
- * Tailwind conditionnelles sans dépendre d'une librairie externe
- * (`clsx`/`classnames`) pour un besoin aussi simple.
+ * Assemble des classes Tailwind : les valeurs falsy (`undefined`, `null`, `false`, chaîne vide) sont ignorées et la dernière
+ * classe en conflit gagne (`cn('px-4', 'px-2')` → `px-2`). Implémentation : `ui/cn.ts` (clsx + tailwind-merge).
  *
  * @example
  * cn('fixed inset-0', isActive && 'opacity-100', className)
  */
-export function cn(...classes: Array<string | undefined | null | false>): string {
-  return classes.filter(Boolean).join(' ');
-}
+export { cn } from '../ui/cn.js';

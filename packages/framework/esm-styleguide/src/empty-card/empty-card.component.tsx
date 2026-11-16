@@ -1,9 +1,8 @@
 import React from 'react';
-import { Button, Layer, Tile } from '@carbon/react';
 import { useLayoutType } from '@egen-civitas/esm-react-utils';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { CardHeader } from '../cards/index.js';
-import styles from './empty-card.module.scss';
+import { Button, Layer, Tile } from '../ui/index.js';
 
 export interface EmptyCardProps {
   /** The name of the type of item that would be displayed here if not empty. This must be a pre-translated string. */
@@ -30,18 +29,18 @@ export const EmptyCard: React.FC<EmptyCardProps> = (props) => {
   const launchForm = props.launchForm;
 
   return (
-    <Layer className={styles.layer}>
-      <Tile className={styles.tile}>
+    <Layer className="bg-transparent">
+      <Tile className="gap-0 rounded-none border-border py-0 text-center shadow-none">
         <CardHeader title={props.headerTitle} />
         <EmptyCardIllustration />
-        <p className={styles.content}>
+        <p className="mt-4 mb-2 text-sm font-semibold text-muted-foreground">
           {getCoreTranslation('emptyStateText', 'There are no {{displayText}} to display', {
             displayText: props.displayText,
           })}
         </p>
-        <p className={styles.action}>
+        <p className="mb-2">
           {launchForm && (
-            <Button onClick={() => launchForm()} kind="ghost" size={isTablet ? 'lg' : 'sm'}>
+            <Button onClick={() => launchForm()} variant="ghost" size={isTablet ? 'lg' : 'sm'}>
               {getCoreTranslation('recordNewEntry', 'Record {{ displayText }}', {
                 displayText: props.displayText,
               })}

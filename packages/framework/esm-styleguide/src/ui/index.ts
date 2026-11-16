@@ -46,15 +46,5 @@ export {
 } from './dropdown-menu.js';
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs.js';
 export { Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption } from './table.js';
-export {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
-} from './select.js';
+// Pas de `Select` ici : le styleguide a déjà le sien (`selections/`), qui prime.
+export { ModalHeader, ModalBody, ModalFooter, type ModalHeaderProps } from './modal.js';

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button } from '@carbon/react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 import { CardHeader } from './card-header.component.js';
 import { AddIcon } from '../icons/index.js';
+import { Button } from '../ui/index.js';
 
 const meta: Meta<typeof CardHeader> = {
   title: 'Components/CardHeader',
@@ -25,7 +25,8 @@ export const WithAction: Story = {
   },
   render: (args) => (
     <CardHeader {...args}>
-      <Button kind="ghost" renderIcon={AddIcon} iconDescription="Add document">
+      <Button variant="ghost">
+        <AddIcon size={16} aria-hidden="true" />
         Add
       </Button>
     </CardHeader>

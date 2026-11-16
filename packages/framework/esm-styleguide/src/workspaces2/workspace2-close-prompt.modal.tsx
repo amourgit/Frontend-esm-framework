@@ -1,7 +1,6 @@
 import React from 'react';
-import { ModalHeader, ModalBody, ModalFooter, Button } from '@carbon/react';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
-import styles from './workspace2-close-prompt.module.scss';
+import { Button, ModalBody, ModalFooter, ModalHeader } from '../ui/index.js';
 
 interface WorkspaceUnsavedChangesModal {
   onConfirm: () => void;
@@ -19,20 +18,20 @@ const Workspace2ClosePromptModal: React.FC<WorkspaceUnsavedChangesModal> = ({
 }) => {
   return (
     <>
-      <ModalHeader closeModal={onCancel} title={getCoreTranslation('closeWorkspaces2PromptTitle')} />
+      <ModalHeader onClose={onCancel} closeLabel={getCoreTranslation('close', 'Close')} title={getCoreTranslation('closeWorkspaces2PromptTitle')} />
       <ModalBody>
         <p>{getCoreTranslation('closeWorkspaces2PromptBody')}</p>
-        <ul className={styles.workspaceList}>
+        <ul className="list-disc pl-6">
           {affectedWorkspaceTitles.map((title) => (
-            <li key={title}>{title}</li>
+            <li key={title} className="ml-4">{title}</li>
           ))}
         </ul>
       </ModalBody>
       <ModalFooter>
-        <Button kind="secondary" onClick={onCancel}>
+        <Button variant="secondary" onClick={onCancel}>
           {getCoreTranslation('cancel', 'Cancel')}
         </Button>
-        <Button kind="danger" onClick={onConfirm}>
+        <Button variant="destructive" onClick={onConfirm}>
           {getCoreTranslation('discardChanges', 'Discard changes')}
         </Button>
       </ModalFooter>

@@ -16,7 +16,9 @@ const ROOT = join(process.cwd(), '..', '..', '..');
 const SOURCE_DIRS = ['packages/framework', 'packages/shell', 'packages/tooling'];
 const SKIP_DIRS = new Set(['node_modules', 'dist', 'coverage', 'storybook-static', '.turbo']);
 const SOURCE_FILE = /\.(ts|tsx|js|jsx|mjs|cjs|scss)$/;
-const CARBON_IMPORT = /(from\s+['"]|import\s+['"]|@use\s+['"]|@forward\s+['"]|@import\s+['"]|require\(\s*['"])@carbon\//;
+// Import Carbon, ou couplage caché par classe CSS Carbon (`cds--…`, `cds-…`).
+const CARBON_IMPORT =
+  /(from\s+['"]|import\s+['"]|@use\s+['"]|@forward\s+['"]|@import\s+['"]|require\(\s*['"])@carbon\/|\bcds-{1,2}[a-z]/;
 
 function walk(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir)) {

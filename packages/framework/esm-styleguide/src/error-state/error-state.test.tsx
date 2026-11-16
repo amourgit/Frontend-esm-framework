@@ -30,16 +30,17 @@ describe('ErrorState', () => {
     mockUseLayoutType.mockReturnValue('tablet');
 
     render(<ErrorState headerTitle="test" error={{}} />);
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(screen.getByRole('heading').parentElement?.getAttribute('class')).toContain('tabletHeader');
+    // Mise en page tablette : titre plus grand (`text-xl`).
+    expect(screen.getByRole('heading')).toHaveClass('text-xl');
   });
 
   it('should render desktop layout when layout type is not tablet', () => {
     mockUseLayoutType.mockReturnValue('small-desktop');
 
     render(<ErrorState headerTitle="test" error={{}} />);
-    // eslint-disable-next-line testing-library/no-node-access
-    expect(screen.getByRole('heading').parentElement?.getAttribute('class')).toContain('desktopHeader');
+    // Mise en page bureau : titre compact (`text-sm`), pas la taille tablette.
+    expect(screen.getByRole('heading')).toHaveClass('text-sm');
+    expect(screen.getByRole('heading')).not.toHaveClass('text-xl');
   });
 
   it('should handle error with partial response data', () => {

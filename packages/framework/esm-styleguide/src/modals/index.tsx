@@ -31,9 +31,29 @@ const modalStore = createGlobalStore<ModalState>('modalState', {
   modalStack: [],
 });
 
+/** Largeur maximale de la fenêtre selon la taille demandée. */
+const MODAL_MAX_WIDTH: Record<ModalSize, string> = { xs: '24rem', sm: '32rem', md: '42rem', lg: '56rem' };
+
 function createModalFrame({ size }: { size: ModalSize }) {
   const modalFrame = document.createElement('div');
-  modalFrame.className = `cds--modal-container cds--modal-container--${size}`;
+  modalFrame.className = 'egen-modal-frame';
+  // Styles en ligne : le cadre est créé hors React et ne doit dépendre d'aucune feuille de style (ni Carbon, ni Tailwind
+  // compilé par le shell). Couleurs et rayons suivent le thème (variables `--colors-*` du moteur de thème).
+  Object.assign(modalFrame.style, {
+    display: 'flex',
+    flexDirection: 'column',
+    boxSizing: 'border-box',
+    width: 'calc(100% - 2rem)',
+    maxWidth: MODAL_MAX_WIDTH[size] ?? MODAL_MAX_WIDTH.md,
+    maxHeight: '90vh',
+    overflow: 'hidden',
+    borderRadius: 'var(--border-radius-lg, 0.75rem)',
+    border: '1px solid var(--colors-border-default, #cbd5e1)',
+    background: 'var(--colors-surface-card, #ffffff)',
+    color: 'var(--colors-surface-card-foreground, #0f172a)',
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.25)',
+    outline: 'none',
+  });
   modalFrame.setAttribute('role', 'dialog');
   modalFrame.setAttribute('tabindex', '-1');
   modalFrame.setAttribute('aria-modal', 'true');

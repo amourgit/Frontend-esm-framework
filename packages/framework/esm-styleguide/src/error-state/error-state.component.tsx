@@ -1,8 +1,7 @@
 import React from 'react';
-import { Layer, Tile } from '@carbon/react';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
-import styles from './error-state.module.scss';
 import { CardHeader } from '../cards/index.js';
+import { Layer, Tile } from '../ui/index.js';
 
 export interface ErrorStateProps {
   /** The error that caused this error card to be rendered. Expected to be a failed fetch result. */
@@ -13,14 +12,14 @@ export interface ErrorStateProps {
 
 export const ErrorState: React.FC<ErrorStateProps> = ({ error, headerTitle }) => {
   return (
-    <Layer>
-      <Tile className={styles.tile}>
+    <Layer className="bg-transparent">
+      <Tile className="gap-0 rounded-none border-border py-0 text-center shadow-none">
         <CardHeader title={headerTitle} />
-        <p className={styles.errorMessage}>
+        <p className="mt-9 mb-2 text-sm font-semibold">
           {getCoreTranslation('error', 'Error')} {`${error?.response?.status}: `}
           {error?.response?.statusText}
         </p>
-        <p className={styles.errorCopy}>{getCoreTranslation('errorCopy')}</p>
+        <p className="mb-2 text-sm text-muted-foreground">{getCoreTranslation('errorCopy')}</p>
       </Tile>
     </Layer>
   );

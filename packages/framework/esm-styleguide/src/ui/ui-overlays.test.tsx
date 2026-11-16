@@ -17,11 +17,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   Table,
   TableBody,
   TableCell,
@@ -149,22 +144,5 @@ describe('Alert', () => {
     const alert = screen.getByRole('alert');
     expect(alert).toHaveTextContent('Attention');
     expect(alert).toHaveClass('border-l-amber-500');
-  });
-});
-
-describe('Select', () => {
-  it('affiche son libellé de remplacement et un déclencheur de type liste', () => {
-    render(
-      <Select>
-        <SelectTrigger aria-label="Taille de page">
-          <SelectValue placeholder="Choisir" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="10">10</SelectItem>
-        </SelectContent>
-      </Select>,
-    );
-    const trigger = screen.getByRole('combobox', { name: 'Taille de page' });
-    expect(trigger).toHaveTextContent('Choisir');
   });
 });

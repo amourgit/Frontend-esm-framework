@@ -1,6 +1,5 @@
 /** @module @category Workspace */
 import React, { useEffect } from 'react';
-import { Button, ComposedModal, ModalBody, ModalFooter, ModalHeader } from '@carbon/react';
 import { escapeRegExp } from 'lodash-es';
 import { navigate } from '@egen-civitas/esm-navigation';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
@@ -14,7 +13,15 @@ import {
   resetWorkspaceStore,
   useWorkspaces,
 } from '../workspaces.js';
-import styles from './workspace-notification.module.scss';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '../../ui/index.js';
 
 export interface WorkspaceNotificationProps {
   contextKey: string;
@@ -82,19 +89,21 @@ export function WorkspaceNotification({ contextKey }: WorkspaceNotificationProps
   }, []);
 
   return prompt != null ? (
-    <ComposedModal open={true} onClose={cancelPrompt}>
-      <ModalHeader title={prompt.title}></ModalHeader>
-      <ModalBody>
-        <p className={styles.messageBody}>{prompt.body}</p>
-      </ModalBody>
-      <ModalFooter>
-        <Button kind="secondary" onClick={cancelPrompt}>
-          {prompt.cancelText ?? getCoreTranslation('cancel')}
-        </Button>
-        <Button kind="danger" onClick={prompt.onConfirm}>
-          {prompt.confirmText ?? getCoreTranslation('confirm')}
-        </Button>
-      </ModalFooter>
-    </ComposedModal>
+    <Dialog open onOpenChange={(open) => !open && cancelPrompt()}>
+      <DialogContent showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle>{prompt.title}</DialogTitle>
+          <DialogDescription className="text-sm font-semibold text-foreground">{prompt.body}</DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="secondary" onClick={cancelPrompt}>
+            {prompt.cancelText ?? getCoreTranslation('cancel')}
+          </Button>
+          <Button variant="destructive" onClick={prompt.onConfirm}>
+            {prompt.confirmText ?? getCoreTranslation('confirm')}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   ) : null;
 }

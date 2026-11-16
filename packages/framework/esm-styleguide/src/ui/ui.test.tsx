@@ -8,6 +8,9 @@ import {
   IconButton,
   InlineLoading,
   Layer,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
   Link,
   Separator,
   Spinner,
@@ -199,5 +202,30 @@ describe('Tile, Layer, Badge, Separator, Spinner', () => {
   it('Spinner est annoncé comme un statut', () => {
     render(<Spinner />);
     expect(screen.getByRole('status', { name: 'Loading' })).toBeInTheDocument();
+  });
+});
+
+describe('ModalHeader / ModalBody / ModalFooter', () => {
+  it('compose une modale : titre, croix de fermeture accessible, corps et pied', async () => {
+    const onClose = vi.fn();
+    render(
+      <div>
+        <ModalHeader title="Fermer les espaces" label="Espace actif" onClose={onClose} closeLabel="Fermer" />
+        <ModalBody>Corps</ModalBody>
+        <ModalFooter>
+          <Button>OK</Button>
+        </ModalFooter>
+      </div>,
+    );
+    expect(screen.getByRole('heading', { name: 'Fermer les espaces' })).toBeInTheDocument();
+    expect(screen.getByText('Espace actif')).toBeInTheDocument();
+    expect(screen.getByText('Corps')).toHaveAttribute('data-slot', 'modal-body');
+    await userEvent.click(screen.getByRole('button', { name: 'Fermer' }));
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("sans `onClose`, aucune croix n'est affichée", () => {
+    render(<ModalHeader title="Titre" />);
+    expect(screen.queryByRole('button')).not.toBeInTheDocument();
   });
 });

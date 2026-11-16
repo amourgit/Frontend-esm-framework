@@ -85,6 +85,22 @@
 <% if (egenCoreRoutes) { %>
   <script type="egen-routes"><%= egenCoreRoutes %></script>
 <% } %>
+    <!-- Fond et centrage des modales (showModal). CSS simple : la fenêtre elle-même est stylée en ligne par esm-styleguide. -->
+    <style>
+      .egen-modals-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        visibility: hidden;
+      }
+    </style>
   </head>
   <body>
     <%= htmlWebpackPlugin.tags.bodyTags %>

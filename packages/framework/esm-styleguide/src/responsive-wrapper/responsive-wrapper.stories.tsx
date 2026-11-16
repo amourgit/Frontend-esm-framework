@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import { TextInput } from '@carbon/react';
 import { ResponsiveWrapper } from './responsive-wrapper.component.js';
+import { TextInput } from '../ui/index.js';
 
 const meta: Meta<typeof ResponsiveWrapper> = {
   title: 'Components/ResponsiveWrapper',
@@ -23,7 +23,7 @@ type Story = StoryObj<typeof ResponsiveWrapper>;
 export const Default: Story = {
   render: () => (
     <ResponsiveWrapper>
-      <TextInput id="example" labelText="Entity name" placeholder="Enter name" />
+      <TextInput id="example" label="Entity name" placeholder="Enter name" />
     </ResponsiveWrapper>
   ),
 };

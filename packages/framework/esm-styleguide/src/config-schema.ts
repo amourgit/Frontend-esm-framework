@@ -2,9 +2,6 @@ import { type ConfigSchema, Type, validators } from '@egen-civitas/esm-config';
 import { type CarbonTagColor, carbonTagColors } from './utils.js';
 
 export interface StyleguideConfigObject {
-  'Brand color #1': string;
-  'Brand color #2': string;
-  'Brand color #3': string;
   /**
    * The name of this deployment/implementation, shown in the UI.
    */
@@ -40,18 +37,6 @@ const classificationTagConfigSchema: ConfigSchema = {
 };
 
 export const esmStyleGuideSchema: ConfigSchema = {
-  'Brand color #1': {
-    _default: '#005d5d',
-    _type: Type.String,
-  },
-  'Brand color #2': {
-    _default: '#004144',
-    _type: Type.String,
-  },
-  'Brand color #3': {
-    _default: '#007d79',
-    _type: Type.String,
-  },
   implementationName: {
     _type: Type.String,
     _description: 'The name of the deployment or authority displayed in the UI.',

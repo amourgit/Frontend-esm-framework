@@ -1,6 +1,8 @@
 # Plan de développement — phases DS-0 à DS-9
 
 Chaque phase : **objectif · périmètre (fichiers/paquets touchés) · tâches · tests qui valident · critère de sortie · rollback**.
+> **Exécution (décision du propriétaire, ADR-006).** L'ancien moteur fait main n'est pas conservé « jusqu'à la fin » : il est supprimé dans la même branche, dès que le golden DS-1 a prouvé la parité. DS-2 à DS-5 ont été réalisés d'un seul tenant (nouveau cœur) et DS-8 (suppression) a été avancé ; DS-7 reste ouvert côté **Frontend-esm-core** (PR séparée, mêmes scripts).
+
 Dépendances : DS-0 → DS-1 → DS-2 → DS-3 → DS-4 → DS-5 → DS-6 → DS-7 → DS-8 → DS-9. DS-6 peut démarrer après DS-4 si DS-5 est livré en parallèle par une autre personne (dépendance sur l'API publique uniquement).
 
 ---
@@ -72,6 +74,7 @@ Dépendances : DS-0 → DS-1 → DS-2 → DS-3 → DS-4 → DS-5 → DS-6 → DS
 
 ## DS-6 — Composants, états et ponts (Carbon, Tailwind)
 **Objectif.** Rendre le thème **consommable** par les composants (cahier des charges §8, §15).
+**Réalisé :** variables `--egen-components-…` produites par le compilateur, helper de cascade `componentVar()`, preset Tailwind migré. **Reporté (lot « composants de base ») :** génération du pont Carbon depuis les tokens et consommation de `components.*` par les composants Carbon/EGEN.
 **Périmètre.** `esm-theme`, `esm-styleguide/src/_carbon-bridge.scss`, `tooling/tailwind-preset`.
 **Tâches.** Génération des variables `--components-<composant>-<variante>-<état>-<propriété>` (via l'adaptateur DS-3) ; helper de cascade `componentVar()` ; **pont Carbon généré depuis la même source** au lieu d'être maintenu à la main ; preset Tailwind aligné ; documentation d'ajout d'un composant.
 **Tests.** Cascade (état → variante → base → global) en CSS réel ; parité du pont Carbon avec l'existant ; rendu de composants Carbon avec un thème de test.

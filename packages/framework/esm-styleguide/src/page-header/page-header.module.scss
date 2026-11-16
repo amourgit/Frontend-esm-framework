@@ -4,7 +4,7 @@
 
 .pageHeader {
   @include type.type-style('body-compact-02');
-  color: $text-02;
+  color: var(--egen-colors-surface-muted-foreground);
   height: layout.$spacing-12;
   width: 100%;
   display: flex;

@@ -1,52 +1,38 @@
-// ============================================================================
-//  @egen-civitas/esm-theme — Point d'entrée public
-// ============================================================================
-
-// Types
+// @egen-civitas/esm-theme — couche d'intégration EGEN du Design System (modèle de thème, orchestration, application).
+// La transformation en CSS est assurée par TokiForge (@tokiforge/core). Variables générées : `--egen-<chemin>`.
 export type {
-  ThemeSchema,
+  GlobalOverrideOptions,
+  LoadedTheme,
+  OverrideOptions,
+  ThemeDocument,
   ThemeEngineOptions,
   ThemeEngineState,
+  ThemeMeta,
   ThemeMode,
-  LoadedTheme,
-  FlattenResult,
-  ColorScale,
-  SurfaceTokens,
-  BorderTokens,
-  PanelLayer,
-  PanelTokenSet,
-  AppThemeOverride,
-} from './types.js';
+  ThemeOverride,
+  ThemeStatus,
+  ThemeStorage,
+  ThemeVars,
+} from './model/types.js';
+export type { ThemeValidationResult } from './model/validate.js';
 
-// Moteur principal
 export { ThemeEngine } from './engine.js';
-
-// Singleton global (utilisé par le shell et les apps)
 export {
-  setupThemeEngine,
+  applyAppThemeOverride,
+  applyGlobalThemeOverride,
   getThemeEngine,
   getThemeState,
+  isGlobalThemeOverrideApplied,
   reloadTheme,
-  setThemeMode,
-  toggleThemeMode,
-  applyAppThemeOverride,
   removeAppThemeOverride,
-  applyGlobalThemeOverride,
   removeGlobalThemeOverride,
+  setThemeMode,
+  setupThemeEngine,
+  toggleThemeMode,
 } from './singleton.js';
 
-// Utilitaires bas niveau (utiles pour les outils de build, tests, storybook)
-export { flattenToCssVars } from './flatten.js';
-export {
-  buildCssString,
-  buildThemeCssText,
-  injectCssVarsToDocument,
-  removeCssVarsFromDocument,
-  injectScopedCssVars,
-  removeScopedCssVars,
-  applyModeAttribute,
-} from './inject.js';
-export { loadHighestPriorityTheme, loadHighestPriorityThemeIfChanged } from './loader.js';
-export { deepMerge, mergeBySortedPriority } from './deepMerge.js';
-export { validateThemeSchema } from './schema.js';
-export type { ThemeValidationResult } from './schema.js';
+export { ThemeValidationError } from './model/errors.js';
+export { validateThemeDocument, validateThemeOverride } from './model/validate.js';
+export { deepMerge, mergeByPriority } from './model/merge.js';
+export { BASE_VARIANT, DEFAULT_STATE, componentCascade, componentVar, componentVarName } from './model/components.js';
+export { CSS_VAR_PREFIX, themeToCssVars } from './tokiforge/compile.js';

@@ -106,12 +106,12 @@
   min-height: 0;
   padding: 0;
   border: 2px solid transparent;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--egen-border-radius-md);
   overflow: hidden;
   background: none;
   cursor: pointer;
   opacity: 0.6;
-  transition: all var(--animation-duration-normal) var(--animation-easing-in-out);
+  transition: all var(--egen-animation-duration-normal) var(--egen-animation-easing-in-out);
 
   // Se rétablit en pleine opacité au survol — UNIQUEMENT la miniature
   // survolée (:hover ne cible jamais les frères, c'est déjà le cas nativement).
@@ -120,7 +120,7 @@
   }
 
   &:focus-visible {
-    outline: 2px solid var(--colors-primary-500);
+    outline: 2px solid var(--egen-colors-primary-500);
     outline-offset: 2px;
   }
 }
@@ -135,7 +135,7 @@
 
 .thumb--active {
   opacity: 1;
-  border-color: var(--colors-on-primary);
+  border-color: var(--egen-colors-on-primary);
 }
 
 .thumbImage {
@@ -159,18 +159,18 @@
   height: 0.5rem;
   padding: 0;
   border: none;
-  border-radius: var(--border-radius-full);
-  background: var(--colors-neutral-300);
+  border-radius: var(--egen-border-radius-full);
+  background: var(--egen-colors-neutral-300);
   cursor: pointer;
-  transition: all var(--animation-duration-normal) var(--animation-easing-in-out);
+  transition: all var(--egen-animation-duration-normal) var(--egen-animation-easing-in-out);
 
   &:focus-visible {
-    outline: 2px solid var(--colors-primary-500);
+    outline: 2px solid var(--egen-colors-primary-500);
     outline-offset: 2px;
   }
 }
 
 .dot--active {
   width: 1.5rem;
-  background: var(--colors-primary-500);
+  background: var(--egen-colors-primary-500);
 }

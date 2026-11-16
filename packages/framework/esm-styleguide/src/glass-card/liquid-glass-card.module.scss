@@ -7,9 +7,9 @@
 //  20. edgeLayer — reflets internes (highlight)
 //  30. content   — le contenu réel
 //
-//  Couleurs : var(--colors-surface-translucent) (blanc/noir translucide déjà
+//  Couleurs : var(--egen-colors-surface-translucent) (blanc/noir translucide déjà
 //  adapté clair/sombre par le thème) moduléé via color-mix() pour les
-//  différentes intensités, + var(--shadows-*) pour la composante d'ombre
+//  différentes intensités, + var(--egen-shadows-*) pour la composante d'ombre
 //  portée. Zéro rgba() figé — voir docs/guide-composants-et-theme.md §5.
 // ============================================================================
 
@@ -83,40 +83,40 @@
 }
 
 // ── Lueur externe (glow) ─────────────────────────────────────────────────────
-// Ombre portée pilotée par les tokens --shadows-* du thème + halo translucide
-// dont l'intensité augmente avec le niveau (color-mix sur --colors-surface-translucent).
+// Ombre portée pilotée par les tokens --egen-shadows-* du thème + halo translucide
+// dont l'intensité augmente avec le niveau (color-mix sur --egen-colors-surface-translucent).
 
 .glow--none {
-  box-shadow: var(--shadows-xs), 0 0 12px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 5%, transparent);
+  box-shadow: var(--egen-shadows-xs), 0 0 12px color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 5%, transparent);
 }
 
 .glow--xs {
-  box-shadow: var(--shadows-xs), 0 0 16px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 8%, transparent);
+  box-shadow: var(--egen-shadows-xs), 0 0 16px color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 8%, transparent);
 }
 
 .glow--sm {
-  box-shadow: var(--shadows-sm), 0 0 24px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 10%, transparent);
+  box-shadow: var(--egen-shadows-sm), 0 0 24px color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 10%, transparent);
 }
 
 .glow--md {
-  box-shadow: var(--shadows-md), 0 0 32px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 15%, transparent);
+  box-shadow: var(--egen-shadows-md), 0 0 32px color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 15%, transparent);
 }
 
 .glow--lg {
-  box-shadow: var(--shadows-lg), 0 0 40px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 20%, transparent);
+  box-shadow: var(--egen-shadows-lg), 0 0 40px color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 20%, transparent);
 }
 
 .glow--xl {
-  box-shadow: var(--shadows-xl), 0 0 48px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 25%, transparent);
+  box-shadow: var(--egen-shadows-xl), 0 0 48px color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 25%, transparent);
 }
 
 .glow--2xl {
-  box-shadow: var(--shadows-2xl), 0 0 60px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 30%, transparent);
+  box-shadow: var(--egen-shadows-2xl), 0 0 60px color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 30%, transparent);
 }
 
 // ── Reflets internes (highlight) ────────────────────────────────────────────
 // Ombres internes croisées (haut-gauche/bas-droite), intensité croissante,
-// pilotées par --colors-surface-translucent (blanc en thème clair, adapté
+// pilotées par --egen-colors-surface-translucent (blanc en thème clair, adapté
 // automatiquement en thème sombre).
 
 .shadow--none {
@@ -124,31 +124,31 @@
 }
 
 .shadow--xs {
-  $c: color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 30%, transparent);
+  $c: color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 30%, transparent);
   box-shadow: inset 1px 1px 1px 0 #{$c}, inset -1px -1px 1px 0 #{$c};
 }
 
 .shadow--sm {
-  $c: color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 35%, transparent);
+  $c: color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 35%, transparent);
   box-shadow: inset 2px 2px 2px 0 #{$c}, inset -2px -2px 2px 0 #{$c};
 }
 
 .shadow--md {
-  $c: color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 45%, transparent);
+  $c: color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 45%, transparent);
   box-shadow: inset 3px 3px 3px 0 #{$c}, inset -3px -3px 3px 0 #{$c};
 }
 
 .shadow--lg {
-  $c: color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 50%, transparent);
+  $c: color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 50%, transparent);
   box-shadow: inset 4px 4px 4px 0 #{$c}, inset -4px -4px 4px 0 #{$c};
 }
 
 .shadow--xl {
-  $c: color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 55%, transparent);
+  $c: color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 55%, transparent);
   box-shadow: inset 6px 6px 6px 0 #{$c}, inset -6px -6px 6px 0 #{$c};
 }
 
 .shadow--2xl {
-  $c: color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 60%, transparent);
+  $c: color-mix(in srgb, var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55)) 60%, transparent);
   box-shadow: inset 8px 8px 8px 0 #{$c}, inset -8px -8px 8px 0 #{$c};
 }

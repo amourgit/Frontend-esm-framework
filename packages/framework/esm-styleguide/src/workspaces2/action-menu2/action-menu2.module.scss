@@ -27,10 +27,10 @@ $actionPanelOffset: layout.$spacing-09;
     }
 
     .container {
-      background: $ui-01;
+      background: var(--egen-colors-surface-muted);
       width: $actionPanelOffset;
       height: 100%;
-      border-inline-start: 1px solid $color-gray-30;
+      border-inline-start: 1px solid var(--egen-colors-neutral-300);
       display: flex;
       align-items: center;
       flex-direction: column;
@@ -45,8 +45,8 @@ $actionPanelOffset: layout.$spacing-09;
 /* Tablet */
 :global(.egen-breakpoint-lt-desktop) {
   .sideRail {
-    border-top: 1px solid $color-gray-30;
-    background-color: $ui-02;
+    border-top: 1px solid var(--egen-colors-neutral-300);
+    background-color: var(--egen-colors-surface-card);
     position: fixed;
     left: 0;
     bottom: var(--egen-footer-height, 0px);
@@ -57,7 +57,7 @@ $actionPanelOffset: layout.$spacing-09;
   }
 
   .chartExtensions {
-    background-color: $ui-02;
+    background-color: var(--egen-colors-surface-card);
     display: flex;
     width: 100%;
 
@@ -80,7 +80,7 @@ $actionPanelOffset: layout.$spacing-09;
 }
 
 .divider {
-  background-color: $text-03;
+  background-color: var(--egen-colors-surface-muted-foreground);
   margin: layout.$spacing-04 0;
   height: 1px;
   width: layout.$spacing-08;

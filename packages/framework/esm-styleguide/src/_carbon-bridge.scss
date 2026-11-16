@@ -23,172 +23,166 @@
 //  `transparent`. D'où les modales et boutons Carbon natifs strictement
 //  transparents, quel que soit `data-theme`.
 //
-//  CORRECTION :
-//  ------------
-//  On définit ici, UNE SEULE FOIS, tous les `--cds-*` couramment consommés
-//  par Carbon, chacun pointant vers son équivalent EGEN via `var(--colors-*,
-//  --panel-*)`. Comme ces derniers sont déjà scopés par `[data-theme]` et
-//  injectés dynamiquement par @egen-civitas/esm-theme (voir inject.ts), CE FICHIER
-//  N'A PAS besoin d'être conditionné par data-theme lui-même : il se contente
-//  de rediriger, la résolution finale suit automatiquement le thème actif.
-//
-//  Aucune valeur Carbon (blanche/g90/g100) n'est plus utilisée comme valeur
-//  RÉELLE ici — uniquement comme fallback `var(x, fallback)` pour la fenêtre
-//  de quelques ms avant hydratation du moteur de thème (même pattern que
-//  --brand-01/02/03 dans _vars.scss).
+//  PRINCIPE :
+//  ----------
+//  On définit ici, UNE SEULE FOIS, tous les `--cds-*` couramment consommés par
+//  Carbon, chacun pointant vers son équivalent EGEN (`--egen-colors-*`,
+//  `--egen-panel-*`) généré par le Design System (@egen-civitas/esm-theme,
+//  moteur TokiForge). Ce fichier ne contient AUCUNE valeur de couleur : il se
+//  contente de rediriger, la résolution finale suit le thème actif.
 // =============================================================================
 
 :root {
   // ─── Familles "layer" (LA cause du bug modales/boutons transparents) ──────
-  --cds-layer: var(--panel-card-background, #f4f4f4);
-  --cds-layer-01: var(--panel-card-background, #f4f4f4);
-  --cds-layer-02: var(--colors-surface-muted, #ffffff);
-  --cds-layer-03: var(--colors-surface-popover, #f4f4f4);
-  --cds-layer-hover: var(--colors-surface-muted, #e8e8e8);
-  --cds-layer-hover-01: var(--colors-surface-muted, #e8e8e8);
-  --cds-layer-hover-02: var(--colors-surface-muted, #e8e8e8);
-  --cds-layer-active: var(--colors-surface-accent, #c6c6c6);
-  --cds-layer-active-01: var(--colors-surface-accent, #c6c6c6);
-  --cds-layer-selected: var(--colors-surface-accent, #e0e0e0);
-  --cds-layer-selected-01: var(--colors-surface-accent, #e0e0e0);
-  --cds-layer-selected-hover: var(--colors-surface-accent, #d1d1d1);
-  --cds-layer-selected-disabled: var(--colors-surface-muted-foreground, #8d8d8d);
-  --cds-layer-selected-inverse: var(--colors-surface-foreground, #161616);
-  --cds-layer-background: var(--colors-surface-background, #ffffff);
-  --cds-layer-accent: var(--colors-surface-muted, #e0e0e0);
-  --cds-layer-accent-01: var(--colors-surface-muted, #e0e0e0);
-  --cds-layer-accent-02: var(--colors-surface-muted, #e0e0e0);
-  --cds-layer-accent-03: var(--colors-surface-muted, #e0e0e0);
-  --cds-layer-accent-hover: var(--colors-surface-accent, #d1d1d1);
-  --cds-layer-accent-hover-01: var(--colors-surface-accent, #d1d1d1);
-  --cds-layer-accent-hover-02: var(--colors-surface-accent, #d1d1d1);
-  --cds-layer-accent-hover-03: var(--colors-surface-accent, #d1d1d1);
-  --cds-layer-accent-active: var(--colors-surface-accent, #c6c6c6);
-  --cds-layer-accent-active-01: var(--colors-surface-accent, #c6c6c6);
-  --cds-layer-accent-active-02: var(--colors-surface-accent, #c6c6c6);
-  --cds-layer-accent-active-03: var(--colors-surface-accent, #c6c6c6);
-  --cds-layer-active-02: var(--colors-surface-accent, #c6c6c6);
-  --cds-layer-active-03: var(--colors-surface-accent, #c6c6c6);
-  --cds-layer-background-01: var(--colors-surface-background, #ffffff);
-  --cds-layer-background-02: var(--colors-surface-background, #ffffff);
-  --cds-layer-background-03: var(--colors-surface-background, #ffffff);
-  --cds-layer-hover-03: var(--colors-surface-muted, #e8e8e8);
-  --cds-layer-selected-02: var(--colors-surface-accent, #e0e0e0);
-  --cds-layer-selected-03: var(--colors-surface-accent, #e0e0e0);
-  --cds-layer-selected-hover-01: var(--colors-surface-accent, #d1d1d1);
-  --cds-layer-selected-hover-02: var(--colors-surface-accent, #d1d1d1);
-  --cds-layer-selected-hover-03: var(--colors-surface-accent, #d1d1d1);
+  --cds-layer: var(--egen-panel-card-background);
+  --cds-layer-01: var(--egen-panel-card-background);
+  --cds-layer-02: var(--egen-colors-surface-muted);
+  --cds-layer-03: var(--egen-colors-surface-popover);
+  --cds-layer-hover: var(--egen-colors-surface-muted);
+  --cds-layer-hover-01: var(--egen-colors-surface-muted);
+  --cds-layer-hover-02: var(--egen-colors-surface-muted);
+  --cds-layer-active: var(--egen-colors-surface-accent);
+  --cds-layer-active-01: var(--egen-colors-surface-accent);
+  --cds-layer-selected: var(--egen-colors-surface-accent);
+  --cds-layer-selected-01: var(--egen-colors-surface-accent);
+  --cds-layer-selected-hover: var(--egen-colors-surface-accent);
+  --cds-layer-selected-disabled: var(--egen-colors-surface-muted-foreground);
+  --cds-layer-selected-inverse: var(--egen-colors-surface-foreground);
+  --cds-layer-background: var(--egen-colors-surface-background);
+  --cds-layer-accent: var(--egen-colors-surface-muted);
+  --cds-layer-accent-01: var(--egen-colors-surface-muted);
+  --cds-layer-accent-02: var(--egen-colors-surface-muted);
+  --cds-layer-accent-03: var(--egen-colors-surface-muted);
+  --cds-layer-accent-hover: var(--egen-colors-surface-accent);
+  --cds-layer-accent-hover-01: var(--egen-colors-surface-accent);
+  --cds-layer-accent-hover-02: var(--egen-colors-surface-accent);
+  --cds-layer-accent-hover-03: var(--egen-colors-surface-accent);
+  --cds-layer-accent-active: var(--egen-colors-surface-accent);
+  --cds-layer-accent-active-01: var(--egen-colors-surface-accent);
+  --cds-layer-accent-active-02: var(--egen-colors-surface-accent);
+  --cds-layer-accent-active-03: var(--egen-colors-surface-accent);
+  --cds-layer-active-02: var(--egen-colors-surface-accent);
+  --cds-layer-active-03: var(--egen-colors-surface-accent);
+  --cds-layer-background-01: var(--egen-colors-surface-background);
+  --cds-layer-background-02: var(--egen-colors-surface-background);
+  --cds-layer-background-03: var(--egen-colors-surface-background);
+  --cds-layer-hover-03: var(--egen-colors-surface-muted);
+  --cds-layer-selected-02: var(--egen-colors-surface-accent);
+  --cds-layer-selected-03: var(--egen-colors-surface-accent);
+  --cds-layer-selected-hover-01: var(--egen-colors-surface-accent);
+  --cds-layer-selected-hover-02: var(--egen-colors-surface-accent);
+  --cds-layer-selected-hover-03: var(--egen-colors-surface-accent);
 
   // ─── Champs de saisie ───────────────────────────────────────────────────────
-  --cds-field: var(--panel-input-background, var(--colors-surface-muted, #f4f4f4));
-  --cds-field-01: var(--panel-input-background, var(--colors-surface-muted, #f4f4f4));
-  --cds-field-02: var(--colors-surface-muted, #ffffff);
-  --cds-field-03: var(--colors-surface-muted, #ffffff);
-  --cds-field-hover: var(--colors-surface-muted, #e8e8e8);
-  --cds-field-hover-01: var(--colors-surface-muted, #e8e8e8);
-  --cds-field-hover-02: var(--colors-surface-muted, #e8e8e8);
-  --cds-field-hover-03: var(--colors-surface-muted, #e8e8e8);
+  --cds-field: var(--egen-panel-input-background, var(--egen-colors-surface-muted));
+  --cds-field-01: var(--egen-panel-input-background, var(--egen-colors-surface-muted));
+  --cds-field-02: var(--egen-colors-surface-muted);
+  --cds-field-03: var(--egen-colors-surface-muted);
+  --cds-field-hover: var(--egen-colors-surface-muted);
+  --cds-field-hover-01: var(--egen-colors-surface-muted);
+  --cds-field-hover-02: var(--egen-colors-surface-muted);
+  --cds-field-hover-03: var(--egen-colors-surface-muted);
 
   // ─── Bordures ─────────────────────────────────────────────────────────────
-  --cds-border-subtle: var(--colors-border-default, #e0e0e0);
-  --cds-border-subtle-00: var(--colors-border-default, #e0e0e0);
-  --cds-border-subtle-01: var(--colors-border-default, #e0e0e0);
-  --cds-border-subtle-02: var(--colors-border-default, #e0e0e0);
-  --cds-border-subtle-03: var(--colors-border-default, #c6c6c6);
-  --cds-border-subtle-selected: var(--colors-border-default, #c6c6c6);
-  --cds-border-subtle-selected-01: var(--colors-border-default, #c6c6c6);
-  --cds-border-subtle-selected-02: var(--colors-border-default, #c6c6c6);
-  --cds-border-subtle-selected-03: var(--colors-border-default, #c6c6c6);
-  --cds-border-strong: var(--colors-border-default, #8d8d8d);
-  --cds-border-strong-01: var(--colors-border-default, #8d8d8d);
-  --cds-border-strong-02: var(--colors-border-default, #8d8d8d);
-  --cds-border-strong-03: var(--colors-border-default, #8d8d8d);
-  --cds-border-tile: var(--colors-border-default, #c6c6c6);
-  --cds-border-tile-01: var(--colors-border-default, #c6c6c6);
-  --cds-border-tile-02: var(--colors-border-default, #c6c6c6);
-  --cds-border-tile-03: var(--colors-border-default, #c6c6c6);
-  --cds-border-interactive: var(--colors-primary-500, #0f62fe);
-  --cds-border-inverse: var(--colors-surface-foreground, #161616);
-  --cds-border-disabled: var(--colors-border-default, #c6c6c6);
+  --cds-border-subtle: var(--egen-colors-border-default);
+  --cds-border-subtle-00: var(--egen-colors-border-default);
+  --cds-border-subtle-01: var(--egen-colors-border-default);
+  --cds-border-subtle-02: var(--egen-colors-border-default);
+  --cds-border-subtle-03: var(--egen-colors-border-default);
+  --cds-border-subtle-selected: var(--egen-colors-border-default);
+  --cds-border-subtle-selected-01: var(--egen-colors-border-default);
+  --cds-border-subtle-selected-02: var(--egen-colors-border-default);
+  --cds-border-subtle-selected-03: var(--egen-colors-border-default);
+  --cds-border-strong: var(--egen-colors-border-default);
+  --cds-border-strong-01: var(--egen-colors-border-default);
+  --cds-border-strong-02: var(--egen-colors-border-default);
+  --cds-border-strong-03: var(--egen-colors-border-default);
+  --cds-border-tile: var(--egen-colors-border-default);
+  --cds-border-tile-01: var(--egen-colors-border-default);
+  --cds-border-tile-02: var(--egen-colors-border-default);
+  --cds-border-tile-03: var(--egen-colors-border-default);
+  --cds-border-interactive: var(--egen-colors-primary-500);
+  --cds-border-inverse: var(--egen-colors-surface-foreground);
+  --cds-border-disabled: var(--egen-colors-border-default);
 
   // ─── Fonds génériques ───────────────────────────────────────────────────────
-  --cds-background: var(--colors-surface-background, #ffffff);
-  --cds-background-hover: var(--colors-surface-muted, #e8e8e8);
-  --cds-background-active: var(--colors-surface-accent, #c6c6c6);
-  --cds-background-selected: var(--colors-surface-accent, #e0e0e0);
-  --cds-background-selected-hover: var(--colors-surface-accent, #d1d1d1);
-  --cds-background-brand: var(--colors-primary-500, #0f62fe);
-  --cds-background-inverse: var(--colors-surface-foreground, #393939);
-  --cds-background-inverse-hover: var(--colors-surface-foreground, #4c4c4c);
+  --cds-background: var(--egen-colors-surface-background);
+  --cds-background-hover: var(--egen-colors-surface-muted);
+  --cds-background-active: var(--egen-colors-surface-accent);
+  --cds-background-selected: var(--egen-colors-surface-accent);
+  --cds-background-selected-hover: var(--egen-colors-surface-accent);
+  --cds-background-brand: var(--egen-colors-primary-500);
+  --cds-background-inverse: var(--egen-colors-surface-foreground);
+  --cds-background-inverse-hover: var(--egen-colors-surface-foreground);
 
   // ─── Textes ───────────────────────────────────────────────────────────────
-  --cds-text-primary: var(--colors-surface-foreground, #161616);
-  --cds-text-secondary: var(--colors-surface-muted-foreground, #525252);
-  --cds-text-placeholder: var(--colors-surface-muted-foreground, #a8a8a8);
-  --cds-text-helper: var(--colors-surface-muted-foreground, #6f6f6f);
-  --cds-text-disabled: var(--colors-surface-muted-foreground, #c6c6c6);
-  --cds-text-inverse: var(--colors-on-primary, #ffffff);
-  --cds-text-on-color: var(--colors-on-primary, #ffffff);
-  --cds-text-on-color-disabled: var(--colors-on-primary, #8d8d8d);
-  --cds-text-error: var(--colors-error-500, #da1e28);
+  --cds-text-primary: var(--egen-colors-surface-foreground);
+  --cds-text-secondary: var(--egen-colors-surface-muted-foreground);
+  --cds-text-placeholder: var(--egen-colors-surface-muted-foreground);
+  --cds-text-helper: var(--egen-colors-surface-muted-foreground);
+  --cds-text-disabled: var(--egen-colors-surface-muted-foreground);
+  --cds-text-inverse: var(--egen-colors-on-primary);
+  --cds-text-on-color: var(--egen-colors-on-primary);
+  --cds-text-on-color-disabled: var(--egen-colors-on-primary);
+  --cds-text-error: var(--egen-colors-error-500);
 
   // ─── Icônes ───────────────────────────────────────────────────────────────
-  --cds-icon-primary: var(--colors-surface-foreground, #161616);
-  --cds-icon-secondary: var(--colors-surface-muted-foreground, #525252);
-  --cds-icon-disabled: var(--colors-surface-muted-foreground, #c6c6c6);
-  --cds-icon-inverse: var(--colors-on-primary, #ffffff);
-  --cds-icon-interactive: var(--colors-primary-500, #0f62fe);
-  --cds-icon-on-color: var(--colors-on-primary, #ffffff);
-  --cds-icon-on-color-disabled: var(--colors-on-primary, #8d8d8d);
+  --cds-icon-primary: var(--egen-colors-surface-foreground);
+  --cds-icon-secondary: var(--egen-colors-surface-muted-foreground);
+  --cds-icon-disabled: var(--egen-colors-surface-muted-foreground);
+  --cds-icon-inverse: var(--egen-colors-on-primary);
+  --cds-icon-interactive: var(--egen-colors-primary-500);
+  --cds-icon-on-color: var(--egen-colors-on-primary);
+  --cds-icon-on-color-disabled: var(--egen-colors-on-primary);
 
   // ─── Interactif / liens ─────────────────────────────────────────────────────
-  --cds-interactive: var(--colors-primary-500, #0f62fe);
-  --cds-link-primary: var(--colors-primary-400, #0f62fe);
-  --cds-link-primary-hover: var(--colors-primary-300, #0043ce);
-  --cds-link-secondary: var(--colors-primary-600, #0043ce);
-  --cds-link-inverse: var(--colors-on-primary, #ffffff);
-  --cds-link-visited: var(--colors-secondary-500, #8a3ffc);
+  --cds-interactive: var(--egen-colors-primary-500);
+  --cds-link-primary: var(--egen-colors-primary-400);
+  --cds-link-primary-hover: var(--egen-colors-primary-300);
+  --cds-link-secondary: var(--egen-colors-primary-600);
+  --cds-link-inverse: var(--egen-colors-on-primary);
+  --cds-link-visited: var(--egen-colors-secondary-500);
 
   // ─── Focus / survol ─────────────────────────────────────────────────────────
-  --cds-focus: var(--colors-border-ring, var(--colors-primary-500, #0f62fe));
-  --cds-focus-inset: var(--colors-on-primary, #ffffff);
-  --cds-focus-inverse: var(--colors-on-primary, #ffffff);
-  --cds-highlight: var(--colors-primary-100, #d0e2ff);
-  --cds-toggle-off: var(--colors-neutral-400, #8d8d8d);
-  --cds-overlay: var(--colors-surface-overlay, rgba(22, 22, 22, 0.5));
+  --cds-focus: var(--egen-colors-border-ring, var(--egen-colors-primary-500));
+  --cds-focus-inset: var(--egen-colors-on-primary);
+  --cds-focus-inverse: var(--egen-colors-on-primary);
+  --cds-highlight: var(--egen-colors-primary-100);
+  --cds-toggle-off: var(--egen-colors-neutral-400);
+  --cds-overlay: var(--egen-colors-surface-overlay, rgba(22, 22, 22, 0.5));
   --cds-shadow: rgba(0, 0, 0, 0.3);
 
   // ─── Statuts / support ──────────────────────────────────────────────────────
-  --cds-support-error: var(--colors-error-500, #da1e28);
-  --cds-support-success: var(--colors-success-500, #24a148);
-  --cds-support-warning: var(--colors-warning-500, #f1c21b);
-  --cds-support-info: var(--colors-info-500, #0043ce);
-  --cds-support-error-inverse: var(--colors-error-600, #fa4d56);
-  --cds-support-success-inverse: var(--colors-success-600, #42be65);
-  --cds-support-warning-inverse: var(--colors-warning-600, #f1c21b);
-  --cds-support-info-inverse: var(--colors-info-600, #4589ff);
+  --cds-support-error: var(--egen-colors-error-500);
+  --cds-support-success: var(--egen-colors-success-500);
+  --cds-support-warning: var(--egen-colors-warning-500);
+  --cds-support-info: var(--egen-colors-info-500);
+  --cds-support-error-inverse: var(--egen-colors-error-600);
+  --cds-support-success-inverse: var(--egen-colors-success-600);
+  --cds-support-warning-inverse: var(--egen-colors-warning-600);
+  --cds-support-info-inverse: var(--egen-colors-info-600);
 
   // ─── Squelettes de chargement ────────────────────────────────────────────────
-  --cds-skeleton-background: var(--colors-surface-skeleton, #e8e8e8);
-  --cds-skeleton-element: var(--colors-surface-muted, #c6c6c6);
+  --cds-skeleton-background: var(--egen-colors-surface-skeleton);
+  --cds-skeleton-element: var(--egen-colors-surface-muted);
 
   // ─── Boutons ──────────────────────────────────────────────────────────────
-  --cds-button-primary: var(--colors-primary-600, #0f62fe);
-  --cds-button-primary-hover: var(--colors-primary-700, #0050e6);
-  --cds-button-primary-active: var(--colors-primary-800, #002d9c);
-  --cds-button-secondary: var(--colors-surface-muted-foreground, #393939);
-  --cds-button-secondary-hover: var(--colors-surface-foreground, #4c4c4c);
-  --cds-button-secondary-active: var(--colors-surface-foreground, #6f6f6f);
-  --cds-button-danger-primary: var(--colors-error-600, #da1e28);
-  --cds-button-danger-hover: var(--colors-error-700, #b81921);
-  --cds-button-danger-active: var(--colors-error-800, #750e13);
-  --cds-button-separator: var(--colors-border-default, #e0e0e0);
-  --cds-button-disabled: var(--colors-border-default, #c6c6c6);
+  --cds-button-primary: var(--egen-colors-primary-600);
+  --cds-button-primary-hover: var(--egen-colors-primary-700);
+  --cds-button-primary-active: var(--egen-colors-primary-800);
+  --cds-button-secondary: var(--egen-colors-surface-muted-foreground);
+  --cds-button-secondary-hover: var(--egen-colors-surface-foreground);
+  --cds-button-secondary-active: var(--egen-colors-surface-foreground);
+  --cds-button-danger-primary: var(--egen-colors-error-600);
+  --cds-button-danger-hover: var(--egen-colors-error-700);
+  --cds-button-danger-active: var(--egen-colors-error-800);
+  --cds-button-separator: var(--egen-colors-border-default);
+  --cds-button-disabled: var(--egen-colors-border-default);
 
   // ─── Tokens "AI" (mise en avant de contenu généré, Modal/Skeleton) ────────────
-  --cds-ai-border-strong: var(--colors-primary-500, #4589ff);
-  --cds-ai-overlay: color-mix(in srgb, var(--colors-primary-900, #001141) 50%, transparent);
-  --cds-ai-drop-shadow: color-mix(in srgb, var(--colors-primary-600, #0f62fe) 10%, transparent);
-  --cds-ai-inner-shadow: color-mix(in srgb, var(--colors-primary-400, #4589ff) 10%, transparent);
-  --cds-ai-skeleton-background: var(--colors-primary-100, #d0e2ff);
+  --cds-ai-border-strong: var(--egen-colors-primary-500);
+  --cds-ai-overlay: color-mix(in srgb, var(--egen-colors-primary-900) 50%, transparent);
+  --cds-ai-drop-shadow: color-mix(in srgb, var(--egen-colors-primary-600) 10%, transparent);
+  --cds-ai-inner-shadow: color-mix(in srgb, var(--egen-colors-primary-400) 10%, transparent);
+  --cds-ai-skeleton-background: var(--egen-colors-primary-100);
 }

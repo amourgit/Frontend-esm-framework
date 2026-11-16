@@ -4,21 +4,21 @@
 
 /* UI Shell Header */
 .cds--header {
-  @include brand-01(background-color);
+  background-color: var(--egen-colors-primary-600);
   border-bottom: none;
 }
 
 .cds--header__action:hover {
-  @include brand-02(background-color);
+  background-color: var(--egen-colors-primary-700);
 }
 
 .cds--header__action--active {
-  @include brand-02(background-color);
-  @include brand-02(border-color);
+  background-color: var(--egen-colors-primary-700);
+  border-color: var(--egen-colors-primary-700);
 }
 
 .cds--header-panel {
-  @include brand-02(background-color);
+  background-color: var(--egen-colors-primary-700);
 }
 
 .cds--header__menu-trigger > svg,
@@ -76,7 +76,7 @@
 }
 
 .cds--content-switcher-btn:not(.darkThemeSwitch) {
-  background-color: $ui-02;
+  background-color: var(--egen-colors-surface-card);
   border: none;
   border-top: 1px solid colors.$blue-30;
   border-bottom: 1px solid colors.$blue-30;
@@ -187,18 +187,18 @@
 .cds--tabs--scrollable .cds--tabs--scrollable__nav-item--selected .cds--tabs--scrollable__nav-link,
 .cds--tabs--scrollable .cds--tabs--scrollable__nav-item--selected .cds--tabs--scrollable__nav-link:active,
 .cds--tabs--scrollable .cds--tabs--scrollable__nav-item--selected .cds--tabs--scrollable__nav-link:focus {
-  border-bottom: 2px solid var(--brand-03);
+  border-bottom: 2px solid var(--egen-colors-primary-500);
 }
 
 .cds--tabs--scrollable.cds--tabs--scrollable--container
   .cds--tabs--scrollable__nav-item--selected
   .cds--tabs--scrollable__nav-link {
-  box-shadow: inset 0 2px 0 0 var(--brand-03);
+  box-shadow: inset 0 2px 0 0 var(--egen-colors-primary-500);
 }
 
 .cds--tabs--scrollable .cds--tabs--scrollable__nav-link:active,
 .cds--tabs--scrollable .cds--tabs--scrollable__nav-link:focus {
-  outline: 2px solid var(--brand-03);
+  outline: 2px solid var(--egen-colors-primary-500);
 }
 
 /* DataTables */
@@ -211,7 +211,7 @@
 }
 
 .cds--data-table-container {
-  background: $ui-02;
+  background: var(--egen-colors-surface-card);
   position: relative;
 }
 
@@ -228,7 +228,7 @@
 .cds--data-table-header__title {
   font-size: layout.$spacing-05;
   font-weight: 600;
-  color: $text-02;
+  color: var(--egen-colors-surface-muted-foreground);
 }
 
 .cds--data-table thead,
@@ -238,33 +238,33 @@
 .cds--data-table--sort th,
 .cds--data-table--sort th .cds--table-sort__flex {
   min-height: unset;
-  color: $text-02;
+  color: var(--egen-colors-surface-muted-foreground);
 }
 
 /* Alternate background and border colors for zebra styled table rows */
 
 // Datatables without expansion
 .cds--data-table--zebra tbody tr:not(.cds--parent-row):nth-child(odd) td {
-  background-color: $ui-02;
-  border-bottom: 1px solid $ui-03;
+  background-color: var(--egen-colors-surface-card);
+  border-bottom: 1px solid var(--egen-colors-border-default);
 }
 
 .cds--data-table--zebra tbody tr:not(.cds--parent-row):nth-child(2n) td {
-  background-color: $ui-01;
-  border-bottom: 1px solid $ui-03;
-  border-top: 1px solid $ui-03;
+  background-color: var(--egen-colors-surface-muted);
+  border-bottom: 1px solid var(--egen-colors-border-default);
+  border-top: 1px solid var(--egen-colors-border-default);
 }
 
 // Datatables with expansion
 .cds--data-table--zebra tbody tr[data-parent-row]:nth-child(4n + 1) td {
-  background-color: $ui-02;
-  border-bottom: 1px solid $ui-03;
-  border-top: 1px solid $ui-03;
+  background-color: var(--egen-colors-surface-card);
+  border-bottom: 1px solid var(--egen-colors-border-default);
+  border-top: 1px solid var(--egen-colors-border-default);
 }
 
 .cds--data-table--zebra tbody tr[data-parent-row]:nth-child(4n + 3) td {
-  background-color: $ui-01;
-  border-bottom: 1px solid $ui-03;
+  background-color: var(--egen-colors-surface-muted);
+  border-bottom: 1px solid var(--egen-colors-border-default);
 }
 
 /* Buttons */
@@ -273,27 +273,27 @@
 .cds--btn--tertiary:hover,
 .cds--btn--tertiary:active,
 .cds--btn--tertiary:focus {
-  @include brand-03(background-color);
+  background-color: var(--egen-colors-primary-500);
 }
 
 .cds--btn--primary:hover {
-  @include brand-02(background-color);
+  background-color: var(--egen-colors-primary-700);
 }
 
 .cds--btn--tertiary {
-  @include brand-03(color);
+  color: var(--egen-colors-primary-500);
 }
 
 .cds--btn--tertiary,
 .cds--btn--primary:focus,
 .cds--btn--tertiary:focus {
-  @include brand-03(border-color);
+  border-color: var(--egen-colors-primary-500);
 }
 
 .cds--btn--tertiary:hover,
 .cds--btn--tertiary:active,
 .cds--btn--tertiary:focus {
-  color: $ui-02;
+  color: var(--egen-colors-surface-card);
 }
 
 // Override right padding applied to icon-only ghost buttons
@@ -304,7 +304,7 @@
 /* Overflow menu */
 .cds--overflow-menu--flip {
   &.cds--overflow-menu-options {
-    background-color: $egen-background-grey;
+    background-color: var(--egen-colors-surface-muted);
     left: -6.025rem;
     min-width: 12.5rem;
     top: layout.$spacing-09;
@@ -329,13 +329,13 @@
 
 .cds--pagination-nav__page:not(.cds--pagination-nav__page--direction) {
   &::after {
-    @include brand-03(background-color);
+    background-color: var(--egen-colors-primary-500);
   }
 }
 
 .cds--pagination-nav__page .cds--pagination-nav__page--active,
 .cds--pagination-nav__page:focus {
-  outline: 2px solid var(--brand-03);
+  outline: 2px solid var(--egen-colors-primary-500);
 }
 
 /* Data table overflow menu */
@@ -675,12 +675,12 @@ html[dir='rtl'] {
 
         .active {
           border-left: unset !important;
-          border-right: layout.$spacing-03 solid var(--colors-primary-400, #009d9a);
+          border-right: layout.$spacing-03 solid var(--egen-colors-primary-400);
         }
 
         .enabled {
           border-left: unset !important;
-          border-right: layout.$spacing-03 solid var(--colors-primary-100, #9ef0f0);
+          border-right: layout.$spacing-03 solid var(--egen-colors-primary-100);
         }
       }
     }
@@ -718,8 +718,8 @@ html[dir='rtl'] {
 // This is to override the green border and background color which we apply to tertiary buttons. Since this in the Notification carbon uses blue.
 .cds--actionable-notification__action-button.cds--btn--tertiary {
   background-color: transparent;
-  border: 1px solid var(--colors-primary-600, #0f62fe);
-  color: var(--colors-primary-600, #0f62fe);
+  border: 1px solid var(--egen-colors-primary-600);
+  color: var(--egen-colors-primary-600);
 }
 
 .egen-icon {

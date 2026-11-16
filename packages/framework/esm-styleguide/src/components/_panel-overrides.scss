@@ -21,19 +21,19 @@
 }
 
 .cds--header__name {
-  color: var(--colors-surface-foreground);
+  color: var(--egen-colors-surface-foreground);
 }
 
 .cds--header__action:hover,
 .cds--header__action--active {
-  background: var(--colors-surface-translucent-hover) !important;
-  backdrop-filter: var(--panel-xs-backdrop-filter);
+  background: var(--egen-colors-surface-translucent-hover) !important;
+  backdrop-filter: var(--egen-panel-xs-backdrop-filter);
 }
 
 // ── Modals ───────────────────────────────────────────────────────────────────
 .cds--modal-container {
   @include panel.panel-surface('modal');
-  border-radius: var(--border-radius-2xl);
+  border-radius: var(--egen-border-radius-2xl);
 }
 
 .cds--modal-header,
@@ -51,19 +51,19 @@
 .cds--combo-box,
 .cds--overflow-menu-options {
   @include panel.panel-surface('dropdown');
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--egen-border-radius-xl);
 }
 
 .cds--dropdown-item:hover,
 .cds--overflow-menu-options__option:hover {
-  background: var(--colors-surface-translucent-hover) !important;
+  background: var(--egen-colors-surface-translucent-hover) !important;
 }
 
 // ── Toasts / Notifications ───────────────────────────────────────────────────
 .cds--toast-notification,
 .cds--inline-notification {
   @include panel.panel-surface('toast');
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--egen-border-radius-xl);
 }
 
 // ── Cards / Tiles ────────────────────────────────────────────────────────────
@@ -71,7 +71,7 @@
 .cds--tile--clickable,
 .cds--structured-list {
   @include panel.panel-surface('card');
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--egen-border-radius-xl);
 }
 
 // ── Inputs ───────────────────────────────────────────────────────────────────
@@ -80,26 +80,26 @@
 .cds--select-input,
 .cds--number-input {
   @include panel.panel-surface('input');
-  border-radius: var(--border-radius-md);
-  color: var(--colors-surface-foreground) !important;
+  border-radius: var(--egen-border-radius-md);
+  color: var(--egen-colors-surface-foreground) !important;
 
   &:focus,
   &:focus-within {
-    border-color: var(--colors-border-focus) !important;
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--colors-primary-500) 20%, transparent) !important;
-    background: var(--colors-surface-translucent-hover) !important;
+    border-color: var(--egen-colors-border-focus) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--egen-colors-primary-500) 20%, transparent) !important;
+    background: var(--egen-colors-surface-translucent-hover) !important;
   }
 }
 
 // ── Boutons ──────────────────────────────────────────────────────────────────
 .cds--btn--primary {
-  background: var(--colors-primary-600) !important;
-  box-shadow: var(--shadows-primary);
-  border-radius: var(--border-radius-md);
-  transition: var(--transitions-default);
+  background: var(--egen-colors-primary-600) !important;
+  box-shadow: var(--egen-shadows-primary);
+  border-radius: var(--egen-border-radius-md);
+  transition: var(--egen-transitions-default);
 
   &:hover {
-    background: var(--colors-primary-700) !important;
+    background: var(--egen-colors-primary-700) !important;
     @include panel.emphasis-glow;
   }
 }
@@ -107,14 +107,14 @@
 .cds--btn--ghost,
 .cds--btn--tertiary {
   background: transparent;
-  border-color: var(--colors-border-default);
-  border-radius: var(--border-radius-md);
-  color: var(--colors-surface-foreground);
-  backdrop-filter: var(--panel-xs-backdrop-filter);
-  transition: var(--transitions-glass);
+  border-color: var(--egen-colors-border-default);
+  border-radius: var(--egen-border-radius-md);
+  color: var(--egen-colors-surface-foreground);
+  backdrop-filter: var(--egen-panel-xs-backdrop-filter);
+  transition: var(--egen-transitions-glass);
 
   &:hover {
-    background: var(--colors-surface-translucent) !important;
+    background: var(--egen-colors-surface-translucent) !important;
   }
 }
 
@@ -125,6 +125,6 @@
 
 // Panneau workspace
 #egen-workspaces-container {
-  backdrop-filter: var(--panel-lg-backdrop-filter);
-  border-left: var(--colors-border-default) solid 1px;
+  backdrop-filter: var(--egen-panel-lg-backdrop-filter);
+  border-left: var(--egen-colors-border-default) solid 1px;
 }

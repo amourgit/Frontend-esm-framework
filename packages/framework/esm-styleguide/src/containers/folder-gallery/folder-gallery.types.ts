@@ -29,6 +29,6 @@ export interface FolderGalleryProps {
   itemWidth?: string;
   /** Hauteur d'une carte repliée/dépliée. Défaut : 18rem. */
   itemHeight?: string;
-  /** Couleur d'accent des reflets/bordures du dossier — token du thème (ex. `var(--colors-primary-500)`). Défaut : ton neutre fixe (voir doc du composant). */
+  /** Couleur d'accent des reflets/bordures du dossier — token du thème (ex. `var(--egen-colors-primary-500)`). Défaut : ton neutre fixe (voir doc du composant). */
   accentColor?: string;
 }

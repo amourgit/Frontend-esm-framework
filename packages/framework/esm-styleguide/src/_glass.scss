@@ -14,13 +14,13 @@
 //  obtenir EXACTEMENT le même rendu via `@include glass.glass-surface;`,
 //  sans dupliquer la recette ni la retoucher.
 //
-//  DYNAMIQUE PAR CONCEPTION : `--effects-glass-cos`, `--effects-glass-sin`,
-//  `--effects-glass-rim-intensity` et `--effects-glass-rim-gradient` ont une
+//  DYNAMIQUE PAR CONCEPTION : `--egen-effects-glass-cos`, `--egen-effects-glass-sin`,
+//  `--egen-effects-glass-rim-intensity` et `--egen-effects-glass-rim-gradient` ont une
 //  valeur par défaut statique (0, 0, 0.6, none — rendu "au repos", identique
 //  à un LiquidGlassButton non survolé/sans suivi de lumière). Si un jour un
 //  système de suivi de lumière (souris, capteur...) est branché sur un
 //  élément particulier, il lui suffit de faire
-//  `el.style.setProperty('--effects-glass-cos', ...)` sur CET élément pour
+//  `el.style.setProperty('--egen-effects-glass-cos', ...)` sur CET élément pour
 //  faire réagir le reflet — TOUS les autres composants utilisant ce mixin
 //  ailleurs dans l'app restent inchangés (la variable est scoped par défaut
 //  au niveau où elle est redéfinie). Aucune modification de ce fichier n'est
@@ -43,11 +43,11 @@
     z-index: 0;
     border-radius: inherit;
     pointer-events: none;
-    background: var(--effects-glass-specular-background);
-    background-image: var(--effects-glass-specular-highlight);
-    backdrop-filter: var(--effects-glass-specular-backdrop-filter);
-    -webkit-backdrop-filter: var(--effects-glass-specular-backdrop-filter-webkit);
-    box-shadow: var(--effects-glass-bevel-shadow-light), var(--effects-glass-bevel-shadow-dark), var(--effects-glass-bevel-shadow-outer);
+    background: var(--egen-effects-glass-specular-background);
+    background-image: var(--egen-effects-glass-specular-highlight);
+    backdrop-filter: var(--egen-effects-glass-specular-backdrop-filter);
+    -webkit-backdrop-filter: var(--egen-effects-glass-specular-backdrop-filter-webkit);
+    box-shadow: var(--egen-effects-glass-bevel-shadow-light), var(--egen-effects-glass-bevel-shadow-dark), var(--egen-effects-glass-bevel-shadow-outer);
   }
 
   // ── Liseré lumineux (bordure en dégradé, réservée aux bords via un masque) ──
@@ -59,8 +59,8 @@
     border-radius: inherit;
     padding: 1px;
     pointer-events: none;
-    background: var(--effects-glass-rim-gradient);
-    opacity: var(--effects-glass-rim-opacity);
+    background: var(--egen-effects-glass-rim-gradient);
+    opacity: var(--egen-effects-glass-rim-opacity);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);

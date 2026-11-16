@@ -48,7 +48,7 @@
 //    }
 //    .mon-modal {
 //      @include panel.panel-surface('modal');
-//      border-radius: var(--border-radius-2xl);
+//      border-radius: var(--egen-border-radius-2xl);
 //    }
 //
 // ============================================================================
@@ -63,12 +63,12 @@
 
 /// Applique le style de panneau générique d'une taille libre (xs→xl).
 @mixin panel-size($size: 'md') {
-  background: var(--panel-#{$size}-background);
-  backdrop-filter: var(--panel-#{$size}-backdrop-filter);
-  -webkit-backdrop-filter: var(--panel-#{$size}-backdrop-filter);
-  border: var(--panel-#{$size}-border);
-  box-shadow: var(--panel-#{$size}-box-shadow);
-  transition: var(--transitions-glass);
+  background: var(--egen-panel-#{$size}-background);
+  backdrop-filter: var(--egen-panel-#{$size}-backdrop-filter);
+  -webkit-backdrop-filter: var(--egen-panel-#{$size}-backdrop-filter);
+  border: var(--egen-panel-#{$size}-border);
+  box-shadow: var(--egen-panel-#{$size}-box-shadow);
+  transition: var(--egen-transitions-glass);
 }
 
 /// Applique le style de panneau d'un composant de base nommé
@@ -79,45 +79,45 @@
 /// besoin d'un nouveau composant de base, elle l'ajoute dans son JSON de
 /// thème (ou sa surcharge) — pas ici.
 @mixin panel-surface($component) {
-  background: var(--panel-#{$component}-background);
-  backdrop-filter: var(--panel-#{$component}-backdrop-filter);
-  -webkit-backdrop-filter: var(--panel-#{$component}-backdrop-filter);
-  border: var(--panel-#{$component}-border);
-  box-shadow: var(--panel-#{$component}-box-shadow);
-  transition: var(--transitions-glass);
+  background: var(--egen-panel-#{$component}-background);
+  backdrop-filter: var(--egen-panel-#{$component}-backdrop-filter);
+  -webkit-backdrop-filter: var(--egen-panel-#{$component}-backdrop-filter);
+  border: var(--egen-panel-#{$component}-border);
+  box-shadow: var(--egen-panel-#{$component}-box-shadow);
+  transition: var(--egen-transitions-glass);
 }
 
 /// Variante "panel-surface" pour la sidebar (bordure latérale + transition dédiée)
 @mixin panel-sidebar {
-  background: var(--panel-sidebar-background);
-  backdrop-filter: var(--panel-sidebar-backdrop-filter);
-  -webkit-backdrop-filter: var(--panel-sidebar-backdrop-filter);
-  border-right: var(--panel-sidebar-border);
-  box-shadow: var(--panel-sidebar-box-shadow);
-  transition: var(--transitions-sidebar);
+  background: var(--egen-panel-sidebar-background);
+  backdrop-filter: var(--egen-panel-sidebar-backdrop-filter);
+  -webkit-backdrop-filter: var(--egen-panel-sidebar-backdrop-filter);
+  border-right: var(--egen-panel-sidebar-border);
+  box-shadow: var(--egen-panel-sidebar-box-shadow);
+  transition: var(--egen-transitions-sidebar);
 }
 
 /// Variante "panel-surface" pour le header (sticky + bordure basse)
 @mixin panel-header {
-  background: var(--panel-header-background);
-  backdrop-filter: var(--panel-header-backdrop-filter);
-  -webkit-backdrop-filter: var(--panel-header-backdrop-filter);
-  border-bottom: var(--panel-header-border);
-  box-shadow: var(--panel-header-box-shadow);
+  background: var(--egen-panel-header-background);
+  backdrop-filter: var(--egen-panel-header-backdrop-filter);
+  -webkit-backdrop-filter: var(--egen-panel-header-backdrop-filter);
+  border-bottom: var(--egen-panel-header-border);
+  box-shadow: var(--egen-panel-header-box-shadow);
   position: sticky;
   top: 0;
-  z-index: var(--z-index-sticky);
-  transition: var(--transitions-glass);
+  z-index: var(--egen-z-index-sticky);
+  transition: var(--egen-transitions-glass);
 }
 
 /// Effet de mise en avant (glow) sur un bouton ou élément interactif
 @mixin emphasis-glow {
-  box-shadow: var(--shadows-glow);
+  box-shadow: var(--egen-shadows-glow);
 }
 
 /// Overlay de fond générique (pour modals, drawers, etc.)
 @mixin panel-overlay {
-  background: var(--panel-overlay-background);
-  backdrop-filter: var(--panel-overlay-backdrop-filter);
-  -webkit-backdrop-filter: var(--panel-overlay-backdrop-filter);
+  background: var(--egen-panel-overlay-background);
+  backdrop-filter: var(--egen-panel-overlay-backdrop-filter);
+  -webkit-backdrop-filter: var(--egen-panel-overlay-backdrop-filter);
 }

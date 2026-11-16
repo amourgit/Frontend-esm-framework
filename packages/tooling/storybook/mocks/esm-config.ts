@@ -72,9 +72,6 @@ function getDefaults() {
     } catch {
       // Fallback: return sensible defaults if the schema can't be loaded.
       cachedDefaults = {
-        'Brand color #1': '#005d5d',
-        'Brand color #2': '#004144',
-        'Brand color #3': '#007d79',
         implementationName: 'Office',
       };
     }

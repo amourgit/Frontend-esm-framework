@@ -6,7 +6,7 @@
 //  `panel.panel-surface('card')` — exactement l'aspect glassmorphism du
 //  composant source (fond sombre translucide + `backdrop-blur-md` +
 //  liseré + ombre portée), sans dupliquer une seule valeur ici. En mode
-//  sombre, `--panel-card-background` résout vers `rgba(15, 23, 42, 0.65)` —
+//  sombre, `--egen-panel-card-background` résout vers `rgba(15, 23, 42, 0.65)` —
 //  la même teinte (slate-900) que l'original, mais pilotée par le thème.
 //
 //  Position/rotation/zIndex de la pile restent gérées en JS (props
@@ -25,7 +25,7 @@
   gap: 1.5rem;
   padding: 1.5rem;
   user-select: none;
-  border-radius: var(--border-radius-2xl);
+  border-radius: var(--egen-border-radius-2xl);
 
   @include panel.panel-surface('card');
 }
@@ -45,29 +45,29 @@
   width: 8rem;
   height: 8rem;
   margin: 0 auto;
-  border-radius: var(--border-radius-full);
-  border: 2px solid var(--colors-border-default, transparent);
-  background: var(--colors-surface-muted);
+  border-radius: var(--egen-border-radius-full);
+  border: 2px solid var(--egen-colors-border-default, transparent);
+  background: var(--egen-colors-surface-muted);
   object-fit: cover;
   pointer-events: none;
 }
 
 .testimonial {
   text-align: center;
-  font-size: var(--typography-font-size-lg-size);
-  line-height: var(--typography-font-size-lg-line-height);
+  font-size: var(--egen-typography-font-size-lg-size);
+  line-height: var(--egen-typography-font-size-lg-line-height);
   font-style: italic;
-  color: var(--colors-surface-muted-foreground);
+  color: var(--egen-colors-surface-muted-foreground);
 }
 
 .author {
   text-align: center;
-  font-size: var(--typography-font-size-sm-size);
-  line-height: var(--typography-font-size-sm-line-height);
-  font-weight: var(--typography-font-weight-medium);
+  font-size: var(--egen-typography-font-size-sm-size);
+  line-height: var(--egen-typography-font-size-sm-line-height);
+  font-weight: var(--egen-typography-font-weight-medium);
   // Texte d'accent indigo — paire background/foreground dédiée aux surfaces
   // "accent" du thème (garantie lisible dans les deux modes), plutôt qu'une
-  // teinte fixe de l'échelle --colors-primary-* qui perdrait du contraste
+  // teinte fixe de l'échelle --egen-colors-primary-* qui perdrait du contraste
   // sur fond clair (le composant source ne visait qu'un rendu sombre fixe).
-  color: var(--colors-surface-accent-foreground);
+  color: var(--egen-colors-surface-accent-foreground);
 }

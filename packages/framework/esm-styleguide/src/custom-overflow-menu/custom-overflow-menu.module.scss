@@ -17,7 +17,7 @@
   min-width: initial;
   left: auto;
   right: 0;
-  background-color: $ui-01;
+  background-color: var(--egen-colors-surface-muted);
   margin-right: 0.2rem;
   box-shadow: 0 6px 6px rgb(0 0 0 / 30%);
 }

@@ -10,7 +10,7 @@ $extraWideWorkspaceWidth: 48.25rem;
 
 .loader {
   display: flex;
-  background-color: $egen-background-grey;
+  background-color: var(--egen-colors-surface-muted);
   justify-content: center;
   min-height: layout.$spacing-09;
 }
@@ -46,8 +46,8 @@ $extraWideWorkspaceWidth: 48.25rem;
   .header {
     position: relative;
     box-sizing: content-box;
-    border-bottom: 1px solid $text-03;
-    background-color: $ui-03;
+    border-bottom: 1px solid var(--egen-colors-surface-muted-foreground);
+    background-color: var(--egen-colors-border-default);
     height: var(--workspace-header-height);
 
     a {
@@ -66,7 +66,7 @@ $extraWideWorkspaceWidth: 48.25rem;
 
   .headerButtons {
     button {
-      background-color: $ui-02;
+      background-color: var(--egen-colors-surface-card);
       border-right: 1px solid colors.$gray-20;
 
       > svg {
@@ -74,7 +74,7 @@ $extraWideWorkspaceWidth: 48.25rem;
       }
 
       &:hover {
-        background-color: $ui-01;
+        background-color: var(--egen-colors-surface-muted);
       }
     }
   }
@@ -97,7 +97,7 @@ $extraWideWorkspaceWidth: 48.25rem;
     position: fixed;
     top: var(--egen-navbar-height);
     bottom: var(--egen-footer-height, 0px);
-    border-left: 1px solid $text-03;
+    border-left: 1px solid var(--egen-colors-surface-muted-foreground);
     z-index: 50;
     background-color: white;
     transition:
@@ -154,7 +154,7 @@ $extraWideWorkspaceWidth: 48.25rem;
   }
 
   .workspaceContent {
-    background-color: $ui-02;
+    background-color: var(--egen-colors-surface-card);
     overflow-y: auto;
     flex-grow: 1;
   }
@@ -169,7 +169,7 @@ $extraWideWorkspaceWidth: 48.25rem;
   }
 
   .overlay {
-    background-color: $ui-02;
+    background-color: var(--egen-colors-surface-card);
     display: flex;
     flex-direction: column;
     z-index: 1000;
@@ -184,18 +184,18 @@ $extraWideWorkspaceWidth: 48.25rem;
 :global(.egen-breakpoint-lt-desktop) {
   .header {
     position: relative;
-    background-color: var(--brand-02);
+    background-color: var(--egen-colors-primary-700);
 
     a {
-      color: $ui-02;
+      color: var(--egen-colors-surface-card);
     }
 
     button {
-      color: $ui-02;
-      background-color: var(--brand-02);
+      color: var(--egen-colors-surface-card);
+      background-color: var(--egen-colors-primary-700);
 
       &:hover {
-        background-color: var(--brand-03);
+        background-color: var(--egen-colors-primary-500);
       }
     }
   }
@@ -221,7 +221,7 @@ $extraWideWorkspaceWidth: 48.25rem;
   }
 
   .overlay {
-    background-color: $ui-02;
+    background-color: var(--egen-colors-surface-card);
     display: flex;
     flex-direction: column;
   }
@@ -235,7 +235,7 @@ $extraWideWorkspaceWidth: 48.25rem;
   }
 
   .workspaceContent {
-    background-color: $ui-01;
+    background-color: var(--egen-colors-surface-muted);
     overflow-y: auto;
     height: 100%;
   }

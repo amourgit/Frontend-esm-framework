@@ -65,6 +65,14 @@ Conserver **`@egen-civitas/esm-theme`**, publié en **2.0.0**, comme *couche d'i
 
 ---
 
+## ADR-008 — Éradication complète de l'ancien système — **Acceptée (exécutée)**
+
+Supprimé du dépôt (cahier des charges §27) : aplatisseur, injecteur, chargeur historique, schéma, fusion, singleton d'origine ; **thème de secours codé en dur** ; **couche d'alias SCSS historiques** (`$ui-01`, `$text-02`, `$brand-primary-*`… couleurs Carbon figées) ; **mixins et variables `brand-01/02/03`** (teal codé en dur) et leur réglage de configuration `Brand color #1/#2/#3` (`setupBranding`) ; **tous les replis hexadécimaux** `var(--egen-…, #hex)` ; clés héritées du mock Storybook.
+Conséquence assumée : sans thème chargé, il n'y a plus de couleurs de repli — le défaut est signalé (`status: 'error'`), jamais masqué. Storybook charge désormais le thème par défaut (option `themeDocuments`).
+Garde-fou : `consumers.test.ts` échoue si l'un de ces éléments réapparaît dans un fichier suivi par git. Scripts rejouables sur les dépôts consommateurs : `scripts/migrate-theme-vars.mjs`, `scripts/migrate-legacy-style-aliases.mjs`.
+
+---
+
 ## ADR-007 — Cibles natives — **Proposée** (à vérifier en DS-4)
 
 Le chantier multiplateforme (R1, R4, N1–N5) s'applique : aucun test de plateforme en dehors d'`esm-platform`/`targets.js`, aucune dépendance native. Les exporteurs natifs de TokiForge (iOS/Android/RN) sont une opportunité, hors périmètre tant qu'aucune app n'en a besoin (N9).

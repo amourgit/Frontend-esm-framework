@@ -48,7 +48,7 @@ const isPresetConfig = (animation: CardModalProps['animation']): animation is Ca
  *
  * @example Variante warp (distorsion + halos lumineux, couleur personnalisable)
  * ```tsx
- * <CardModal trigger={<button>Alerte</button>} animation="warp" warpColor="var(--colors-primary-500)" cardVariant="glass">
+ * <CardModal trigger={<button>Alerte</button>} animation="warp" warpColor="var(--egen-colors-primary-500)" cardVariant="glass">
  *   <p>Contenu</p>
  * </CardModal>
  * ```
@@ -57,7 +57,7 @@ const isPresetConfig = (animation: CardModalProps['animation']): animation is Ca
  * ```tsx
  * <CardModal
  *   cardVariant="dots"
- *   cardProps={{ title: 'Confirmation', dotsColor: 'var(--colors-warning-500)' }}
+ *   cardProps={{ title: 'Confirmation', dotsColor: 'var(--egen-colors-warning-500)' }}
  *   animation={{ preset: 'slide-up', duration: 0.4 }}
  *   draggable
  *   open={isOpen}
@@ -201,7 +201,7 @@ export const CardModal: React.FC<CardModalProps> = ({
               className={classNames(styles.overlay, overlayClassName)}
               style={
                 effect === 'warp'
-                  ? ({ '--card-modal-warp-color': warpColor ?? 'var(--colors-error-500)' } as React.CSSProperties)
+                  ? ({ '--card-modal-warp-color': warpColor ?? 'var(--egen-colors-error-500)' } as React.CSSProperties)
                   : undefined
               }
               initial={{ opacity: 0 }}

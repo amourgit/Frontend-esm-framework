@@ -1,263 +1,262 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ThemeEngine } from '../engine';
+import { ThemeEngine } from '../engine.js';
+import { ThemeValidationError } from '../model/errors.js';
+import type { ThemeStorage } from '../model/types.js';
 
-function mockFetchJson(themesByUrl: Record<string, unknown>) {
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async (input: string) => {
-      const url = String(input).split('?')[0];
-      const body = themesByUrl[url];
-      if (!body) return { ok: false, status: 404 } as Response;
-      const text = JSON.stringify(body);
-      return { ok: true, text: async () => text, json: async () => body } as unknown as Response;
-    }),
-  );
-}
-
-const BASE_THEME = {
-  priority: 1,
-  meta: { name: 'Thème de test' },
-  colors: { primary: { '500': '#6366f1' } },
-  colors_extra: undefined,
-  panel: {
-    dark: { card: { background: 'rgba(15,23,42,0.65)' } },
-    light: { card: { background: 'rgba(255,255,255,0.60)' } },
-  },
+const memory = (): ThemeStorage & { data: Map<string, string> } => {
+  const data = new Map<string, string>();
+  return {
+    data,
+    getItem: (k) => data.get(k) ?? null,
+    setItem: (k, v) => void data.set(k, v),
+    removeItem: (k) => void data.delete(k),
+  };
 };
+const theme = (priority: number, primary: string, extra: Record<string, unknown> = {}) => ({
+  priority,
+  meta: { name: `t${priority}` },
+  colors: { primary: { '500': primary }, surface: { light: { background: '#fff' }, dark: { background: '#000' } } },
+  ...extra,
+});
+const mockFetch = (files: Record<string, unknown>) =>
+  vi.fn(async (url: string) => {
+    const key = Object.keys(files).find((k) => url.startsWith(k));
+    if (!key) return { ok: false, status: 404, text: async () => '' };
+    return { ok: true, status: 200, text: async () => JSON.stringify(files[key]) };
+  });
+const styleText = (id: string) => document.getElementById(id)?.textContent ?? null;
+const make = (over: Partial<ConstructorParameters<typeof ThemeEngine>[0]> = {}) =>
+  new ThemeEngine({ themeUrls: ['/a.json', '/b.json'], storage: memory(), modeStorageKey: null, ...over });
 
 beforeEach(() => {
-  document.documentElement.removeAttribute('data-theme');
   document.head.innerHTML = '';
-  localStorage.clear();
+  document.documentElement.removeAttribute('data-theme');
+  vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(console, 'error').mockImplementation(() => undefined);
 });
-
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+  vi.useRealTimers();
 });
 
-describe('ThemeEngine — résolution du mode clair/sombre', () => {
-  it("applique le mode par défaut ('dark') si aucune préférence n'existe", async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-
-    expect(engine.getMode()).toBe('dark');
-    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
-  });
-
-  it('injecte bien les DEUX jeux de variables (light + dark) dans le DOM', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-
-    const css = document.getElementById('egen-theme-vars')?.textContent ?? '';
-    expect(css).toContain("[data-theme='dark']");
-    expect(css).toContain("[data-theme='light']");
-    expect(css).toContain('--panel-card-background: rgba(15,23,42,0.65)');
-    expect(css).toContain('--panel-card-background: rgba(255,255,255,0.60)');
-  });
-
-  it('setMode() change instantanément l’attribut data-theme SANS ré-injecter les variables', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-
-    const cssBefore = document.getElementById('egen-theme-vars')?.textContent;
-    engine.setMode('light');
-
-    expect(document.documentElement.getAttribute('data-theme')).toBe('light');
-    expect(engine.getMode()).toBe('light');
-    // Le contenu CSS ne doit pas changer : les deux modes étaient déjà injectés
-    expect(document.getElementById('egen-theme-vars')?.textContent).toBe(cssBefore);
-  });
-
-  it('toggleMode() bascule entre les deux modes', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-
-    expect(engine.getMode()).toBe('dark');
-    engine.toggleMode();
-    expect(engine.getMode()).toBe('light');
-    engine.toggleMode();
-    expect(engine.getMode()).toBe('dark');
-  });
-
-  it('persiste le mode choisi en localStorage et le relit au prochain boot', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine1 = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine1.apply();
-    engine1.setMode('light');
-    engine1.destroy();
-
-    const engine2 = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    expect(engine2.getMode()).toBe('light');
-  });
-
-  it('respecte un attribut data-theme déjà posé sur <html> (anti-FOUC) en priorité sur defaultMode', async () => {
-    document.documentElement.setAttribute('data-theme', 'light');
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'], defaultMode: 'dark' });
-    expect(engine.getMode()).toBe('light');
-  });
-  it('applique un thème de secours embarqué si AUCUN themeUrls ne charge/valide, sans laisser l’app non stylée', async () => {
-    mockFetchJson({}); // aucune URL connue -> tout échoue
-    const engine = new ThemeEngine({ themeUrls: ['/inexistant.json'] });
-    const cssVars = await engine.apply();
-
-    const state = engine.getState();
-    expect(state.status).toBe('error');
-    expect(state.usingFallback).toBe(true);
-    expect(state.error).toBeTruthy();
-
-    // Le DOM contient malgré tout des variables exploitables (pas un app totalement non stylée)
-    expect(Object.keys(cssVars.base).length).toBeGreaterThan(0);
-    const css = document.getElementById('egen-theme-vars')?.textContent ?? '';
-    expect(css).toContain('--colors-primary-500');
-  });
-});
-
-describe('ThemeEngine — surcharge de thème scopée par app, avec priorité', () => {
-  it('injecte une surcharge dans une balise scopée à [data-egen-app="scope"]', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-
-    engine.applyAppOverride('mon-app', { colors: { primary: { '500': '#16a34a' } } });
-
-    const css = document.getElementById('egen-theme-override-mon-app')?.textContent ?? '';
-    expect(css).toContain("[data-egen-app='mon-app']");
-    expect(css).toContain('--colors-primary-500: #16a34a');
-
-    // La surcharge ne doit PAS toucher le thème global
-    const globalCss = document.getElementById('egen-theme-vars')?.textContent ?? '';
-    expect(globalCss).toContain('--colors-primary-500: #6366f1');
-  });
-
-  it('fusionne plusieurs surcharges du même scope par priorité croissante (pas de winner-take-all)', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-
-    // Surcharge tenant (priorité basse) : touche primary ET panel.card
-    engine.applyAppOverride(
-      'mon-app',
-      { colors: { primary: { '500': '#16a34a' } }, panel: { dark: { card: { boxShadow: 'none' } } } },
-      { id: 'tenant', priority: 5 },
+describe('thème de base', () => {
+  it('retient le plus prioritaire et injecte les variables --egen-*', async () => {
+    vi.stubGlobal('fetch', mockFetch({ '/a.json': theme(1, '#111'), '/b.json': theme(5, '#222') }));
+    const onApplied = vi.fn();
+    const e = make({ onApplied });
+    await e.apply();
+    expect(styleText('tokiforge-theme')).toContain('--egen-colors-primary-500: #222;');
+    expect(e.getState()).toMatchObject({ status: 'applied' });
+    expect(onApplied).toHaveBeenCalledWith(
+      expect.objectContaining({ priority: 5 }),
+      expect.objectContaining({ base: expect.any(Object) }),
     );
-    // Préférence utilisateur (priorité haute) : ne touche QUE primary
-    engine.applyAppOverride('mon-app', { colors: { primary: { '500': '#0ea5e9' } } }, { id: 'user-pref', priority: 10 });
-
-    const css = document.getElementById('egen-theme-override-mon-app')?.textContent ?? '';
-
-    // La priorité la plus haute gagne sur la clé en conflit...
-    expect(css).toContain('--colors-primary-500: #0ea5e9');
-    expect(css).not.toContain('#16a34a');
-    // ...mais la clé non-conflictuelle de la surcharge basse priorité est conservée (fusion, pas écrasement total)
-    expect(css).toContain('--panel-card-box-shadow: none');
   });
 
-  it('removeAppOverride(scope, id) retire une seule surcharge et recalcule le reste', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-
-    engine.applyAppOverride('mon-app', { colors: { primary: { '500': '#16a34a' } } }, { id: 'tenant', priority: 5 });
-    engine.applyAppOverride('mon-app', { colors: { primary: { '500': '#0ea5e9' } } }, { id: 'user-pref', priority: 10 });
-
-    engine.removeAppOverride('mon-app', 'user-pref');
-
-    const css = document.getElementById('egen-theme-override-mon-app')?.textContent ?? '';
-    expect(css).toContain('--colors-primary-500: #16a34a');
+  it("n'applique rien et signale l'erreur si aucun thème n'est chargeable (pas de thème codé en dur)", async () => {
+    vi.stubGlobal('fetch', mockFetch({}));
+    const onError = vi.fn();
+    const e = make({ onError });
+    await expect(e.apply()).resolves.toBeNull();
+    expect(e.getState()).toMatchObject({ status: 'error', activeTheme: null, cssVarsCount: 0 });
+    expect(document.getElementById('tokiforge-theme')).toBeNull();
+    expect(onError).toHaveBeenCalled();
   });
 
-  it('removeAppOverride(scope) sans id retire tout le scope et supprime la balise', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-
-    engine.applyAppOverride('mon-app', { colors: { primary: { '500': '#16a34a' } } });
-    expect(document.getElementById('egen-theme-override-mon-app')).not.toBeNull();
-
-    engine.removeAppOverride('mon-app');
-    expect(document.getElementById('egen-theme-override-mon-app')).toBeNull();
+  it('ignore un thème invalide et prend le suivant', async () => {
+    vi.stubGlobal('fetch', mockFetch({ '/a.json': { colors: {} }, '/b.json': theme(2, '#333') }));
+    const e = make();
+    await e.apply();
+    expect(e.getState().activeTheme?.url).toContain('/b.json');
   });
 
-  it('plusieurs scopes (plusieurs apps) coexistent indépendamment', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-
-    engine.applyAppOverride('app-a', { colors: { primary: { '500': '#16a34a' } } });
-    engine.applyAppOverride('app-b', { colors: { primary: { '500': '#dc2626' } } });
-
-    expect(document.getElementById('egen-theme-override-app-a')?.textContent).toContain('#16a34a');
-    expect(document.getElementById('egen-theme-override-app-b')?.textContent).toContain('#dc2626');
-  });
-
-  it('re-applique automatiquement les surcharges actives après un hot-reload du thème global', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-    engine.applyAppOverride('mon-app', { colors: { primary: { '500': '#16a34a' } } });
-
-    // Simule un rechargement complet du thème global (ex: hot-reload)
-    await engine.apply();
-
-    expect(document.getElementById('egen-theme-override-mon-app')?.textContent).toContain('#16a34a');
+  it('hot-reload : ne ré-applique que si le contenu change', async () => {
+    vi.useFakeTimers();
+    const files: Record<string, unknown> = { '/a.json': theme(1, '#111') };
+    vi.stubGlobal('fetch', mockFetch(files));
+    const onApplied = vi.fn();
+    const e = make({ themeUrls: ['/a.json'], pollIntervalMs: 1000, onApplied });
+    await e.apply();
+    await vi.advanceTimersByTimeAsync(1100); // première passe : hash inconnu → appliqué
+    const afterFirst = onApplied.mock.calls.length;
+    await vi.advanceTimersByTimeAsync(1100); // identique → rien
+    expect(onApplied.mock.calls.length).toBe(afterFirst);
+    files['/a.json'] = theme(1, '#999');
+    await vi.advanceTimersByTimeAsync(1100);
+    expect(styleText('tokiforge-theme')).toContain('#999');
+    e.destroy();
+    expect(document.getElementById('tokiforge-theme')).toBeNull();
   });
 });
 
-describe('ThemeEngine — surcharge de thème GLOBALE (ex: tenant), sans scope DOM', () => {
-  it('applique la surcharge directement sur targetSelector (:root), pas sur un sélecteur [data-egen-app]', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
+describe('mode (TokiForge ThemeController)', () => {
+  it('une seule feuille de thème : le mode courant, bascule, data-theme, mémorisation, abonnés', async () => {
+    vi.stubGlobal('fetch', mockFetch({ '/a.json': theme(1, '#111') }));
+    const onModeChanged = vi.fn();
+    const e = make({ themeUrls: ['/a.json'], modeStorageKey: 'k', defaultMode: 'light', onModeChanged });
+    await e.apply();
+    expect(document.documentElement.dataset.theme).toBe('light');
+    expect(styleText('tokiforge-theme')).toContain('--egen-colors-surface-background: #fff;');
+    expect(onModeChanged).not.toHaveBeenCalled(); // le mode initial n'est pas un changement
+    e.toggleMode();
+    expect(document.documentElement.dataset.theme).toBe('dark');
+    expect(styleText('tokiforge-theme')).toContain('--egen-colors-surface-background: #000;');
+    expect(window.localStorage.getItem('k')).toBe('dark');
+    expect(onModeChanged).toHaveBeenCalledExactlyOnceWith('dark');
+    expect(make({ modeStorageKey: 'k' }).getMode()).toBe('dark'); // relu depuis data-theme/stockage
+    expect(document.querySelectorAll('style#tokiforge-theme')).toHaveLength(1);
+  });
+  it('le mode choisi avant le premier rendu est conservé', async () => {
+    vi.stubGlobal('fetch', mockFetch({ '/a.json': theme(1, '#111') }));
+    const e = make({ themeUrls: ['/a.json'] });
+    e.setMode('light');
+    await e.apply();
+    expect(e.getMode()).toBe('light');
+    expect(styleText('tokiforge-theme')).toContain('#fff');
+  });
+});
 
-    engine.applyGlobalOverride({ colors: { primary: { '500': '#16a34a' } } }, { id: 'tenant-acme', priority: 10 });
+describe('surcharges', () => {
+  const ready = async () => {
+    vi.stubGlobal('fetch', mockFetch({ '/a.json': theme(1, '#111') }));
+    const e = make({ themeUrls: ['/a.json'] });
+    await e.apply();
+    return e;
+  };
 
-    // La balise de surcharge globale existe et cible bien :root — PAS [data-egen-app="..."]
-    const styleTag = document.getElementById('egen-theme-override-__egen_global_override__');
-    expect(styleTag).not.toBeNull();
-    const css = styleTag?.textContent ?? '';
-    expect(css).toContain(':root');
-    expect(css).not.toContain('[data-egen-app');
-    expect(css).toContain('--colors-primary-500: #16a34a');
+  it('par application : scope dédié, priorité, retrait', async () => {
+    const e = await ready();
+    e.applyAppOverride('demo', { colors: { primary: { '500': '#aaa' } } }, { id: 'low', priority: 1 });
+    e.applyAppOverride('demo', { colors: { primary: { '500': '#bbb' } } }, { id: 'high', priority: 9 });
+    expect(styleText('egen-theme-override-demo')).toContain("[data-egen-app='demo']");
+    expect(styleText('egen-theme-override-demo')).toContain('#bbb');
+    expect(e.getState().activeOverrideScopes).toEqual(['demo']);
+    e.removeAppOverride('demo', 'high');
+    expect(styleText('egen-theme-override-demo')).toContain('#aaa');
+    e.removeAppOverride('demo');
+    expect(document.getElementById('egen-theme-override-demo')).toBeNull();
+    expect(e.getState().activeOverrideScopes).toEqual([]);
   });
 
-  it('ne fait PAS apparaître le scope interne dans activeOverrideScopes (détail d’implémentation caché)', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-
-    engine.applyGlobalOverride({ colors: { primary: { '500': '#16a34a' } } }, { priority: 10 });
-    engine.applyAppOverride('mon-app', { colors: { primary: { '500': '#0ea5e9' } } });
-
-    expect(engine.getState().activeOverrideScopes).toEqual(['mon-app']);
+  it('globale : fusionnée au document, un seul thème effectif', async () => {
+    const e = await ready();
+    e.applyGlobalOverride({ colors: { primary: { '500': '#fed' } } }, { id: 'studio', priority: 100 });
+    expect(styleText('tokiforge-theme')).toContain('--egen-colors-primary-500: #fed;');
+    expect(document.querySelectorAll('style[id^="egen-theme-override-"]')).toHaveLength(0);
+    expect(e.isGlobalOverrideApplied('studio')).toBe(true);
+    expect(e.isGlobalOverrideApplied('autre')).toBe(false);
+    expect(e.getState().activeGlobalOverrides).toEqual(['studio']);
+    expect(e.getState().activeOverrideScopes).toEqual([]); // le scope global n'est pas public
   });
 
-  it('fusionne plusieurs surcharges globales par priorité (ex: tenant schema + tenant themeUrl distant)', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
-
-    engine.applyGlobalOverride({ colors: { primary: { '500': '#111111' } } }, { id: 'tenant-schema', priority: 10 });
-    engine.applyGlobalOverride({ colors: { primary: { '500': '#222222' } } }, { id: 'tenant-remote', priority: 9 });
-
-    const css = document.getElementById('egen-theme-override-__egen_global_override__')?.textContent ?? '';
-    // priorité 10 > 9 -> #111111 gagne
-    expect(css).toContain('--colors-primary-500: #111111');
+  it('refuse un document invalide (erreur typée) et un scope dangereux', async () => {
+    const e = await ready();
+    expect(() => e.applyGlobalOverride({ spacing: { value: '1px' } })).toThrow(ThemeValidationError);
+    expect(() => e.applyAppOverride("x'] { }", {})).toThrow(/scope invalide/);
+    expect(styleText('tokiforge-theme')).not.toContain('value');
+    expect(e.isGlobalOverrideApplied()).toBe(false);
   });
 
-  it('removeGlobalOverride() retire la surcharge et supprime la balise', async () => {
-    mockFetchJson({ '/theme.json': BASE_THEME });
-    const engine = new ThemeEngine({ themeUrls: ['/theme.json'] });
-    await engine.apply();
+  it('les surcharges survivent à un rechargement du thème de base', async () => {
+    const e = await ready();
+    e.applyAppOverride('demo', { x: '1px' });
+    await e.apply();
+    expect(styleText('egen-theme-override-demo')).toContain('--egen-x: 1px;');
+  });
+});
 
-    engine.applyGlobalOverride({ colors: { primary: { '500': '#16a34a' } } });
-    expect(document.getElementById('egen-theme-override-__egen_global_override__')).not.toBeNull();
+describe('application persistante (ADR-005)', () => {
+  const boot = async (storage: ThemeStorage) => {
+    vi.stubGlobal('fetch', mockFetch({ '/a.json': theme(1, '#111') }));
+    const e = new ThemeEngine({ themeUrls: ['/a.json'], storage, modeStorageKey: null });
+    await e.apply();
+    return e;
+  };
 
-    engine.removeGlobalOverride();
-    expect(document.getElementById('egen-theme-override-__egen_global_override__')).toBeNull();
+  it('apply → rechargement → réappliqué avant tout rendu', async () => {
+    const storage = memory();
+    const first = await boot(storage);
+    first.applyGlobalOverride(
+      { colors: { primary: { '500': '#abc' } } },
+      { id: 'studio', priority: 100, persist: true },
+    );
+    first.destroy();
+    document.head.innerHTML = '';
+    const second = await boot(storage); // « rechargement de la page »
+    expect(second.isGlobalOverrideApplied('studio')).toBe(true);
+    expect(styleText('tokiforge-theme')).toContain('--egen-colors-primary-500: #abc;');
+  });
+
+  it('sans persist, rien n’est conservé', async () => {
+    const storage = memory();
+    (await boot(storage)).applyGlobalOverride({ x: '1px' }, { id: 's' });
+    expect(storage.data.size).toBe(0);
+  });
+
+  it('retrait persistant : ne revient pas au prochain démarrage', async () => {
+    const storage = memory();
+    const e = await boot(storage);
+    e.applyGlobalOverride({ x: '1px' }, { id: 's', persist: true });
+    e.removeGlobalOverride('s');
+    e.destroy();
+    expect((await boot(storage)).isGlobalOverrideApplied()).toBe(false);
+  });
+
+  it('ignore un stockage corrompu ou altéré (jamais appliqué)', async () => {
+    const storage = memory();
+    storage.setItem(
+      'egen-theme-applied',
+      JSON.stringify({
+        v: 1,
+        overrides: [
+          { id: 'evil', priority: 1, document: { a: 'red; } body { display:none', spacing: { value: 'x' } } },
+        ],
+      }),
+    );
+    expect((await boot(storage)).isGlobalOverrideApplied()).toBe(false);
+    storage.setItem('egen-theme-applied', '{oops');
+    expect((await boot(storage)).isGlobalOverrideApplied()).toBe(false);
+  });
+
+  it('fonctionne sans stockage disponible', async () => {
+    vi.stubGlobal('fetch', mockFetch({ '/a.json': theme(1, '#111') }));
+    const e = new ThemeEngine({ themeUrls: ['/a.json'], overridesStorageKey: null, modeStorageKey: null });
+    await e.apply();
+    expect(() => e.applyGlobalOverride({ x: '1px' }, { persist: true })).not.toThrow();
+    expect(e.isGlobalOverrideApplied()).toBe(true);
+  });
+});
+
+describe('documents en ligne', () => {
+  it('s’appliquent sans réseau et concourent par priorité avec les URL', async () => {
+    const fetchMock = mockFetch({ '/a.json': theme(1, '#111') });
+    vi.stubGlobal('fetch', fetchMock);
+    const e = new ThemeEngine({
+      themeUrls: [],
+      themeDocuments: [theme(3, '#ccc')],
+      storage: memory(),
+      modeStorageKey: null,
+    });
+    await e.apply();
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(styleText('tokiforge-theme')).toContain('--egen-colors-primary-500: #ccc;');
+    const e2 = new ThemeEngine({
+      themeUrls: ['/a.json'],
+      themeDocuments: [theme(0, '#000')],
+      storage: memory(),
+      modeStorageKey: null,
+    });
+    await e2.apply();
+    expect(e2.getState().activeTheme?.url).toContain('/a.json'); // priorité 1 > 0
+  });
+  it('ignore un document invalide', async () => {
+    const e = new ThemeEngine({
+      themeUrls: [],
+      themeDocuments: [{ colors: {} } as never],
+      storage: memory(),
+      modeStorageKey: null,
+    });
+    await expect(e.apply()).resolves.toBeNull();
   });
 });

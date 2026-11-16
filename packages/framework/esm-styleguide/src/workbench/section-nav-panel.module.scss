@@ -16,7 +16,7 @@
 .groupTitle {
   margin: 0;
   padding: 0 0.5rem;
-  color: var(--colors-surface-muted-foreground, #9ca3af);
+  color: var(--egen-colors-surface-muted-foreground);
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -42,7 +42,7 @@
   border: 0;
   border-radius: 0.5rem;
   background: transparent;
-  color: var(--colors-surface-muted-foreground, #9ca3af);
+  color: var(--egen-colors-surface-muted-foreground);
   font: inherit;
   font-size: 0.8125rem;
   text-align: left;
@@ -52,18 +52,18 @@
     color 120ms ease;
 
   &:hover {
-    background: var(--colors-surface-translucent-hover, rgb(255 255 255 / 10%));
-    color: var(--colors-surface-foreground, #fff);
+    background: var(--egen-colors-surface-translucent-hover, rgb(255 255 255 / 10%));
+    color: var(--egen-colors-surface-foreground);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--colors-border-ring, var(--colors-primary-500, #3b82f6));
+    outline: 2px solid var(--egen-colors-border-ring, var(--egen-colors-primary-500));
     outline-offset: 1px;
   }
 
   &[data-active='true'] {
-    background: var(--colors-surface-translucent-hover, rgb(255 255 255 / 14%));
-    color: var(--colors-surface-foreground, #fff);
+    background: var(--egen-colors-surface-translucent-hover, rgb(255 255 255 / 14%));
+    color: var(--egen-colors-surface-foreground);
     font-weight: 600;
   }
 }

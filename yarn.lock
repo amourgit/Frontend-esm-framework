@@ -1773,6 +1773,7 @@ __metadata:
   dependencies:
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.21"
+    "@tokiforge/core": "npm:^2.4.0"
     "@vitest/coverage-v8": "npm:^4.1.2"
     concurrently: "npm:^9.2.1"
     cross-env: "npm:^10.1.0"
@@ -1886,6 +1887,7 @@ __metadata:
     "@egen-civitas/esm-react-utils": "npm:^3.0.1"
     "@egen-civitas/esm-state": "npm:^1.0.3"
     "@egen-civitas/esm-styleguide": "npm:^4.1.0"
+    "@egen-civitas/esm-theme": "npm:^1.1.0"
     "@egen-civitas/esm-translations": "npm:^1.0.5"
     "@egen-civitas/esm-utils": "npm:^2.0.0"
     "@internationalized/date": "npm:^3.8.0"
@@ -6172,6 +6174,15 @@ __metadata:
   version: 0.3.0
   resolution: "@tokenizer/token@npm:0.3.0"
   checksum: 10/889c1f1e63ac7c92c0ea22d4a2861142f1b43c3d92eb70ec42aa9e9851fab2e9952211d50f541b287781280df2f979bf5600a9c1f91fbc61b7fcf9994e9376a5
+  languageName: node
+  linkType: hard
+
+"@tokiforge/core@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@tokiforge/core@npm:2.4.0"
+  dependencies:
+    yaml: "npm:^2.3.4"
+  checksum: 10/0a2c35a2de523d2e7025350c8db7dd0cf7aa6a0d09185610abdd4bf5c139b70d007fd72418cd2b267c7f41b957c4720d8dd3ebcafd21e84391b066f7d6a94a1e
   languageName: node
   linkType: hard
 
@@ -21010,7 +21021,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:^2.7.0, yaml@npm:^2.9.0":
+"yaml@npm:^2.3.4, yaml@npm:^2.7.0, yaml@npm:^2.9.0":
   version: 2.9.1
   resolution: "yaml@npm:2.9.1"
   bin:

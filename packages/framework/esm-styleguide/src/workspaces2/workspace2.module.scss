@@ -59,8 +59,8 @@ $extraWideWorkspaceWidth: 48.25rem;
     flex-direction: column;
     height: 100%;
     width: var(--workspaceWidth);
-    border-inline-start: 1px solid $text-03;
-    background-color: var(--colors-surface-card, #fff);
+    border-inline-start: 1px solid var(--egen-colors-surface-muted-foreground);
+    background-color: var(--egen-colors-surface-card);
     will-change: width;
     transition: width 0.5s ease-in-out;
 
@@ -101,8 +101,8 @@ $extraWideWorkspaceWidth: 48.25rem;
   .header {
     position: relative;
     box-sizing: content-box;
-    border-bottom: 1px solid $text-03;
-    background-color: $ui-03;
+    border-bottom: 1px solid var(--egen-colors-surface-muted-foreground);
+    background-color: var(--egen-colors-border-default);
     height: var(--workspace-header-height);
 
     a {
@@ -116,7 +116,7 @@ $extraWideWorkspaceWidth: 48.25rem;
 
   .headerButtons {
     button {
-      background-color: $ui-02;
+      background-color: var(--egen-colors-surface-card);
       border-right: 1px solid colors.$gray-20;
 
       > svg {
@@ -124,13 +124,13 @@ $extraWideWorkspaceWidth: 48.25rem;
       }
 
       &:hover {
-        background-color: $ui-01;
+        background-color: var(--egen-colors-surface-muted);
       }
     }
   }
 
   .workspaceContent {
-    background-color: $ui-02;
+    background-color: var(--egen-colors-surface-card);
     overflow-y: auto;
     flex-grow: 1;
   }
@@ -150,18 +150,18 @@ $extraWideWorkspaceWidth: 48.25rem;
 :global(.egen-breakpoint-lt-desktop) {
   .header {
     position: relative;
-    background-color: var(--brand-02);
+    background-color: var(--egen-colors-primary-700);
 
     a {
-      color: $ui-02;
+      color: var(--egen-colors-surface-card);
     }
 
     button {
-      color: $ui-02;
-      background-color: var(--brand-02);
+      color: var(--egen-colors-surface-card);
+      background-color: var(--egen-colors-primary-700);
 
       &:hover {
-        background-color: var(--brand-03);
+        background-color: var(--egen-colors-primary-500);
       }
     }
   }

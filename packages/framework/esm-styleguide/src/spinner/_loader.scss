@@ -3,8 +3,8 @@
 // (.egen-loader-overlay--local) ou loader seul (.egen-loader). Couleurs pilotables par thème :
 // --egen-loader-from / --egen-loader-to / --egen-loader-glow.
 .egen-loader {
-  --egen-loader-from: var(--colors-primary-600, #008080);
-  --egen-loader-to: var(--colors-primary-300, #38bdf8);
+  --egen-loader-from: var(--egen-colors-primary-600);
+  --egen-loader-to: var(--egen-colors-primary-300);
   --egen-loader-glow: rgb(0 128 128 / 60%);
 
   position: relative;

@@ -5,18 +5,18 @@
 //  exactement le même que dialogs/card-modal (cohérence visuelle entre les
 //  deux composants "carte qui s'agrandit avec voile"), plutôt qu'un
 //  bg-black + opacité manuelle. Cartes par défaut (bg-white de l'original) →
-//  --colors-surface-card, adaptatif clair/sombre (contrairement à
+//  --egen-colors-surface-card, adaptatif clair/sombre (contrairement à
 //  InteractiveSelector/folder-gallery, ce composant n'a pas d'ambiance
 //  "toujours sombre" assumée — c'est juste une grille de cartes blanches
 //  qui doit s'adapter au thème de l'app hôte). Zéro couleur hex/rgb figée —
 //  voir docs/guide-composants-et-theme.md §5.
 //
 //  Z-INDEX : valeurs volontairement LOCALES (littérales), pas l'échelle
-//  --z-index-* globale. LayoutGrid n'est pas porté via portal (pas de
+//  --egen-z-index-* globale. LayoutGrid n'est pas porté via portal (pas de
 //  position:fixed plein écran, juste des frères directs dans .root) — c'est
 //  un empilement purement local entre quelques éléments. Utiliser l'échelle
-//  globale ici inverserait l'ordre relatif voulu (--z-index-overlay(300) >
-//  --z-index-raised(10) placerait le voile AU-DESSUS de lastSelected, alors
+//  globale ici inverserait l'ordre relatif voulu (--egen-z-index-overlay(300) >
+//  --egen-z-index-raised(10) placerait le voile AU-DESSUS de lastSelected, alors
 //  que l'original veut l'inverse) : on garde donc les valeurs relatives du
 //  composant source.
 // ============================================================================
@@ -57,8 +57,8 @@
 .card--default {
   height: 100%;
   width: 100%;
-  background: var(--colors-surface-card);
-  border-radius: var(--border-radius-xl);
+  background: var(--egen-colors-surface-card);
+  border-radius: var(--egen-border-radius-xl);
 }
 
 .card--lastSelected {
@@ -77,7 +77,7 @@
   justify-content: center;
   flex-wrap: wrap;
   flex-direction: column;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--egen-border-radius-lg);
   cursor: pointer;
 
   @media (min-width: 768px) {
@@ -92,7 +92,7 @@
   width: 100%;
   object-fit: cover;
   object-position: top;
-  transition: all var(--animation-duration-normal) var(--animation-easing-in-out);
+  transition: all var(--egen-animation-duration-normal) var(--egen-animation-easing-in-out);
 }
 
 // ── Voile de fond ────────────────────────────────────────────────────────────
@@ -123,8 +123,8 @@
   flex-direction: column;
   justify-content: flex-end;
   background: transparent;
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadows-2xl);
+  border-radius: var(--egen-border-radius-lg);
+  box-shadow: var(--egen-shadows-2xl);
 }
 
 .scrim {
@@ -133,7 +133,7 @@
   z-index: 1;
   height: 100%;
   width: 100%;
-  background: var(--colors-neutral-950);
+  background: var(--egen-colors-neutral-950);
 }
 
 .selectedContent {

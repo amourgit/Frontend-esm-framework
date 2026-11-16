@@ -21,9 +21,9 @@
   position: absolute;
   place-self: center;
   cursor: grab;
-  border: 1px solid var(--colors-border-default, transparent);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadows-md);
+  border: 1px solid var(--egen-colors-border-default, transparent);
+  border-radius: var(--egen-border-radius-lg);
+  box-shadow: var(--egen-shadows-md);
   overflow: hidden;
   will-change: transform;
   transform: perspective(var(--card-perspective)) translateZ(calc(-1 * var(--card-z-offset) * var(--i)))

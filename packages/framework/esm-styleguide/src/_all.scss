@@ -1,3 +1,5 @@
+// `$field-01` reste masqué : l'ancien alias du styleguide n'existe plus, et un consommateur qui l'utiliserait encore
+// doit échouer à la compilation (« undefined variable ») plutôt que recevoir silencieusement la couleur Carbon.
 @forward '@carbon/styles' hide $field-01;
 
 @forward './vars';

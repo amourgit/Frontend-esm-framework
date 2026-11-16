@@ -13,11 +13,11 @@ const containerVariants: Variants = {
 const letterVariants: Variants = {
   initial: {
     y: 0,
-    color: 'var(--colors-surface-foreground)',
+    color: 'var(--egen-colors-surface-foreground)',
   },
   animate: {
     y: '-120%',
-    color: 'var(--colors-surface-muted-foreground)',
+    color: 'var(--egen-colors-surface-muted-foreground)',
     transition: { type: 'spring', stiffness: 300, damping: 20 },
   },
 };

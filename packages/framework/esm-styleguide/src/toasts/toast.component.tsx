@@ -47,7 +47,7 @@ export const Toast: React.FC<ToastProps> = ({ toast, closeToast }) => {
 
   const config = toastKindConfig[kind];
   const Icon = config.icon;
-  const colorVar = `var(--colors-${config.colorToken}-500)`;
+  const colorVar = `var(--egen-colors-${config.colorToken}-500)`;
 
   // ── Actions effectives : `actions` (nouveau) prime, sinon on retombe sur le
   //    couple historique actionButtonLabel/onActionButtonClick (compatibilité totale). ──
@@ -110,7 +110,7 @@ export const Toast: React.FC<ToastProps> = ({ toast, closeToast }) => {
         blurIntensity="xl"
         glowIntensity={critical ? 'lg' : 'sm'}
         shadowIntensity="md"
-        borderRadius="var(--border-radius-lg)"
+        borderRadius="var(--egen-border-radius-lg)"
         className={classNames(styles.card, styles[`card--${config.colorToken}`])}
       >
         <div className={styles.body}>

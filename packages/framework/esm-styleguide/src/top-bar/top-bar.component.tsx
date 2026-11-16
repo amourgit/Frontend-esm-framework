@@ -11,8 +11,7 @@ import { cn } from '../page-background/page-background.utils.js';
 //  optionnellement, une seconde ligne (fil d'Ariane).
 //
 //  Tokens : tout vient des variables injectées par @egen-civitas/esm-theme
-//  (--panel-header-*, --colors-*, --layout-header-height), avec fallback
-//  statique le temps que le moteur de thème hydrate les variables.
+//  (--egen-panel-header-*, --egen-colors-*, --egen-layout-header-height).
 // =============================================================================
 
 export interface TopBarProps {
@@ -62,7 +61,7 @@ export const TopBar = forwardRef<HTMLElement, TopBarProps>(function TopBar(
 ) {
   return (
     <div
-      className={cn('flex flex-col w-full z-(--z-index-sticky,200)', sticky && 'sticky', wrapperClassName)}
+      className={cn('flex flex-col w-full z-(--egen-z-index-sticky,200)', sticky && 'sticky', wrapperClassName)}
       style={sticky ? { top: stickyOffset } : undefined}
     >
       <header
@@ -71,12 +70,12 @@ export const TopBar = forwardRef<HTMLElement, TopBarProps>(function TopBar(
         aria-label={ariaLabel}
         className={cn(
           'relative flex w-full items-center justify-between gap-2 px-3 sm:px-4 select-none',
-          'h-(--layout-header-height,48px) border-b',
-          'border-b-(--panel-header-border,rgba(255,255,255,0.08))',
-          'text-(--colors-surface-foreground,#f4f4f4)',
+          'h-(--egen-layout-header-height,48px) border-b',
+          'border-b-(--egen-panel-header-border,rgba(255,255,255,0.08))',
+          'text-(--egen-colors-surface-foreground,#f4f4f4)',
           variant === 'glass'
-            ? 'bg-(--panel-header-background,rgba(11,25,44,0.72)) backdrop-blur-xl shadow-(--panel-header-box-shadow,0_1px_12px_rgba(0,0,0,0.25))'
-            : 'bg-(--colors-surface-card,#0b192c) shadow-(--panel-header-box-shadow,none)',
+            ? 'bg-(--egen-panel-header-background,rgba(11,25,44,0.72)) backdrop-blur-xl shadow-(--egen-panel-header-box-shadow,0_1px_12px_rgba(0,0,0,0.25))'
+            : 'bg-(--egen-colors-surface-card,#0b192c) shadow-(--egen-panel-header-box-shadow,none)',
           className,
         )}
       >
@@ -216,8 +215,8 @@ export const TopBarAvatar = forwardRef<HTMLButtonElement, TopBarAvatarProps>(fun
  *    - Garder la logique (session, tenant, panneaux) DANS l'app : la TopBar ne
  *      fait que disposer ce qu'on lui donne.
  *    - Toujours fournir `label` aux TopBarIconButton (accessibilité + infobulle).
- *    - Couleurs/hauteur : pilotées par le thème (--panel-header-*,
- *      --layout-header-height) ; ne pas les coder en dur.
+ *    - Couleurs/hauteur : pilotées par le thème (--egen-panel-header-*,
+ *      --egen-layout-header-height) ; ne pas les coder en dur.
  *    - Pour surcharger un style, ajouter des classes Tailwind via `className`
  *      (pas de `!` nécessaire : ce composant ne partage aucun sélecteur SCSS).
  * ===========================================================================*/

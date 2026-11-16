@@ -6,22 +6,22 @@
   margin-top: layout.$spacing-02;
   margin-bottom: layout.$spacing-02;
   border-radius: 50%;
-  color: $ui-05;
+  color: var(--egen-colors-surface-foreground);
   max-width: none;
 
   &:hover {
-    background-color: $color-gray-30;
-    color: $text-02;
+    background-color: var(--egen-colors-neutral-300);
+    color: var(--egen-colors-surface-muted-foreground);
   }
 
   &:focus {
-    border-color: $interactive-01;
+    border-color: var(--egen-colors-primary-600);
   }
 
   & > span {
     margin-top: layout.$spacing-02;
     @include type.type-style('body-compact-01');
-    color: $text-02;
+    color: var(--egen-colors-surface-muted-foreground);
   }
 
   & svg {
@@ -39,8 +39,8 @@
     position: absolute;
     font-size: 10px;
     text-align: center;
-    color: $ui-01;
-    background-color: $danger;
+    color: var(--egen-colors-surface-muted);
+    background-color: var(--egen-colors-error-500);
     padding: 0 4px;
     border-radius: 50%;
     top: -14px;
@@ -60,12 +60,12 @@
 :global(.egen-breakpoint-gt-tablet) {
   .active {
     border: layout.$spacing-01 solid;
-    @include brand-03(border-color);
+    border-color: var(--egen-colors-primary-500);
     border-radius: 50%;
-    background-color: $ui-02;
+    background-color: var(--egen-colors-surface-card);
 
     &:focus {
-      border-color: var(--brand-03) !important;
+      border-color: var(--egen-colors-primary-500) !important;
     }
   }
 
@@ -82,7 +82,7 @@
     margin-bottom: 0;
     margin-top: 0;
     border-radius: unset;
-    color: $ui-05;
+    color: var(--egen-colors-surface-foreground);
     max-width: none;
 
     display: flex;
@@ -92,20 +92,20 @@
   }
 
   .active {
-    background-color: $color-blue-10;
-    color: $interactive-01;
+    background-color: var(--egen-colors-primary-50);
+    color: var(--egen-colors-primary-600);
 
     &:hover {
-      color: $interactive-01;
+      color: var(--egen-colors-primary-600);
     }
 
     & > span {
-      color: $interactive-01;
+      color: var(--egen-colors-primary-600);
       @include type.type-style('heading-compact-01');
     }
 
     svg {
-      fill: $interactive-01;
+      fill: var(--egen-colors-primary-600);
     }
   }
 }

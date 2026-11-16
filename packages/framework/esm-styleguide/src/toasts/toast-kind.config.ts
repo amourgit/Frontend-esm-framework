@@ -7,7 +7,7 @@ export interface ToastKindConfig {
   icon: React.ComponentType<{ className?: string; size?: number }>;
   /** Libellé de catégorie par défaut (utilisé si `eyebrow` n'est pas fourni). */
   defaultEyebrow: string;
-  /** Racine des tokens de couleur du thème (`--colors-{colorToken}-*`). */
+  /** Racine des tokens de couleur du thème (`--egen-colors-{colorToken}-*`). */
   colorToken: 'success' | 'error' | 'warning' | 'info';
 }
 

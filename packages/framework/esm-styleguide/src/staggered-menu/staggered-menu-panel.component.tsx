@@ -62,7 +62,7 @@ export interface StaggeredMenuPanelProps {
  * social, ni couche de couleur, ni couleur d'accent ne sont pré-remplis.
  * C'est au consommateur de fournir la totalité du contenu (`items`,
  * `socialItems`, `colors`, `accentColor`) — typiquement via les tokens du
- * thème EGEN (`var(--colors-*)`), comme dans l'exemple ci-dessous.
+ * thème EGEN (`var(--egen-colors-*)`), comme dans l'exemple ci-dessous.
  *
  * Les apps peuvent y poser des composants libres (voir `extensionSlot`) : elles déclarent une extension sur
  * `STAGGERED_MENU_SLOT` avec une `meta` (zone, ordre, priorité, `global`…), comme pour les rails du shell.
@@ -82,8 +82,8 @@ export interface StaggeredMenuPanelProps {
  *   socialItems={socialItems}
  *   displaySocials
  *   displayItemNumbering
- *   colors={['var(--colors-secondary-300)', 'var(--colors-primary-600)']}
- *   accentColor="var(--colors-primary-600)"
+ *   colors={['var(--egen-colors-secondary-300)', 'var(--egen-colors-primary-600)']}
+ *   accentColor="var(--egen-colors-primary-600)"
  *   closeOnClickAway
  * />
  * ```

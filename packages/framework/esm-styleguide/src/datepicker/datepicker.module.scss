@@ -421,8 +421,8 @@
     }
 
     &:has([data-selected]) {
-      background-color: $color-blue-60-2;
-      color: $ui-background;
+      background-color: var(--egen-colors-primary-600);
+      color: var(--egen-colors-surface-background);
     }
 
     &[aria-disabled] {
@@ -434,7 +434,7 @@
 
 .today:not([data-selected]) {
   position: relative;
-  color: $color-blue-60-2;
+  color: var(--egen-colors-primary-600);
   font-weight: 600;
   font-size: var(--cds-body-compact-01-font-size, 0.875rem);
   line-height: var(--cds-body-compact-01-line-height, 1.28572);

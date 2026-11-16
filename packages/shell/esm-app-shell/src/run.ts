@@ -470,7 +470,7 @@ export function run(configUrls: Array<string>) {
     pollIntervalMs: process.env.NODE_ENV === 'development' ? 4000 : 0,
     onApplied: (theme, cssVars) => {
       if (process.env.NODE_ENV !== 'production') {
-        const name = theme.schema?.meta?.name ?? theme.url;
+        const name = theme.document.meta?.name ?? theme.url;
         const count =
           Object.keys(cssVars.base).length + Object.keys(cssVars.light).length + Object.keys(cssVars.dark).length;
         // eslint-disable-next-line no-console
@@ -478,11 +478,11 @@ export function run(configUrls: Array<string>) {
       }
     },
     onError: (err) => {
-      console.warn('[egen-civitas/esm-theme] Le thème par défaut sera utilisé.', err.message);
+      console.error('[egen-civitas/esm-theme] Aucun thème appliqué :', err.message);
     },
   }).catch((err) => {
-    // Erreur non bloquante : l'app démarre quand même avec les fallbacks SCSS
-    console.warn('[egen-civitas/esm-theme] Initialisation thème échouée (fallback SCSS actif):', err);
+    // Erreur non bloquante : l'app démarre, sans thème (le thème par défaut est la seule source de vérité)
+    console.error('[egen-civitas/esm-theme] Initialisation du thème échouée :', err);
   });
 
   // ── Tenant system setup ─────────────────────────────────────────────────

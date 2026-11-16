@@ -1,6 +1,8 @@
 import React from 'react';
 import type { Preview } from 'storybook-react-rsbuild';
+import { setupThemeEngine, setThemeMode } from '@egen-civitas/esm-theme';
 import { setLayoutType } from '../mocks/esm-react-utils';
+import defaultTheme from '../../../framework/esm-theme/src/themes/theme.default.json';
 
 // Import the styleguide's global stylesheet which brings in Carbon's base
 // styles, Egen brand variables, component-specific styles, and overrides.
@@ -11,11 +13,21 @@ import '../../../framework/esm-styleguide/src/_all.scss';
 import '../mocks/globals-setup';
 import '../mocks/svg-setup';
 
+// Le thème par défaut est la seule source de vérité des couleurs : sans lui, les composants n'ont plus de valeurs.
+// Documents fournis en ligne (pas de réseau) ; le mode n'est pas mémorisé entre deux stories.
+void setupThemeEngine({
+  themeUrls: [],
+  themeDocuments: [defaultTheme as never],
+  modeStorageKey: null,
+  defaultMode: 'light',
+});
+
 const RTL_LOCALES = new Set(['ar', 'he', 'fa', 'ur']);
 
 const preview: Preview = {
   decorators: [
     (Story, context) => {
+      setThemeMode(context.globals.themeMode ?? 'light');
       const layoutType = context.globals.layoutType ?? 'small-desktop';
       setLayoutType(layoutType);
 
@@ -33,6 +45,18 @@ const preview: Preview = {
     },
   ],
   globalTypes: {
+    themeMode: {
+      description: 'Mode du thème EGEN',
+      toolbar: {
+        title: 'Thème',
+        icon: 'circlehollow',
+        items: [
+          { value: 'light', title: 'Clair' },
+          { value: 'dark', title: 'Sombre' },
+        ],
+        dynamicTitle: true,
+      },
+    },
     layoutType: {
       description: 'Simulated Egen layout type',
       toolbar: {

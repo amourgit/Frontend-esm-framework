@@ -1,4 +1,6 @@
-# Architecture actuelle (mémo de référence)
+# Architecture AVANT la refonte (mémo historique)
+
+> **Ce document décrit l'ancien système, aujourd'hui supprimé** (voir ADR-006). Il est conservé pour comprendre l'origine des choix de compatibilité (`egen-theme-mode`, `theme.default.json`, séquence de démarrage). L'architecture en vigueur est décrite dans [`packages/framework/esm-theme/README.md`](../../packages/framework/esm-theme/README.md) et [`ADR.md`](ADR.md).
 
 > Établi par lecture du code de `main` (commit `768c770`). Ce qui n'a pas pu être vérifié par lecture est marqué **« à confirmer en DS-1 »** et sera verrouillé par des tests de caractérisation.
 

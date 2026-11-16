@@ -13,7 +13,7 @@ export interface ValidationRule {
   regex: RegExp;
   /** Message affiché sous le champ quand la règle est active. */
   message: string;
-  /** Sévérité, qui pilote la couleur (tokens `--colors-{type}-*`) et l'icône affichée. */
+  /** Sévérité, qui pilote la couleur (tokens `--egen-colors-{type}-*`) et l'icône affichée. */
   type: ValidationRuleType;
 }
 
@@ -43,7 +43,7 @@ export interface FieldIcon {
 /** Variante visuelle du champ — toutes trois pilotées à 100% par les tokens du thème EGEN. */
 export type DynamicFieldVariant = 'filled' | 'standard' | 'outlined' | 'kinetic';
 
-/** Taille du champ — mappée sur les tailles `--panel-*` du thème (`panel-size`). */
+/** Taille du champ — mappée sur les tailles `--egen-panel-*` du thème (`panel-size`). */
 export type DynamicFieldSize = 'sm' | 'md' | 'lg';
 
 export type DynamicFieldInputType = 'text' | 'email' | 'password' | 'tel' | 'url' | 'number' | 'search';

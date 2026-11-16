@@ -4,7 +4,7 @@
 //  100% tokens du thème EGEN. Le fond glassmorphique vient de LiquidGlassCard
 //  (flou + reflets) ; ce fichier ajoute uniquement la teinte de fond/bordure
 //  propre à la sévérité (kind), via color-mix() sur les tokens sémantiques
-//  --colors-{success|error|warning|info}-*.
+//  --egen-colors-{success|error|warning|info}-*.
 // ============================================================================
 
 .wrapper {
@@ -14,18 +14,18 @@
 
 .card {
   border: 1px solid transparent;
-  background: var(--colors-surface-translucent, rgba(255, 255, 255, 0.55));
+  background: var(--egen-colors-surface-translucent, rgba(255, 255, 255, 0.55));
   overflow: hidden;
 }
 
 @each $token in ('success', 'error', 'warning', 'info') {
   .card--#{$token} {
-    border-color: color-mix(in srgb, var(--colors-#{$token}-500) 30%, transparent);
+    border-color: color-mix(in srgb, var(--egen-colors-#{$token}-500) 30%, transparent);
   }
 }
 
 .card--error {
-  border-color: color-mix(in srgb, var(--colors-error-500) 40%, transparent);
+  border-color: color-mix(in srgb, var(--egen-colors-error-500) 40%, transparent);
 }
 
 .body {
@@ -38,23 +38,23 @@
 .icon {
   flex-shrink: 0;
   margin-top: 0.125rem;
-  color: var(--colors-surface-foreground);
+  color: var(--egen-colors-surface-foreground);
 }
 
 .card--success .icon {
-  color: var(--colors-success-500);
+  color: var(--egen-colors-success-500);
 }
 
 .card--error .icon {
-  color: var(--colors-error-500);
+  color: var(--egen-colors-error-500);
 }
 
 .card--warning .icon {
-  color: var(--colors-warning-500);
+  color: var(--egen-colors-warning-500);
 }
 
 .card--info .icon {
-  color: var(--colors-info-500);
+  color: var(--egen-colors-info-500);
 }
 
 .textArea {
@@ -65,26 +65,26 @@
 .eyebrow {
   display: block;
   font-size: 0.6875rem;
-  font-weight: var(--typography-font-weight-bold, 700);
+  font-weight: var(--egen-typography-font-weight-bold, 700);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   opacity: 0.65;
-  color: var(--colors-surface-foreground);
+  color: var(--egen-colors-surface-foreground);
   margin-bottom: 0.125rem;
 }
 
 .title {
   margin: 0 0 0.125rem;
-  font-size: var(--typography-font-size-sm-size);
-  font-weight: var(--typography-font-weight-bold, 700);
-  color: var(--colors-surface-foreground);
+  font-size: var(--egen-typography-font-size-sm-size);
+  font-weight: var(--egen-typography-font-weight-bold, 700);
+  color: var(--egen-colors-surface-foreground);
 }
 
 .description {
-  font-size: var(--typography-font-size-xs-size);
-  font-weight: var(--typography-font-weight-medium, 500);
+  font-size: var(--egen-typography-font-size-xs-size);
+  font-weight: var(--egen-typography-font-weight-medium, 500);
   line-height: 1.5;
-  color: var(--colors-surface-foreground);
+  color: var(--egen-colors-surface-foreground);
 }
 
 .closeButton {
@@ -94,17 +94,17 @@
   align-items: center;
   justify-content: center;
   padding: 0.25rem;
-  border-radius: var(--border-radius-full, 9999px);
+  border-radius: var(--egen-border-radius-full, 9999px);
   background: transparent;
   border: none;
-  color: var(--colors-surface-foreground);
+  color: var(--egen-colors-surface-foreground);
   opacity: 0.5;
   cursor: pointer;
-  transition: var(--transitions-colors), var(--transitions-opacity);
+  transition: var(--egen-transitions-colors), var(--egen-transitions-opacity);
 
   &:hover {
     opacity: 1;
-    background: color-mix(in srgb, var(--colors-surface-foreground) 8%, transparent);
+    background: color-mix(in srgb, var(--egen-colors-surface-foreground) 8%, transparent);
   }
 }
 
@@ -124,39 +124,39 @@
 
 .actionButton {
   padding: 0.375rem 0.75rem;
-  font-size: var(--typography-font-size-xs-size);
-  font-weight: var(--typography-font-weight-semibold, 600);
-  border-radius: var(--border-radius-sm);
+  font-size: var(--egen-typography-font-size-xs-size);
+  font-weight: var(--egen-typography-font-weight-semibold, 600);
+  border-radius: var(--egen-border-radius-sm);
   cursor: pointer;
-  transition: var(--transitions-colors);
+  transition: var(--egen-transitions-colors);
   border: 1px solid transparent;
 }
 
 .actionButton--primary {
-  background: var(--colors-primary-500);
-  color: var(--colors-on-primary, #fff);
+  background: var(--egen-colors-primary-500);
+  color: var(--egen-colors-on-primary);
 
   &:hover {
-    background: var(--colors-primary-600);
+    background: var(--egen-colors-primary-600);
   }
 }
 
 .actionButton--secondary {
   background: transparent;
-  border-color: var(--colors-border-default, transparent);
-  color: var(--colors-surface-foreground);
+  border-color: var(--egen-colors-border-default, transparent);
+  color: var(--egen-colors-surface-foreground);
 
   &:hover {
-    background: color-mix(in srgb, var(--colors-surface-foreground) 8%, transparent);
+    background: color-mix(in srgb, var(--egen-colors-surface-foreground) 8%, transparent);
   }
 }
 
 .actionButton--danger {
-  background: var(--colors-error-500);
-  color: var(--colors-on-primary, #fff);
+  background: var(--egen-colors-error-500);
+  color: var(--egen-colors-on-primary);
 
   &:hover {
-    background: var(--colors-error-600);
+    background: var(--egen-colors-error-600);
   }
 }
 
@@ -165,7 +165,7 @@
 .progressTrack {
   height: 3px;
   width: 100%;
-  background: color-mix(in srgb, var(--colors-surface-foreground) 8%, transparent);
+  background: color-mix(in srgb, var(--egen-colors-surface-foreground) 8%, transparent);
   overflow: hidden;
 }
 

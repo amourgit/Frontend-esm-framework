@@ -12,10 +12,10 @@
 .errorCopy {
   margin-bottom: layout.$spacing-03;
   @include type.type-style('body-01');
-  color: $text-02;
+  color: var(--egen-colors-surface-muted-foreground);
 }
 
 .tile {
   text-align: center;
-  border: 1px solid $ui-03;
+  border: 1px solid var(--egen-colors-border-default);
 }

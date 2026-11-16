@@ -13,7 +13,7 @@ interface ErrorFilledIconProps {
  * autres sévérités déjà couvertes (succès → `CheckmarkFilledIcon`, avertissement →
  * `WarningIcon`), d'où ce SVG inline — voir guide §9.3. `currentColor` uniquement :
  * aucune couleur n'est figée ici, elle est héritée du texte du parent (lui-même
- * piloté par `var(--colors-{success|warning|error}-*)`).
+ * piloté par `var(--egen-colors-{success|warning|error}-*)`).
  */
 export const ErrorFilledIcon: React.FC<ErrorFilledIconProps> = ({ className, size = 16 }) => (
   <svg

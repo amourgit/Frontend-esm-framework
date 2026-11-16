@@ -79,8 +79,8 @@ html[data-public-route='true'] {
   // Fallback statique conservé : cette page peut s'afficher précisément
   // quand le moteur de thème lui-même a échoué à s'initialiser — elle ne
   // peut donc pas dépendre exclusivement des CSS vars qu'il injecte.
-  background: var(--colors-surface-background, white);
-  border-top: 5px solid var(--colors-error-500, $danger);
+  background: var(--egen-colors-surface-background, white);
+  border-top: 5px solid var(--egen-colors-error-500, var(--egen-colors-error-500));
 
   p {
     margin: layout.$spacing-06 0;

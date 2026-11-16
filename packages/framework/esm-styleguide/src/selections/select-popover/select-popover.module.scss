@@ -15,20 +15,20 @@
   max-width: 18rem;
   height: 3rem;
   padding: 0.5rem 0.75rem;
-  background: var(--colors-surface-card);
-  color: var(--colors-surface-foreground);
-  border: 1px solid var(--colors-border-default, transparent);
-  border-radius: var(--border-radius-md);
-  font-size: var(--typography-font-size-sm-size);
+  background: var(--egen-colors-surface-card);
+  color: var(--egen-colors-surface-foreground);
+  border: 1px solid var(--egen-colors-border-default, transparent);
+  border-radius: var(--egen-border-radius-md);
+  font-size: var(--egen-typography-font-size-sm-size);
   cursor: pointer;
-  transition: var(--transitions-colors);
+  transition: var(--egen-transitions-colors);
 
   &:hover {
-    background: var(--colors-surface-muted);
+    background: var(--egen-colors-surface-muted);
   }
 
   &:focus-visible {
-    outline: 2px solid var(--colors-primary-500);
+    outline: 2px solid var(--egen-colors-primary-500);
     outline-offset: 2px;
   }
 }
@@ -48,13 +48,13 @@
 }
 
 .triggerPlaceholder {
-  color: var(--colors-surface-muted-foreground);
+  color: var(--egen-colors-surface-muted-foreground);
 }
 
 .triggerChevron {
   flex-shrink: 0;
-  color: var(--colors-surface-muted-foreground);
-  transition: var(--transitions-transform, transform 200ms ease);
+  color: var(--egen-colors-surface-muted-foreground);
+  transition: var(--egen-transitions-transform, transform 200ms ease);
 }
 
 .triggerChevron--open {
@@ -66,7 +66,7 @@
 .avatar {
   width: 1.5rem;
   height: 1.5rem;
-  border-radius: var(--border-radius-full, 9999px);
+  border-radius: var(--egen-border-radius-full, 9999px);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -77,11 +77,11 @@
   justify-content: center;
   width: 1.5rem;
   height: 1.5rem;
-  border-radius: var(--border-radius-full, 9999px);
-  background: var(--colors-primary-500);
-  color: var(--colors-on-primary, #fff);
-  font-size: var(--typography-font-size-xs-size);
-  font-weight: var(--typography-font-weight-semibold, 600);
+  border-radius: var(--egen-border-radius-full, 9999px);
+  background: var(--egen-colors-primary-500);
+  color: var(--egen-colors-on-primary);
+  font-size: var(--egen-typography-font-size-xs-size);
+  font-weight: var(--egen-typography-font-weight-semibold, 600);
   flex-shrink: 0;
 }
 
@@ -90,32 +90,32 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: var(--z-index-overlay);
+  z-index: var(--egen-z-index-overlay);
 }
 
 .panel {
   position: fixed;
-  z-index: var(--z-index-dropdown);
+  z-index: var(--egen-z-index-dropdown);
   width: 20rem;
   max-height: 24rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--egen-border-radius-lg);
   @include panel.panel-surface('dropdown');
 }
 
 .panelHeader {
   padding: 0.625rem 0.75rem;
-  border-bottom: 1px solid var(--colors-border-default, transparent);
+  border-bottom: 1px solid var(--egen-colors-border-default, transparent);
   flex-shrink: 0;
 }
 
 .panelTitle {
   margin: 0;
-  font-size: var(--typography-font-size-sm-size);
-  font-weight: var(--typography-font-weight-medium, 500);
-  color: var(--colors-surface-muted-foreground);
+  font-size: var(--egen-typography-font-size-sm-size);
+  font-weight: var(--egen-typography-font-weight-medium, 500);
+  color: var(--egen-colors-surface-muted-foreground);
 }
 
 .searchRow {
@@ -123,14 +123,14 @@
   display: flex;
   align-items: center;
   padding: 0.625rem 0.75rem;
-  border-bottom: 1px solid var(--colors-border-default, transparent);
+  border-bottom: 1px solid var(--egen-colors-border-default, transparent);
   flex-shrink: 0;
 }
 
 .searchIcon {
   position: absolute;
   left: 1.25rem;
-  color: var(--colors-surface-muted-foreground);
+  color: var(--egen-colors-surface-muted-foreground);
   pointer-events: none;
 }
 
@@ -138,12 +138,12 @@
   width: 100%;
   padding-left: 1.5rem;
   background: transparent;
-  color: var(--colors-surface-foreground);
+  color: var(--egen-colors-surface-foreground);
   border: none;
-  font-size: var(--typography-font-size-sm-size);
+  font-size: var(--egen-typography-font-size-sm-size);
 
   &::placeholder {
-    color: var(--colors-surface-muted-foreground);
+    color: var(--egen-colors-surface-muted-foreground);
   }
 
   &:focus {
@@ -160,8 +160,8 @@
 .emptyState {
   padding: 0.75rem;
   text-align: center;
-  color: var(--colors-surface-muted-foreground);
-  font-size: var(--typography-font-size-sm-size);
+  color: var(--egen-colors-surface-muted-foreground);
+  font-size: var(--egen-typography-font-size-sm-size);
 }
 
 .optionButton {
@@ -171,18 +171,18 @@
   padding: 0.5rem;
   background: transparent;
   border: none;
-  border-radius: var(--border-radius-sm);
+  border-radius: var(--egen-border-radius-sm);
   text-align: left;
   cursor: pointer;
-  transition: var(--transitions-colors);
+  transition: var(--egen-transitions-colors);
 
   &:hover {
-    background: var(--colors-surface-muted);
+    background: var(--egen-colors-surface-muted);
   }
 }
 
 .optionButton--selected {
-  background: color-mix(in srgb, var(--colors-primary-500) 10%, transparent);
+  background: color-mix(in srgb, var(--egen-colors-primary-500) 10%, transparent);
 }
 
 .optionContent {
@@ -201,26 +201,26 @@
 }
 
 .optionName {
-  font-size: var(--typography-font-size-sm-size);
-  color: var(--colors-surface-foreground);
+  font-size: var(--egen-typography-font-size-sm-size);
+  color: var(--egen-colors-surface-foreground);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .optionMeta {
-  font-size: var(--typography-font-size-xs-size);
-  color: var(--colors-surface-muted-foreground);
+  font-size: var(--egen-typography-font-size-xs-size);
+  color: var(--egen-colors-surface-muted-foreground);
 }
 
 .optionCheck {
   flex-shrink: 0;
   margin-left: auto;
-  color: var(--colors-primary-500);
+  color: var(--egen-colors-primary-500);
 }
 
 .panelDivider {
-  border-top: 1px solid var(--colors-border-default, transparent);
+  border-top: 1px solid var(--egen-colors-border-default, transparent);
   flex-shrink: 0;
 }
 

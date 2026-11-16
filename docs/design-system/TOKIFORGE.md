@@ -28,3 +28,14 @@
 ## Ce qui est directement réutilisable (à ne PAS réécrire — cahier des charges §11)
 
 Génération et échappement du CSS, validation de sélecteur, conversions et espaces colorimétriques, contrastes, thèmes de composants (`ComponentTheming`), versionnage de tokens, export natif, SSR/critical CSS, erreurs typées.
+
+## Ce que l'intégration délègue effectivement à TokiForge (état de la branche)
+
+| Responsabilité | Assurée par |
+|---|---|
+| Sélection du mode (`light`/`dark`), persistance (`egen-theme-mode`), abonnements, application du thème | `ThemeController` + `ThemeRuntime` |
+| Génération et échappement du CSS, validation du sélecteur, nommage `--egen-…` | `TokenExporter` |
+| Injection du thème de base (`<style id="tokiforge-theme">`) | `ThemeRuntime` |
+
+**Reste à EGEN (aucun équivalent TokiForge)** : chargement des sources du déploiement et choix par priorité, fusion document-level des surcharges, surcharges par application (`[data-egen-app]`), application persistante, liste blanche des valeurs CSS (TokiForge n'échappe que `\n` et `<`), attribut `data-theme` lu par les feuilles de style.
+Aucun thème n'est codé en dur dans le code : le thème par défaut (`theme.default.json`) est la seule source de vérité, et son absence est une **erreur signalée** (état `error`, `onError`), pas un repli silencieux.

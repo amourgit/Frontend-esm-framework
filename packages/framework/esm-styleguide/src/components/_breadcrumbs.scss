@@ -3,7 +3,7 @@
 
 nav.breadcrumbs-container {
   padding: layout.$spacing-05;
-  background-color: vars.$ui-01;
+  background-color: var(--egen-colors-surface-muted);
 
   ol li {
     display: inline-flex;

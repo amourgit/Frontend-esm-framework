@@ -5,7 +5,7 @@
 // (#egen-page-background-container, z-index négatif — voir _general.scss).
 // Le rendu est identique : body occupe toute la fenêtre.
 html {
-  background-color: $ui-01;
+  background-color: var(--egen-colors-surface-muted);
 }
 
 html,

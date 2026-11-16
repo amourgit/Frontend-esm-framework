@@ -65,6 +65,9 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
 @import "tailwindcss/utilities.css";
+/* Animations d'entrée/sortie (`animate-in`, `fade-in-0`, `zoom-in-95`, `slide-in-from-*`…) utilisées par les composants
+   de `esm-styleguide/src/ui` (infobulles, menus, modales). MIT — https://github.com/Wombosvideo/tw-animate-css */
+@import "tw-animate-css";
 
 /* Tailwind n'analyse pas node_modules par défaut : on déclare explicitement le
    styleguide publié (paquets frères dans node_modules/@egen-civitas/) pour que

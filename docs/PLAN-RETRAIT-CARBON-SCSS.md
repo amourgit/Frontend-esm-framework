@@ -25,8 +25,9 @@ Composants Carbon réellement utilisés : `Button` (18), `Tile`, `Layer`, `IconB
 
 ## 2. Cible
 
-- **Style** : Tailwind v4 seul. Jetons de thème = variables CSS `--egen-*` (remplacent `_vars.scss` et les jetons Carbon `$layer`,
-  `$text-primary`, `spacing-*`, `type-style(...)`) déclarées dans `@egen-civitas/tailwind-preset` ; `esm-theme` les surcharge à chaud.
+- **Style** : Tailwind v4 seul. Jetons de thème = variables CSS `--colors-*`, `--border-radius-*`, `--typography-*` du moteur `esm-theme`, déjà
+  reliées à Tailwind par `@egen-civitas/tailwind-preset` (`bg-background`, `bg-card`, `bg-primary`, `border-input`…, noms shadcn) ; elles
+  remplacent `_vars.scss` et les jetons Carbon (`$layer`, `$text-primary`, `spacing-*`, `type-style(...)`).
 - **Composants de base** (dans `esm-styleguide/src/ui/`) : copiés de **shadcn/ui** (MIT) ; comportements accessibles via **Radix
   Primitives** (MIT, sans style) ; `class-variance-authority` + `tailwind-merge` + `clsx` pour les variantes ; icônes `lucide-react`
   (déjà présent). Un composant copié = *nôtre* : on le modifie librement ; l'avis de licence d'origine est conservé dans
@@ -38,13 +39,13 @@ Composants Carbon réellement utilisés : `Button` (18), `Tile`, `Layer`, `IconB
 
 ## 3. Phases (ordre d'exécution ; une phase = une PR/un push validé : tsc, eslint, tests, build)
 
-**Phase 0 — Fondations (framework)**
+**Phase 0 — Fondations (framework) — FAIT**
 1. `THIRD_PARTY_NOTICES.md` ; dépendances de base (`@radix-ui/*` utiles, `class-variance-authority`, `tailwind-merge`, `clsx`).
 2. `esm-styleguide/src/ui/cn.ts` ; jetons `--egen-*` dans `tailwind-preset` (palette sombre « verre », espacements, rayons, typo).
 3. Tailwind devient le style de base du styleguide (le styleguide importe lui-même la feuille Tailwind) ; règle rspack `*.tw.css` conservée.
 4. Tests d'architecture « zéro Carbon / zéro SCSS » écrits d'abord, **allow-list** des fichiers restants (elle ne fait que rétrécir).
 
-**Phase 1 — Primitives simples (`esm-styleguide/src/ui/`)**
+**Phase 1 — Primitives simples (`esm-styleguide/src/ui/`) — FAIT (Button, IconButton, Link, Tile, Layer, Spinner/InlineLoading, Input/TextInput, Switch, Tooltip, Badge, Separator, Label)**
 `Button` (+ `IconButton`), `Link`, `Tile`/`Card` (+ `Layer` = simple surface), `Spinner`/`InlineLoading`, `TextInput`, `Toggle` (Switch),
 `Tooltip`, `Badge`/`Tag`, `Separator`. Chacune : source copiée, adaptée, **test de rendu**, exportée sous l'ancien nom.
 

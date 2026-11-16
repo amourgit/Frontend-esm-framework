@@ -25,7 +25,7 @@ Composants Carbon réellement utilisés : `Button` (18), `Tile`, `Layer`, `IconB
 
 ## 2. Cible
 
-- **Style** : Tailwind v4 seul. Jetons de thème = variables CSS `--colors-*`, `--border-radius-*`, `--typography-*` du moteur `esm-theme`, déjà
+- **Style** : Tailwind v4 seul. Jetons de thème = variables CSS `--egen-colors-*`, `--egen-border-radius-*`, `--egen-typography-*` (préfixe `--egen-` depuis la refonte du Design System, [`docs/design-system/`](design-system/README.md)) du moteur `esm-theme`, déjà
   reliées à Tailwind par `@egen-civitas/tailwind-preset` (`bg-background`, `bg-card`, `bg-primary`, `border-input`…, noms shadcn) ; elles
   remplacent `_vars.scss` et les jetons Carbon (`$layer`, `$text-primary`, `spacing-*`, `type-style(...)`).
 - **Composants de base** (dans `esm-styleguide/src/ui/`) : copiés de **shadcn/ui** (MIT) ; comportements accessibles via **Radix

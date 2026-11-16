@@ -9,6 +9,7 @@ permissifs. Chaque fichier concerné rappelle son origine en en-tête ; les lice
 | Radix Primitives — https://github.com/radix-ui/primitives | MIT, © WorkOS | Comportements accessibles sans style (dépendance) |
 | class-variance-authority, tailwind-merge, clsx | MIT / MIT / MIT | Variantes et fusion de classes (dépendances) |
 | lucide — https://github.com/lucide-icons/lucide | ISC | Icônes (dépendance `lucide-react`) |
+| TokiForge — https://github.com/TokiForge/tokiforge | **AGPL-3.0** | `@tokiforge/core` : moteur de génération du CSS et de gestion du thème (dépendance de `@egen-civitas/esm-theme`). Décision de licence : [`docs/design-system/ADR.md`](docs/design-system/ADR.md) (ADR-001, AGPL acceptée). |
 
 Texte de la licence MIT : permission d'utiliser, copier, modifier, fusionner, publier, distribuer et vendre des copies du logiciel,
 sous réserve que l'avis de droit d'auteur et cet avis de permission figurent dans toutes les copies ou parties substantielles.

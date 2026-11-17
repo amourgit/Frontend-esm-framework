@@ -1,5 +1,11 @@
 # @egen-civitas/esm-styleguide
 
+## 5.1.0
+
+### Minor Changes
+
+- 03dcc6f: Nouveaux composants de base 100 % Tailwind, pour finir le retrait de Carbon dans le core : `Checkbox`, `Accordion` (+ `AccordionItem`, `AccordionTrigger`, `AccordionContent`), `Skeleton` (copiés de shadcn/ui, MIT), `PasswordInput` (champ mot de passe avec bouton œil), `MenuList` / `MenuItem` / `MenuDivider` (liste d'actions d'un panneau, remplace `Switcher`) et `StructuredList` (+ `StructuredListHead`, `StructuredListBody`, `StructuredListRow`, `StructuredListCell`).
+
 ## 5.0.0
 
 ### Major Changes

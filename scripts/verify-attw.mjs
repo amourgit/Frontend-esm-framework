@@ -50,8 +50,7 @@
  *
  * Sous-chemins SCSS exclus de l'analyse : certains packages (ex.
  * esm-styleguide) exposent des sous-chemins comme "./styles" ou
- * "./src/vars" uniquement via une condition "sass" (consommée par des
- * imports Sass, `@use '@egen-civitas/x/styles'`), sans aucune condition
+ * "./src/vars" vers une feuille de style `.css` (ex. `@egen-civitas/esm-styleguide/styles`), sans aucune condition
  * "types"/JS. attw les traite comme des imports JS/TS ordinaires et les
  * rapporte à tort en échec de résolution. On détecte et exclut
  * automatiquement (--exclude-entrypoints) tout sous-chemin dont la seule
@@ -89,11 +88,15 @@ for (const { dir, name, pkg } of packages) {
     continue;
   }
 
-  // Sous-chemins exposés uniquement via une condition "sass" (pas de
+  // Sous-chemins qui servent une feuille de style (fichier `.css`, sans
   // "types") : ce ne sont pas des modules JS/TS, attw n'a rien à y
   // vérifier — voir commentaire d'en-tête.
+  const isStylesheetTarget = (target) =>
+    typeof target === 'string'
+      ? /\.css$/i.test(target)
+      : typeof target === 'object' && target !== null && !('types' in target) && Object.values(target).length > 0 && Object.values(target).every(isStylesheetTarget);
   const sassOnlyEntrypoints = Object.entries(pkg.exports || {})
-    .filter(([, target]) => typeof target === 'object' && target !== null && 'sass' in target && !('types' in target))
+    .filter(([, target]) => isStylesheetTarget(target))
     .map(([subpath]) => subpath);
 
   const attwArgs = ['--pack', '.', '--profile', 'node16', '--ignore-rules', 'internal-resolution-error'];

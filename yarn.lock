@@ -1476,6 +1476,7 @@ __metadata:
     "@types/three": "npm:0.170.0"
     "@vitest/coverage-v8": "npm:^4.1.2"
     class-variance-authority: "npm:^0.7.1"
+    classnames: "npm:^2.5.1"
     clsx: "npm:^2.1.1"
     concurrently: "npm:^9.2.1"
     cross-env: "npm:^10.1.0"
@@ -9391,7 +9392,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:^2.3.2":
+"classnames@npm:^2.3.2, classnames@npm:^2.5.1":
   version: 2.5.1
   resolution: "classnames@npm:2.5.1"
   checksum: 10/58eb394e8817021b153bb6e7d782cfb667e4ab390cb2e9dac2fc7c6b979d1cc2b2a733093955fc5c94aa79ef5c8c89f11ab77780894509be6afbb91dddd79d15

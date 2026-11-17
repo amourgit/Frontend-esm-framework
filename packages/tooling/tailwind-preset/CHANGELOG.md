@@ -1,5 +1,29 @@
 # @egen-civitas/tailwind-preset
 
+## 2.0.0
+
+### Major Changes
+
+- aa66db3: **Retrait complet de Carbon et de SCSS.** Tailwind v4 est le seul système de style ; les composants de base sont les nôtres (`esm-styleguide/src/ui`, copiés de shadcn/ui et Radix, MIT).
+
+  - `@egen-civitas/esm-styleguide` : plus de `@carbon/react`, `@carbon/charts` ni `sass`. Nouveaux composants exportés : `Button`, `IconButton`, `Link`, `Badge`, `Separator`, `Label`, `Input`, `TextInput`, `Switch`, `Spinner`, `InlineLoading`, `Layer`, `Tooltip`, `Tile*`, `Alert*`, `NotificationBanner`, `Dialog*`, `DropdownMenu*`, `Tabs*`, `Table*`, `ModalHeader` / `ModalBody` / `ModalFooter`, `AppHeader*`. `cn` utilise désormais `tailwind-merge`. Le type `CarbonTagColor` devient `TagColor` (et `carbonTagColors` → `tagColors`). Les composants du framework qui reposaient sur Carbon (modales, notifications, snackbars, tags, pagination, menu déroulant, barre d'actions par lots, sélecteur de dates, fenêtres d'espace de travail) sont réécrits sans lui.
+  - Feuille globale : `@egen-civitas/esm-styleguide/styles` pointe sur un **fichier CSS standard** (`dist/styles.css`) ; l'export SCSS `./src/vars` et tous les partiels `.scss` disparaissent. Les modules `*.module.scss` sont devenus `*.module.css` (mêmes noms de classes). Les jetons `--cds-*` sont renommés `--ui-*`.
+  - `@egen-civitas/rspack-config`, `@egen-civitas/webpack-config` : plus de règle `sass-loader`, `scssRuleConfig` supprimé, `.scss` retiré des extensions résolues.
+  - `@egen-civitas/esm-app-shell` : la feuille globale est lue telle quelle (plus de compilation Sass) ; `@carbon/react` n'est plus une dépendance partagée ; la page d'erreur et le fil d'Ariane n'utilisent plus de classes Carbon.
+  - `@egen-civitas/tailwind-preset` : importe `tw-animate-css` (animations des composants).
+  - `@egen-civitas/esm-ai-tools` : l'identité des composants vient du `data-slot` des composants EGEN (`source: 'slot'`, champ `slot`) à la place du bloc Carbon (`source: 'carbon'`, champ `carbon`) ; `theme.carbonTheme` est supprimé.
+  - `@egen-civitas/egen` : les dépendances `sass*` ne sont plus fournies.
+
+  Guide de migration : `docs/MIGRATION-CARBON.md`.
+
+### Minor Changes
+
+- 3e0ab01: Premiers composants de base 100 % Tailwind, sans Carbon ni SCSS (chantier de retrait de Carbon, phase 0 et 1) : `Button`, `IconButton`, `Link`, `Badge`, `Separator`, `Label`, `Input`, `TextInput`, `Switch`, `Spinner`, `InlineLoading`, `Layer`, `Tooltip` et `Tile` (+ `TileHeader`, `TileTitle`, `TileDescription`, `TileAction`, `TileContent`, `TileFooter`), exportés par `@egen-civitas/esm-styleguide`, avec l'utilitaire `cn` (clsx + tailwind-merge). Code copié de shadcn/ui (MIT, avis dans `THIRD_PARTY_NOTICES.md`) puis adapté ; comportements accessibles via Radix. Ils lisent les jetons de thème existants (`bg-primary`, `bg-card`, `border-input`…), donc suivent le moteur de thème.
+
+  `@egen-civitas/tailwind-preset` importe désormais `tw-animate-css` (classes `animate-in`, `fade-in-0`, `zoom-in-95`…, requises par les infobulles et bientôt les menus et modales).
+
+  Garde-fou : un test d'architecture (`zero-carbon.architecture.test.ts`) interdit tout nouvel import Carbon ou fichier `.scss` ; sa liste blanche (`carbon-scss-allowlist.json`, 88 fichiers) ne peut que rétrécir.
+
 ## 1.4.0
 
 ### Minor Changes

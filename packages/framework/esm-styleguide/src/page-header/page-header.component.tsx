@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { getConfig } from '@egen-civitas/esm-config';
 import { type StyleguideConfigObject } from '../config-schema.js';
-import styles from './page-header.module.scss';
+import styles from './page-header.module.css';
 import { type CoreTranslationKey, getCoreTranslation } from '@egen-civitas/esm-translations';
 
 export interface PageHeaderContentProps {

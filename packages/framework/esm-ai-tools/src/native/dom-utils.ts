@@ -5,7 +5,7 @@
 //  de lecture de page (read_page, read_component, find_in_page…) ont en commun :
 //  visibilité, nom accessible, rédaction des champs sensibles, références
 //  d'éléments, traversée profonde (Shadow DOM + iframes même origine) et
-//  identification des composants (React, Carbon).
+//  identification des composants (React, composants EGEN via `data-slot`).
 //
 //  Règle : les nouveaux modules testent les balises via `localName` (et non
 //  `instanceof HTMLxxxElement`) — un élément issu d'une iframe appartient à un
@@ -480,17 +480,11 @@ export function getReactOwnerName(el: Element): string | undefined {
   return getReactOwnerChain(el, 1)[0];
 }
 
-// ─── Composants (Carbon, hints de classe, custom elements) ────────────────────
+// ─── Composants (data-slot, hints de classe, custom elements) ─────────────────
 
-const CARBON_BLOCK = /^(?:cds|bx)--([a-z0-9]+(?:-[a-z0-9]+)*)$/;
-
-/** Bloc Carbon Design System porté par l'élément (« tile », « data-table »…), sans modificateurs. */
-export function getCarbonComponent(el: Element): string | undefined {
-  for (const cls of Array.from(el.classList ?? [])) {
-    const match = CARBON_BLOCK.exec(cls);
-    if (match) return match[1];
-  }
-  return undefined;
+/** Composant EGEN (`@egen-civitas/esm-styleguide`) porté par l'élément, d'après son `data-slot` (« tile », « alert »…). */
+export function getSlotComponent(el: Element): string | undefined {
+  return el.getAttribute?.('data-slot') || undefined;
 }
 
 function classTokens(el: Element, includeInner: boolean): string[] {

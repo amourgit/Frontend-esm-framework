@@ -127,7 +127,7 @@ export function setNativeInputValue(el: HTMLInputElement | HTMLTextAreaElement, 
   const nativeSetter = Object.getOwnPropertyDescriptor(prototype, 'value')?.set;
   nativeSetter?.call(el, value);
   el.dispatchEvent(new Event('input', { bubbles: true }));
-  // Certains composants (Carbon NumberInput, validations au blur…) n'écoutent que « change ».
+  // Certains composants (NumberInput, validations au blur…) n'écoutent que « change ».
   el.dispatchEvent(new Event('change', { bubbles: true }));
 }
 

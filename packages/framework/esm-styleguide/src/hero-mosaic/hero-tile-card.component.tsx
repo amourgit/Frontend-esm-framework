@@ -1,7 +1,7 @@
 /** @category Hero Mosaic */
 import React from 'react';
 import { motion } from 'framer-motion';
-import styles from './hero-mosaic.module.scss';
+import styles from './hero-mosaic.module.css';
 
 /** Une tuile de la mosaïque « À la une ». */
 export interface HeroTile {

@@ -22,7 +22,6 @@ try {
 
 
 const { mkdirSync, readdirSync, statSync, readFileSync, writeFileSync } = require('node:fs');
-const sass = require('sass-embedded');
 const semver = require('semver');
 const { removeTrailingSlash, getTimestamp } = require('./tools/helpers');
 const { resolveTarget, targetWindowBridge } = require('./tools/targets');
@@ -344,15 +343,9 @@ module.exports = (env, argv = []) => {
 
   const assetsPatterns = egenJsCssAssets.map((asset) => ({ from: asset, to: 'assets' }));
 
-  // Compile the styleguide SCSS to CSS outside of rspack so it's a pure static file
-  // with no JS involvement. The result is content-hashed for long-term caching.
-  // Sass preserves @import of .css files as plain CSS @import rules rather than
-  // inlining them, so we strip those out and prepend the actual file contents.
-  const sassOutput = sass.compile(require.resolve('@egen-civitas/esm-styleguide/styles'), {
-    style: isProd ? 'compressed' : 'expanded',
-    quietDeps: true,
-    loadPaths: [resolve(__dirname, '..', '..', '..', 'node_modules')],
-  }).css;
+  // La feuille globale du styleguide est du CSS standard (plus de préprocesseur) : on la lit telle quelle, hors rspack,
+  // pour qu'elle reste un fichier statique sans JS, haché par contenu pour le cache long terme.
+  const sassOutput = readFileSync(require.resolve('@egen-civitas/esm-styleguide/styles'), 'utf-8');
 
   const cssImportRegex = /@import\s*["']([^"']+)["']\s*;?\n?/g;
   const inlinedImports = [];
@@ -526,19 +519,6 @@ module.exports = (env, argv = []) => {
               ? { loader: require.resolve(CssExtractRspackPlugin.loader) }
               : { loader: require.resolve('style-loader') },
             { loader: require.resolve('css-loader') },
-          ],
-        },
-        {
-          test: /\.s[ac]ss$/,
-          use: [
-            isProd
-              ? { loader: require.resolve(CssExtractRspackPlugin.loader) }
-              : { loader: require.resolve('style-loader') },
-            { loader: require.resolve('css-loader') },
-            {
-              loader: require.resolve('sass-loader'),
-              options: { sassOptions: { quietDeps: true } },
-            },
           ],
         },
         {

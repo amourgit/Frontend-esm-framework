@@ -13,7 +13,7 @@
 //
 //    - main {e3}
 //      - heading[1] "Étudiants" {e4}
-//      - card "Effectif" {e8} (react: StatCard · carbon: tile)
+//      - card "Effectif" {e8} (react: StatCard · slot: tile)
 //        - text: 1 245 étudiants actifs
 //        - link "Voir la liste" {e9} → /students
 //
@@ -100,7 +100,7 @@ export interface OutlineNode {
   hint?: string;
   flags: string[];
   react?: string;
-  carbon?: string;
+  slot?: string;
   declared?: DeclaredInfo;
   field?: FieldModel;
   table?: TableModel;
@@ -465,7 +465,7 @@ function visit(el: Element, out: OutlineNode[], ctx: BuildContext): void {
       role: kind,
       label: getComponentTitle(el) ?? declared?.label,
     });
-    if (identity?.source === 'carbon' && identity.name) node.carbon = identity.name;
+    if (identity?.source === 'slot' && identity.name) node.slot = identity.name;
     const react = getReactOwnerName(el);
     if (react) node.react = react;
 
@@ -626,7 +626,7 @@ const refOf = (node: OutlineNode) => (node.ref ? ` {${node.ref}}` : '');
 function metaOf(node: OutlineNode): string {
   const meta: string[] = [];
   if (node.react) meta.push(`react: ${node.react}`);
-  if (node.carbon) meta.push(`carbon: ${node.carbon}`);
+  if (node.slot) meta.push(`slot: ${node.slot}`);
   if (node.declared) meta.push(`déclaré: ${node.declared.id}`);
   return meta.length ? ` (${meta.join(' · ')})` : '';
 }

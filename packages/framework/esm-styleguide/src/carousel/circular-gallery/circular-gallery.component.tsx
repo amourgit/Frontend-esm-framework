@@ -5,7 +5,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '../../icons/index.js';
 import { GalleryImage } from './gallery-image.component.js';
 import { GalleryTabs } from './gallery-tabs.component.js';
 import type { CircularGalleryProps } from './circular-gallery.types.js';
-import styles from './circular-gallery.module.scss';
+import styles from './circular-gallery.module.css';
 
 /**
  * `CircularGallery` — galerie où chaque image est une petite pastille

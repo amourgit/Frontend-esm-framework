@@ -1,12 +1,12 @@
 /** @module @category Workspace */
 import React from 'react';
-import { IconButton } from '@carbon/react';
+import { IconButton } from '../../ui/index.js';
 import { ExtensionSlot, ComponentContext, isDesktop, useLayoutType } from '@egen-civitas/esm-react-utils';
 import { type WorkspaceGroupDefinition2 } from '@egen-civitas/esm-globals';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { closeWorkspaceGroup2 } from '../workspace2.js';
 import { CloseIcon } from '../../icons/index.js';
-import styles from './action-menu2.module.scss';
+import styles from './action-menu2.module.css';
 
 export interface ActionMenuProps {
   workspaceGroup: WorkspaceGroupDefinition2 & { moduleName: string };
@@ -29,13 +29,11 @@ export function ActionMenu({ workspaceGroup, groupProps }: ActionMenuProps) {
       <div className={styles.container}>
         {isClosable && isDesktop(layout) && (
           <IconButton
-            align="left"
+            tooltipSide="left"
             onClick={() => closeWorkspaceGroup2()}
             label={getCoreTranslation('close')}
-            kind="ghost"
-          >
-            <CloseIcon />
-          </IconButton>
+            icon={<CloseIcon />}
+          />
         )}
         <ComponentContext.Provider
           value={{

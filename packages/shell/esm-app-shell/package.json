@@ -42,7 +42,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@carbon/react": "^1.92.1",
     "@egen-civitas/esm-api": "^3.0.1",
     "@egen-civitas/esm-config": "^2.0.0",
     "@egen-civitas/esm-framework": "^4.1.0",
@@ -82,7 +81,6 @@
     "cross-env": "^10.1.0",
     "dotenv": "^16.0.3",
     "react-is": "^17.0.2",
-    "sass": "^1.98.0",
     "vitest": "^4.1.2",
     "webpack": "^5.105.3"
   }

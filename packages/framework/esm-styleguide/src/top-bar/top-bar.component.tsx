@@ -91,7 +91,7 @@ export const TopBar = forwardRef<HTMLElement, TopBarProps>(function TopBar(
 });
 
 export interface TopBarIconButtonProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> {
-  /** Icône (ex. composant Carbon `<Notification size={20} />`). */
+  /** Icône (ex. composant `<BellIcon size={20} />`). */
   icon: React.ReactNode;
   /** Libellé accessible ET infobulle (obligatoire : le bouton n'a pas de texte). */
   label: string;

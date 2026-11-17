@@ -1,6 +1,6 @@
 /** @category DecoratedCard */
 import React from 'react';
-import styles from './decorated-card.module.scss';
+import styles from './decorated-card.module.css';
 
 export const DotsPattern: React.FC<{ dotsColor?: string }> = ({ dotsColor }) => (
   <>

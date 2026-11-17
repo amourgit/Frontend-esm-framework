@@ -1,7 +1,7 @@
 /** @category Fields */
 import type React from 'react';
 
-/** Type Carbon-safe accepté pour les icônes d'un champ (EGEN set, `@carbon/react/icons`, ou tout composant SVG custom respectant `currentColor`). */
+/** Type accepté pour les icônes d'un champ (set EGEN, ou tout composant SVG custom respectant `currentColor`). */
 export type FieldIconComponent = React.ComponentType<{ className?: string; size?: number }>;
 
 /** Niveau de sévérité d'une règle de validation. */

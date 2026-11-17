@@ -1,7 +1,7 @@
 /** @category CardModal */
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import styles from './card-modal.module.scss';
+import styles from './card-modal.module.css';
 
 const ENTER = 0.5;
 const EXIT = 0.25;

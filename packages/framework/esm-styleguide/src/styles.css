@@ -1,0 +1,1364 @@
+/* Feuille globale d'EGEN (générée une dernière fois depuis les anciens partiels SCSS, sans Carbon). À modifier directement. */
+/* 60,70 and 80 are already declared as brand-01, 02 and 03 respectively */
+:root {
+  --brand-01: var(--colors-primary-600, #005d5d);
+  --brand-02: var(--colors-primary-700, #004144);
+  --brand-03: var(--colors-primary-500, #007d79);
+  --bottom-nav-height: 4rem;
+  --workspace-header-height: 3rem;
+  --tablet-workspace-window-height: calc(100vh - var(--egen-navbar-height) - var(--egen-footer-height, 0px) - var(--bottom-nav-height));
+  --desktop-workspace-window-height: calc(100vh - var(--egen-navbar-height) - var(--egen-footer-height, 0px) - var(--workspace-header-height));
+}
+
+:root {
+  --ui-layer: var(--panel-card-background, #f4f4f4);
+  --ui-layer-01: var(--panel-card-background, #f4f4f4);
+  --ui-layer-02: var(--colors-surface-muted, #ffffff);
+  --ui-layer-03: var(--colors-surface-popover, #f4f4f4);
+  --ui-layer-hover: var(--colors-surface-muted, #e8e8e8);
+  --ui-layer-hover-01: var(--colors-surface-muted, #e8e8e8);
+  --ui-layer-hover-02: var(--colors-surface-muted, #e8e8e8);
+  --ui-layer-active: var(--colors-surface-accent, #c6c6c6);
+  --ui-layer-active-01: var(--colors-surface-accent, #c6c6c6);
+  --ui-layer-selected: var(--colors-surface-accent, #e0e0e0);
+  --ui-layer-selected-01: var(--colors-surface-accent, #e0e0e0);
+  --ui-layer-selected-hover: var(--colors-surface-accent, #d1d1d1);
+  --ui-layer-selected-disabled: var(--colors-surface-muted-foreground, #8d8d8d);
+  --ui-layer-selected-inverse: var(--colors-surface-foreground, #161616);
+  --ui-layer-background: var(--colors-surface-background, #ffffff);
+  --ui-layer-accent: var(--colors-surface-muted, #e0e0e0);
+  --ui-layer-accent-01: var(--colors-surface-muted, #e0e0e0);
+  --ui-layer-accent-02: var(--colors-surface-muted, #e0e0e0);
+  --ui-layer-accent-03: var(--colors-surface-muted, #e0e0e0);
+  --ui-layer-accent-hover: var(--colors-surface-accent, #d1d1d1);
+  --ui-layer-accent-hover-01: var(--colors-surface-accent, #d1d1d1);
+  --ui-layer-accent-hover-02: var(--colors-surface-accent, #d1d1d1);
+  --ui-layer-accent-hover-03: var(--colors-surface-accent, #d1d1d1);
+  --ui-layer-accent-active: var(--colors-surface-accent, #c6c6c6);
+  --ui-layer-accent-active-01: var(--colors-surface-accent, #c6c6c6);
+  --ui-layer-accent-active-02: var(--colors-surface-accent, #c6c6c6);
+  --ui-layer-accent-active-03: var(--colors-surface-accent, #c6c6c6);
+  --ui-layer-active-02: var(--colors-surface-accent, #c6c6c6);
+  --ui-layer-active-03: var(--colors-surface-accent, #c6c6c6);
+  --ui-layer-background-01: var(--colors-surface-background, #ffffff);
+  --ui-layer-background-02: var(--colors-surface-background, #ffffff);
+  --ui-layer-background-03: var(--colors-surface-background, #ffffff);
+  --ui-layer-hover-03: var(--colors-surface-muted, #e8e8e8);
+  --ui-layer-selected-02: var(--colors-surface-accent, #e0e0e0);
+  --ui-layer-selected-03: var(--colors-surface-accent, #e0e0e0);
+  --ui-layer-selected-hover-01: var(--colors-surface-accent, #d1d1d1);
+  --ui-layer-selected-hover-02: var(--colors-surface-accent, #d1d1d1);
+  --ui-layer-selected-hover-03: var(--colors-surface-accent, #d1d1d1);
+  --ui-field: var(--panel-input-background, var(--colors-surface-muted, #f4f4f4));
+  --ui-field-01: var(--panel-input-background, var(--colors-surface-muted, #f4f4f4));
+  --ui-field-02: var(--colors-surface-muted, #ffffff);
+  --ui-field-03: var(--colors-surface-muted, #ffffff);
+  --ui-field-hover: var(--colors-surface-muted, #e8e8e8);
+  --ui-field-hover-01: var(--colors-surface-muted, #e8e8e8);
+  --ui-field-hover-02: var(--colors-surface-muted, #e8e8e8);
+  --ui-field-hover-03: var(--colors-surface-muted, #e8e8e8);
+  --ui-border-subtle: var(--colors-border-default, #e0e0e0);
+  --ui-border-subtle-00: var(--colors-border-default, #e0e0e0);
+  --ui-border-subtle-01: var(--colors-border-default, #e0e0e0);
+  --ui-border-subtle-02: var(--colors-border-default, #e0e0e0);
+  --ui-border-subtle-03: var(--colors-border-default, #c6c6c6);
+  --ui-border-subtle-selected: var(--colors-border-default, #c6c6c6);
+  --ui-border-subtle-selected-01: var(--colors-border-default, #c6c6c6);
+  --ui-border-subtle-selected-02: var(--colors-border-default, #c6c6c6);
+  --ui-border-subtle-selected-03: var(--colors-border-default, #c6c6c6);
+  --ui-border-strong: var(--colors-border-default, #8d8d8d);
+  --ui-border-strong-01: var(--colors-border-default, #8d8d8d);
+  --ui-border-strong-02: var(--colors-border-default, #8d8d8d);
+  --ui-border-strong-03: var(--colors-border-default, #8d8d8d);
+  --ui-border-tile: var(--colors-border-default, #c6c6c6);
+  --ui-border-tile-01: var(--colors-border-default, #c6c6c6);
+  --ui-border-tile-02: var(--colors-border-default, #c6c6c6);
+  --ui-border-tile-03: var(--colors-border-default, #c6c6c6);
+  --ui-border-interactive: var(--colors-primary-500, #0f62fe);
+  --ui-border-inverse: var(--colors-surface-foreground, #161616);
+  --ui-border-disabled: var(--colors-border-default, #c6c6c6);
+  --ui-background: var(--colors-surface-background, #ffffff);
+  --ui-background-hover: var(--colors-surface-muted, #e8e8e8);
+  --ui-background-active: var(--colors-surface-accent, #c6c6c6);
+  --ui-background-selected: var(--colors-surface-accent, #e0e0e0);
+  --ui-background-selected-hover: var(--colors-surface-accent, #d1d1d1);
+  --ui-background-brand: var(--colors-primary-500, #0f62fe);
+  --ui-background-inverse: var(--colors-surface-foreground, #393939);
+  --ui-background-inverse-hover: var(--colors-surface-foreground, #4c4c4c);
+  --ui-text-primary: var(--colors-surface-foreground, #161616);
+  --ui-text-secondary: var(--colors-surface-muted-foreground, #525252);
+  --ui-text-placeholder: var(--colors-surface-muted-foreground, #a8a8a8);
+  --ui-text-helper: var(--colors-surface-muted-foreground, #6f6f6f);
+  --ui-text-disabled: var(--colors-surface-muted-foreground, #c6c6c6);
+  --ui-text-inverse: var(--colors-on-primary, #ffffff);
+  --ui-text-on-color: var(--colors-on-primary, #ffffff);
+  --ui-text-on-color-disabled: var(--colors-on-primary, #8d8d8d);
+  --ui-text-error: var(--colors-error-500, #da1e28);
+  --ui-icon-primary: var(--colors-surface-foreground, #161616);
+  --ui-icon-secondary: var(--colors-surface-muted-foreground, #525252);
+  --ui-icon-disabled: var(--colors-surface-muted-foreground, #c6c6c6);
+  --ui-icon-inverse: var(--colors-on-primary, #ffffff);
+  --ui-icon-interactive: var(--colors-primary-500, #0f62fe);
+  --ui-icon-on-color: var(--colors-on-primary, #ffffff);
+  --ui-icon-on-color-disabled: var(--colors-on-primary, #8d8d8d);
+  --ui-interactive: var(--colors-primary-500, #0f62fe);
+  --ui-link-primary: var(--colors-primary-400, #0f62fe);
+  --ui-link-primary-hover: var(--colors-primary-300, #0043ce);
+  --ui-link-secondary: var(--colors-primary-600, #0043ce);
+  --ui-link-inverse: var(--colors-on-primary, #ffffff);
+  --ui-link-visited: var(--colors-secondary-500, #8a3ffc);
+  --ui-focus: var(--colors-border-ring, var(--colors-primary-500, #0f62fe));
+  --ui-focus-inset: var(--colors-on-primary, #ffffff);
+  --ui-focus-inverse: var(--colors-on-primary, #ffffff);
+  --ui-highlight: var(--colors-primary-100, #d0e2ff);
+  --ui-toggle-off: var(--colors-neutral-400, #8d8d8d);
+  --ui-overlay: var(--colors-surface-overlay, rgba(22, 22, 22, 0.5));
+  --ui-shadow: rgba(0, 0, 0, 0.3);
+  --ui-support-error: var(--colors-error-500, #da1e28);
+  --ui-support-success: var(--colors-success-500, #24a148);
+  --ui-support-warning: var(--colors-warning-500, #f1c21b);
+  --ui-support-info: var(--colors-info-500, #0043ce);
+  --ui-support-error-inverse: var(--colors-error-600, #fa4d56);
+  --ui-support-success-inverse: var(--colors-success-600, #42be65);
+  --ui-support-warning-inverse: var(--colors-warning-600, #f1c21b);
+  --ui-support-info-inverse: var(--colors-info-600, #4589ff);
+  --ui-skeleton-background: var(--colors-surface-skeleton, #e8e8e8);
+  --ui-skeleton-element: var(--colors-surface-muted, #c6c6c6);
+  --ui-button-primary: var(--colors-primary-600, #0f62fe);
+  --ui-button-primary-hover: var(--colors-primary-700, #0050e6);
+  --ui-button-primary-active: var(--colors-primary-800, #002d9c);
+  --ui-button-secondary: var(--colors-surface-muted-foreground, #393939);
+  --ui-button-secondary-hover: var(--colors-surface-foreground, #4c4c4c);
+  --ui-button-secondary-active: var(--colors-surface-foreground, #6f6f6f);
+  --ui-button-danger-primary: var(--colors-error-600, #da1e28);
+  --ui-button-danger-hover: var(--colors-error-700, #b81921);
+  --ui-button-danger-active: var(--colors-error-800, #750e13);
+  --ui-button-separator: var(--colors-border-default, #e0e0e0);
+  --ui-button-disabled: var(--colors-border-default, #c6c6c6);
+  --ui-ai-border-strong: var(--colors-primary-500, #4589ff);
+  --ui-ai-overlay: color-mix(in srgb, var(--colors-primary-900, #001141) 50%, transparent);
+  --ui-ai-drop-shadow: color-mix(in srgb, var(--colors-primary-600, #0f62fe) 10%, transparent);
+  --ui-ai-inner-shadow: color-mix(in srgb, var(--colors-primary-400, #4589ff) 10%, transparent);
+  --ui-ai-skeleton-background: var(--colors-primary-100, #d0e2ff);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+*:not([data-scrollbar=visible]) {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*:not([data-scrollbar=visible])::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+html[data-public-route=true] #egen-top-nav-app-container {
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden;
+}
+html[data-public-route=true] #egen-apps-container {
+  min-height: 100%;
+}
+html[data-public-route=true] #egen-workspaces-container,
+html[data-public-route=true] #egen-footer-app-container,
+html[data-public-route=true] #egen-rail-left-container,
+html[data-public-route=true] #egen-rail-right-container,
+html[data-public-route=true] #egen-zone-left-container,
+html[data-public-route=true] #egen-zone-right-container,
+html[data-public-route=true] #egen-zone-bottom-container {
+  display: none;
+}
+html[data-public-route=true] body {
+  grid-template-columns: 0 0 minmax(0, 1fr) 0 0 min-content;
+  grid-template-rows: auto minmax(0, 1fr) 0 var(--egen-footer-height, 0px);
+}
+html[data-public-route=true] #egen-scroll-region {
+  margin: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.egen-app-error {
+  padding: 5rem;
+  width: 100%;
+  height: 100%;
+  background: var(--colors-surface-background, white);
+  border-top: 5px solid var(--colors-error-500, var(--colors-error-500, #da1e28));
+}
+.egen-app-error p {
+  margin: 1.5rem 0;
+}
+
+#egen-page-background-container {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+#egen-scroll-region {
+  grid-area: appRoots;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  height: auto;
+  margin: calc(var(--egen-workbench-gap, 0.375rem) / 2);
+  border-radius: 0.625rem;
+  background: var(--egen-workbench-card-bg, rgba(0, 0, 0, 0.24));
+}
+
+:root {
+  --egen-rail-width: 2.5rem;
+  --egen-workbench-gap: 0.375rem;
+  --egen-workbench-card-bg: rgb(0 0 0 / 24%);
+}
+
+:root[data-theme=light] {
+  --egen-workbench-card-bg: rgb(0 0 0 / 8%);
+}
+
+html[data-workbench-resizing] {
+  user-select: none;
+}
+
+#egen-rail-left-container {
+  grid-area: railL;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#egen-rail-right-container {
+  grid-area: railR;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#egen-zone-left-container {
+  grid-area: zoneL;
+  min-width: 0;
+  min-height: 0;
+}
+
+#egen-zone-right-container {
+  grid-area: zoneR;
+  min-width: 0;
+  min-height: 0;
+}
+
+#egen-zone-bottom-container {
+  grid-area: zoneB;
+  min-width: 0;
+  min-height: 0;
+}
+
+#egen-apps-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1 0 auto;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+#egen-workspaces-container {
+  grid-area: workspace;
+  position: sticky;
+  height: 100%;
+  min-height: 0;
+  top: 0;
+  z-index: 1000;
+  will-change: contents;
+}
+
+#egen-top-nav-app-container {
+  grid-area: topNav;
+  position: relative;
+  z-index: var(--egen-shell-bar-z-index, 8100);
+  height: auto;
+  min-height: 3rem;
+  overflow: visible;
+}
+
+#egen-footer-app-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--egen-shell-bar-z-index, 8100);
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 0;
+  overflow: visible;
+}
+
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: grid;
+  grid-template-areas: "topNav topNav topNav topNav topNav topNav" "railL zoneL appRoots zoneR railR workspace" "railL zoneB zoneB zoneB railR workspace" "footerGap footerGap footerGap footerGap footerGap footerGap";
+  grid-template-columns: var(--egen-rail-width, 2.5rem) var(--egen-zone-left-width, 0px) minmax(0, 1fr) var(--egen-zone-right-width, 0px) var(--egen-rail-width, 2.5rem) min-content;
+  grid-template-rows: auto minmax(0, 1fr) var(--egen-zone-bottom-height, 0px) var(--egen-footer-height, 0px);
+  box-sizing: border-box;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+@media (max-width: 767px) {
+  #egen-rail-left-container,
+  #egen-rail-right-container,
+  #egen-zone-left-container,
+  #egen-zone-right-container,
+  #egen-zone-bottom-container {
+    display: none;
+  }
+  body {
+    grid-template-columns: 0 0 minmax(0, 1fr) 0 0 min-content;
+    grid-template-rows: auto minmax(0, 1fr) 0 var(--egen-footer-height, 0px);
+  }
+  #egen-scroll-region {
+    margin: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+}
+@media print {
+  html,
+  body {
+    display: block;
+    height: auto;
+    overflow: visible;
+    container-type: normal;
+  }
+  #egen-workspaces-container,
+  #egen-top-nav-app-container,
+  #egen-footer-app-container,
+  #egen-rail-left-container,
+  #egen-rail-right-container,
+  #egen-zone-left-container,
+  #egen-zone-right-container,
+  #egen-zone-bottom-container {
+    display: none;
+  }
+  #egen-scroll-region,
+  #egen-apps-container {
+    height: auto;
+    min-height: auto;
+    overflow: visible;
+  }
+  #egen-scroll-region {
+    margin: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+}
+html {
+  background-color: var(--colors-surface-muted, #f4f4f4);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: transparent;
+}
+
+nav.breadcrumbs-container {
+  padding: 1rem;
+  background-color: var(--colors-surface-muted, #f4f4f4);
+}
+nav.breadcrumbs-container ol li {
+  display: inline-flex;
+}
+
+:root {
+  --egen-offline-banner-height: 0;
+  --egen-navbar-height: 3rem;
+  --egen-footer-height: 0px;
+  --egen-shell-bar-z-index: 8100;
+  --egen-topnav-height: var(--egen-navbar-height);
+}
+
+.egen-main-content {
+  margin-left: 0;
+  transition: margin-left 0.5s ease;
+}
+
+.egen-offline {
+  --egen-offline-banner-height: 1.5rem;
+  --egen-topnav-height: 4.5rem;
+}
+
+#egen-workspaces-container {
+  backdrop-filter: var(--panel-lg-backdrop-filter);
+  border-left: var(--colors-border-default) solid 1px;
+}
+
+.egen-loader {
+  --egen-loader-from: var(--colors-primary-600, #008080);
+  --egen-loader-to: var(--colors-primary-300, #38bdf8);
+  --egen-loader-glow: rgb(0 128 128 / 60%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  filter: drop-shadow(0 0 25px var(--egen-loader-glow));
+}
+
+.egen-loader__defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.egen-loader__stop-from {
+  stop-color: var(--egen-loader-from);
+}
+
+.egen-loader__stop-to {
+  stop-color: var(--egen-loader-to);
+}
+
+.egen-loader__spin {
+  position: relative;
+  z-index: 1;
+  filter: url("#egen-loader-goo");
+}
+
+.egen-loader__shadow {
+  position: absolute;
+  opacity: 0.3;
+  filter: blur(5px);
+  transform: translate(3px, 3px);
+}
+
+.egen-loader__arc,
+.egen-loader__ring {
+  fill: none;
+  stroke: url("#egen-loader-gradient");
+  stroke-width: 23;
+  stroke-linecap: round;
+}
+
+.egen-loader__arc {
+  animation: egen-loader-spin 10s infinite linear;
+  stroke-dasharray: 180 800;
+}
+
+.egen-loader__ring {
+  animation: egen-loader-spin 3s infinite linear;
+  stroke-dasharray: 26 54;
+}
+
+@keyframes egen-loader-spin {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -403px;
+  }
+}
+.egen-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--egen-shell-bar-z-index, 8100) - 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: transparent;
+  backdrop-filter: blur(8px);
+  cursor: wait;
+  user-select: none;
+}
+
+.egen-loader-overlay--local {
+  position: absolute;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.egen-inline-notifications-container {
+  z-index: 100000;
+  position: fixed;
+  width: 100%;
+  bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.egen-notification-mounting,
+.egen-notification-mounting > * {
+  padding: 0;
+}
+
+.egen-notification-closing,
+.egen-notification-mounting {
+  opacity: 0;
+}
+
+.egen-actionable-notifications-container {
+  z-index: 1000;
+  position: fixed;
+  width: 100%;
+  display: flex;
+  bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.egen-actionable-notification-mounting,
+.egen-actionable-notification-mounting > * {
+  padding: 0;
+}
+
+.egen-actionable-notification-closing,
+.egen-actionable-notification-mounting {
+  opacity: 0;
+}
+
+.egen-toasts-container {
+  display: flex;
+  flex-direction: column;
+  z-index: 100000;
+  position: fixed;
+  width: 20rem;
+  top: 4rem;
+  right: 1rem;
+  gap: 0.5rem;
+}
+
+.egen-toast-mounting,
+.egen-toast-mounting > * {
+  padding: 0;
+}
+
+.egen-toast-closing,
+.egen-toast-mounting {
+  opacity: 0;
+}
+
+.egen-snackbars-container {
+  z-index: 9001;
+  position: fixed;
+  width: 20rem;
+  bottom: 1rem;
+  left: 1rem;
+  gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* Tablet */
+.egen-breakpoint-lt-desktop .egen-snackbars-container {
+  bottom: 5.5rem;
+}
+
+.egen-snackbar-mounting,
+.egen-snackbar-mounting > * {
+  padding: 0;
+}
+
+.egen-snackbar-closing,
+.egen-snackbar-mounting {
+  opacity: 0;
+}
+
+:root {
+  --egen-motion-fast: 150ms;
+  --egen-motion-base: 250ms;
+  --egen-motion-slow: 400ms;
+  --egen-motion-slower: 700ms;
+  --egen-motion-zone: 300ms;
+  --egen-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --egen-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --egen-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --egen-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --egen-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --egen-anim-distance: 1.5rem;
+}
+
+@keyframes egen-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes egen-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes egen-slide-in-from-left {
+  from {
+    opacity: 0;
+    transform: translate3d(calc(var(--egen-anim-distance) * -1), 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes egen-slide-in-from-right {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--egen-anim-distance), 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes egen-slide-in-from-top {
+  from {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--egen-anim-distance) * -1), 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes egen-slide-in-from-bottom {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--egen-anim-distance), 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes egen-slide-out-to-left {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(calc(var(--egen-anim-distance) * -1), 0, 0);
+  }
+}
+@keyframes egen-slide-out-to-right {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(var(--egen-anim-distance), 0, 0);
+  }
+}
+@keyframes egen-slide-out-to-top {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--egen-anim-distance) * -1), 0);
+  }
+}
+@keyframes egen-slide-out-to-bottom {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, var(--egen-anim-distance), 0);
+  }
+}
+@keyframes egen-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes egen-zoom-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+@keyframes egen-blur-in {
+  from {
+    opacity: 0;
+    filter: blur(12px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+@keyframes egen-blur-out {
+  from {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(12px);
+  }
+}
+@keyframes egen-rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--egen-anim-distance) * 0.5), 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes egen-rise-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--egen-anim-distance) * -0.35), 0);
+  }
+}
+@keyframes egen-drop-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, calc(var(--egen-anim-distance) * -1.5), 0);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(0, 4px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes egen-bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  80% {
+    transform: scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes egen-flip-in-x {
+  from {
+    opacity: 0;
+    transform: perspective(600px) rotateX(-70deg);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(600px) rotateX(0);
+  }
+}
+@keyframes egen-flip-in-y {
+  from {
+    opacity: 0;
+    transform: perspective(600px) rotateY(-70deg);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(600px) rotateY(0);
+  }
+}
+@keyframes egen-wipe-in-left {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes egen-wipe-in-top {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes egen-wipe-out-left {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+  to {
+    clip-path: inset(0 100% 0 0);
+  }
+}
+@keyframes egen-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.04);
+  }
+}
+@keyframes egen-float {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+@keyframes egen-shake {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  20%, 60% {
+    transform: translate3d(-6px, 0, 0);
+  }
+  40%, 80% {
+    transform: translate3d(6px, 0, 0);
+  }
+}
+@keyframes egen-shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+@keyframes egen-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.egen-anim-fade-in {
+  animation-name: egen-fade-in;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-base));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-standard));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-fade-out {
+  animation-name: egen-fade-out;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-fast));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-in));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-slide-in-from-left {
+  animation-name: egen-slide-in-from-left;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-zone));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-slide-in-from-right {
+  animation-name: egen-slide-in-from-right;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-zone));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-slide-in-from-top {
+  animation-name: egen-slide-in-from-top;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-zone));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-slide-in-from-bottom {
+  animation-name: egen-slide-in-from-bottom;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-zone));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-slide-out-to-left {
+  animation-name: egen-slide-out-to-left;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-zone));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-in-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-slide-out-to-right {
+  animation-name: egen-slide-out-to-right;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-zone));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-in-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-slide-out-to-top {
+  animation-name: egen-slide-out-to-top;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-zone));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-in-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-slide-out-to-bottom {
+  animation-name: egen-slide-out-to-bottom;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-zone));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-in-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-zoom-in {
+  animation-name: egen-zoom-in;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-base));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-zoom-out {
+  animation-name: egen-zoom-out;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-fast));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-in));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-blur-in {
+  animation-name: egen-blur-in;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-slow));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-blur-out {
+  animation-name: egen-blur-out;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-base));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-in));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-rise-in {
+  animation-name: egen-rise-in;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-slow));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-rise-out {
+  animation-name: egen-rise-out;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-base));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-in));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-drop-in {
+  animation-name: egen-drop-in;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-slow));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-standard));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-bounce-in {
+  animation-name: egen-bounce-in;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-slower));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-standard));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-flip-in-x {
+  animation-name: egen-flip-in-x;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-slow));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-flip-in-y {
+  animation-name: egen-flip-in-y;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-slow));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-wipe-in-left {
+  animation-name: egen-wipe-in-left;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-slow));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-in-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-wipe-in-top {
+  animation-name: egen-wipe-in-top;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-slow));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-in-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-wipe-out-left {
+  animation-name: egen-wipe-out-left;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-base));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-in-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-pulse {
+  animation-name: egen-pulse;
+  animation-duration: var(--egen-anim-duration, 1.6s);
+  animation-timing-function: var(--egen-anim-easing, ease-in-out);
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+  --egen-anim-iterations: infinite;
+}
+
+.egen-anim-float {
+  animation-name: egen-float;
+  animation-duration: var(--egen-anim-duration, 3s);
+  animation-timing-function: var(--egen-anim-easing, ease-in-out);
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+  --egen-anim-iterations: infinite;
+}
+
+.egen-anim-shake {
+  animation-name: egen-shake;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-slow));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-standard));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+}
+
+.egen-anim-spin {
+  animation-name: egen-spin;
+  animation-duration: var(--egen-anim-duration, 1s);
+  animation-timing-function: var(--egen-anim-easing, linear);
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+  --egen-anim-iterations: infinite;
+}
+
+.egen-anim-shimmer {
+  background-image: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.14) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation-name: egen-shimmer;
+  animation-duration: var(--egen-anim-duration, 1.6s);
+  animation-timing-function: var(--egen-anim-easing, linear);
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+  --egen-anim-iterations: infinite;
+}
+
+.egen-anim--fast {
+  --egen-anim-duration: var(--egen-motion-fast);
+}
+
+.egen-anim--slow {
+  --egen-anim-duration: var(--egen-motion-slow);
+}
+
+.egen-anim--slower {
+  --egen-anim-duration: var(--egen-motion-slower);
+}
+
+.egen-anim-stagger > * {
+  --egen-i: 0;
+  animation-name: egen-rise-in;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-slow));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+  animation-delay: calc(var(--egen-anim-stagger-step, 40ms) * var(--egen-i));
+}
+
+.egen-anim-stagger > :nth-child(1) {
+  --egen-i: 0;
+}
+
+.egen-anim-stagger > :nth-child(2) {
+  --egen-i: 1;
+}
+
+.egen-anim-stagger > :nth-child(3) {
+  --egen-i: 2;
+}
+
+.egen-anim-stagger > :nth-child(4) {
+  --egen-i: 3;
+}
+
+.egen-anim-stagger > :nth-child(5) {
+  --egen-i: 4;
+}
+
+.egen-anim-stagger > :nth-child(6) {
+  --egen-i: 5;
+}
+
+.egen-anim-stagger > :nth-child(7) {
+  --egen-i: 6;
+}
+
+.egen-anim-stagger > :nth-child(8) {
+  --egen-i: 7;
+}
+
+.egen-anim-stagger > :nth-child(9) {
+  --egen-i: 8;
+}
+
+.egen-anim-stagger > :nth-child(10) {
+  --egen-i: 9;
+}
+
+.egen-anim-stagger > :nth-child(11) {
+  --egen-i: 10;
+}
+
+.egen-anim-stagger > :nth-child(12) {
+  --egen-i: 11;
+}
+
+.egen-anim-stagger--fade > * {
+  animation-name: egen-fade-in;
+}
+
+.egen-anim-stagger--zoom > * {
+  animation-name: egen-zoom-in;
+}
+
+.egen-anim-stagger--slide-left > * {
+  animation-name: egen-slide-in-from-left;
+}
+
+.egen-anim-stagger--slide-right > * {
+  animation-name: egen-slide-in-from-right;
+}
+
+.egen-anim-page-enter {
+  animation-name: egen-rise-in;
+  animation-duration: var(--egen-anim-duration, var(--egen-motion-slow));
+  animation-timing-function: var(--egen-anim-easing, var(--egen-ease-out));
+  animation-delay: var(--egen-anim-delay, 0ms);
+  animation-fill-mode: both;
+  animation-iteration-count: var(--egen-anim-iterations, 1);
+  --egen-anim-distance: 1rem;
+}
+
+html[data-egen-page-anim=fade] .egen-anim-page-enter {
+  animation-name: egen-fade-in;
+}
+
+html[data-egen-page-anim=zoom] .egen-anim-page-enter {
+  animation-name: egen-zoom-in;
+}
+
+html[data-egen-page-anim=blur] .egen-anim-page-enter {
+  animation-name: egen-blur-in;
+}
+
+html[data-egen-page-anim=slide] .egen-anim-page-enter {
+  animation-name: egen-slide-in-from-right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [class*=egen-anim-],
+  [class*=egen-anim-] > * {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+@property --egen-zone-left-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+@property --egen-zone-right-width {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+@property --egen-zone-bottom-height {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+html {
+  transition: --egen-zone-left-width var(--egen-motion-zone, 300ms) var(--egen-ease-out, ease), --egen-zone-right-width var(--egen-motion-zone, 300ms) var(--egen-ease-out, ease), --egen-zone-bottom-height var(--egen-motion-zone, 300ms) var(--egen-ease-out, ease);
+}
+
+html[data-workbench-resizing] {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
+}
+/* UI Shell Header */
+
+/* Tooltip */
+
+/* Tooltips presently have a higher stacking context than modals, which leads to tooltip buttons rendering above modal content */
+
+/* Modals */
+
+/* Content Switcher */
+
+/* Tabs */
+
+/* DataTables */
+
+/* Alternate background and border colors for zebra styled table rows */
+
+/* Buttons */
+
+/* Overflow menu */
+
+/* Pagination */
+
+/* Data table overflow menu */
+
+/* Search inputs */
+
+/* Radio buttons */
+
+/* Breadcrumbs */
+
+/* Preloader */
+
+/* RTL overrides */
+html[dir=rtl] {
+  /* RTL Content Switcher */
+}
+html[dir=rtl] .form-container .tab-container .tab > button {
+  text-align: right;
+}
+html[dir=rtl] .form-container .tab-container .tab .active {
+  border-left: unset !important;
+  border-right: 0.5rem solid var(--colors-primary-400, #009d9a);
+}
+html[dir=rtl] .form-container .tab-container .tab .enabled {
+  border-left: unset !important;
+  border-right: 0.5rem solid var(--colors-primary-100, #9ef0f0);
+}
+html[dir=rtl] .form-container .tab-content .pane {
+  padding-inline: 0;
+}
+html[dir=rtl] .form-container .tab-content .pane > h4 {
+  padding-left: unset;
+  padding-inline-start: 1rem;
+}
+html[dir=rtl] .form-container .question-area {
+  min-width: unset;
+}
+
+.egen-icon {
+  fill: var(--egen-icon-fill, currentColor);
+}
+
+/* Fil d'Ariane du shell (`esm-app-shell/src/ui/breadcrumbs.tsx`) : liste horizontale, séparateur « / ». */
+.egen-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.egen-breadcrumb-item:not(:last-child)::after {
+  content: '/';
+  margin: 0 0.5rem;
+  color: var(--colors-surface-muted-foreground, #6b7280);
+}

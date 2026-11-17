@@ -1,0 +1,28 @@
+.pageHeader {
+  font-size: var(--ui-body-compact-02-font-size, 1rem);
+  font-weight: var(--ui-body-compact-02-font-weight, 400);
+  line-height: var(--ui-body-compact-02-line-height, 1.375);
+  letter-spacing: var(--ui-body-compact-02-letter-spacing, 0);
+  color: var(--colors-surface-muted-foreground, #525252);
+  height: 6rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pageHeaderContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.pageName {
+  font-size: var(--ui-heading-04-font-size, 1.75rem);
+  font-weight: var(--ui-heading-04-font-weight, 400);
+  line-height: var(--ui-heading-04-line-height, 1.28572);
+  letter-spacing: var(--ui-heading-04-letter-spacing, 0);
+}
+
+.pageLabels p:first-of-type {
+  margin-bottom: 0.25rem;
+}

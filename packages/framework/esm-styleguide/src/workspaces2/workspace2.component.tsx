@@ -1,13 +1,13 @@
 import React, { useEffect, type ReactNode } from 'react';
 import classNames from 'classnames';
-import { Header, HeaderGlobalAction, HeaderGlobalBar, HeaderName } from '@carbon/react';
-import { DownToBottom, Maximize, Minimize } from '@carbon/react/icons';
+import { AppHeader, AppHeaderAction, AppHeaderBar, AppHeaderName } from '../ui/index.js';
+import { ArrowDownToLineIcon as DownToBottom, Maximize2Icon as Maximize, Minimize2Icon as Minimize } from 'lucide-react';
 import { isDesktop, useLayoutType } from '@egen-civitas/esm-react-utils';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { getOpenedWindowIndexByWorkspace } from '@egen-civitas/esm-extensions';
 import { ArrowRightIcon, CloseIcon } from '../icons/index.js';
 import { useWorkspace2Store, useWorkspace2Context, closeWorkspaceGroup2 } from './workspace2.js';
-import styles from './workspace2.module.scss';
+import styles from './workspace2.module.css';
 
 interface Workspace2Props {
   title: string;
@@ -157,42 +157,42 @@ export const Workspace2: React.FC<Workspace2Props> = ({ title, children, hasUnsa
             [styles.isRootWorkspace]: isRootWorkspace,
           })}
         >
-          <Header aria-label={getCoreTranslation('workspaceHeader')} className={styles.header}>
-            <HeaderName prefix="">{title}</HeaderName>
+          <AppHeader aria-label={getCoreTranslation('workspaceHeader')} className={styles.header}>
+            <AppHeaderName>{title}</AppHeaderName>
             <div className={styles.overlayHeaderSpacer} />
-            <HeaderGlobalBar className={styles.headerButtons}>
+            <AppHeaderBar className={styles.headerButtons}>
               {isDesktop(layout) ? (
                 <>
                   {(canMaximize || maximized) && (
-                    <HeaderGlobalAction
+                    <AppHeaderAction
                       aria-label={maximized ? getCoreTranslation('minimize') : getCoreTranslation('maximize')}
                       onClick={() => setWindowMaximized(windowName, !maximized)}
                     >
                       {maximized ? <Minimize /> : <Maximize />}
-                    </HeaderGlobalAction>
+                    </AppHeaderAction>
                   )}
                   {canHide && (
-                    <HeaderGlobalAction aria-label={getCoreTranslation('hide')} onClick={() => hideWindow()}>
+                    <AppHeaderAction aria-label={getCoreTranslation('hide')} onClick={() => hideWindow()}>
                       <ArrowRightIcon />
-                    </HeaderGlobalAction>
+                    </AppHeaderAction>
                   )}
                   {!canCloseGroup && (
-                    <HeaderGlobalAction
+                    <AppHeaderAction
                       aria-label={getCoreTranslation('close')}
                       onClick={() => closeWorkspace({ closeWindow: true })}
                     >
                       <CloseIcon />
-                    </HeaderGlobalAction>
+                    </AppHeaderAction>
                   )}
                 </>
               ) : (
                 <>
                   {canHide && (
-                    <HeaderGlobalAction aria-label={getCoreTranslation('hide')} onClick={() => hideWindow()}>
+                    <AppHeaderAction aria-label={getCoreTranslation('hide')} onClick={() => hideWindow()}>
                       <DownToBottom />
-                    </HeaderGlobalAction>
+                    </AppHeaderAction>
                   )}
-                  <HeaderGlobalAction
+                  <AppHeaderAction
                     aria-label={getCoreTranslation('close')}
                     onClick={() => {
                       if (canCloseGroup) {
@@ -203,11 +203,11 @@ export const Workspace2: React.FC<Workspace2Props> = ({ title, children, hasUnsa
                     }}
                   >
                     <CloseIcon />
-                  </HeaderGlobalAction>
+                  </AppHeaderAction>
                 </>
               )}
-            </HeaderGlobalBar>
-          </Header>
+            </AppHeaderBar>
+          </AppHeader>
           <div className={classNames(styles.workspaceContent)}>{children}</div>
         </div>
       </div>

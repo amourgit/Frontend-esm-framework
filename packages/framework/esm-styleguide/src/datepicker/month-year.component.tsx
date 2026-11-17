@@ -26,7 +26,7 @@ function getYearAsNumber(date: Date, intlLocale: Intl.Locale) {
 }
 
 /**
- * Custom component to render the month and year on the DatePicker and provide the standard Carbon
+ * Custom component to render the month and year on the DatePicker and provide the standard date-picker header look
  * UI to change them.
  *
  * Should work with any calendar system supported by the @internationalized/date package.

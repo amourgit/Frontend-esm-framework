@@ -725,7 +725,7 @@ export const readComponentTool: AIToolDefinition = {
   description:
     "Lit le CONTENU d'un composant précis (titre, sous-titre, carte, tuile, modale, section, notification, " +
     "formulaire, liste…) : ses parties déduites (titre, sous-titre, corps, métadonnées, actions, médias, champs, " +
-    'tableaux, listes), le plan complet de son contenu, son identité technique (composants React, bloc Carbon), ' +
+    'tableaux, listes), le plan complet de son contenu, son identité technique (composants React, data-slot EGEN), ' +
     "les données déclarées par l'app à l'intérieur (observables) et les props du composant React propriétaire. " +
     "Cibler par ref (obtenue via read_page / find_in_page / discover_components), actionId ou selector. " +
     'La liste `children` permet de descendre dans un sous-composant.',
@@ -765,7 +765,7 @@ export const readTableTool: AIToolDefinition = {
   id: 'read_table',
   name: 'Lire un tableau',
   description:
-    "Lit un tableau complet (<table> ou grille ARIA, y compris Carbon DataTable) : légende, en-têtes, lignes " +
+    "Lit un tableau complet (<table> ou grille ARIA) : légende, en-têtes, lignes " +
     "(paginées par offset/limit), pied de tableau, colonne triée, sélection. Cibler le tableau — ou un élément qui " +
     "le contient — par ref, actionId ou selector. À utiliser quand read_page indique « lignes de plus ». Ne lit " +
     "que les lignes présentes dans le DOM : une liste virtualisée n'en rend qu'une partie (voir scroll_to).",
@@ -856,7 +856,7 @@ export const discoverComponentsTool: AIToolDefinition = {
   description:
     "Inventaire des composants présents dans la page : zones de page, cartes/tuiles, modales, onglets, " +
     "accordéons, notifications, tableaux, formulaires, tags, fils d'Ariane, pagination, etc. — avec leur nature, " +
-    "titre, extrait, composant React / bloc Carbon et position — et le décompte par nature. kinds=['react-component'] " +
+    "titre, extrait, composant React / data-slot et position — et le décompte par nature. kinds=['react-component'] " +
     "liste les composants React eux-mêmes ; reactComponents donne toujours les plus fréquents. À utiliser pour " +
     'savoir quoi lire, puis read_component sur la ref voulue.',
   parameters: {
@@ -866,7 +866,7 @@ export const discoverComponentsTool: AIToolDefinition = {
       items: { type: 'string' },
       description: "Ne garder que ces natures (ex: ['card','dialog','tabs','notification','table','form']).",
     },
-    query: { type: 'string', required: false, description: 'Filtre texte sur la nature, le nom (React/Carbon) ou le titre.' },
+    query: { type: 'string', required: false, description: 'Filtre texte sur la nature, le nom (React/data-slot) ou le titre.' },
     limit: { type: 'number', required: false, description: 'Composants détaillés (défaut 100, plafond 500).' },
     includeHidden: { type: 'boolean', required: false, description: 'Inclure les composants masqués.' },
     ...TARGET_PARAMS_OPTIONAL,

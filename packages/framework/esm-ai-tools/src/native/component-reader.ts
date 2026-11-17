@@ -3,7 +3,7 @@
 //
 //  read_component : « qu'y a-t-il DANS ce composant ? » — titre, sous-titre,
 //  corps, métadonnées, actions, médias, champs, tableaux, listes, plus l'identité
-//  technique (composants React, bloc Carbon) et les données déclarées par l'app.
+//  technique (composants React, data-slot EGEN) et les données déclarées par l'app.
 //  Les « parties » (titre/sous-titre/corps…) sont déduites par heuristique à
 //  partir de la structure et des noms de classes : le plan complet (`outline`)
 //  reste la source de vérité.
@@ -18,7 +18,7 @@ import {
   buildStableSelector,
   collapseWhitespace,
   computeAccessibleName,
-  getCarbonComponent,
+  getSlotComponent,
   getElementRef,
   getReactOwner,
   getReactOwnerChain,
@@ -186,7 +186,7 @@ export interface ComponentReport {
   role?: string;
   kind: string;
   source?: ComponentSource | 'unknown';
-  identity: { react: string[]; carbon?: string; customElement?: string; shadowDom: boolean };
+  identity: { react: string[]; slot?: string; customElement?: string; shadowDom: boolean };
   name: string;
   visible: boolean;
   inViewport: boolean;
@@ -256,7 +256,7 @@ export function readComponent(el: Element, options: ReadComponentOptions = {}): 
     source: identity?.source ?? 'unknown',
     identity: {
       react: getReactOwnerChain(el),
-      carbon: getCarbonComponent(el),
+      slot: getSlotComponent(el),
       customElement: tagOf(el).includes('-') ? tagOf(el) : undefined,
       shadowDom: isInShadowRoot(el),
     },
@@ -288,7 +288,7 @@ export interface DiscoverOptions {
   includeHidden?: boolean;
   /** Ne garder que ces natures (card, dialog, tabs, notification, table, form, react-component…). */
   kinds?: string[];
-  /** Filtre texte sur la nature, le nom (React/Carbon) ou le titre. */
+  /** Filtre texte sur la nature, le nom (React/data-slot) ou le titre. */
   query?: string;
   limit?: number;
   maxNodes?: number;
@@ -300,7 +300,7 @@ export interface DiscoveredComponent {
   source: ComponentSource | 'react';
   name?: string;
   react?: string;
-  carbon?: string;
+  slot?: string;
   title?: string;
   snippet?: string;
   tag: string;
@@ -386,7 +386,7 @@ export function discoverComponents(options: DiscoverOptions = {}): DiscoverResul
       source: identity?.source ?? 'react',
       name: identity?.name,
       react: owner,
-      carbon: getCarbonComponent(el),
+      slot: getSlotComponent(el),
       title,
       snippet: snippet(inlineText(el, ctx, { links: false }), 100) || undefined,
       tag: tagOf(el),

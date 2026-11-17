@@ -1,6 +1,6 @@
 /** @category Content Section */
 import React from 'react';
-import styles from './content-section.module.scss';
+import styles from './content-section.module.css';
 
 export interface ContentSectionProps {
   /** Identifiant HTML de la section (ancre, `aria-labelledby`...). */

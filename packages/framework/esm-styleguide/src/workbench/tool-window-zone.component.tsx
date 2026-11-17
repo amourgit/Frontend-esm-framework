@@ -19,7 +19,7 @@ import {
   workbenchStore,
   type SideAnchor,
 } from './workbench.store.js';
-import styles from './workbench.module.scss';
+import styles from './workbench.module.css';
 
 /**
  * Contexte de composant des zones. Le shell monte chaque zone dans un `createRoot` autonome, hors de tout

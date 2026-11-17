@@ -1,8 +1,13 @@
 import React, { type ReactNode, Suspense, useCallback, useContext, useEffect, useMemo } from 'react';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import classNames from 'classnames';
-import { Header, HeaderGlobalAction, HeaderGlobalBar, HeaderMenuButton, HeaderName } from '@carbon/react';
-import { DownToBottom, Maximize, Minimize } from '@carbon/react/icons';
+import {
+  AppHeader,
+  AppHeaderAction,
+  AppHeaderBar,
+  AppHeaderName,
+} from '../../ui/index.js';
+import { ArrowDownToLineIcon as DownToBottom, Maximize2Icon as Maximize, Minimize2Icon as Minimize } from 'lucide-react';
 import { ComponentContext, ExtensionSlot, isDesktop, useBodyScrollLock, useLayoutType } from '@egen-civitas/esm-react-utils';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { ArrowLeftIcon, ArrowRightIcon, CloseIcon } from '../../icons/index.js';
@@ -10,7 +15,7 @@ import { WorkspaceNotification } from '../notification/workspace-notification.co
 import { type OpenWorkspace, updateWorkspaceWindowState, useWorkspaces } from '../workspaces.js';
 import { WorkspaceRenderer } from './workspace-renderer.component.js';
 import ActionMenu from './action-menu.component.js';
-import styles from './workspace.module.scss';
+import styles from './workspace.module.css';
 
 /**
  * @deprecated Workspace container is no longer needed with workspace v2.
@@ -199,17 +204,15 @@ function Workspace({ workspaceInstance, additionalWorkspaceProps }: WorkspacePro
   return (
     workspaceInstance && (
       <>
-        <Header aria-label={getCoreTranslation('workspaceHeader', 'Workspace Header')} className={styles.header}>
+        <AppHeader aria-label={getCoreTranslation('workspaceHeader', 'Workspace Header')} className={styles.header}>
           {!isDesktop(layout) && !canHide && (
-            <HeaderMenuButton
-              aria-label={getCoreTranslation('close', 'Close')}
-              renderMenuIcon={<ArrowLeftIcon />}
-              onClick={() => closeWorkspace()}
-            />
+            <AppHeaderAction aria-label={getCoreTranslation('close', 'Close')} onClick={() => closeWorkspace()}>
+              <ArrowLeftIcon />
+              </AppHeaderAction>
           )}
-          <HeaderName prefix="">{workspaceInstance.titleNode ?? (t(workspaceInstance.title) as ReactNode)}</HeaderName>
+          <AppHeaderName>{workspaceInstance.titleNode ?? (t(workspaceInstance.title) as ReactNode)}</AppHeaderName>
           <div className={styles.overlayHeaderSpacer} />
-          <HeaderGlobalBar className={styles.headerButtons}>
+          <AppHeaderBar className={styles.headerButtons}>
             <ExtensionSlot
               name={`workspace-header-group-${workspaceInstance.currentWorkspaceGroup}-slot`}
               state={workspaceProps}
@@ -219,7 +222,7 @@ function Workspace({ workspaceInstance, additionalWorkspaceProps }: WorkspacePro
             {isDesktop(layout) && (
               <>
                 {(canMaximize || isMaximized) && (
-                  <HeaderGlobalAction
+                  <AppHeaderAction
                     aria-label={
                       isMaximized
                         ? getCoreTranslation('minimize', 'Minimize')
@@ -228,32 +231,32 @@ function Workspace({ workspaceInstance, additionalWorkspaceProps }: WorkspacePro
                     onClick={toggleWindowState}
                   >
                     {isMaximized ? <Minimize /> : <Maximize />}
-                  </HeaderGlobalAction>
+                  </AppHeaderAction>
                 )}
                 {canHide && !currentGroupName ? (
-                  <HeaderGlobalAction
+                  <AppHeaderAction
                     aria-label={getCoreTranslation('hide', 'Hide')}
                     onClick={() => updateWorkspaceWindowState('hidden')}
                   >
                     <ArrowRightIcon />
-                  </HeaderGlobalAction>
+                  </AppHeaderAction>
                 ) : (
-                  <HeaderGlobalAction
+                  <AppHeaderAction
                     aria-label={getCoreTranslation('close', 'Close')}
                     onClick={() => closeWorkspace?.()}
                   >
                     <CloseIcon />
-                  </HeaderGlobalAction>
+                  </AppHeaderAction>
                 )}
               </>
             )}
             {layout === 'tablet' && canHide && (
-              <HeaderGlobalAction aria-label={getCoreTranslation('close', 'Close')} onClick={() => closeWorkspace?.()}>
+              <AppHeaderAction aria-label={getCoreTranslation('close', 'Close')} onClick={() => closeWorkspace?.()}>
                 <DownToBottom />
-              </HeaderGlobalAction>
+              </AppHeaderAction>
             )}
-          </HeaderGlobalBar>
-        </Header>
+          </AppHeaderBar>
+        </AppHeader>
         <div
           className={classNames(styles.workspaceContent, {
             [styles.marginWorkspaceContent]: Boolean(currentWorkspaceGroup),

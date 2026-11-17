@@ -5,7 +5,7 @@ import { type CalendarDate, type DateValue } from '@internationalized/date';
 import { ChevronLeftIcon, ChevronRightIcon } from '../icons/index.js';
 import { MonthYear } from './month-year.component.js';
 import { AutoCloseDialog } from './auto-close-dialog.component.js';
-import styles from './datepicker.module.scss';
+import styles from './datepicker.module.css';
 
 type CalendarPopoverProps = {
   /** The current date */
@@ -44,7 +44,7 @@ export const CalendarPopover = /*#__PURE__*/ forwardRef<HTMLDivElement, Calendar
   // RangeCalendar needs explicit min/max values and a className;
   // Calendar inherits these from its parent DatePicker context.
   const calendarProps = isRange
-    ? { minValue: minDate, maxValue: maxDate, className: 'cds--date-picker__calendar' }
+    ? { minValue: minDate, maxValue: maxDate, className: styles.calendar }
     : {};
 
   return (
@@ -64,7 +64,7 @@ export const CalendarPopover = /*#__PURE__*/ forwardRef<HTMLDivElement, Calendar
             {(date) => (
               <CalendarCell
                 key={date.toString()}
-                className={classNames('cds--date-picker__day', {
+                className={classNames(styles.day, {
                   [styles.today]: today_.compare(date) === 0,
                 })}
                 date={date}

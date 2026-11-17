@@ -6,7 +6,7 @@ import { ActionMenu } from './action-menu2/action-menu2.component.js';
 import { closeWorkspaceGroup2, useWorkspace2Store } from './workspace2.js';
 import { shouldCloseOnUrlChange } from './scope-utils.js';
 import ActiveWorkspaceWindow from './active-workspace-window.component.js';
-import styles from './workspace-windows-and-menu.module.scss';
+import styles from './workspace-windows-and-menu.module.css';
 
 export function renderWorkspaceWindowsAndMenu(target: HTMLElement | null) {
   if (target) {

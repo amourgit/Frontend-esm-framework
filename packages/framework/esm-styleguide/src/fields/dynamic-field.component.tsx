@@ -6,7 +6,7 @@ import { ValidationIcon } from './validation-icon.component.js';
 import { KineticLabel } from './kinetic-label.component.js';
 import { useFieldValidation } from './use-field-validation.hook.js';
 import { defaultValidation, type DynamicFieldProps } from './dynamic-field.types.js';
-import styles from './dynamic-field.module.scss';
+import styles from './dynamic-field.module.css';
 
 /**
  * `DynamicField` — champ de saisie unique, dynamique et personnalisable, destiné à

@@ -35,9 +35,9 @@ afterEach(() => {
 });
 
 describe('getPageState', () => {
-  it('décrit URL, titre, langue, viewport, thème Carbon, méta et compte les éléments', () => {
+  it('décrit URL, titre, langue, viewport, thème, méta et compte les éléments', () => {
     document.documentElement.setAttribute('lang', 'fr');
-    document.documentElement.classList.add('cds--g100');
+    document.documentElement.setAttribute('data-theme', 'dark');
     document.head.innerHTML =
       '<meta name="description" content="Pilotage des classes"><meta property="og:title" content="EGEN"><meta name="robots" content="noindex">';
     document.title = 'Tableau de bord'; // après avoir remplacé le <head>
@@ -52,7 +52,7 @@ describe('getPageState', () => {
       lang: 'fr',
       dir: 'ltr',
       readyState: expect.any(String),
-      theme: { carbonTheme: 'g100' },
+      theme: { dataTheme: 'dark' },
       meta: { description: 'Pilotage des classes', 'og:title': 'EGEN' },
     });
     expect(state.meta).not.toHaveProperty('robots');
@@ -93,10 +93,10 @@ describe('getPageState', () => {
     expect(getPageState().selection).toBeNull();
   });
 
-  it('classe les alertes par niveau Carbon et ignore le contenu masqué ou data-ai-ignore', () => {
+  it('classe les alertes par niveau (`data-kind`) et ignore le contenu masqué ou data-ai-ignore', () => {
     document.body.innerHTML = `
-      <div class="cds--inline-notification cds--inline-notification--error" role="alert"><p>Échec</p></div>
-      <div class="cds--toast-notification cds--toast-notification--success"><p>Enregistré</p></div>
+      <div data-slot="alert" data-kind="error" role="alert"><p>Échec</p></div>
+      <div data-slot="alert" data-kind="success"><p>Enregistré</p></div>
       <div role="status" style="display:none">Caché</div>
       <div role="status" data-ai-ignore>Assistant</div>
       <div role="alert"><p></p></div>`;
@@ -119,8 +119,8 @@ describe('getPageState', () => {
 describe('chargement', () => {
   it('détecte aria-busy, progressbar, squelettes et spinners visibles — pas ceux qui sont masqués', () => {
     document.body.innerHTML = `
-      <div aria-busy="true"></div><div role="progressbar"></div><div class="cds--skeleton"></div>
-      <div class="page-spinner"></div><div class="cds--loading" style="display:none"></div>`;
+      <div aria-busy="true"></div><div role="progressbar"></div><div class="skeleton"></div>
+      <div class="page-spinner"></div><div data-slot="spinner" style="display:none"></div>`;
     expect(getLoadingIndicators().map((i) => i.kind)).toEqual(['aria-busy', 'progressbar', 'skeleton', 'spinner']);
     expect(getLoadingIndicators(2)).toHaveLength(2);
     expect(isPageLoading()).toBe(true);

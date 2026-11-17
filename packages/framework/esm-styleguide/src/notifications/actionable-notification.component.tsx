@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ActionableNotification } from '@carbon/react';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
+import { NotificationBanner } from '../ui/index.js';
 /** @module @category UI */
 
 export interface ActionableNotificationProps {
@@ -31,7 +31,7 @@ export const ActionableNotificationComponent: React.FC<ActionableNotificationPro
     subtitle,
     kind,
     title,
-    critical,
+    critical: _critical,
     progressActionLabel,
     id,
     ...props
@@ -47,16 +47,13 @@ export const ActionableNotificationComponent: React.FC<ActionableNotificationPro
   };
 
   return (
-    <ActionableNotification
+    <NotificationBanner
       kind={(kind as ActionableNotificationType) || 'info'}
-      actionButtonLabel={actionText}
-      ariaLabel={getCoreTranslation('closesActionableNotification', 'Closes actionable notification')}
-      onActionButtonClick={handleActionClick}
-      statusIconDescription={getCoreTranslation('actionableNotification', 'Actionable notification')}
+      actionLabel={actionText}
+      onAction={handleActionClick}
+      statusLabel={getCoreTranslation('actionableNotification', 'Actionable notification')}
       subtitle={subtitle}
       title={title}
-      lowContrast={critical}
-      inline
       {...props}
     />
   );

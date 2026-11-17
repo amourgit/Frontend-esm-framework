@@ -3,7 +3,7 @@ import {
   _clearElementRefs,
   buildStableSelector,
   cssEscape,
-  getCarbonComponent,
+  getSlotComponent,
   getElementRef,
   getIframeDocument,
   getReactOwner,
@@ -131,7 +131,7 @@ describe('visibilité', () => {
   });
 });
 
-describe('Shadow DOM, iframes, Carbon, React', () => {
+describe('Shadow DOM, iframes, data-slot, React', () => {
   it('isInShadowRoot et walkElementsDeep (iframes même origine inclus, cross-origin ignorées)', () => {
     document.body.innerHTML = '<div id="host"></div><iframe id="same"></iframe><iframe id="cross"></iframe>';
     const host = document.getElementById('host') as HTMLElement;
@@ -158,14 +158,11 @@ describe('Shadow DOM, iframes, Carbon, React', () => {
     expect(noFrames).not.toContain('in-frame');
   });
 
-  it('getCarbonComponent ne retient que le bloc, pas les modificateurs ni éléments', () => {
-    expect(getCarbonComponent(el('<div class="cds--tile cds--tile--clickable cds--tile__chevron"></div>'))).toBe(
-      'tile',
-    );
-    expect(getCarbonComponent(el('<div class="cds--data-table cds--data-table--zebra"></div>'))).toBe('data-table');
-    expect(getCarbonComponent(el('<div class="bx--tag"></div>'))).toBe('tag');
-    expect(getCarbonComponent(el('<div class="cds--btn--primary"></div>'))).toBeUndefined();
-    expect(getCarbonComponent(el('<div class="maclasse"></div>'))).toBeUndefined();
+  it('getSlotComponent lit le `data-slot` des composants EGEN, et rien sans lui', () => {
+    expect(getSlotComponent(el('<div data-slot="tile" class="peu-importe"></div>'))).toBe('tile');
+    expect(getSlotComponent(el('<div data-slot="table-container"></div>'))).toBe('table-container');
+    expect(getSlotComponent(el('<div class="maclasse"></div>'))).toBeUndefined();
+    expect(getSlotComponent(el('<div data-slot=""></div>'))).toBeUndefined();
   });
 
   it('getReactOwner renvoie nom + props bruts du composant propriétaire ; memo/forwardRef/classes gérés', () => {

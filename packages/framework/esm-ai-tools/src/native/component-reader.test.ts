@@ -36,7 +36,7 @@ const FIXTURE = `
       <p>Hello <b>wor</b>ld en cours</p>
     </div>
     <div role="dialog" aria-label="Confirmer la suppression"><p>Cette action est définitive.</p></div>
-    <div class="cds--inline-notification cds--inline-notification--error" role="alert"><p>Échec de l'enregistrement</p></div>
+    <div data-slot="alert" data-kind="error" role="alert"><p>Échec de l'enregistrement</p></div>
     <h2>Contact</h2>
     <div><input aria-label="Courriel" placeholder="nom@exemple.ga" value="ada@exemple.ga"></div>
   </main>`;
@@ -46,18 +46,18 @@ describe('classifyComponent', () => {
     document.body.innerHTML = '';
   });
 
-  it('identifie landmarks, ARIA, Carbon, classes et custom elements', () => {
+  it('identifie landmarks, ARIA, data-slot, classes et custom elements', () => {
     document.body.innerHTML = `
       <nav id="n"></nav>
       <div id="d" role="dialog"></div>
-      <div id="c" class="cds--tile"></div>
+      <div id="c" data-slot="tile"></div>
       <div id="k" class="user-card"></div>
       <x-widget id="w"></x-widget>
       <div id="plain" class="wrapper"></div>`;
     const kind = (id: string) => classifyComponent(document.getElementById(id) as Element);
     expect(kind('n')).toMatchObject({ kind: 'navigation', source: 'native', structural: true });
     expect(kind('d')).toMatchObject({ kind: 'dialog', source: 'aria' });
-    expect(kind('c')).toMatchObject({ kind: 'card', source: 'carbon', name: 'tile' });
+    expect(kind('c')).toMatchObject({ kind: 'card', source: 'slot', name: 'tile' });
     expect(kind('k')).toMatchObject({ kind: 'card', source: 'class' });
     expect(kind('w')).toMatchObject({ kind: 'custom-element', name: 'x-widget' });
     expect(kind('plain')).toBeNull();

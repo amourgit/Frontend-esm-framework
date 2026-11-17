@@ -29,7 +29,7 @@ import { createReadContext, roleOf } from './text-extract.js';
 // ─── Chargement ───────────────────────────────────────────────────────────────
 
 const LOADING_SELECTOR =
-  '[aria-busy="true"], [role="progressbar"], .cds--loading, .cds--inline-loading, .cds--skeleton, [class*="skeleton"], [class*="spinner"]';
+  '[aria-busy="true"], [role="progressbar"], [data-slot="spinner"], [data-slot="inline-loading"], [class*="skeleton"], [class*="spinner"]';
 
 export interface LoadingIndicator {
   ref: string;
@@ -80,9 +80,9 @@ export async function waitForPageReady(
 // ─── get_page_state ───────────────────────────────────────────────────────────
 
 const DIALOG_SELECTOR =
-  'dialog[open], [role="dialog"], [role="alertdialog"], .cds--modal.is-visible, .cds--modal[open]';
+  'dialog[open], [role="dialog"], [role="alertdialog"], [data-slot=\"dialog-content\"]';
 const NOTIFICATION_SELECTOR =
-  '[role="alert"], [role="status"], .cds--inline-notification, .cds--toast-notification, .cds--actionable-notification';
+  '[role="alert"], [role="status"], [data-slot=\"alert\"]';
 
 export interface PageState {
   url: string;
@@ -105,7 +105,7 @@ export interface PageState {
   };
   focus: { ref: string; tag: string; name: string; selector: string } | null;
   selection: string | null;
-  theme: { prefersDark: boolean | null; dataTheme: string | null; carbonTheme: string | null };
+  theme: { prefersDark: boolean | null; dataTheme: string | null };
   meta: Record<string, string>;
   counts: Record<string, number>;
   microfrontends: Array<{ name: string; hasContent: boolean }>;
@@ -116,8 +116,9 @@ export interface PageState {
 }
 
 function notificationLevel(el: Element): string | null {
-  const match = /(?:inline|toast|actionable)-notification--(error|success|warning|info)/.exec(String(el.className));
-  return match ? match[1] : null;
+  // Notifications EGEN : `data-kind` (error | success | warning | info) posé par `NotificationBanner`.
+  const kind = el.getAttribute('data-kind');
+  return kind && ['error', 'success', 'warning', 'info'].includes(kind) ? kind : null;
 }
 
 function readMeta(): Record<string, string> {
@@ -157,9 +158,6 @@ export function getPageState(): PageState {
   } catch {
     // sélection indisponible
   }
-
-  const classes = `${doc.documentElement.className} ${doc.body?.className ?? ''}`;
-  const carbonTheme = /cds--(white|g10|g90|g100)\b/.exec(classes)?.[1] ?? null;
 
   const count = (selector: string) => doc.querySelectorAll(selector).length;
   const counts = {
@@ -228,8 +226,7 @@ export function getPageState(): PageState {
     theme: {
       prefersDark: typeof win.matchMedia === 'function' ? win.matchMedia('(prefers-color-scheme: dark)').matches : null,
       dataTheme:
-        doc.documentElement.getAttribute('data-theme') ?? doc.documentElement.getAttribute('data-carbon-theme'),
-      carbonTheme,
+        doc.documentElement.getAttribute('data-theme'),
     },
     meta: readMeta(),
     counts,

@@ -1,0 +1,540 @@
+/* Structure de base du sélecteur de dates (reprend ce que fournissait l'ancienne feuille Carbon : formulaire, étiquette, conteneur). */
+.formItem {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.datePicker {
+  display: flex;
+  max-width: 100%;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  color: var(--colors-surface-muted-foreground, #525252);
+  font-size: 0.75rem;
+  line-height: 1.33333;
+  letter-spacing: 0.32px;
+  vertical-align: baseline;
+}
+
+.labelDisabled {
+  color: var(--colors-surface-muted-foreground, #c6c6c6);
+  opacity: 0.6;
+}
+
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.short,
+.light,
+.calendar,
+.day {
+  /* Points d'ancrage : les variantes sont portées par les attributs et règles ci-dessous. */
+  box-sizing: border-box;
+}
+
+.short .inputWrapper {
+  width: 6.5rem;
+}
+
+.inputGroup {
+  align-items: center;
+  background-color: var(--ui-field);
+  border-block-end: 1px solid var(--ui-border-strong);
+  color: var(--ui-text-primary);
+  display: flex;
+  position: relative;
+}
+.inputGroup:focus-within, .inputGroup.focused {
+  outline: 2px solid var(--ui-focus, #0f62fe);
+  outline-offset: -2px;
+}
+@media screen and (prefers-contrast) {
+  .inputGroup:focus-within, .inputGroup.focused {
+    outline-style: dotted;
+  }
+}
+.inputGroup[data-invalid] {
+  outline: 2px solid var(--ui-support-error, #da1e28);
+  outline-offset: -2px;
+}
+@media screen and (prefers-contrast) {
+  .inputGroup[data-invalid] {
+    outline-style: dotted;
+  }
+}
+.inputGroup[data-invalid] {
+  color: var(--ui-support-error, #da1e28);
+}
+.inputGroup[data-disabled] {
+  border-block-end: 1px solid rgba(0, 0, 0, 0);
+  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  cursor: not-allowed;
+}
+
+.inputWrapper .inputSegment, .dateInputWrapper .inputSegment {
+  caret-color: var(--ui-text-primary);
+}
+.inputWrapper .inputSegment:focus, .dateInputWrapper .inputSegment:focus {
+  outline: unset;
+  background-color: var(--ui-layer-selected-hover);
+}
+.inputWrapper [data-placeholder].inputSegment, .dateInputWrapper [data-placeholder].inputSegment {
+  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+}
+.inputWrapper [data-focused=true].inputSegment, .dateInputWrapper [data-focused=true].inputSegment {
+  animation: cursor-blink 1s step-end infinite;
+}
+:global([dir="rtl"]) .inputWrapper [data-focused=true].inputSegment, :global([dir="rtl"]) .dateInputWrapper [data-focused=true].inputSegment, .inputWrapper :global([dir="rtl"]) [data-focused=true].inputSegment, .dateInputWrapper :global([dir="rtl"]) [data-focused=true].inputSegment {
+  animation: cursor-blink-rtl 1s step-end infinite;
+}
+
+.inputWrapper [data-readonly]:has(+ [data-placeholder]), .dateInputWrapper [data-readonly]:has(+ [data-placeholder]) {
+  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+}
+.inputWrapper [data-placeholder] + [data-readonly], .dateInputWrapper [data-placeholder] + [data-readonly] {
+  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+}
+
+@keyframes cursor-blink {
+  from, to {
+    border-right: 1px solid transparent;
+  }
+  50% {
+    border-right: 1px solid currentColor;
+  }
+}
+@keyframes cursor-blink-rtl {
+  from, to {
+    border-left: 1px solid transparent;
+  }
+  50% {
+    border-left: 1px solid currentColor;
+  }
+}
+.inputWrapper, .dateInputWrapper {
+  inline-size: 15rem;
+  margin-left: 1rem;
+  min-width: 10rem;
+  max-width: 15rem;
+}
+.inputWrapperMd {
+  block-size: 2.5rem;
+}
+
+.inputWrapperSm {
+  block-size: 2rem;
+}
+
+.inputWrapperLg {
+  block-size: 3rem;
+}
+
+.inputsWrapper {
+  display: flex;
+  min-width: 10rem;
+  max-width: 15rem;
+  margin-inline-start: 1rem;
+  inline-size: 15rem;
+}
+
+.inputsWrapperSm {
+  block-size: 2rem;
+}
+
+.inputsWrapperMd {
+  block-size: 2.5rem;
+}
+
+.inputsWrapperLg {
+  block-size: 3rem;
+}
+
+.dateInputWrapper {
+  min-width: unset;
+  margin: 0px;
+}
+
+.startInput {
+  flex-basis: fit-content;
+}
+
+.endInput {
+  padding-right: unset;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  margin-inline: 0.5rem;
+}
+
+.inputGroup:has([data-placeholder]) > .inputsWrapper > .separator > span {
+  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+}
+
+.invalidText {
+  color: var(--ui-text-error, #da1e28) !important;
+  font-size: 0.75rem;
+  font-weight: 400 !important;
+  margin: 0.25rem 0 0;
+  overflow: hidden;
+}
+
+@keyframes expand-in {
+  from {
+    opacity: 0;
+    transform: scale(0.93);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.popover {
+  transform-origin: top center;
+}
+
+.popover[data-placement=top],
+.popover[data-placement=top-start],
+.popover[data-placement=top-end] {
+  transform-origin: bottom center;
+}
+
+.popover[data-entering] {
+  animation: expand-in 110ms cubic-bezier(0, 0, 0.38, 0.9);
+}
+@media screen and (prefers-reduced-motion: reduce) {
+  .popover[data-entering] {
+    animation: none;
+  }
+}
+
+.dialog {
+  box-shadow: 0 2px 6px var(--ui-shadow, rgba(0, 0, 0, 0.3));
+  background-color: var(--ui-layer-01, #f4f4f4);
+  overflow: hidden;
+  padding: 0.25rem 0.25rem 0.5rem 0.25rem;
+}
+
+.header {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.flatButton {
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+.flatButton *,
+.flatButton *::before,
+.flatButton *::after {
+  box-sizing: inherit;
+}
+.flatButton {
+  background-color: inherit;
+  display: inline-flex;
+}
+.flatButton:hover:not(:disabled) {
+  background-color: var(--ui-layer-hover);
+}
+.flatButton:disabled > svg {
+  fill: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+}
+.flatButton > svg {
+  display: block;
+  margin: auto;
+  text-align: center;
+}
+
+[data-invalid] > .flatButton > svg {
+  --egen-icon-fill: var(--ui-support-error, #da1e28);
+}
+
+.flatButtonMd {
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
+.flatButtonSm {
+  height: 2rem;
+  width: 2rem;
+}
+
+.flatButtonLg {
+  height: 3rem;
+  width: 3rem;
+}
+
+.monthYear {
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+  font-size: var(--ui-heading-compact-01-font-size, 0.875rem);
+  font-weight: var(--ui-heading-compact-01-font-weight, 600);
+  line-height: var(--ui-heading-compact-01-line-height, 1.28572);
+  letter-spacing: var(--ui-heading-compact-01-letter-spacing, 0.16px);
+}
+.monthYear *,
+.monthYear *::before,
+.monthYear *::after {
+  box-sizing: inherit;
+}
+.monthYear {
+  margin-top: 0.5rem;
+  margin-block-end: 0.125rem;
+  text-align: center;
+}
+.monthYear > span {
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+.monthYear div:has(input[inputmode=numeric]) {
+  display: inline;
+}
+.monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric] {
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+  font-size: var(--ui-heading-compact-01-font-size, 0.875rem);
+  font-weight: var(--ui-heading-compact-01-font-weight, 600);
+  line-height: var(--ui-heading-compact-01-line-height, 1.28572);
+  letter-spacing: var(--ui-heading-compact-01-letter-spacing, 0.16px);
+}
+.monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric] *,
+.monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric] *::before,
+.monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric] *::after {
+  box-sizing: inherit;
+}
+.monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric] {
+  background-color: var(--ui-field);
+  inline-size: 2.5rem;
+  padding: 0.25rem;
+  padding-right: 0;
+}
+.monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric]::-webkit-outer-spin-button, .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric]::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+.monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric]:focus {
+  outline: 1px solid var(--ui-focus, #0f62fe);
+}
+@media screen and (prefers-contrast) {
+  .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric]:focus {
+    outline-style: dotted;
+  }
+}
+.monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric][data-invalid] {
+  outline: 2px solid var(--ui-support-error, #da1e28);
+  outline-offset: -2px;
+}
+@media screen and (prefers-contrast) {
+  .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric][data-invalid] {
+    outline-style: dotted;
+  }
+}
+.monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric][data-disabled], .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric][data-disabled]:hover {
+  background-color: var(--ui-layer-01, #f4f4f4);
+  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  pointer-events: none;
+}
+.monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric][data-disabled] + div > button::after {
+  border-block-end-color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  border-block-start-color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+}
+.monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric][data-disabled] + div > button:hover {
+  opacity: 0;
+}
+.monthYear div:has(input[inputmode=numeric]) div[role=group] {
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+.monthYear div:has(input[inputmode=numeric]) div[role=group] *,
+.monthYear div:has(input[inputmode=numeric]) div[role=group] *::before,
+.monthYear div:has(input[inputmode=numeric]) div[role=group] *::after {
+  box-sizing: inherit;
+}
+.monthYear div:has(input[inputmode=numeric]) div[role=group] {
+  display: inline;
+  position: relative;
+}
+.monthYear div:has(input[inputmode=numeric]):hover button {
+  opacity: 1;
+}
+.monthYear div:has(input[inputmode=numeric]) button {
+  box-sizing: border-box;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+.monthYear div:has(input[inputmode=numeric]) button *,
+.monthYear div:has(input[inputmode=numeric]) button *::before,
+.monthYear div:has(input[inputmode=numeric]) button *::after {
+  box-sizing: inherit;
+}
+.monthYear div:has(input[inputmode=numeric]) button {
+  position: absolute;
+  padding-block: 0;
+  padding-inline-start: 0.125rem;
+  padding-inline-end: 0.25rem;
+  border: none;
+  block-size: 50%;
+  cursor: pointer;
+  inline-size: 0.75rem;
+  inset-inline-start: 2.5rem;
+  line-height: 50%;
+  opacity: 0;
+}
+.monthYear div:has(input[inputmode=numeric]) button::after {
+  display: block;
+  border-inline-end: 0.25rem solid transparent;
+  border-inline-start: 0.25rem solid transparent;
+  content: "";
+  inset-block-start: 33%;
+}
+.monthYear div:has(input[inputmode=numeric]) button:hover::after {
+  border-block-end-color: var(--ui-button-primary, #0f62fe);
+  border-block-start-color: var(--ui-button-primary, #0f62fe);
+}
+.monthYear div:has(input[inputmode=numeric]) button:active::after {
+  border-block-end-color: var(--ui-border-interactive, #0f62fe);
+  border-block-start-color: var(--ui-border-interactive, #0f62fe);
+}
+.monthYear div:has(input[inputmode=numeric]) button[slot=increment] {
+  top: 0;
+  left: 0;
+}
+.monthYear div:has(input[inputmode=numeric]) button[slot=decrement] {
+  top: 0.75rem;
+  left: 0;
+}
+
+.calendarGrid {
+  width: 17rem;
+}
+.calendarGrid tr, .calendarGrid tr > th, .calendarGrid tr > td {
+  height: 2.428rem;
+  width: 2.428rem;
+}
+.calendarGrid > thead > tr > th {
+  font-size: var(--ui-body-compact-01-font-size, 0.875rem);
+  font-weight: var(--ui-body-compact-01-font-weight, 400);
+  line-height: var(--ui-body-compact-01-line-height, 1.28572);
+  letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
+  cursor: default;
+  text-align: center;
+  vertical-align: middle;
+}
+.calendarGrid > tbody > tr > td {
+  font-size: var(--ui-body-compact-01-font-size, 0.875rem);
+  font-weight: var(--ui-body-compact-01-font-weight, 400);
+  line-height: var(--ui-body-compact-01-line-height, 1.28572);
+  letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+}
+.calendarGrid > tbody > tr > td > div {
+  outline: unset;
+}
+.calendarGrid > tbody > tr > td:hover:not(:has([aria-disabled], [data-selected])) {
+  background-color: var(--ui-layer-hover);
+}
+.calendarGrid > tbody > tr > td:has([data-selected]) {
+  background-color: var(--colors-primary-600, #0f62fe);
+  color: var(--colors-surface-background, #ffffff);
+}
+.calendarGrid > tbody > tr > td[aria-disabled] {
+  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  cursor: default;
+}
+
+.today:not([data-selected]) {
+  position: relative;
+  color: var(--colors-primary-600, #0f62fe);
+  font-weight: 600;
+  font-size: var(--ui-body-compact-01-font-size, 0.875rem);
+  line-height: var(--ui-body-compact-01-line-height, 1.28572);
+  letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: 2.5rem;
+  cursor: pointer;
+  inline-size: 2.5rem;
+}
+.today:not([data-selected])::after {
+  position: absolute;
+  display: block;
+  block-size: 0.25rem;
+  content: "";
+  inline-size: 0.25rem;
+  inset-block-end: 0.4375rem;
+  inset-inline-start: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
+.today:not([data-selected])[data-disabled]::after {
+  background-color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+}
+.today:not([data-selected]):not([data-disabled])::after {
+  background-color: var(--ui-link-primary, var(--ui-link-primary, #0f62fe));
+}
+
+:global([dir="rtl"]) .inputWrapper, :global([dir="rtl"]) .dateInputWrapper {
+  padding-left: unset;
+  padding-right: 0.75rem;
+}
+:global([dir="rtl"]) .endInput {
+  padding-right: 0;
+}
+:global([dir="rtl"]) .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric] {
+  padding-right: 0.25rem;
+}
+:global([dir="rtl"]) .monthYear button[slot=increment] {
+  top: 0;
+  left: unset;
+  right: 0;
+}
+:global([dir="rtl"]) .monthYear button[slot=decrement] {
+  top: 0.75rem;
+  left: unset;
+  right: 0;
+}

@@ -8,8 +8,7 @@ interface ErrorFilledIconProps {
 
 /**
  * Icône "erreur" (cercle plein + point d'exclamation), calquée sur le pictogramme
- * `error--filled` de Carbon Design System. Ni le set EGEN (`icons.tsx`) ni
- * `@carbon/react/icons` n'exposent une variante strictement équivalente aux deux
+ * « erreur pleine ». Le set EGEN (`icons.tsx`) n'expose une variante strictement équivalente aux deux
  * autres sévérités déjà couvertes (succès → `CheckmarkFilledIcon`, avertissement →
  * `WarningIcon`), d'où ce SVG inline — voir guide §9.3. `currentColor` uniquement :
  * aucune couleur n'est figée ici, elle est héritée du texte du parent (lui-même

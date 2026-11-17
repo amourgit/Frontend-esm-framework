@@ -13,9 +13,8 @@ import React, {
   type ComponentProps,
 } from 'react';
 import classNames from 'classnames';
-import { OverflowMenuItem } from '@carbon/react';
 import { useLayoutType, useOnClickOutside } from '@egen-civitas/esm-react-utils';
-import styles from './custom-overflow-menu.module.scss';
+import styles from './custom-overflow-menu.module.css';
 
 interface CustomOverflowMenuContextValue {
   closeMenu: () => void;
@@ -39,10 +38,8 @@ interface CustomOverflowMenuProps {
 }
 
 /**
- * A custom overflow menu that supports a text/icon trigger button instead of
- * Carbon's icon-only OverflowMenu trigger. Uses CSS-based show/hide rather
- * than Carbon's FloatingMenu portal, so keyboard behavior (Escape, arrow keys,
- * auto-focus) is implemented here to match the WAI-ARIA menu button pattern.
+ * A custom overflow menu with a text/icon trigger button. Uses CSS-based show/hide (no portal), so keyboard
+ * behavior (Escape, arrow keys, auto-focus) is implemented here to match the WAI-ARIA menu button pattern.
  */
 export function CustomOverflowMenu({ menuTitle, children }: CustomOverflowMenuProps) {
   const [menuIsOpen, setMenuIsOpen] = React.useState(false);
@@ -115,15 +112,10 @@ export function CustomOverflowMenu({ menuTitle, children }: CustomOverflowMenuPr
   });
 
   return (
-    <div data-overflow-menu className={classNames('cds--overflow-menu', styles.container)} ref={ref}>
+    <div data-overflow-menu className={styles.container} ref={ref}>
       <button
-        className={classNames(
-          'cds--btn',
-          'cds--btn--ghost',
-          'cds--overflow-menu__trigger',
-          { 'cds--overflow-menu--open': menuIsOpen },
-          styles.overflowMenuButton,
-        )}
+        type="button"
+        className={classNames(styles.trigger, { [styles.triggerOpen]: menuIsOpen })}
         aria-controls={menuId}
         aria-expanded={menuIsOpen}
         aria-haspopup="true"
@@ -135,33 +127,98 @@ export function CustomOverflowMenu({ menuTitle, children }: CustomOverflowMenuPr
         {menuTitle}
       </button>
       <div
-        className={classNames('cds--overflow-menu-options', 'cds--overflow-menu--flip', styles.menu, {
-          [styles.show]: menuIsOpen,
-        })}
+        className={classNames(styles.menu, { [styles.show]: menuIsOpen })}
         aria-labelledby={triggerId}
-        data-floating-menu-direction="bottom"
+        data-placement="bottom"
         id={menuId}
         onKeyDown={handleEscapeKey}
         ref={menuRef}
         role="menu"
         tabIndex={-1}
       >
-        <ul
-          className={classNames('cds--overflow-menu-options__content', { 'cds--overflow-menu-options--lg': isTablet })}
-        >
+        <ul className={styles.list} data-size={isTablet ? 'lg' : 'md'}>
           <CustomOverflowMenuContext.Provider value={contextValue}>
             {enrichedChildren}
           </CustomOverflowMenuContext.Provider>
         </ul>
-        <span />
       </div>
     </div>
   );
 }
 
-type OverflowMenuItemProps = ComponentProps<typeof OverflowMenuItem>;
+export interface CustomOverflowMenuItemProps
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'onClick'> {
+  /** Texte de l'entrée. */
+  itemText: React.ReactNode;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  /** Entrée destructive (rouge). */
+  isDelete?: boolean;
+  /** Filet de séparation au-dessus de l'entrée. */
+  hasDivider?: boolean;
+  /** Rend un lien (`<a>`) au lieu d'un bouton. */
+  href?: string;
+  /** Ajoute le texte en infobulle (`title`). */
+  requireTitle?: boolean;
+  wrapperClassName?: string;
+  /** Fournis par `CustomOverflowMenu` ; ferme le menu après l'action. */
+  closeMenu?: () => void;
+}
 
-export function CustomOverflowMenuItem(props: Omit<OverflowMenuItemProps, 'closeMenu'>) {
+export function CustomOverflowMenuItem({
+  itemText,
+  onClick,
+  isDelete,
+  hasDivider,
+  href,
+  requireTitle,
+  wrapperClassName,
+  className,
+  disabled,
+  closeMenu: closeMenuProp,
+  handleOverflowMenuItemFocus,
+  index: _index,
+  ...rest
+}: CustomOverflowMenuItemProps & {
+  handleOverflowMenuItemFocus?: (args: { currentIndex?: number; direction: number }) => void;
+  index?: number;
+}) {
   const context = useContext(CustomOverflowMenuContext);
-  return <OverflowMenuItem {...props} closeMenu={context?.closeMenu} />;
+  const closeMenu = closeMenuProp ?? context?.closeMenu;
+  const itemClass = classNames(styles.item, { [styles.itemDelete]: isDelete }, className);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    onClick?.(event);
+    closeMenu?.();
+  };
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      handleOverflowMenuItemFocus?.({ direction: 1 });
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      handleOverflowMenuItemFocus?.({ direction: -1 });
+    }
+  };
+  const title = requireTitle && typeof itemText === 'string' ? itemText : undefined;
+  return (
+    <li role="none" className={classNames(styles.itemWrapper, { [styles.itemDivider]: hasDivider }, wrapperClassName)}>
+      {href ? (
+        <a role="menuitem" href={href} className={itemClass} title={title} onClick={handleClick} onKeyDown={handleKeyDown}>
+          {itemText}
+        </a>
+      ) : (
+        <button
+          type="button"
+          role="menuitem"
+          className={itemClass}
+          disabled={disabled}
+          title={title}
+          onClick={handleClick}
+          onKeyDown={handleKeyDown}
+          {...rest}
+        >
+          {itemText}
+        </button>
+      )}
+    </li>
+  );
 }

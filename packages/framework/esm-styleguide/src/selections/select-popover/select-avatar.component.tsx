@@ -1,6 +1,6 @@
 /** @category SelectPopover */
 import React, { useState } from 'react';
-import styles from './select-popover.module.scss';
+import styles from './select-popover.module.css';
 
 interface SelectAvatarProps {
   src?: string;

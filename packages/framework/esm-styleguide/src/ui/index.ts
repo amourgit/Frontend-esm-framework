@@ -1,4 +1,4 @@
-// Composants de base d'EGEN : Tailwind seul, sans Carbon ni SCSS. Voir `THIRD_PARTY_NOTICES.md` pour les origines.
+// Composants de base d'EGEN : Tailwind seul, Voir `THIRD_PARTY_NOTICES.md` pour les origines.
 // `cn` est exporté publiquement par `page-background` (même fonction, ré-exportée depuis `./cn.js`).
 export { Button, buttonVariants } from './button.js';
 export { IconButton, type IconButtonProps } from './icon-button.js';
@@ -48,3 +48,5 @@ export { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs.js';
 export { Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption } from './table.js';
 // Pas de `Select` ici : le styleguide a déjà le sien (`selections/`), qui prime.
 export { ModalHeader, ModalBody, ModalFooter, type ModalHeaderProps } from './modal.js';
+export { NotificationBanner, type NotificationBannerProps, type NotificationKind } from './notification-banner.js';
+export { AppHeader, AppHeaderName, AppHeaderBar, AppHeaderAction } from './app-header.js';

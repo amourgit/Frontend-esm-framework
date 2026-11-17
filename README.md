@@ -69,7 +69,7 @@ afficher, capturer/lire l'audio, et exécuter les *tools frontend* demandés par
 
 - **Build** : Yarn 4 Berry + Turborepo + Rspack + SWC
 - **Runtime** : React 18 + Single-SPA 6 + RxJS 6
-- **UI** : @carbon/react + Framer Motion + D3 + GSAP
+- **UI** : Tailwind CSS v4 + composants de base maison (copiés de shadcn/ui, Radix) + Framer Motion + D3 + GSAP
 - **Styling** : SASS + CSS Variables
 - **Tests** : Vitest + @testing-library + Playwright
 - **Versionnement** : Changesets

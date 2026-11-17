@@ -1,0 +1,93 @@
+.container {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  border-radius: 50%;
+  color: var(--colors-surface-foreground, #161616);
+  max-width: none;
+}
+.container:hover {
+  background-color: var(--colors-neutral-300, #c6c6c6);
+  color: var(--colors-surface-muted-foreground, #525252);
+}
+.container > span {
+  margin-top: 0.25rem;
+  font-size: var(--ui-body-compact-01-font-size, 0.875rem);
+  font-weight: var(--ui-body-compact-01-font-weight, 400);
+  line-height: var(--ui-body-compact-01-line-height, 1.28572);
+  letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
+  color: var(--colors-surface-muted-foreground, #525252);
+}
+.container svg {
+  transform: scale(1.25);
+}
+
+.elementContainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex-direction: column;
+}
+.elementContainer .countTag, .elementContainer .interruptedTag {
+  position: absolute;
+  font-size: 10px;
+  text-align: center;
+  color: var(--colors-surface-muted, #f4f4f4);
+  background-color: var(--colors-error-500, #da1e28);
+  padding: 0 4px;
+  border-radius: 50%;
+  top: -14px;
+  right: -12px;
+}
+.elementContainer .interruptedTag {
+  font-size: 10px;
+  padding: 0 5px;
+  width: 14px;
+  height: 14px;
+}
+
+/* Desktop */
+:global(.egen-breakpoint-gt-tablet) .active, :global(.egen-breakpoint-gt-tablet) :global(.egen-breakpoint-lt-desktop) .focused, :global(.egen-breakpoint-lt-desktop) :global(.egen-breakpoint-gt-tablet) .focused {
+  border: 0.125rem solid;
+  border-color: #007d79;
+  border-color: var(--brand-03);
+  border-radius: 50%;
+  background-color: var(--colors-surface-card, #ffffff);
+}
+:global(.egen-breakpoint-gt-tablet) .focused {
+  border: 0.125rem solid var(--colors-primary-600, #0f62fe);
+  border-radius: 50%;
+  background-color: var(--colors-surface-card, #ffffff);
+}
+:global(.egen-breakpoint-gt-tablet) .container svg {
+  transform: scale(1.25);
+}
+
+/* Tablet */
+:global(.egen-breakpoint-lt-desktop) .container {
+  margin-bottom: 0;
+  margin-top: 0;
+  border-radius: unset;
+  color: var(--colors-surface-foreground, #161616);
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+:global(.egen-breakpoint-lt-desktop) .active, :global(.egen-breakpoint-lt-desktop) .focused {
+  background-color: var(--colors-primary-50, #edf5ff);
+  color: var(--colors-primary-600, #0f62fe);
+}
+:global(.egen-breakpoint-lt-desktop) .active:hover, :global(.egen-breakpoint-lt-desktop) .focused:hover {
+  color: var(--colors-primary-600, #0f62fe);
+}
+:global(.egen-breakpoint-lt-desktop) .active > span, :global(.egen-breakpoint-lt-desktop) .focused > span {
+  color: var(--colors-primary-600, #0f62fe);
+  font-size: var(--ui-heading-compact-01-font-size, 0.875rem);
+  font-weight: var(--ui-heading-compact-01-font-weight, 600);
+  line-height: var(--ui-heading-compact-01-line-height, 1.28572);
+  letter-spacing: var(--ui-heading-compact-01-letter-spacing, 0.16px);
+}
+:global(.egen-breakpoint-lt-desktop) .active svg, :global(.egen-breakpoint-lt-desktop) .focused svg {
+  fill: var(--colors-primary-600, #0f62fe);
+}

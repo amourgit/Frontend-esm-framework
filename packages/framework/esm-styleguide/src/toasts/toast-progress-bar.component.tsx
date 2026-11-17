@@ -1,7 +1,7 @@
 /** @category Toast */
 import React from 'react';
 import { motion } from 'framer-motion';
-import styles from './toast.module.scss';
+import styles from './toast.module.css';
 
 interface ToastProgressBarProps {
   colorVar: string;

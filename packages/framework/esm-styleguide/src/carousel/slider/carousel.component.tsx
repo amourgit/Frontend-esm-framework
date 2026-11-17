@@ -5,7 +5,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { CarouselContext } from './slider.context.js';
 import { SliderContainer } from './slider-container.component.js';
 import type { CarouselProps, SliderContainerProps, SliderProps } from './slider.types.js';
-import styles from './slider.module.scss';
+import styles from './slider.module.css';
 
 /**
  * Extrait la liste des `thumbnailSrc` déclarés par les `<Slider>` imbriqués

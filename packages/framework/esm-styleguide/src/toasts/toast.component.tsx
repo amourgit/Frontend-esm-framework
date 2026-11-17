@@ -7,7 +7,7 @@ import { LiquidGlassCard } from '../glass-card/index.js';
 import { toastKindConfig } from './toast-kind.config.js';
 import { ToastProgressBar } from './toast-progress-bar.component.js';
 import type { ToastAction, ToastProps } from './toast.types.js';
-import styles from './toast.module.scss';
+import styles from './toast.module.css';
 
 export type { ToastAction, ToastVariant, ToastProps, ToastDescriptor, ToastNotificationMeta, ToastType } from './toast.types.js';
 

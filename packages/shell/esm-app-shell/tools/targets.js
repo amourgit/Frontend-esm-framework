@@ -25,7 +25,7 @@ const WEB_DEFAULT_PUBLIC_PATH = '/egen-civitas/spa';
 
 /**
  * CSP de départ de la cible native (proposition à valider sur appareil, cf. tâche B5).
- * Les styles `'unsafe-inline'` sont à réexaminer (Carbon / injection de styles). `'unsafe-eval'` est interdit.
+ * Les styles `'unsafe-inline'` sont à réexaminer (injection de styles). `'unsafe-eval'` est interdit.
  *
  * @param {string} apiOrigin Origine de l'API (`https://api.exemple.ga`), déjà validée.
  * @returns {string}

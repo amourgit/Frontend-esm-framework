@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { mountRootParcel, type ParcelConfig } from 'single-spa';
 import Parcel from 'single-spa-react/parcel';
-import { InlineLoading } from '@carbon/react';
+import { InlineLoading } from '../../ui/index.js';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
-import styles from './workspace.module.scss';
+import styles from './workspace.module.css';
 import { type OpenWorkspace } from '../workspaces.js';
 import { useWorkspaceGroupStore } from '../workspace-sidebar-store/useWorkspaceGroupStore.js';
 

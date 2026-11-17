@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { motion, type PanInfo } from 'framer-motion';
 import classNames from 'classnames';
 import type { FolderGalleryProps } from './folder-gallery.types.js';
-import styles from './folder-gallery.module.scss';
+import styles from './folder-gallery.module.css';
 
 /**
  * `FolderGallery` — dossier interactif : une pile de cartes repliée dans un

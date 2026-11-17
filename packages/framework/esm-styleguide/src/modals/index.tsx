@@ -37,7 +37,7 @@ const MODAL_MAX_WIDTH: Record<ModalSize, string> = { xs: '24rem', sm: '32rem', m
 function createModalFrame({ size }: { size: ModalSize }) {
   const modalFrame = document.createElement('div');
   modalFrame.className = 'egen-modal-frame';
-  // Styles en ligne : le cadre est créé hors React et ne doit dépendre d'aucune feuille de style (ni Carbon, ni Tailwind
+  // Styles en ligne : le cadre est créé hors React et ne doit dépendre d'aucune feuille de style (ni Tailwind compilé par le shell, ni Tailwind
   // compilé par le shell). Couleurs et rayons suivent le thème (variables `--colors-*` du moteur de thème).
   Object.assign(modalFrame.style, {
     display: 'flex',

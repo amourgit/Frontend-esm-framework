@@ -3,7 +3,7 @@ import React, { useId, useState } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import classNames from 'classnames';
 import type { LiquidGlassCardProps } from './liquid-glass-card.types.js';
-import styles from './liquid-glass-card.module.scss';
+import styles from './liquid-glass-card.module.css';
 
 /**
  * `LiquidGlassCard` — enveloppe tout contenu dans un effet de "verre liquide" :

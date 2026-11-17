@@ -2,9 +2,8 @@ import React from 'react';
 import type { Preview } from 'storybook-react-rsbuild';
 import { setLayoutType } from '../mocks/esm-react-utils';
 
-// Import the styleguide's global stylesheet which brings in Carbon's base
-// styles, Egen brand variables, component-specific styles, and overrides.
-import '../../../framework/esm-styleguide/src/_all.scss';
+// Import the styleguide's global stylesheet (Egen brand variables and component-specific styles).
+import '../../../framework/esm-styleguide/src/styles.css';
 
 // Global setup: window variables, calendar registration, and SVG sprite.
 // These must run before any story renders.

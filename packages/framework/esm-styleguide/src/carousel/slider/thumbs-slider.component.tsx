@@ -3,7 +3,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { useCarouselContext } from './slider.context.js';
 import type { ThumbsSliderProps } from './slider.types.js';
-import styles from './slider.module.scss';
+import styles from './slider.module.css';
 
 /**
  * `ThumbsSlider` — rail de miniatures synchronisé avec les slides

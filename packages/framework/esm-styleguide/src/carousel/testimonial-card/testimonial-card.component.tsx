@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import type { TestimonialCardProps } from './testimonial-card.types.js';
-import styles from './testimonial-card.module.scss';
+import styles from './testimonial-card.module.css';
 
 /**
  * `TestimonialCard` — une carte de la pile de témoignages, glissable à la

@@ -64,7 +64,7 @@ describe('CustomOverflowMenu', () => {
       </CustomOverflowMenu>,
     );
 
-    expect(screen.getByRole('list')).toHaveClass('cds--overflow-menu-options--lg');
+    expect(screen.getByRole('list')).toHaveAttribute('data-size', 'lg');
   });
 
   it('should have correct ARIA attributes', () => {
@@ -136,7 +136,7 @@ describe('CustomOverflowMenu', () => {
     await waitFor(() => expect(menuItems[1]).toHaveFocus());
   });
 
-  it('should have correct menu positioning attributes', () => {
+  it('should open below its trigger', () => {
     render(
       <CustomOverflowMenu menuTitle="Menu">
         <li>Option 1</li>
@@ -144,7 +144,7 @@ describe('CustomOverflowMenu', () => {
     );
 
     const menu = screen.getByRole('menu');
-    expect(menu).toHaveAttribute('data-floating-menu-direction', 'bottom');
+    expect(menu).toHaveAttribute('data-placement', 'bottom');
   });
 });
 

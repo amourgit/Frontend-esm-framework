@@ -1,5 +1,5 @@
 import { type ConfigSchema, Type, validators } from '@egen-civitas/esm-config';
-import { type CarbonTagColor, carbonTagColors } from './utils.js';
+import { type TagColor, tagColors } from './utils.js';
 
 export interface StyleguideConfigObject {
   'Brand color #1': string;
@@ -19,8 +19,8 @@ export interface StyleguideConfigObject {
    * Colors for primary/secondary classification tags.
    */
   classificationTags: {
-    primaryColor: CarbonTagColor;
-    secondaryColor: CarbonTagColor;
+    primaryColor: TagColor;
+    secondaryColor: TagColor;
   };
 }
 
@@ -29,13 +29,13 @@ const classificationTagConfigSchema: ConfigSchema = {
     _type: Type.String,
     _description: 'The color for displaying primary classification tags',
     _default: 'red',
-    _validators: [validators.oneOf(carbonTagColors)],
+    _validators: [validators.oneOf(tagColors)],
   },
   secondaryColor: {
     _type: Type.String,
     _description: 'The color for displaying secondary classification tags',
     _default: 'blue',
-    _validators: [validators.oneOf(carbonTagColors)],
+    _validators: [validators.oneOf(tagColors)],
   },
 };
 

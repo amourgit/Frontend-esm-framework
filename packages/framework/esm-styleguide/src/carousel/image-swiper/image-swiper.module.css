@@ -1,0 +1,31 @@
+.stack {
+  position: relative;
+  display: grid;
+  place-content: center;
+  user-select: none;
+  touch-action: none;
+  transform-style: preserve-3d;
+}
+
+.imageCard {
+  position: absolute;
+  place-self: center;
+  cursor: grab;
+  border: 1px solid var(--colors-border-default, transparent);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadows-md);
+  overflow: hidden;
+  will-change: transform;
+  transform: perspective(var(--card-perspective)) translateZ(calc(-1 * var(--card-z-offset) * var(--i))) translateY(calc(var(--card-y-offset) * var(--i))) translateX(var(--swipe-x, 0px)) rotateY(var(--swipe-rotate, 0deg));
+}
+.imageCard:active {
+  cursor: grabbing;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  pointer-events: none;
+}

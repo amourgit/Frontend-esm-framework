@@ -8,7 +8,7 @@ import { DecoratedCard } from '../../cards/decorated-card/index.js';
 import { cardModalAnimationPresets, cardModalPresetStyles } from './card-modal.animations.js';
 import type { CardModalAnimationConfig, CardModalProps } from './card-modal.types.js';
 import { CardModalWarpGlow } from './card-modal.warp-glow.js';
-import styles from './card-modal.module.scss';
+import styles from './card-modal.module.css';
 
 interface DockState {
   side: 'left' | 'right';

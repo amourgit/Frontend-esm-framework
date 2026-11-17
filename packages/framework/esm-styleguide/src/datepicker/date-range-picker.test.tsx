@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import { useConfig } from '@egen-civitas/esm-react-utils/mock';
 import { EgenDateRangePicker } from './index';
 import { DEFAULT_MIN_DATE_FLOOR } from './defaults';
-import styles from './datepicker.module.scss';
+import styles from './datepicker.module.css';
 
 describe('EgenDateRangePicker', () => {
   beforeEach(() => {
@@ -72,7 +72,7 @@ describe('EgenDateRangePicker', () => {
       render(<EgenDateRangePicker labelText="Date range" />);
       const labelText = screen.getByText('Date range');
       expect(labelText).toBeInTheDocument();
-      expect(labelText).toHaveClass('cds--label');
+      expect(labelText).toHaveAttribute('data-slot', 'date-label');
       const group = screen.getByRole('group');
       expect(group).toBeInTheDocument();
     });
@@ -134,7 +134,7 @@ describe('EgenDateRangePicker', () => {
     it('should render disabled label styling when isDisabled is true', () => {
       render(<EgenDateRangePicker labelText="Date range" isDisabled={true} />);
       const label = screen.getByText('Date range');
-      expect(label).toHaveClass('cds--label--disabled');
+      expect(label).toHaveAttribute('data-disabled', 'true');
     });
   });
 

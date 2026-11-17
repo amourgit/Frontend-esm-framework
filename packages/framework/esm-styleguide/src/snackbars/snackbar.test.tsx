@@ -17,7 +17,7 @@ describe('Snackbar component', () => {
     const snackbar = screen.getByRole('alertdialog', { name: /order submitted/i });
     const closeButton = screen.getByRole('button', { name: /close snackbar/i });
     expect(snackbar).toBeInTheDocument();
-    expect(snackbar.classList).toContainEqual(expect.stringMatching('success'));
+    expect(snackbar).toHaveAttribute('data-kind', 'success');
     expect(closeButton).toBeInTheDocument();
   });
 
@@ -32,7 +32,7 @@ describe('Snackbar component', () => {
 
     const snackbar = screen.getByRole('alertdialog', { name: /error submitting order/i });
     expect(snackbar).toBeInTheDocument();
-    expect(snackbar.classList).toContainEqual(expect.stringMatching('error'));
+    expect(snackbar).toHaveAttribute('data-kind', 'error');
     expect(screen.getByRole('button', { name: /close snackbar/i })).toBeInTheDocument();
     expect(screen.getByText(/error contacting lab system. please try again later/i)).toBeInTheDocument();
   });

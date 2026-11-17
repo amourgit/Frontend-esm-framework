@@ -8,7 +8,7 @@ import { navigate } from '@egen-civitas/esm-navigation';
 import { useAssignedExtensions } from '@egen-civitas/esm-react-utils';
 import { translateFrom } from '@egen-civitas/esm-translations';
 import { resolveWorkbenchIcon } from './workbench-icons.js';
-import styles from './section-nav-panel.module.scss';
+import styles from './section-nav-panel.module.css';
 
 interface SectionEntry {
   /** Nom de l'extension (routes.json) : identifie la sous-option. */

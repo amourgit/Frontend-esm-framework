@@ -1,7 +1,7 @@
 /** @category Fields */
 import React from 'react';
 import type { FieldIcon } from './dynamic-field.types.js';
-import styles from './dynamic-field.module.scss';
+import styles from './dynamic-field.module.css';
 
 interface FieldIconComponentProps {
   fieldIcon?: FieldIcon;

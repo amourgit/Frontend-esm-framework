@@ -1,0 +1,68 @@
+.sideRailHidden {
+  display: none;
+}
+
+.sideRailVisible {
+  display: flex;
+}
+
+/* Desktop */
+:global(.egen-breakpoint-gt-tablet) .sideRail {
+  width: 3rem;
+}
+:global(.egen-breakpoint-gt-tablet) .sideRail .container {
+  position: fixed;
+  top: var(--egen-navbar-height);
+  bottom: var(--egen-footer-height, 0px);
+  right: 0;
+  background: var(--colors-surface-muted, #f4f4f4);
+  height: auto;
+  z-index: 1000;
+  width: 3rem;
+  border-left: 1px solid var(--colors-surface-muted-foreground, #a8a8a8);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+:global(.egen-breakpoint-gt-tablet) .sideRail.withinWorkspace .container {
+  top: calc(var(--egen-navbar-height) + var(--workspace-header-height));
+}
+
+/* Tablet */
+:global(.egen-breakpoint-lt-desktop) .sideRail {
+  border-top: 1px solid var(--colors-neutral-300, #c6c6c6);
+  background-color: var(--colors-surface-card, #ffffff);
+  position: fixed;
+  left: 0;
+  bottom: var(--egen-footer-height, 0px);
+  z-index: 8003;
+  width: 100%;
+  display: flex;
+  justify-content: stretch;
+}
+:global(.egen-breakpoint-lt-desktop) .chartExtensions {
+  background-color: var(--colors-surface-card, #ffffff);
+  display: flex;
+  width: 100%;
+}
+:global(.egen-breakpoint-lt-desktop) .chartExtensions > div {
+  flex: 1;
+  cursor: pointer;
+}
+:global(.egen-breakpoint-lt-desktop) .container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.divider {
+  background-color: var(--colors-surface-muted-foreground, #a8a8a8);
+  margin: 0.75rem 0;
+  height: 1px;
+  width: 2.5rem;
+}
+
+html[dir=rtl] :global(.egen-breakpoint-gt-tablet) .sideRail .container {
+  right: unset;
+  left: 0;
+}

@@ -1,6 +1,5 @@
 import type { StorybookConfig } from 'storybook-react-rsbuild';
 import { mergeRsbuildConfig } from '@rsbuild/core';
-import { pluginSass } from '@rsbuild/plugin-sass';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
@@ -24,15 +23,6 @@ const config: StorybookConfig = {
       output: {
         assetPrefix: process.env.STORYBOOK_BASE_PATH || '/',
       },
-      plugins: [
-        pluginSass({
-          sassLoaderOptions: {
-            api: 'modern-compiler',
-            implementation: require.resolve('sass-embedded'),
-            sassOptions: { quietDeps: true },
-          },
-        }),
-      ],
       resolve: {
         alias: {
           // Replace framework peer dependency imports with Storybook-compatible mocks.

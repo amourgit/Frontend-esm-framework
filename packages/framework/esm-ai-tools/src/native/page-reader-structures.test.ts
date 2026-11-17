@@ -248,7 +248,7 @@ describe('champs : toutes les variantes de rendu', () => {
   it('rend erreur, aide, requis, désactivé, lecture seule et options tronquées', () => {
     const options = Array.from({ length: 40 }, (_, i) => `<option>Option ${i}</option>`).join('');
     const out = outlineOf(`
-      <div class="cds--form-item">
+      <div class="form-item">
         <label for="mail">Courriel</label>
         <input id="mail" type="email" value="x" aria-invalid="true" aria-describedby="aide" aria-errormessage="err" required>
         <div id="aide">Format : nom@domaine.ga</div>

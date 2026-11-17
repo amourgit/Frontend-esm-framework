@@ -75,7 +75,7 @@ describe('tools de lecture de page', () => {
     document.body.innerHTML = `
       <main>
         <h1>Classes</h1>
-        <div class="cds--tile" id="tile"><h3>Terminale</h3><p>32 élèves</p><a href="/c/t">Ouvrir</a></div>
+        <div data-slot="tile" id="tile"><h3>Terminale</h3><p>32 élèves</p><a href="/c/t">Ouvrir</a></div>
         <table id="t"><thead><tr><th>Nom</th><th>Note</th></tr></thead>
           <tbody>${Array.from({ length: 6 }, (_, i) => `<tr><td>Élève ${i}</td><td>${10 + i}</td></tr>`).join('')}</tbody></table>
         <input id="pwd" type="password" value="hunter2" aria-label="Mot de passe">
@@ -146,7 +146,7 @@ describe('tools de lecture de page', () => {
   it('discover_components accepte kinds, query et un filtre de zone', async () => {
     const result = await run(discoverComponentsTool, { kinds: ['card'] });
     expect(result.data.components).toHaveLength(1);
-    expect(result.data.components[0]).toMatchObject({ kind: 'card', title: 'Terminale', carbon: 'tile' });
+    expect(result.data.components[0]).toMatchObject({ kind: 'card', title: 'Terminale', slot: 'tile' });
     const scoped = await run(discoverComponentsTool, { selector: '#t' });
     expect(scoped.data.components).toHaveLength(1);
     expect(scoped.data.components[0].kind).toBe('table');

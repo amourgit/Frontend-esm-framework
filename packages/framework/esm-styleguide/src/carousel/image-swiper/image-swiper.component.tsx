@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import type { ImageSwiperProps } from './image-swiper.types.js';
-import styles from './image-swiper.module.scss';
+import styles from './image-swiper.module.css';
 
 /**
  * `ImageSwiper` — pile de cartes en 3D (façon Tinder), qu'on swipe à la

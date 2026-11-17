@@ -10,7 +10,7 @@ import {
   workbenchStore,
   type SideAnchor,
 } from './workbench.store.js';
-import styles from './workbench.module.scss';
+import styles from './workbench.module.css';
 
 const KEYBOARD_STEP = 16;
 const RESIZING_ATTRIBUTE = 'data-workbench-resizing';

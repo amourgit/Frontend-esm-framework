@@ -126,13 +126,6 @@ export const cssRuleConfig: Partial<RuleSetRule> = {};
 
 /**
  * This object will be merged into the webpack rule governing
- * the loading of SCSS files.
- * Make sure to modify this object and not reassign it.
- */
-export const scssRuleConfig: Partial<RuleSetRule> = {};
-
-/**
- * This object will be merged into the webpack rule governing
  * the loading of static asset files.
  * Make sure to modify this object and not reassign it.
  */
@@ -210,24 +203,6 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
             use: [require.resolve('style-loader'), cssLoader],
           },
           cssRuleConfig,
-        ),
-        merge(
-          {
-            test: /\.s[ac]ss$/i,
-            use: [
-              require.resolve('style-loader'),
-              cssLoader,
-              {
-                loader: require.resolve('sass-loader'),
-                options: {
-                  api: 'modern-compiler',
-                  implementation: require.resolve('sass-embedded'),
-                  sassOptions: { quietDeps: true },
-                },
-              },
-            ],
-          },
-          scssRuleConfig,
         ),
         merge(
           {
@@ -353,7 +328,7 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
       }),
     ].filter(Boolean),
     resolve: {
-      extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.json'],
+      extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
       extensionAlias: {
         '.js': ['.ts', '.tsx', '.js'],
       },

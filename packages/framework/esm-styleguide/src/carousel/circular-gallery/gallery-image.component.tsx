@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
-import styles from './circular-gallery.module.scss';
+import styles from './circular-gallery.module.css';
 
 gsap.registerPlugin(MotionPathPlugin);
 

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import type { InteractiveSelectorProps } from './interactive-selector.types.js';
-import styles from './interactive-selector.module.scss';
+import styles from './interactive-selector.module.css';
 
 /**
  * `InteractiveSelector` — sélecteur à panneaux qui s'étirent au clic : un

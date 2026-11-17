@@ -2,13 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import Parcel from 'single-spa-react/parcel';
 import { mountRootParcel, type ParcelConfig } from 'single-spa';
-import { InlineLoading } from '@carbon/react';
+import { InlineLoading } from '../ui/index.js';
 import { type OpenedWindow, type OpenedWorkspace, workspace2Store } from '@egen-civitas/esm-extensions';
 import { loadLifeCycles } from '@egen-civitas/esm-routes';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
 import { promptForClosingWorkspaces, useWorkspace2Store } from './workspace2.js';
 import { type Workspace2DefinitionProps } from './workspace2.component.js';
-import styles from './workspace2.module.scss';
+import styles from './workspace2.module.css';
 
 interface WorkspaceWindowProps {
   openedWindow: OpenedWindow;

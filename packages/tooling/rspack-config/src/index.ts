@@ -346,13 +346,6 @@ export const cssRuleConfig: Partial<RuleSetRule> = {};
 
 /**
  * This object will be merged into the webpack rule governing
- * the loading of SCSS files.
- * Make sure to modify this object and not reassign it.
- */
-export const scssRuleConfig: Partial<RuleSetRule> = {};
-
-/**
- * This object will be merged into the webpack rule governing
  * the loading of Tailwind entry files (`*.tw.css` — see `tailwindLoader`
  * below for why this dedicated extension exists instead of reusing `.css`).
  * Make sure to modify this object and not reassign it.
@@ -417,24 +410,24 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
 
   /**
    * TAILWIND — pourquoi une extension dédiée (`*.tw.css`) plutôt que de
-   * réutiliser `.css`/`.scss` :
+   * réutiliser `.css` :
    *
    * Dans TOUT le code consommateur existant (Frontend-esm-core), les
-   * fichiers `.scss`/`.css` sont importés en `import styles from './x.scss'`
+   * fichiers `.css` sont importés en `import styles from './x.module.css'`
    * SANS le suffixe `.module.` — la convention de ce dépôt est de traiter
-   * `.scss`/`.css` comme des CSS Modules par défaut, quel que soit leur nom
+   * `.css` comme des CSS Modules par défaut, quel que soit leur nom
    * (voir `cssLoader` ci-dessus : `modules` est actif sans clé `auto`, donc
    * appliqué à TOUT fichier matchant `/\.css$/` ou `/\.s[ac]ss$/i`).
    *
    * Un import Tailwind (`@import "tailwindcss";`) doit au contraire produire
    * des noms de classes GLOBAUX et STABLES (`bg-primary-500`, pas
    * `home__bg-primary-500__aB3xY`) pour matcher le `className="bg-primary-500"`
-   * écrit en dur dans le JSX. Réutiliser la règle `.css`/`.scss` existante
+   * écrit en dur dans le JSX. Réutiliser la règle `.css` existante
    * casserait donc soit Tailwind (classes hashées), soit tous les imports
-   * `.scss` existants si on désactivait `modules` globalement.
+   * `.css` existants si on désactivait `modules` globalement.
    *
    * D'où une règle strictement séparée sur une extension distincte
-   * (`*.tw.css`), qui laisse `.css`/`.scss` inchangés pour 100% du code
+   * (`*.tw.css`), qui laisse `.css` inchangés pour 100% du code
    * existant et n'active PostCSS/Tailwind que là où c'est demandé
    * explicitement.
    */
@@ -498,24 +491,6 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
             use: [require.resolve('style-loader'), cssLoaderNoModules, postcssTailwindLoader],
           },
           tailwindRuleConfig,
-        ),
-        merge(
-          {
-            test: /\.s[ac]ss$/i,
-            use: [
-              require.resolve('style-loader'),
-              cssLoader,
-              {
-                loader: require.resolve('sass-loader'),
-                options: {
-                  api: 'modern-compiler',
-                  implementation: require.resolve('sass-embedded'),
-                  sassOptions: { quietDeps: true },
-                },
-              },
-            ],
-          },
-          scssRuleConfig,
         ),
         merge(
           {
@@ -642,7 +617,7 @@ export default (env: Record<string, string>, argv: Record<string, string> = {}) 
       }),
     ].filter(Boolean),
     resolve: {
-      extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss', '.json'],
+      extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
       extensionAlias: {
         '.js': ['.ts', '.tsx', '.js'],
       },

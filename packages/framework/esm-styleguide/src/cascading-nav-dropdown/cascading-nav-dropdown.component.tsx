@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { ChevronDownIcon } from '../icons/icons.js';
 import { ColumnWithSearch } from './column-with-search.component.js';
 import type { CascadingNavDropdownProps, NavigationItem } from './cascading-nav-dropdown.types.js';
-import styles from './cascading-nav-dropdown.module.scss';
+import styles from './cascading-nav-dropdown.module.css';
 
 interface Anchor {
   left: number;

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { CheckmarkFilledIcon, WarningIcon } from '../icons/icons.js';
 import { ErrorFilledIcon } from '../icons/error-filled.icon.js';
 import type { ValidationRule, ValidationRuleType } from './dynamic-field.types.js';
-import styles from './dynamic-field.module.scss';
+import styles from './dynamic-field.module.css';
 
 const severityIcons: Record<ValidationRuleType, React.ComponentType<{ className?: string; size?: number }>> = {
   success: CheckmarkFilledIcon,

@@ -1,7 +1,7 @@
 /** @category Hero Mosaic */
 import React from 'react';
 import { HeroTileCard, type HeroTile } from './hero-tile-card.component.js';
-import styles from './hero-mosaic.module.scss';
+import styles from './hero-mosaic.module.css';
 
 export interface HeroMosaicProps {
   mainTile: HeroTile;

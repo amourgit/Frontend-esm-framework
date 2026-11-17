@@ -2,7 +2,7 @@
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useRef } from 'react';
 import classNames, { type Argument } from 'classnames';
 import { RenderIfValueIsTruthy } from '@egen-civitas/esm-react-utils';
-import style from './icons.module.scss';
+import style from './icons.module.css';
 
 /** Array of all available Egen icon IDs that can be used with the Icon component. */
 export const iconIds = [

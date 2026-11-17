@@ -11,7 +11,7 @@ import {
   type SideAnchor,
 } from './workbench.store.js';
 import { formatToolWindowBadge, workbenchBadgeStore } from './workbench-badges.js';
-import styles from './workbench.module.scss';
+import styles from './workbench.module.css';
 
 function RailGroup({ anchor, label, rail }: { anchor: ToolWindowAnchor; label: string; rail?: 'left' | 'right' }) {
   const tools = useToolWindows(anchor, rail);

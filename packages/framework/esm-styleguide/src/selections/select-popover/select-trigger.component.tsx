@@ -5,7 +5,7 @@ import { ChevronDownIcon } from '../../icons/index.js';
 import { useSelectContext } from './select-popover.types.js';
 import { SelectAvatar } from './select-avatar.component.js';
 import type { SelectTriggerProps } from './select-popover.types.js';
-import styles from './select-popover.module.scss';
+import styles from './select-popover.module.css';
 
 export const SelectTrigger: React.FC<SelectTriggerProps> = ({
   className,

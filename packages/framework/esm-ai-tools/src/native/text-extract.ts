@@ -351,11 +351,11 @@ export function describeField(el: Element, ctx: ReadContext): FieldModel {
 
   const errorText =
     textOfIds(el, 'aria-errormessage') ||
-    (invalid ? collapseWhitespace(queryNearby(el, '.cds--form-requirement, [role="alert"]')?.textContent) : '');
+    (invalid ? collapseWhitespace(queryNearby(el, '[role="alert"]')?.textContent) : '');
   if (errorText) model.errorMessage = errorText;
 
   const helper =
-    textOfIds(el, 'aria-describedby') || collapseWhitespace(queryNearby(el, '.cds--form__helper-text')?.textContent);
+    textOfIds(el, 'aria-describedby');
   if (helper && helper !== errorText) model.helperText = helper;
 
   return model;
@@ -397,10 +397,7 @@ function tableCaption(el: Element): string | undefined {
   const text =
     collapseWhitespace(native?.textContent) ||
     textOfIds(el, 'aria-labelledby') ||
-    collapseWhitespace(el.getAttribute('aria-label')) ||
-    collapseWhitespace(
-      el.closest('.cds--data-table-container')?.querySelector('.cds--data-table-header__title')?.textContent,
-    );
+    collapseWhitespace(el.getAttribute('aria-label'));
   return text || undefined;
 }
 

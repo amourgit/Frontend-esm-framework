@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { screen, render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Pen } from '@carbon/react/icons';
 import { useLayoutType } from '@egen-civitas/esm-react-utils';
 import { ActionMenuButton } from './action-menu-button.component';
 import { type OpenWorkspace, useWorkspaces, type WorkspacesInfo } from '../workspaces';
@@ -11,10 +10,8 @@ import { type OpenWorkspace, useWorkspaces, type WorkspacesInfo } from '../works
 const mockUseLayoutType = vi.mocked(useLayoutType);
 const mockUseWorkspaces = vi.mocked(useWorkspaces);
 
-vi.mock('@carbon/react/icons', async () => ({
-  ...(await vi.importActual('@carbon/react/icons')),
-  Pen: vi.fn(({ size }) => <div data-testid="pen-icon">size: {size}</div>),
-}));
+// Icône factice : le test vérifie que `getIcon` reçoit bien la taille demandée.
+const Pen = ({ size }: { size?: number }) => <div data-testid="pen-icon">size: {size}</div>;
 
 vi.mock('@egen-civitas/esm-react-utils', async () => {
   const originalModule = await vi.importActual('@egen-civitas/esm-react-utils');

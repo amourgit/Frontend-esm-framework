@@ -1,0 +1,82 @@
+.container {
+  position: relative;
+  display: inline-block;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+  padding: 0.875rem 1rem;
+  border: 0;
+  background: transparent;
+  color: var(--colors-primary-600, #0f62fe);
+  font: inherit;
+  cursor: pointer;
+}
+.trigger:hover,
+.triggerOpen {
+  background-color: var(--colors-surface-muted, #e8e8e8);
+}
+.trigger:focus-visible {
+  outline: 2px solid var(--colors-primary-500, #0f62fe);
+  outline-offset: -2px;
+}
+
+.menu {
+  display: none;
+  position: absolute;
+  top: 3.125rem;
+  right: 0;
+  z-index: 6000;
+  min-width: 10rem;
+  margin-right: 0.2rem;
+  background-color: var(--colors-surface-muted, #f4f4f4);
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.3);
+}
+.show {
+  display: block;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.itemWrapper {
+  list-style: none;
+}
+.itemDivider {
+  border-top: 1px solid var(--colors-border-default, #cbd5e1);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  border: 0;
+  background: transparent;
+  color: var(--colors-surface-foreground, #161616);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+.list[data-size='lg'] .item {
+  min-height: 3rem;
+}
+.item:hover,
+.item:focus-visible {
+  background-color: var(--colors-surface-card, #e8e8e8);
+  outline: none;
+}
+.item:disabled {
+  color: var(--colors-surface-muted-foreground, #8d8d8d);
+  cursor: not-allowed;
+}
+.itemDelete {
+  color: var(--colors-destructive, #da1e28);
+}

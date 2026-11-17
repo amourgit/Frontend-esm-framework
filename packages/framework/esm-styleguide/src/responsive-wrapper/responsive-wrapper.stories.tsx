@@ -11,7 +11,7 @@ const meta: Meta<typeof ResponsiveWrapper> = {
     docs: {
       description: {
         component:
-          'Wraps children in a Carbon Layer on tablet viewports, providing a light background for form inputs. Use the Layout toolbar to toggle between desktop and tablet.',
+          'Wraps children in a Layer (plain surface) on tablet viewports, providing a light background for form inputs. Use the Layout toolbar to toggle between desktop and tablet.',
       },
     },
   },

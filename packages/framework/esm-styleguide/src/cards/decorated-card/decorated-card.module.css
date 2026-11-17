@@ -1,0 +1,332 @@
+.card {
+  position: relative;
+  width: 100%;
+}
+
+.content {
+  padding: 1.5rem;
+}
+
+.title {
+  margin: 0 0 0.25rem;
+  font-size: var(--typography-font-size-lg-size);
+  font-weight: var(--typography-font-weight-bold, 700);
+  color: var(--colors-surface-foreground);
+}
+
+.description {
+  margin: 0;
+  color: var(--colors-surface-muted-foreground);
+}
+
+.card--default {
+  border: 1px solid var(--colors-border-default, transparent);
+  border-radius: var(--border-radius-lg);
+  background: var(--colors-surface-card);
+}
+
+.card--dots {
+  padding: 0 clamp(1rem, 3vw, 2rem);
+}
+
+.hLineTop,
+.hLineBottom {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--colors-border-default, transparent);
+  z-index: 0;
+}
+
+.hLineTop {
+  top: clamp(1rem, 2vw, 2rem);
+}
+
+.hLineBottom {
+  bottom: clamp(1rem, 2vw, 2rem);
+}
+
+.dotsFrame {
+  position: relative;
+  width: 100%;
+  border-left: 1px solid var(--colors-border-default, transparent);
+  border-right: 1px solid var(--colors-border-default, transparent);
+  border-style: dashed;
+}
+
+.dotsGrid {
+  position: absolute;
+  z-index: 0;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-content: space-between;
+  padding: clamp(1rem, 2vw, 2rem) 0;
+}
+
+.dot {
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: var(--border-radius-full, 9999px);
+  outline: 8px solid var(--colors-surface-card);
+}
+
+.dotsInner {
+  position: relative;
+  z-index: 20;
+}
+
+.card--gradient {
+  padding: 0 clamp(1rem, 3vw, 2rem);
+}
+
+.gradientLineTop,
+.gradientLineBottom {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  z-index: 0;
+}
+
+.gradientLineTop {
+  top: clamp(1rem, 2vw, 2rem);
+  background: linear-gradient(to left, transparent, var(--colors-border-default, currentColor), transparent);
+}
+
+.gradientLineBottom {
+  bottom: clamp(1rem, 2vw, 2rem);
+  background: linear-gradient(to right, transparent, var(--colors-border-default, currentColor), transparent);
+}
+
+.gradientSideLeft,
+.gradientSideRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to top, transparent, var(--colors-border-default, currentColor), transparent);
+}
+
+.gradientSideLeft {
+  left: 0;
+}
+
+.gradientSideRight {
+  right: 0;
+}
+
+.gradientInner {
+  position: relative;
+  z-index: 20;
+}
+
+.card--plus {
+  border: 1px dashed var(--colors-border-default, transparent);
+}
+
+.plusIcon {
+  position: absolute;
+  color: var(--colors-surface-foreground);
+}
+
+.plusIcon--topLeft {
+  top: -0.75rem;
+  left: -0.75rem;
+}
+
+.plusIcon--topRight {
+  top: -0.75rem;
+  right: -0.75rem;
+}
+
+.plusIcon--bottomLeft {
+  bottom: -0.75rem;
+  left: -0.75rem;
+}
+
+.plusIcon--bottomRight {
+  bottom: -0.75rem;
+  right: -0.75rem;
+}
+
+.card--neubrutalism {
+  border: 1px solid var(--colors-border-default, transparent);
+  border-radius: var(--border-radius-md);
+  background: var(--colors-surface-card);
+  box-shadow: 4px 4px 0 0 color-mix(in srgb, var(--colors-surface-foreground) 100%, transparent);
+}
+
+.card--inner {
+  border: 1px solid var(--colors-border-default, transparent);
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem;
+}
+
+.innerPanel {
+  border: 1px solid var(--colors-border-default, transparent);
+  border-radius: var(--border-radius-xs, 0.25rem);
+  background: linear-gradient(to bottom right, var(--colors-surface-card), var(--colors-surface-muted));
+  box-shadow: inset 0 1px 3px color-mix(in srgb, var(--colors-surface-foreground) 10%, transparent);
+}
+
+.card--lifted {
+  border: 1px solid var(--colors-border-default, transparent);
+  border-radius: var(--border-radius-xl);
+  background: var(--colors-surface-muted);
+  box-shadow: 0 5px 0 0 color-mix(in srgb, var(--colors-surface-foreground) 70%, transparent);
+}
+
+.card--corners {
+  border: 2px solid var(--colors-border-default, transparent);
+  border-radius: var(--border-radius-md);
+}
+
+.cornerBracket {
+  position: absolute;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-color: var(--colors-surface-foreground);
+  border-style: solid;
+  border-width: 0;
+}
+
+.cornerBracket--topLeft {
+  top: -2px;
+  left: -2px;
+  border-left-width: 2px;
+  border-top-width: 2px;
+  border-top-left-radius: var(--border-radius-md);
+}
+
+.cornerBracket--topRight {
+  top: -2px;
+  right: -2px;
+  border-right-width: 2px;
+  border-top-width: 2px;
+  border-top-right-radius: var(--border-radius-md);
+}
+
+.cornerBracket--bottomLeft {
+  bottom: -2px;
+  left: -2px;
+  border-left-width: 2px;
+  border-bottom-width: 2px;
+  border-bottom-left-radius: var(--border-radius-md);
+}
+
+.cornerBracket--bottomRight {
+  bottom: -2px;
+  right: -2px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-bottom-right-radius: var(--border-radius-md);
+}
+
+.card--glass {
+  border-radius: var(--border-radius-xl);
+  background: var(--colors-surface-card);
+  position: relative;
+  isolation: isolate;
+}
+.card--glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: var(--effects-glass-specular-background);
+  background-image: var(--effects-glass-specular-highlight);
+  backdrop-filter: var(--effects-glass-specular-backdrop-filter);
+  -webkit-backdrop-filter: var(--effects-glass-specular-backdrop-filter-webkit);
+  box-shadow: var(--effects-glass-bevel-shadow-light), var(--effects-glass-bevel-shadow-dark), var(--effects-glass-bevel-shadow-outer);
+}
+.card--glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: var(--effects-glass-rim-gradient);
+  opacity: var(--effects-glass-rim-opacity);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+.card--glass > * {
+  position: relative;
+  z-index: 2;
+}
+
+.card--mirror {
+  position: relative;
+}
+
+.mirrorSurface {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--border-radius-xl);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--colors-surface-card) 100%, var(--colors-surface-translucent) 40%), var(--colors-surface-card));
+  border: 1px solid var(--colors-surface-translucent-border, rgba(255, 255, 255, 0.8));
+  box-shadow: inset 0 1px 0 0 color-mix(in srgb, var(--colors-surface-translucent) 80%, transparent), inset 0 -1px 0 0 color-mix(in srgb, var(--colors-surface-foreground) 6%, transparent), 0 1px 2px 0 color-mix(in srgb, var(--colors-surface-foreground) 8%, transparent);
+  transition: var(--transitions-default);
+}
+
+.card--mirror:hover .mirrorSurface {
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--colors-surface-card) 100%, var(--colors-surface-translucent) 55%), var(--colors-surface-card));
+}
+
+.mirrorShadow {
+  position: absolute;
+  z-index: 0;
+  left: 6%;
+  right: 6%;
+  bottom: -0.5rem;
+  height: 1rem;
+  border-radius: var(--border-radius-full, 9999px);
+  background: color-mix(in srgb, var(--colors-surface-foreground) 20%, transparent);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.mirrorSurface--sm .content {
+  padding: 0.5rem 1rem;
+}
+
+.mirrorSurface--default .content {
+  padding: 0.875rem 1.5rem;
+}
+
+.mirrorSurface--lg .content {
+  padding: 1rem 2rem;
+}
+
+.mirrorSurface--icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--border-radius-full, 9999px);
+}
+
+.mirrorSurface--icon .content {
+  padding: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card--mirror:has(.mirrorSurface--icon) {
+  width: auto;
+  display: inline-block;
+}
+
+.card--mirror:has(.mirrorSurface--icon) .mirrorShadow {
+  left: 10%;
+  right: 10%;
+}

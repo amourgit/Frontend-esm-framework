@@ -22,7 +22,7 @@ const FIXTURE = `
   <main>
     <h1>Tableau de bord</h1>
     <p>Bienvenue <b>Samuel</b>, voici l'état du jour.</p>
-    <div class="cds--tile">
+    <div data-slot="tile">
       <h3>Effectif</h3>
       <span class="card__subtitle">Année 2026</span>
       <p>1 245 étudiants actifs</p>
@@ -71,9 +71,9 @@ describe('readPage', () => {
     expect(outline).toContain("- text: Bienvenue Samuel, voici l'état du jour.");
   });
 
-  it('reconnaît une carte Carbon et déduit les rôles de texte', () => {
+  it('reconnaît une carte (`data-slot`) et déduit les rôles de texte', () => {
     const { outline } = readPage();
-    expect(outline).toMatch(/- card .*\(carbon: tile\)/);
+    expect(outline).toMatch(/- card .*\(slot: tile\)/);
     expect(outline).toContain('- text(subtitle): Année 2026');
     expect(outline).toContain('- text: 1 245 étudiants actifs');
     expect(outline).toContain('- link "Voir la liste"');
@@ -152,7 +152,7 @@ describe('readPage', () => {
   });
 
   it('cible une sous-arborescence et la lit comme un composant', () => {
-    const tile = document.querySelector('.cds--tile') as Element;
+    const tile = document.querySelector('[data-slot="tile"]') as Element;
     const { outline } = readPage({ root: tile });
     expect(outline.startsWith('- card')).toBe(true);
     expect(outline).toContain('Voir la liste');

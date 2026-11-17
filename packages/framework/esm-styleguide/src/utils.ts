@@ -1,8 +1,7 @@
 /**
- * Array of valid values for Carbon tag's "type" attribute.
- * Options from https://react.carbondesignsystem.com/?path=/docs/components-tag--overview
+ * Valid values for a classification tag colour (config `classificationTags`), rendered by `ClassificationTags`.
  */
-export const carbonTagColors = [
+export const tagColors = [
   'red',
   'magenta',
   'purple',
@@ -17,4 +16,4 @@ export const carbonTagColors = [
   'outline',
 ] as const;
 
-export type CarbonTagColor = (typeof carbonTagColors)[number];
+export type TagColor = (typeof tagColors)[number];

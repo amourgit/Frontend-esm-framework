@@ -1,9 +1,9 @@
 /** @module @category UI */
 import React, { useCallback, useState, useEffect } from 'react';
 import classnames from 'classnames';
-import { ActionableNotification } from '@carbon/react';
 import { getCoreTranslation } from '@egen-civitas/esm-translations';
-import styles from './snackbar.module.scss';
+import { NotificationBanner } from '../ui/index.js';
+import styles from './snackbar.module.css';
 
 // Design documentation for Snackbars https://egen.alpha.vercel.com/design-system
 export interface SnackbarProps {
@@ -83,21 +83,19 @@ export const Snackbar: React.FC<SnackbarProps> = ({ snackbar, closeSnackbar: rem
   }, []);
 
   return (
-    <ActionableNotification
-      actionButtonLabel={actionText}
-      aria-label={getCoreTranslation('closeSnackbar', 'Close snackbar')}
+    <NotificationBanner
+      actionLabel={actionText}
+      statusLabel={getCoreTranslation('closeSnackbar', 'Close snackbar')}
+      closeLabel={getCoreTranslation('closeSnackbar', 'Close snackbar')}
       className={classnames(styles.slideIn, {
         [styles.animated]: applyAnimation,
         [styles.slideOut]: isClosing,
       })}
       kind={kind as SnackbarType}
-      lowContrast={isLowContrast}
-      onActionButtonClick={handleActionClick}
+      onAction={handleActionClick}
       onClose={closeSnackbar}
-      statusIconDescription={getCoreTranslation('snackbarNotification', 'Snackbar notification')}
       subtitle={subtitle}
       title={title}
-      {...props}
     />
   );
 };

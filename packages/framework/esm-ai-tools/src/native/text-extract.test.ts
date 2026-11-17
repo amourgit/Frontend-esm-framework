@@ -189,14 +189,14 @@ describe('champs', () => {
     });
   });
 
-  it("erreur et aide : Carbon, role=alert voisin, aria-errormessage ; jamais d'erreur inventée", () => {
+  it("erreur et aide : role=alert voisin, aria-errormessage ; jamais d'erreur inventée", () => {
     document.body.innerHTML = `
-      <div class="cds--form-item"><input id="a" class="cds--text-input cds--text-input--invalid" aria-label="A" value="x">
-        <div class="cds--form-requirement">Champ invalide</div><div class="cds--form__helper-text">Aide Carbon</div></div>
+      <div><input id="a" aria-label="A" value="x" aria-invalid="true" aria-describedby="a-aide" aria-errormessage="a-err">
+        <div id="a-err">Champ invalide</div><div id="a-aide">Aide du champ</div></div>
       <div><input id="b" aria-label="B" aria-invalid="true"><div role="alert">Erreur alerte</div></div>
       <div><input id="c" aria-label="C"><div role="alert">Pas pour C</div></div>`;
     const get = (id: string) => describeField(document.getElementById(id) as Element, ctx);
-    expect(get('a')).toMatchObject({ invalid: true, errorMessage: 'Champ invalide', helperText: 'Aide Carbon' });
+    expect(get('a')).toMatchObject({ invalid: true, errorMessage: 'Champ invalide', helperText: 'Aide du champ' });
     expect(get('b')).toMatchObject({ invalid: true, errorMessage: 'Erreur alerte' });
     const c = get('c');
     expect(c.invalid).toBeUndefined();
@@ -239,13 +239,13 @@ describe('tableaux', () => {
     expect(describeTable(hiddenRow, createReadContext({ includeHidden: true })).rows).toEqual([['vu'], ['caché']]);
   });
 
-  it('ne mélange pas un tableau imbriqué avec son parent ; légende Carbon ; échappe les |', () => {
+  it('ne mélange pas un tableau imbriqué avec son parent ; légende (caption) ; échappe les |', () => {
     const outer = first(
       '<table><tbody><tr><td>externe<table><tbody><tr><td>interne</td></tr></tbody></table></td></tr></tbody></table>',
     );
     expect(describeTable(outer, ctx).rows).toHaveLength(1);
     document.body.innerHTML =
-      '<div class="cds--data-table-container"><h4 class="cds--data-table-header__title">Élèves</h4><table id="t"><tbody><tr><td>a|b</td></tr></tbody></table></div>';
+      '<table id="t"><caption>Élèves</caption><tbody><tr><td>a|b</td></tr></tbody></table>';
     const t = document.getElementById('t') as Element;
     expect(describeTable(t, ctx).caption).toBe('Élèves');
     expect(cellText(t.querySelector('td') as Element, ctx)).toBe('a\\|b');

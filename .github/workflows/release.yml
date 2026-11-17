@@ -35,7 +35,7 @@ jobs:
           # .enableCompileCache() sans filet - sur Node 20.x cette fonction
           # n'existe pas dans ce module, l'étape de publication plante avec
           # "enableCompileCache is not a function" avant même de lire les
-          # changesets. Node 20.x cassait aussi silencieusement @carbon/themes
+          # changesets. Node 20.x cassait aussi silencieusement certaines dépendances
           # (warning EBADENGINE dans verify-pack-install.mjs, engines >=22).
           node-version: '22.x'
           registry-url: 'https://registry.npmjs.org'

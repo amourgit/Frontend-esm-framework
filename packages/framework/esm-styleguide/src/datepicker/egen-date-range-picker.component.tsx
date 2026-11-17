@@ -13,7 +13,7 @@ import {
 } from 'react-aria-components';
 import { type CalendarDate } from '@internationalized/date';
 import { DateSegment } from './date-segment.component.js';
-import styles from './datepicker.module.scss';
+import styles from './datepicker.module.css';
 import { EgenIntlLocaleContext, useDatepickerContext } from './hooks.js';
 import { type DateInputValue, type DatePickerBaseProps } from './types.js';
 import { I18nWrapper } from './i18n-wrapper.component.js';
@@ -39,7 +39,7 @@ export interface EgenDateRangePickerProps
 }
 
 /**
- * A date range picker to enter or select a date and time range. Based on React Aria, but styled to look like Carbon.
+ * A date range picker to enter or select a date and time range. Based on React Aria, but with EGEN styling.
  */
 export const EgenDateRangePicker = /*#__PURE__*/ forwardRef<HTMLDivElement, EgenDateRangePickerProps>(
   function EgenDateRangePicker(
@@ -120,13 +120,13 @@ export const EgenDateRangePicker = /*#__PURE__*/ forwardRef<HTMLDivElement, Egen
 
     return (
       <I18nWrapper locale={intlLocale.toString()}>
-        <div className={classNames('cds--form-item', className)}>
+        <div className={classNames(styles.formItem, className)}>
           <Provider values={[[EgenIntlLocaleContext, intlLocale]]}>
             <DateRangePicker
               id={hasVisibleLabel ? id : undefined}
-              className={classNames('cds--date-picker', {
-                'cds--date-picker--light': light,
-                'cds--date-picker--disabled': isDisabled,
+              className={classNames(styles.datePicker, {
+                [styles.light]: light,
+                [styles.disabled]: isDisabled,
               })}
               isInvalid={isInvalid}
               shouldForceLeadingZeros={intlLocale.language === 'en' ? true : undefined}
@@ -139,9 +139,13 @@ export const EgenDateRangePicker = /*#__PURE__*/ forwardRef<HTMLDivElement, Egen
               {...dateRangePickerProps}
               onChange={innerOnChange}
             >
-              <div className="cds--date-picker-container">
+              <div className={styles.container}>
                 {hasVisibleLabel && (
-                  <Label className={classNames('cds--label', { 'cds--label--disabled': isDisabled })} htmlFor={id}>
+                  <Label
+                    data-slot="date-label"
+                    data-disabled={isDisabled ? 'true' : undefined}
+                    className={classNames(styles.label, { [styles.labelDisabled]: isDisabled })}
+                    htmlFor={id}>
                     {labelText ?? label}
                   </Label>
                 )}
@@ -155,8 +159,8 @@ export const EgenDateRangePicker = /*#__PURE__*/ forwardRef<HTMLDivElement, Egen
                     })}
                   >
                     <DateInput
+                      data-slot="date-input-wrapper"
                       className={classNames(
-                        'cds--date-picker-input__wrapper',
                         styles.startInput,
                         styles.dateInputWrapper,
                       )}
@@ -170,8 +174,8 @@ export const EgenDateRangePicker = /*#__PURE__*/ forwardRef<HTMLDivElement, Egen
                       </span>
                     </div>
                     <DateInput
+                      data-slot="date-input-wrapper"
                       className={classNames(
-                        'cds--date-picker-input__wrapper',
                         styles.endInput,
                         styles.dateInputWrapper,
                       )}

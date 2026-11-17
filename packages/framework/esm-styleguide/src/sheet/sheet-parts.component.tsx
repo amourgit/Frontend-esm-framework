@@ -1,7 +1,7 @@
 /** @category Sheet */
 import React from 'react';
 import classNames from 'classnames';
-import styles from './sheet.module.scss';
+import styles from './sheet.module.css';
 
 export interface SheetHeaderProps {
   children: React.ReactNode;

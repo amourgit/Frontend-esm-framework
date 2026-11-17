@@ -1,7 +1,7 @@
 /** @category Fields */
 import React from 'react';
 import { motion, type Variants } from 'framer-motion';
-import styles from './dynamic-field.module.scss';
+import styles from './dynamic-field.module.css';
 
 const containerVariants: Variants = {
   initial: {},

@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import { useConfig } from '@egen-civitas/esm-react-utils/mock';
 import { EgenDatePicker } from './index';
 import { DEFAULT_MIN_DATE_FLOOR } from './defaults';
-import styles from './datepicker.module.scss';
+import styles from './datepicker.module.css';
 
 window.i18next = { language: 'en' } as i18n;
 
@@ -77,7 +77,7 @@ describe('EgenDatePicker', () => {
       render(<EgenDatePicker labelText="Start date" />);
       const labelText = screen.getByText('Start date');
       expect(labelText).toBeInTheDocument();
-      expect(labelText).toHaveClass('cds--label');
+      expect(labelText).toHaveAttribute('data-slot', 'date-label');
       const group = screen.getByRole('group');
       expect(group).toBeInTheDocument();
     });
@@ -127,7 +127,7 @@ describe('EgenDatePicker', () => {
     it('should render disabled label styling when isDisabled is true', () => {
       render(<EgenDatePicker labelText="Date" isDisabled={true} />);
       const label = screen.getByText('Date');
-      expect(label).toHaveClass('cds--label--disabled');
+      expect(label).toHaveAttribute('data-disabled', 'true');
     });
   });
 
@@ -150,28 +150,28 @@ describe('EgenDatePicker', () => {
     /* eslint-disable testing-library/no-container, testing-library/no-node-access */
     it('should apply md size classes by default', () => {
       const { container } = render(<EgenDatePicker aria-label="datepicker" />);
-      const wrapper = container.querySelector('.cds--date-picker-input__wrapper')!;
+      const wrapper = container.querySelector('[data-slot="date-input-wrapper"]')!;
       expect(wrapper).toHaveClass(styles.inputWrapperMd);
       expect(screen.getByRole('button')).toHaveClass(styles.flatButtonMd);
     });
 
     it('should apply sm size classes when size="sm"', () => {
       const { container } = render(<EgenDatePicker aria-label="datepicker" size="sm" />);
-      const wrapper = container.querySelector('.cds--date-picker-input__wrapper')!;
+      const wrapper = container.querySelector('[data-slot="date-input-wrapper"]')!;
       expect(wrapper).toHaveClass(styles.inputWrapperSm);
       expect(screen.getByRole('button')).toHaveClass(styles.flatButtonSm);
     });
 
     it('should apply md size classes when size="md"', () => {
       const { container } = render(<EgenDatePicker aria-label="datepicker" size="md" />);
-      const wrapper = container.querySelector('.cds--date-picker-input__wrapper')!;
+      const wrapper = container.querySelector('[data-slot="date-input-wrapper"]')!;
       expect(wrapper).toHaveClass(styles.inputWrapperMd);
       expect(screen.getByRole('button')).toHaveClass(styles.flatButtonMd);
     });
 
     it('should apply lg size classes when size="lg"', () => {
       const { container } = render(<EgenDatePicker aria-label="datepicker" size="lg" />);
-      const wrapper = container.querySelector('.cds--date-picker-input__wrapper')!;
+      const wrapper = container.querySelector('[data-slot="date-input-wrapper"]')!;
       expect(wrapper).toHaveClass(styles.inputWrapperLg);
       expect(screen.getByRole('button')).toHaveClass(styles.flatButtonLg);
     });

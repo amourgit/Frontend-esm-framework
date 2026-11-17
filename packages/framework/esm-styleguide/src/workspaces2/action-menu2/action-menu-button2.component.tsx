@@ -1,12 +1,12 @@
 /** @module @category Workspace */
 import React, { useContext } from 'react';
 import classNames from 'classnames';
-import { Button, IconButton } from '@carbon/react';
+import { Button, IconButton } from '../../ui/index.js';
 import { SingleSpaContext } from 'single-spa-react';
 import { ComponentContext, useLayoutType } from '@egen-civitas/esm-react-utils';
 import { type OpenedWindow } from '@egen-civitas/esm-extensions';
 import { launchWorkspace2, useWorkspace2Store } from '../workspace2.js';
-import styles from './action-menu-button2.module.scss';
+import styles from './action-menu-button2.module.css';
 
 interface TagsProps {
   getIcon: (props: object) => JSX.Element;
@@ -107,12 +107,10 @@ export const ActionMenuButton2: React.FC<ActionMenuButtonProps2> = ({
           [styles.active]: isWindowOpened && !isWindowFocused,
           [styles.focused]: isWindowFocused,
         })}
-        iconDescription={label}
-        kind="ghost"
+        variant="ghost"
         onClick={onClick}
         role="button"
         tabIndex={0}
-        size="md"
       >
         <span className={styles.elementContainer}>
           <Tags hasUnsavedChanges={hasUnsavedChanges} getIcon={getIcon} tagContent={tagContent} />
@@ -124,21 +122,19 @@ export const ActionMenuButton2: React.FC<ActionMenuButtonProps2> = ({
 
   return (
     <IconButton
-      align="left"
       aria-label={label}
       className={classNames(styles.container, {
         [styles.active]: isWindowOpened && !isWindowFocused,
         [styles.focused]: isWindowFocused,
       })}
-      enterDelayMs={300}
-      kind="ghost"
+      tooltipSide="left"
       label={label}
       onClick={onClick}
-      size="md"
-    >
-      <div className={styles.elementContainer}>
-        <Tags hasUnsavedChanges={hasUnsavedChanges} getIcon={getIcon} tagContent={tagContent} />
-      </div>
-    </IconButton>
+      icon={
+        <div className={styles.elementContainer}>
+          <Tags hasUnsavedChanges={hasUnsavedChanges} getIcon={getIcon} tagContent={tagContent} />
+        </div>
+      }
+    />
   );
 };

@@ -3,21 +3,21 @@
 //
 //  Répond à « qu'est-ce que c'est ? » pour un élément : un landmark, une carte,
 //  une modale, un onglet… quelle que soit la façon dont l'app l'a construit
-//  (balise native, rôle ARIA, bloc Carbon Design System, convention de nom de
+//  (balise native, rôle ARIA, `data-slot` des composants EGEN, convention de nom de
 //  classe, custom element). Le résultat est une heuristique documentée, jamais
 //  une vérité absolue : `source` dit d'où vient la déduction.
 // =============================================================================
 
-import { collapseWhitespace, getCarbonComponent, getClassComponentWord, snippet, tagOf } from './dom-utils.js';
+import { collapseWhitespace, getSlotComponent, getClassComponentWord, snippet, tagOf } from './dom-utils.js';
 import { roleOf } from './text-extract.js';
 
-export type ComponentSource = 'native' | 'aria' | 'carbon' | 'class' | 'custom-element';
+export type ComponentSource = 'native' | 'aria' | 'slot' | 'class' | 'custom-element';
 
 export interface ComponentIdentity {
   /** Nature sémantique : card, dialog, tabs, notification, navigation, main… */
   kind: string;
   source: ComponentSource;
-  /** Nom technique : bloc Carbon (« tile »), balise du custom element… */
+  /** Nom technique : `data-slot` (« tile »), balise du custom element… */
   name?: string;
   /** Landmark / structure de page (vs composant applicatif). */
   structural: boolean;
@@ -86,44 +86,26 @@ const STRUCTURAL_KINDS = new Set([
   'tabpanel',
 ]);
 
-/** Bloc Carbon (sans préfixe cds--/bx--) → nature sémantique. Les blocs de mise en page sont ignorés. */
-const CARBON_KINDS: Record<string, string> = {
+/** `data-slot` des composants EGEN → nature sémantique. Les blocs de mise en page sont ignorés. */
+const SLOT_KINDS: Record<string, string> = {
   tile: 'card',
-  'clickable-tile': 'card',
-  'selectable-tile': 'card',
-  'expandable-tile': 'card',
-  modal: 'dialog',
-  'inline-notification': 'notification',
-  'toast-notification': 'notification',
-  'actionable-notification': 'notification',
-  accordion: 'accordion',
+  'dialog-content': 'dialog',
+  'modal-header': 'dialog',
+  alert: 'notification',
   tabs: 'tabs',
-  'content-switcher': 'tabs',
-  tag: 'tag',
-  'data-table': 'table',
-  'structured-list': 'list',
-  breadcrumb: 'breadcrumb',
-  pagination: 'pagination',
-  progress: 'stepper',
-  'progress-bar': 'progress',
-  loading: 'progress',
-  skeleton: 'loading',
-  header: 'header',
-  'overflow-menu': 'menu',
-  dropdown: 'dropdown',
-  'combo-box': 'dropdown',
-  'multi-select': 'dropdown',
-  search: 'search',
-  popover: 'popover',
+  badge: 'tag',
+  table: 'table',
+  'table-container': 'table',
+  'dropdown-menu-content': 'menu',
+  'app-header': 'header',
+  'inline-loading': 'loading',
+  spinner: 'progress',
   tooltip: 'popover',
-  toggletip: 'popover',
-  btn: 'button',
+  'tooltip-content': 'popover',
+  button: 'button',
+  input: 'field',
   'text-input': 'field',
-  'text-area': 'field',
-  select: 'field',
-  toggle: 'field',
-  'number-input': 'field',
-  'date-picker': 'field',
+  switch: 'field',
 };
 
 const CLASS_KINDS: Record<string, string> = {
@@ -186,7 +168,7 @@ function hasAccessibleName(el: Element): boolean {
 
 /**
  * Identifie le composant qu'un élément représente, ou `null` pour un simple wrapper sans identité.
- * Ordre : balise native / rôle ARIA (structure) > bloc Carbon > mot-clé de classe > custom element.
+ * Ordre : balise native / rôle ARIA (structure) > `data-slot` > mot-clé de classe > custom element.
  */
 export function classifyComponent(el: Element): ComponentIdentity | null {
   const tag = tagOf(el);
@@ -208,9 +190,8 @@ export function classifyComponent(el: Element): ComponentIdentity | null {
     return { kind, source: 'native', structural: STRUCTURAL_KINDS.has(kind) };
   }
 
-  const carbon = getCarbonComponent(el);
-  if (carbon && CARBON_KINDS[carbon])
-    return { kind: CARBON_KINDS[carbon], source: 'carbon', name: carbon, structural: false };
+  const slot = getSlotComponent(el);
+  if (slot && SLOT_KINDS[slot]) return { kind: SLOT_KINDS[slot], source: 'slot', name: slot, structural: false };
 
   const word = getClassComponentWord(el, CLASS_WORDS);
   // Même mot sur le parent (« card » > « card-body ») : partie interne du même composant.
@@ -219,9 +200,7 @@ export function classifyComponent(el: Element): ComponentIdentity | null {
   }
 
   if (tag.includes('-')) {
-    const carbonTag = /^cds-(.+)$/.exec(tag)?.[1];
-    const mapped = carbonTag ? CARBON_KINDS[carbonTag] : undefined;
-    return { kind: mapped ?? 'custom-element', source: 'custom-element', name: tag, structural: false };
+    return { kind: 'custom-element', source: 'custom-element', name: tag, structural: false };
   }
 
   return null;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActionableNotification } from '@carbon/react';
+import { NotificationBanner } from '../ui/index.js';
 /** @module @category UI */
 
 export interface NotificationProps {
@@ -26,14 +26,12 @@ export const Notification: React.FC<NotificationProps> = ({ notification }) => {
   const { description, action, kind, critical, title, onAction } = notification;
 
   return (
-    <ActionableNotification
-      actionButtonLabel={action}
+    <NotificationBanner
       kind={kind || 'info'}
-      lowContrast={critical}
+      title={title || undefined}
       subtitle={description}
-      title={title || ''}
-      inline={true}
-      onActionButtonClick={onAction}
+      actionLabel={action}
+      onAction={onAction}
     />
   );
 };

@@ -1,0 +1,163 @@
+.workspaceOuterContainer {
+  --actionPanelOffset: 0px;
+  width: var(--workspaceWidth);
+  display: contents;
+}
+.workspaceOuterContainer.narrowWorkspace {
+  --workspaceWidth: 26.25rem;
+}
+.workspaceOuterContainer.widerWorkspace {
+  --workspaceWidth: 32.25rem;
+}
+.workspaceOuterContainer.extraWideWorkspace {
+  --workspaceWidth: 48.25rem;
+}
+.workspaceOuterContainer .workspaceMiddleContainer {
+  width: inherit;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-end: var(--actionPanelOffset);
+  z-index: 100;
+}
+.workspaceOuterContainer .workspaceMiddleContainer.maximized {
+  position: fixed !important;
+  top: var(--egen-navbar-height) !important;
+  inset-inline-start: 0 !important;
+  inset-inline-end: var(--actionPanelOffset) !important;
+  width: calc(100vw - var(--actionPanelOffset)) !important;
+  bottom: var(--egen-footer-height, 0px) !important;
+  transform: none !important;
+  will-change: auto !important;
+  transition: none !important;
+}
+.workspaceOuterContainer .workspaceMiddleContainer.hidden {
+  width: 0;
+}
+.workspaceOuterContainer .workspaceInnerContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: var(--workspaceWidth);
+  border-inline-start: 1px solid var(--colors-surface-muted-foreground, #a8a8a8);
+  background-color: var(--colors-surface-card, #fff);
+  will-change: width;
+  transition: width 0.5s ease-in-out;
+}
+.workspaceOuterContainer .workspaceInnerContainer.maximized {
+  width: 100%;
+  transition: none !important;
+}
+.workspaceOuterContainer .workspaceSpacer {
+  width: inherit;
+  height: 100%;
+}
+.workspaceOuterContainer .workspaceSpacer.hidden {
+  width: 0;
+}
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50%;
+}
+
+.hiddenExtraWorkspace {
+  display: none;
+}
+
+/* Desktop */
+:global(.egen-breakpoint-gt-tablet) .header {
+  position: relative;
+  box-sizing: content-box;
+  border-bottom: 1px solid var(--colors-surface-muted-foreground, #a8a8a8);
+  background-color: var(--colors-border-default, #e0e0e0);
+  height: var(--workspace-header-height);
+}
+:global(.egen-breakpoint-gt-tablet) .header a {
+  font-size: var(--ui-heading-compact-02-font-size, 1rem);
+  font-weight: var(--ui-heading-compact-02-font-weight, 600);
+  line-height: var(--ui-heading-compact-02-line-height, 1.375);
+  letter-spacing: var(--ui-heading-compact-02-letter-spacing, 0);
+}
+:global(.egen-breakpoint-gt-tablet) .header a:hover {
+  color: inherit;
+}
+:global(.egen-breakpoint-gt-tablet) .headerButtons button {
+  background-color: var(--colors-surface-card, #ffffff);
+  border-right: 1px solid #e0e0e0;
+}
+:global(.egen-breakpoint-gt-tablet) .headerButtons button > svg {
+  fill: #121619 !important;
+}
+:global(.egen-breakpoint-gt-tablet) .headerButtons button:hover {
+  background-color: var(--colors-surface-muted, #f4f4f4);
+}
+:global(.egen-breakpoint-gt-tablet) .workspaceContent {
+  background-color: var(--colors-surface-card, #ffffff);
+  overflow-y: auto;
+  flex-grow: 1;
+}
+:global(.egen-breakpoint-gt-tablet) .overlayHeaderSpacer {
+  flex-grow: 1;
+}
+:global(.egen-breakpoint-gt-tablet) .workspaceOuterContainer.isActionMenuOpened {
+  --actionPanelOffset: 3rem;
+}
+
+/* Tablet */
+:global(.egen-breakpoint-lt-desktop) .header {
+  position: relative;
+  background-color: var(--brand-02);
+}
+:global(.egen-breakpoint-lt-desktop) .header a {
+  color: var(--colors-surface-card, #ffffff);
+}
+:global(.egen-breakpoint-lt-desktop) .header button {
+  color: var(--colors-surface-card, #ffffff);
+  background-color: var(--brand-02);
+}
+:global(.egen-breakpoint-lt-desktop) .header button:hover {
+  background-color: var(--brand-03);
+}
+:global(.egen-breakpoint-lt-desktop) .workspaceOuterContainer {
+  width: 100vw;
+}
+@supports (width: 100cqw) {
+  :global(.egen-breakpoint-lt-desktop) .workspaceOuterContainer {
+    width: 100cqw;
+  }
+}
+:global(.egen-breakpoint-lt-desktop) .workspaceMiddleContainer {
+  width: inherit !important;
+}
+:global(.egen-breakpoint-lt-desktop) .workspaceMiddleContainer.hidden {
+  display: none;
+}
+:global(.egen-breakpoint-lt-desktop) .workspaceMiddleContainer.showActionMenu {
+  height: calc(100% - 4rem);
+}
+:global(.egen-breakpoint-lt-desktop) .workspaceInnerContainer {
+  width: 100% !important;
+}
+:global(.egen-breakpoint-lt-desktop) .marginWorkspaceContent {
+  margin-bottom: var(--bottom-nav-height);
+}
+:global(.egen-breakpoint-lt-desktop) .workspaceContent {
+  overflow-y: auto;
+  height: 100%;
+}
+
+html[dir=rtl] :global(.egen-breakpoint-gt-tablet) .workspaceContainerWithActionMenu.workspaceFixedContainer {
+  right: unset;
+  left: var(--actionPanelOffset);
+}
+html[dir=rtl] :global(.egen-breakpoint-gt-tablet) .workspaceContainerWithoutActionMenu {
+  height: 100%;
+}
+html[dir=rtl] :global(.egen-breakpoint-gt-tablet) .workspaceContainerWithoutActionMenu.workspaceFixedContainer {
+  right: unset;
+  left: 0;
+}

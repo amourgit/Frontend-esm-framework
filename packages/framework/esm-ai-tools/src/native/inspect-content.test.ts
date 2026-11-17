@@ -109,7 +109,7 @@ describe('inspect_element : contenu enrichi', () => {
 
 describe('niveaux de détail', () => {
   it('full : tout ; standard : CSS regroupé sans cascade ; compact : aucun CSS ni props React', () => {
-    const target = get('<button id="b" class="cds--btn">OK</button>');
+    const target = get('<button id="b" class="btn">OK</button>');
     (target as unknown as Record<string, unknown>).__reactProps$x = { onClick: () => {}, label: 'OK' };
     (target as unknown as Record<string, unknown>).__reactFiber$x = { type: 'button' };
 

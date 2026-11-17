@@ -2,7 +2,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { useSheetContext } from './sheet.context.js';
-import styles from './sheet.module.scss';
+import styles from './sheet.module.css';
 
 export interface SheetTriggerProps {
   asChild?: boolean;

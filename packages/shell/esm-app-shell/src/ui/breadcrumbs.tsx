@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Breadcrumb, BreadcrumbItem, InlineLoading } from '@carbon/react';
 import type { BreadcrumbRegistration } from '@egen-civitas/esm-framework';
-import { getBreadcrumbsFor, ConfigurableLink } from '@egen-civitas/esm-framework';
+import { getBreadcrumbsFor, ConfigurableLink, InlineLoading } from '@egen-civitas/esm-framework';
 
 function getPath(path: string, params: Array<string>) {
   const parts = [...params];
@@ -44,11 +43,11 @@ export const CustomBreadcrumbItem: React.FC<CustomBreadcrumbItemProps> = ({ brea
   }, [breadcrumbRegistration, params]);
 
   return (
-    <BreadcrumbItem key={breadcrumbRegistration.settings.path}>
+    <li key={breadcrumbRegistration.settings.path} className="egen-breadcrumb-item">
       <ConfigurableLink to={getPath(breadcrumbRegistration.settings.path, params)}>
         {title ? title : <InlineLoading />}
       </ConfigurableLink>
-    </BreadcrumbItem>
+    </li>
   );
 };
 
@@ -75,11 +74,13 @@ export const Breadcrumbs: React.FC = () => {
   }
 
   return (
-    <Breadcrumb className="breadcrumbs-container">
-      {breadcrumbs.map((bc, index) => (
-        <CustomBreadcrumbItem key={`breadcrumb-item-${index}`} breadcrumbRegistration={bc} params={params} />
-      ))}
-    </Breadcrumb>
+    <nav aria-label="Breadcrumb" className="breadcrumbs-container">
+      <ol className="egen-breadcrumb">
+        {breadcrumbs.map((bc, index) => (
+          <CustomBreadcrumbItem key={`breadcrumb-item-${index}`} breadcrumbRegistration={bc} params={params} />
+        ))}
+      </ol>
+    </nav>
   );
 };
 

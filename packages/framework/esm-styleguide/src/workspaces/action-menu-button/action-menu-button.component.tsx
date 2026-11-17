@@ -1,10 +1,10 @@
 /** @module @category Workspace */
 import React from 'react';
 import classNames from 'classnames';
-import { Button, IconButton } from '@carbon/react';
+import { Button, IconButton } from '../../ui/index.js';
 import { useLayoutType } from '@egen-civitas/esm-react-utils';
 import { useWorkspaces } from '../workspaces.js';
-import styles from './action-menu-button.module.scss';
+import styles from './action-menu-button.module.css';
 
 interface TagsProps {
   getIcon: (props: object) => JSX.Element;
@@ -57,12 +57,10 @@ export const ActionMenuButton: React.FC<ActionMenuButtonProps> = ({
     return (
       <Button
         className={classNames(styles.container, { [styles.active]: isWorkspaceActive })}
-        iconDescription={iconDescription}
-        kind="ghost"
+        variant="ghost"
         onClick={handler}
         role="button"
         tabIndex={0}
-        size="md"
       >
         <span className={styles.elementContainer}>
           <Tags formOpenInTheBackground={formOpenInTheBackground} getIcon={getIcon} tagContent={tagContent} />
@@ -74,20 +72,18 @@ export const ActionMenuButton: React.FC<ActionMenuButtonProps> = ({
 
   return (
     <IconButton
-      align="left"
       aria-label={iconDescription}
       className={classNames(styles.container, {
         [styles.active]: isWorkspaceActive,
       })}
-      enterDelayMs={300}
-      kind="ghost"
+      tooltipSide="left"
       label={label}
       onClick={handler}
-      size="md"
-    >
-      <div className={styles.elementContainer}>
-        <Tags formOpenInTheBackground={formOpenInTheBackground} getIcon={getIcon} tagContent={tagContent} />
-      </div>
-    </IconButton>
+      icon={
+        <div className={styles.elementContainer}>
+          <Tags formOpenInTheBackground={formOpenInTheBackground} getIcon={getIcon} tagContent={tagContent} />
+        </div>
+      }
+    />
   );
 };

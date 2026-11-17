@@ -1,6 +1,6 @@
 /** @category EntityDetailBrowser */
 import React from 'react';
-import styles from './entity-detail-browser.module.scss';
+import styles from './entity-detail-browser.module.css';
 
 /**
  * Effet de flou progressif (8 couches, flou croissant + masque en dégradé) —

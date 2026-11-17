@@ -1,0 +1,204 @@
+.loader {
+  display: flex;
+  background-color: var(--colors-surface-muted, #f4f4f4);
+  justify-content: center;
+  min-height: 3rem;
+}
+
+.hiddenExtraWorkspace {
+  display: none;
+}
+
+.workspaceInnerContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Desktop */
+:global(.egen-breakpoint-gt-tablet) .workspaceContainerWithActionMenu {
+  height: 100%;
+}
+:global(.egen-breakpoint-gt-tablet) .workspaceContainerWithActionMenu .workspaceFixedContainer {
+  right: 3rem;
+}
+:global(.egen-breakpoint-gt-tablet) .workspaceContainerWithoutActionMenu {
+  height: 100%;
+}
+:global(.egen-breakpoint-gt-tablet) .workspaceContainerWithoutActionMenu .workspaceFixedContainer {
+  right: 0;
+}
+:global(.egen-breakpoint-gt-tablet) .header {
+  position: relative;
+  box-sizing: content-box;
+  border-bottom: 1px solid var(--colors-surface-muted-foreground, #a8a8a8);
+  background-color: var(--colors-border-default, #e0e0e0);
+  height: var(--workspace-header-height);
+}
+:global(.egen-breakpoint-gt-tablet) .header a {
+  font-size: var(--ui-heading-compact-02-font-size, 1rem);
+  font-weight: var(--ui-heading-compact-02-font-weight, 600);
+  line-height: var(--ui-heading-compact-02-line-height, 1.375);
+  letter-spacing: var(--ui-heading-compact-02-letter-spacing, 0);
+}
+:global(.egen-breakpoint-gt-tablet) .header a:hover {
+  color: inherit;
+}
+:global(.egen-breakpoint-gt-tablet) .header:not(.maximizedWindow) {
+  right: auto;
+  left: auto;
+}
+:global(.egen-breakpoint-gt-tablet) .headerButtons button {
+  background-color: var(--colors-surface-card, #ffffff);
+  border-right: 1px solid #e0e0e0;
+}
+:global(.egen-breakpoint-gt-tablet) .headerButtons button > svg {
+  fill: #121619 !important;
+}
+:global(.egen-breakpoint-gt-tablet) .headerButtons button:hover {
+  background-color: var(--colors-surface-muted, #f4f4f4);
+}
+:global(.egen-breakpoint-gt-tablet) .maximizedWindow {
+  width: calc(100% - 3rem) !important;
+}
+:global(.egen-breakpoint-gt-tablet) .workspaceWindowSpacer {
+  height: 100%;
+  transition: margin-right 0.5s ease-in-out;
+}
+:global(.egen-breakpoint-gt-tablet) .workspaceOverlayOuterContainer {
+  position: fixed;
+  z-index: 50;
+}
+:global(.egen-breakpoint-gt-tablet) .workspaceFixedContainer {
+  position: fixed;
+  top: var(--egen-navbar-height);
+  bottom: var(--egen-footer-height, 0px);
+  border-left: 1px solid var(--colors-surface-muted-foreground, #a8a8a8);
+  z-index: 50;
+  background-color: white;
+  transition: width 0.5s ease-in-out, right 0.5s ease-in-out;
+}
+:global(.egen-breakpoint-gt-tablet) .extraWideWorkspace {
+  width: 48.25rem;
+}
+:global(.egen-breakpoint-gt-tablet) .extraWideWorkspace .workspaceFixedContainer {
+  width: 48.25rem;
+}
+:global(.egen-breakpoint-gt-tablet) .extraWideWorkspace.hiddenRelative {
+  margin-right: -48.25rem !important;
+}
+:global(.egen-breakpoint-gt-tablet) .extraWideWorkspace .hiddenFixed {
+  right: -48.25rem !important;
+}
+:global(.egen-breakpoint-gt-tablet) .widerWorkspace {
+  width: 32.25rem;
+}
+:global(.egen-breakpoint-gt-tablet) .widerWorkspace .workspaceFixedContainer {
+  width: 32.25rem;
+}
+:global(.egen-breakpoint-gt-tablet) .widerWorkspace.hiddenRelative {
+  margin-right: -32.25rem !important;
+}
+:global(.egen-breakpoint-gt-tablet) .widerWorkspace .hiddenFixed {
+  right: -32.25rem !important;
+}
+:global(.egen-breakpoint-gt-tablet) .narrowWorkspace {
+  width: 26.25rem;
+}
+:global(.egen-breakpoint-gt-tablet) .narrowWorkspace .workspaceFixedContainer {
+  width: 26.25rem;
+}
+:global(.egen-breakpoint-gt-tablet) .narrowWorkspace.hiddenRelative {
+  margin-right: -26.25rem !important;
+}
+:global(.egen-breakpoint-gt-tablet) .narrowWorkspace .hiddenFixed {
+  right: -26.25rem !important;
+}
+:global(.egen-breakpoint-gt-tablet) .workspaceContent {
+  background-color: var(--colors-surface-card, #ffffff);
+  overflow-y: auto;
+  flex-grow: 1;
+}
+:global(.egen-breakpoint-gt-tablet) .marginWorkspaceContent {
+  margin-right: 3rem;
+}
+:global(.egen-breakpoint-gt-tablet) .workspaceContent > div {
+  height: 100%;
+}
+:global(.egen-breakpoint-gt-tablet) .overlay {
+  background-color: var(--colors-surface-card, #ffffff);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+:global(.egen-breakpoint-gt-tablet) .overlayHeaderSpacer {
+  flex-grow: 1;
+}
+
+/* Tablet */
+:global(.egen-breakpoint-lt-desktop) .header {
+  position: relative;
+  background-color: var(--brand-02);
+}
+:global(.egen-breakpoint-lt-desktop) .header a {
+  color: var(--colors-surface-card, #ffffff);
+}
+:global(.egen-breakpoint-lt-desktop) .header button {
+  color: var(--colors-surface-card, #ffffff);
+  background-color: var(--brand-02);
+}
+:global(.egen-breakpoint-lt-desktop) .header button:hover {
+  background-color: var(--brand-03);
+}
+:global(.egen-breakpoint-lt-desktop) .hiddenFixed {
+  top: 100% !important;
+}
+:global(.egen-breakpoint-lt-desktop) .workspaceFixedContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 8002;
+  transition: top 0.5s ease-in-out;
+}
+:global(.egen-breakpoint-lt-desktop) .workspaceContainerWithActionMenu .workspaceFixedContainer {
+  bottom: var(--bottom-nav-height);
+}
+:global(.egen-breakpoint-lt-desktop) .overlay {
+  background-color: var(--colors-surface-card, #ffffff);
+  display: flex;
+  flex-direction: column;
+}
+:global(.egen-breakpoint-lt-desktop) .overlayCloseButton {
+  order: 1;
+}
+:global(.egen-breakpoint-lt-desktop) .overlayTitle {
+  order: 2;
+}
+:global(.egen-breakpoint-lt-desktop) .workspaceContent {
+  background-color: var(--colors-surface-muted, #f4f4f4);
+  overflow-y: auto;
+  height: 100%;
+}
+:global(.egen-breakpoint-lt-desktop) .workspaceContent > div {
+  height: 100%;
+}
+:global(.egen-breakpoint-lt-desktop) .dynamicWidth {
+  width: 100%;
+}
+:global(.egen-breakpoint-lt-desktop) .marginWorkspaceContent {
+  margin-bottom: var(--bottom-nav-height);
+}
+
+html[dir=rtl] :global(.egen-breakpoint-gt-tablet) .workspaceContainerWithActionMenu .workspaceFixedContainer {
+  right: unset;
+  left: 3rem;
+}
+html[dir=rtl] :global(.egen-breakpoint-gt-tablet) .workspaceContainerWithoutActionMenu {
+  height: 100%;
+}
+html[dir=rtl] :global(.egen-breakpoint-gt-tablet) .workspaceContainerWithoutActionMenu .workspaceFixedContainer {
+  right: unset;
+  left: 0;
+}

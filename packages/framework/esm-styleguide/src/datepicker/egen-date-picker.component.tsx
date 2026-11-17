@@ -12,7 +12,7 @@ import { CalendarPopover } from './calendar-popover.component.js';
 import { DatePickerInput } from './date-picker-input.component.js';
 import { DatePickerIcon } from './date-picker-icon.component.js';
 import { DateSegment } from './date-segment.component.js';
-import styles from './datepicker.module.scss';
+import styles from './datepicker.module.css';
 
 /**
  * Properties for the EgenDatePicker
@@ -40,7 +40,7 @@ const defaultProps: EgenDatePickerProps = {
 };
 
 /**
- * A date picker component to select a single date. Based on React Aria, but styled to look like Carbon.
+ * A date picker component to select a single date. Based on React Aria, with EGEN styling.
  */
 export const EgenDatePicker = /*#__PURE__*/ forwardRef<HTMLDivElement, EgenDatePickerProps>(
   function EgenDatePicker(props, ref) {
@@ -101,12 +101,12 @@ export const EgenDatePicker = /*#__PURE__*/ forwardRef<HTMLDivElement, EgenDateP
 
     return (
       <I18nWrapper locale={intlLocale.toString()}>
-        <div className={classNames('cds--form-item', className)}>
+        <div className={classNames(styles.formItem, className)}>
           <Provider values={[[EgenIntlLocaleContext, intlLocale]]}>
             <DatePicker
-              className={classNames('cds--date-picker', 'cds--date-picker--single', {
-                ['cds--date-picker--short']: short,
-                ['cds--date-picker--light']: light,
+              className={classNames(styles.datePicker, {
+                [styles.short]: short,
+                [styles.light]: light,
               })}
               defaultValue={defaultValue}
               isDisabled={isDisabled}
@@ -118,17 +118,22 @@ export const EgenDatePicker = /*#__PURE__*/ forwardRef<HTMLDivElement, EgenDateP
               {...datePickerProps}
               onChange={onChange}
             >
-              <div className="cds--date-picker-container">
+              <div className={styles.container}>
                 {hasVisibleLabel && (
-                  <Label className={classNames('cds--label', { 'cds--label--disabled': isDisabled })} htmlFor={id}>
+                  <Label
+                    data-slot="date-label"
+                    data-disabled={isDisabled ? 'true' : undefined}
+                    className={classNames(styles.label, { [styles.labelDisabled]: isDisabled })}
+                    htmlFor={id}>
                     {labelText ?? label}
                   </Label>
                 )}
                 <Group className={styles.inputGroup}>
                   <DatePickerInput
+                    data-slot="date-input-wrapper"
                     id={hasVisibleLabel ? id : undefined}
                     ref={ref}
-                    className={classNames('cds--date-picker-input__wrapper', styles.inputWrapper, {
+                    className={classNames(styles.inputWrapper, {
                       [styles.inputWrapperSm]: size === 'sm',
                       [styles.inputWrapperMd]: size === 'md' || !size || size.length === 0,
                       [styles.inputWrapperLg]: size === 'lg',

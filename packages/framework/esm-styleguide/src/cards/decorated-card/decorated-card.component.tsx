@@ -3,7 +3,7 @@ import React, { forwardRef } from 'react';
 import classNames from 'classnames';
 import { CornerBrackets, DotsPattern, GradientLines, PlusIcons } from './card-decorations.js';
 import type { CardProps } from './decorated-card.types.js';
-import styles from './decorated-card.module.scss';
+import styles from './decorated-card.module.css';
 
 /**
  * `DecoratedCard` — carte prête à l'emploi avec 8 traitements décoratifs de

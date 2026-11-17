@@ -1,0 +1,27 @@
+.workspaceWindowsAndMenuContainer {
+  position: relative;
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+.workspaceWindowsAndMenuContainer.hasMaximizedWindow {
+  contain: none !important;
+  transform: none !important;
+  will-change: auto !important;
+}
+.workspaceWindowsAndMenuContainer.overlay {
+  contain: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: calc(100vw - var(--actionPanelOffset));
+}
+
+.workspaceWindowsContainer {
+  display: grid;
+  width: fit-content;
+}
+.workspaceWindowsContainer > * {
+  grid-area: 1/1;
+}

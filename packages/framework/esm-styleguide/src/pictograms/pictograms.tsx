@@ -2,7 +2,7 @@
 import React, { forwardRef, memo, useEffect, useRef } from 'react';
 import classNames, { type Argument } from 'classnames';
 import { RenderIfValueIsTruthy } from '@egen-civitas/esm-react-utils';
-import style from './pictograms.module.scss';
+import style from './pictograms.module.css';
 
 /** Array of all available Egen pictogram IDs that can be used with the Pictogram component. */
 export const pictogramIds = [

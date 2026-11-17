@@ -56,6 +56,50 @@ exports[`index.ejs rendu > Web : inchangé > rendu de référence : le HTML Web 
     </script>
 
 
+    <!-- Fond et centrage des modales (showModal). CSS simple : la fenêtre elle-même est stylée en ligne par esm-styleguide. -->
+    <style>
+      .egen-modals-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9001;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        visibility: hidden;
+      }
+      /* Page d'erreur de l'application (modèle #app-error) : CSS simple, sans dépendance à une bibliothèque de composants. */
+      .egen-btn {
+        display: inline-flex;
+        align-items: center;
+        min-height: 2.5rem;
+        padding: 0 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.375rem;
+        background: #e5e7eb;
+        color: #111827;
+        font: inherit;
+        cursor: pointer;
+      }
+      .egen-btn:hover { filter: brightness(0.95); }
+      .egen-btn--primary { background: #0f62fe; color: #fff; }
+      .egen-snippet {
+        position: relative;
+        max-width: 48rem;
+        margin-top: 1rem;
+        background: #f4f4f4;
+        border-radius: 0.375rem;
+      }
+      .egen-snippet-container { overflow: auto; padding: 0.75rem 3rem 0.75rem 1rem; font-family: ui-monospace, monospace; font-size: 0.8125rem; }
+      .egen-snippet-container pre { margin: 0; white-space: pre-wrap; }
+      .egen-copy-btn { position: absolute; top: 0; right: 0; width: 2.5rem; height: 2.5rem; border: 0; background: transparent; cursor: pointer; }
+      .egen-copy-btn:hover { background: rgba(0, 0, 0, 0.08); }
+      .egen-copy-btn__feedback, .egen-assistive-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+      .egen-snippet__icon { fill: currentColor; }
+    </style>
   </head>
   <body>
     
@@ -92,18 +136,18 @@ exports[`index.ejs rendu > Web : inchangé > rendu de référence : le HTML Web 
         <p>Something went wrong. Please try reloading.</p>
         <p>Contact your system administrator if the problem persists.</p>
         <div id="buttons">
-          <button class="cds--btn cds--btn--primary" onclick="location.reload()">Reload</button>
+          <button class="egen-btn egen-btn--primary" onclick="location.reload()">Reload</button>
         </div>
-        <div class="cds--snippet cds--snippet--single" >
-          <div tabindex="0"  class="cds--snippet-container"
+        <div class="egen-snippet" >
+          <div tabindex="0"  class="egen-snippet-container"
             aria-label="Code Snippet Text">
             <pre>
               <code data-var="message"></code>
             </pre>
           </div>
-          <button data-copy-btn class="cds--copy-btn" type="button" tabindex="0" onclick="copyText(this.parentElement)">
-            <span class="cds--assistive-text cds--copy-btn__feedback">Copied!</span>
-            <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="cds--snippet__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M14,5v9H5V5h9m0-1H5A1,1,0,0,0,4,5v9a1,1,0,0,0,1,1h9a1,1,0,0,0,1-1V5a1,1,0,0,0-1-1Z"></path><path d="M2,9H1V2A1,1,0,0,1,2,1H9V2H2Z"></path></svg>
+          <button data-copy-btn class="egen-copy-btn" type="button" tabindex="0" onclick="copyText(this.parentElement)">
+            <span class="egen-assistive-text egen-copy-btn__feedback">Copied!</span>
+            <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="egen-snippet__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M14,5v9H5V5h9m0-1H5A1,1,0,0,0,4,5v9a1,1,0,0,0,1,1h9a1,1,0,0,0,1-1V5a1,1,0,0,0-1-1Z"></path><path d="M2,9H1V2A1,1,0,0,1,2,1H9V2H2Z"></path></svg>
           </button>
         </div>
       </div>

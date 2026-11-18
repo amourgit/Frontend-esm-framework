@@ -4,6 +4,11 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   Accordion,
+  Badge,
+  Button,
+  IconButton,
+  Link,
+  TextInput,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
@@ -138,5 +143,33 @@ describe('SearchInput', () => {
     expect(box).toHaveValue('');
     await userEvent.type(box, 'x{Escape}');
     expect(box).toHaveValue('');
+  });
+});
+
+describe('transmission des refs (React 18)', () => {
+  it('Button, IconButton, Link, Input, TextInput et Badge exposent leur élément DOM', () => {
+    const refs = {
+      button: React.createRef<HTMLButtonElement>(),
+      icon: React.createRef<HTMLButtonElement>(),
+      link: React.createRef<HTMLAnchorElement>(),
+      text: React.createRef<HTMLInputElement>(),
+      badge: React.createRef<HTMLSpanElement>(),
+    };
+    render(
+      <div>
+        <Button ref={refs.button}>b</Button>
+        <IconButton ref={refs.icon} icon={<svg />} label="i" noTooltip />
+        <Link ref={refs.link} href="/x">
+          l
+        </Link>
+        <TextInput ref={refs.text} label="t" />
+        <Badge ref={refs.badge}>g</Badge>
+      </div>,
+    );
+    expect(refs.button.current).toBeInstanceOf(HTMLButtonElement);
+    expect(refs.icon.current).toBeInstanceOf(HTMLButtonElement);
+    expect(refs.link.current).toBeInstanceOf(HTMLAnchorElement);
+    expect(refs.text.current).toBeInstanceOf(HTMLInputElement);
+    expect(refs.badge.current).toBeInstanceOf(HTMLSpanElement);
   });
 });

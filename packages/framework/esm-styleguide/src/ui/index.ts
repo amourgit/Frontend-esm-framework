@@ -1,6 +1,6 @@
 // Composants de base d'EGEN : Tailwind seul, Voir `THIRD_PARTY_NOTICES.md` pour les origines.
 // `cn` est exporté publiquement par `page-background` (même fonction, ré-exportée depuis `./cn.js`).
-export { Button, buttonVariants } from './button.js';
+export { Button, buttonVariants, type ButtonProps } from './button.js';
 export { IconButton, type IconButtonProps } from './icon-button.js';
 export { Link, type LinkProps } from './link.js';
 export { Badge, badgeVariants } from './badge.js';

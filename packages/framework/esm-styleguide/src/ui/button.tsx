@@ -39,20 +39,22 @@ const buttonVariants = cva(
   }
 )
 
-function Button({
-  className,
-  variant = "default",
-  size = "default",
-  asChild = false,
-  ...props
-}: React.ComponentProps<"button"> &
+type ButtonProps = Omit<React.ComponentProps<"button">, "ref"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
-  }) {
+  }
+
+// `forwardRef` : React 18 ne transmet pas `ref` aux composants fonction ; Radix (`asChild` des Tooltip, Dropdown, Dialog…)
+// en a besoin pour ancrer les fenêtres flottantes sur le bouton.
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
+  { className, variant = "default", size = "default", asChild = false, ...props },
+  ref
+) {
   const Comp = asChild ? Slot.Root : "button"
 
   return (
     <Comp
+      ref={ref}
       data-slot="button"
       data-variant={variant}
       data-size={size}
@@ -60,6 +62,6 @@ function Button({
       {...props}
     />
   )
-}
+})
 
-export { Button, buttonVariants }
+export { Button, buttonVariants, type ButtonProps }

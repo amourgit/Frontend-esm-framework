@@ -3,7 +3,7 @@ import { cn } from './cn.js';
 import { Input } from './input.js';
 import { Label } from './label.js';
 
-type TextInputProps = Omit<React.ComponentProps<typeof Input>, 'id'> & {
+type TextInputProps = Omit<React.ComponentProps<typeof Input>, 'id' | 'ref'> & {
   /** Obligatoire : un champ sans libellé n'est pas accessible. */
   label: React.ReactNode;
   id?: string;
@@ -18,16 +18,10 @@ type TextInputProps = Omit<React.ComponentProps<typeof Input>, 'id'> & {
 };
 
 /** Champ texte complet : libellé relié, aide/erreur annoncées (`aria-describedby`), états `invalid` et `disabled`. */
-function TextInput({
-  label,
-  id,
-  helperText,
-  errorText,
-  hideLabel = false,
-  containerClassName,
-  className,
-  ...props
-}: TextInputProps) {
+const TextInput = React.forwardRef<HTMLInputElement, TextInputProps>(function TextInput(
+  { label, id, helperText, errorText, hideLabel = false, containerClassName, className, ...props },
+  ref,
+) {
   const generatedId = React.useId();
   const inputId = id ?? generatedId;
   const messageId = `${inputId}-message`;
@@ -38,6 +32,7 @@ function TextInput({
         {label}
       </Label>
       <Input
+        ref={ref}
         id={inputId}
         aria-invalid={errorText ? true : undefined}
         aria-describedby={message ? messageId : undefined}
@@ -51,6 +46,6 @@ function TextInput({
       ) : null}
     </div>
   );
-}
+});
 
 export { TextInput, type TextInputProps };

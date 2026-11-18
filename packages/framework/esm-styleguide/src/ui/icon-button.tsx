@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Button } from './button.js';
+import { Button, type ButtonProps } from './button.js';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip.js';
 
-type IconButtonProps = Omit<React.ComponentProps<typeof Button>, 'size' | 'children'> & {
+type IconButtonProps = Omit<ButtonProps, 'size' | 'children'> & {
   /** Icône (ex. un composant `lucide-react`). */
   icon: React.ReactNode;
   /** Libellé accessible ET infobulle : obligatoire, un bouton sans texte doit toujours être nommé (`aria-label` peut le surcharger côté lecteur d'écran). */
@@ -15,17 +15,12 @@ type IconButtonProps = Omit<React.ComponentProps<typeof Button>, 'size' | 'child
 };
 
 /** Bouton qui ne montre qu'une icône : variantes de `Button`, `aria-label` obligatoire, infobulle au survol/focus. */
-function IconButton({
-  icon,
-  label,
-  size = 'icon',
-  variant = 'ghost',
-  tooltipSide = 'top',
-  noTooltip = false,
-  ...props
-}: IconButtonProps) {
+const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton(
+  { icon, label, size = 'icon', variant = 'ghost', tooltipSide = 'top', noTooltip = false, ...props },
+  ref,
+) {
   const button = (
-    <Button type="button" variant={variant} size={size} aria-label={label} {...props}>
+    <Button ref={ref} type="button" variant={variant} size={size} aria-label={label} {...props}>
       {icon}
     </Button>
   );
@@ -38,6 +33,6 @@ function IconButton({
       </Tooltip>
     </TooltipProvider>
   );
-}
+});
 
 export { IconButton, type IconButtonProps };

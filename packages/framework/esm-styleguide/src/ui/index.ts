@@ -62,3 +62,5 @@ export {
   StructuredListRow,
   StructuredListCell,
 } from './structured-list.js';
+export { RadioGroup, RadioGroupItem } from './radio-group.js';
+export { SearchInput, type SearchInputProps } from './search-input.js';

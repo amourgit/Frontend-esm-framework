@@ -1,5 +1,11 @@
 # @egen-civitas/esm-styleguide
 
+## 5.2.0
+
+### Minor Changes
+
+- c995661: Nouveaux composants de base 100 % Tailwind : `RadioGroup` / `RadioGroupItem` (copiés de shadcn/ui, MIT ; accessibilité via Radix) et `SearchInput` (champ de recherche avec loupe, bouton « effacer » et `Échap` pour vider).
+
 ## 5.1.0
 
 ### Minor Changes

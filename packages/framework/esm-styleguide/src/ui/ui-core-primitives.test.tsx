@@ -7,7 +7,7 @@ import {
   Badge,
   Button,
   IconButton,
-  Link,
+  TextLink,
   TextInput,
   AccordionContent,
   AccordionItem,
@@ -147,7 +147,7 @@ describe('SearchInput', () => {
 });
 
 describe('transmission des refs (React 18)', () => {
-  it('Button, IconButton, Link, Input, TextInput et Badge exposent leur élément DOM', () => {
+  it('Button, IconButton, TextLink, Input, TextInput et Badge exposent leur élément DOM', () => {
     const refs = {
       button: React.createRef<HTMLButtonElement>(),
       icon: React.createRef<HTMLButtonElement>(),
@@ -159,9 +159,9 @@ describe('transmission des refs (React 18)', () => {
       <div>
         <Button ref={refs.button}>b</Button>
         <IconButton ref={refs.icon} icon={<svg />} label="i" noTooltip />
-        <Link ref={refs.link} href="/x">
+        <TextLink ref={refs.link} href="/x">
           l
-        </Link>
+        </TextLink>
         <TextInput ref={refs.text} label="t" />
         <Badge ref={refs.badge}>g</Badge>
       </div>,

@@ -2,15 +2,15 @@ import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { cn } from './cn.js';
 
-type LinkProps = Omit<React.ComponentProps<'a'>, 'ref'> & {
+type TextLinkProps = Omit<React.ComponentProps<'a'>, 'ref'> & {
   /** Rend l'enfant à la place de `<a>` (ex. le `<Link>` de react-router) en lui passant les classes. */
   asChild?: boolean;
   /** Souligné en permanence (sinon : au survol). */
   underline?: boolean;
 };
 
-/** Lien de texte : couleur `primary`, focus visible. Les liens externes (`target="_blank"`) reçoivent `rel="noopener noreferrer"`. */
-const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
+/** Lien de texte (nommé `TextLink` : `Link` est déjà un type d'`@egen-civitas/esm-api`) : couleur `primary`, focus visible. Les liens externes (`target="_blank"`) reçoivent `rel="noopener noreferrer"`. */
+const TextLink = React.forwardRef<HTMLAnchorElement, TextLinkProps>(function TextLink(
   { className, asChild = false, underline = false, target, rel, ...props },
   ref,
 ) {
@@ -31,4 +31,4 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(
   );
 });
 
-export { Link, type LinkProps };
+export { TextLink, type TextLinkProps };

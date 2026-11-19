@@ -2,7 +2,7 @@
 // `cn` est exporté publiquement par `page-background` (même fonction, ré-exportée depuis `./cn.js`).
 export { Button, buttonVariants, type ButtonProps } from './button.js';
 export { IconButton, type IconButtonProps } from './icon-button.js';
-export { Link, type LinkProps } from './link.js';
+export { TextLink, type TextLinkProps } from './link.js';
 export { Badge, badgeVariants } from './badge.js';
 export { Separator } from './separator.js';
 export { Label } from './label.js';

@@ -11,7 +11,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalHeader,
-  Link,
+  TextLink,
   Separator,
   Spinner,
   Switch,
@@ -89,18 +89,18 @@ describe('IconButton', () => {
   });
 });
 
-describe('Link', () => {
+describe('TextLink', () => {
   it('un lien externe reçoit rel="noopener noreferrer"', () => {
     render(
-      <Link href="https://exemple.test" target="_blank">
+      <TextLink href="https://exemple.test" target="_blank">
         Docs
-      </Link>,
+      </TextLink>,
     );
     expect(screen.getByRole('link', { name: 'Docs' })).toHaveAttribute('rel', 'noopener noreferrer');
   });
 
   it('un lien interne ne reçoit pas de rel', () => {
-    render(<Link href="/aide">Aide</Link>);
+    render(<TextLink href="/aide">Aide</TextLink>);
     expect(screen.getByRole('link', { name: 'Aide' })).not.toHaveAttribute('rel');
   });
 });

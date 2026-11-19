@@ -13,7 +13,7 @@ Cette version majeure retire Carbon et SCSS. Les composants se remplacent un à 
 | `Layer` | `<Layer className="bg-…">` | simple surface |
 | `InlineLoading status description` | `<InlineLoading status="active|finished|error|inactive" description />` | |
 | `Loading` | `<Spinner />` | |
-| `Link` | `<Link>` | `target="_blank"` ajoute `rel` |
+| `Link` | `<TextLink>` | `target="_blank"` ajoute `rel` (`Link` existe déjà dans `esm-api`) |
 | `TextInput labelText helperText invalidText invalid` | `<TextInput label helperText errorText />` | |
 | `Toggle labelText` | `<Switch aria-label />` | |
 | `Tag type="red"` | `<Badge variant="outline" className="…">` | cf. `ClassificationTags` |

@@ -7,7 +7,7 @@ import * as publicApi from '../public';
 const COMPONENTS = [
   'Button',
   'IconButton',
-  'Link',
+  'TextLink',
   'Badge',
   'Tile',
   'Layer',

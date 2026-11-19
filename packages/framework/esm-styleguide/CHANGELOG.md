@@ -1,5 +1,12 @@
 # @egen-civitas/esm-styleguide
 
+## 5.2.2
+
+### Patch Changes
+
+- 89eaf51: Correctif : les composants de base (`Button`, `Tile`, `Dialog`, `Table`, `Checkbox`…) étaient exportés par `public.ts` mais pas par le point d'entrée principal du package (`internal.ts`, celui que résolvent `@egen-civitas/esm-styleguide` et `@egen-civitas/esm-framework`) : ils étaient introuvables à l'import. Ils sont maintenant exportés des deux côtés, avec un test qui verrouille les deux points d'entrée.
+- 0605af5: `Link` (composant de lien de texte) est renommé `TextLink` : le nom `Link` entrait en conflit avec le type `Link` d'`@egen-civitas/esm-api`, ce qui faisait échouer la construction d'`@egen-civitas/esm-framework` (qui ré-exporte les deux). `TextLinkProps` remplace `LinkProps`.
+
 ## 5.2.1
 
 ### Patch Changes

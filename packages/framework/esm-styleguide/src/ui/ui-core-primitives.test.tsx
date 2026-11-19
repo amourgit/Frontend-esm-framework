@@ -154,6 +154,8 @@ describe('transmission des refs (React 18)', () => {
       link: React.createRef<HTMLAnchorElement>(),
       text: React.createRef<HTMLInputElement>(),
       badge: React.createRef<HTMLSpanElement>(),
+      password: React.createRef<HTMLInputElement>(),
+      search: React.createRef<HTMLInputElement>(),
     };
     render(
       <div>
@@ -164,6 +166,8 @@ describe('transmission des refs (React 18)', () => {
         </TextLink>
         <TextInput ref={refs.text} label="t" />
         <Badge ref={refs.badge}>g</Badge>
+        <PasswordInput ref={refs.password} label="p" />
+        <SearchInput ref={refs.search} label="s" />
       </div>,
     );
     expect(refs.button.current).toBeInstanceOf(HTMLButtonElement);
@@ -171,5 +175,7 @@ describe('transmission des refs (React 18)', () => {
     expect(refs.link.current).toBeInstanceOf(HTMLAnchorElement);
     expect(refs.text.current).toBeInstanceOf(HTMLInputElement);
     expect(refs.badge.current).toBeInstanceOf(HTMLSpanElement);
+    expect(refs.password.current).toBeInstanceOf(HTMLInputElement);
+    expect(refs.search.current).toBeInstanceOf(HTMLInputElement);
   });
 });

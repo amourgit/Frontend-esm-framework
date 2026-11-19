@@ -2,7 +2,7 @@ import * as React from 'react';
 import { SearchIcon, XIcon } from 'lucide-react';
 import { cn } from './cn.js';
 
-type SearchInputProps = Omit<React.ComponentProps<'input'>, 'type' | 'value' | 'defaultValue' | 'onChange'> & {
+type SearchInputProps = Omit<React.ComponentProps<'input'>, 'ref' | 'type' | 'value' | 'defaultValue' | 'onChange'> & {
   /** Libellé accessible du champ (obligatoire : pas de libellé visible). */
   label: string;
   value?: string;
@@ -15,17 +15,10 @@ type SearchInputProps = Omit<React.ComponentProps<'input'>, 'type' | 'value' | '
 };
 
 /** Champ de recherche : icône loupe, bouton « effacer » dès qu'il y a une saisie, `Échap` vide le champ. */
-function SearchInput({
-  label,
-  value,
-  defaultValue = '',
-  onValueChange,
-  clearLabel = 'Clear search',
-  className,
-  containerClassName,
-  onKeyDown,
-  ...props
-}: SearchInputProps) {
+const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput(
+  { label, value, defaultValue = '', onValueChange, clearLabel = 'Clear search', className, containerClassName, onKeyDown, ...props },
+  ref,
+) {
   const [inner, setInner] = React.useState(defaultValue);
   const controlled = value !== undefined;
   const current = controlled ? value : inner;
@@ -37,6 +30,7 @@ function SearchInput({
     <div data-slot="search-input" className={cn('relative flex items-center', containerClassName)}>
       <SearchIcon className="pointer-events-none absolute left-3 size-4 text-muted-foreground" aria-hidden="true" />
       <input
+        ref={ref}
         type="search"
         role="searchbox"
         aria-label={label}
@@ -68,6 +62,6 @@ function SearchInput({
       ) : null}
     </div>
   );
-}
+});
 
 export { SearchInput, type SearchInputProps };

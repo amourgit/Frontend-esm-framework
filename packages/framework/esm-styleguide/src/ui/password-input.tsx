@@ -3,25 +3,22 @@ import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { cn } from './cn.js';
 import { TextInput, type TextInputProps } from './text-input.js';
 
-type PasswordInputProps = Omit<TextInputProps, 'type'> & {
+type PasswordInputProps = Omit<TextInputProps, 'type' | 'ref'> & {
   /** Libellés (déjà traduits) du bouton qui affiche / masque le mot de passe. */
   showPasswordLabel?: string;
   hidePasswordLabel?: string;
 };
 
 /** Champ mot de passe : `TextInput` avec un bouton œil pour afficher ou masquer la saisie. */
-function PasswordInput({
-  showPasswordLabel = 'Show password',
-  hidePasswordLabel = 'Hide password',
-  containerClassName,
-  className,
-  ...props
-}: PasswordInputProps) {
+const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(function PasswordInput(
+  { showPasswordLabel = 'Show password', hidePasswordLabel = 'Hide password', containerClassName, className, ...props },
+  ref,
+) {
   const [visible, setVisible] = React.useState(false);
   const toggleLabel = visible ? hidePasswordLabel : showPasswordLabel;
   return (
     <div className={cn('relative', containerClassName)}>
-      <TextInput {...props} containerClassName="w-full" type={visible ? 'text' : 'password'} className={cn('pr-10', className)} />
+      <TextInput {...props} ref={ref} containerClassName="w-full" type={visible ? 'text' : 'password'} className={cn('pr-10', className)} />
       <button
         type="button"
         aria-label={toggleLabel}
@@ -33,6 +30,6 @@ function PasswordInput({
       </button>
     </div>
   );
-}
+});
 
 export { PasswordInput, type PasswordInputProps };

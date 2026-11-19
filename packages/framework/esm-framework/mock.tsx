@@ -13,6 +13,8 @@ export * from '@egen-civitas/esm-data-api/mock';
 export * from '@egen-civitas/esm-config/mock';
 export * from '@egen-civitas/esm-context';
 export * from '@egen-civitas/esm-expression-evaluator';
+// Composants de base du module style (Tailwind, sans effet de bord) : les vrais composants servent dans les tests.
+export * from '@egen-civitas/esm-styleguide/ui';
 export * from '@egen-civitas/esm-extensions/mock';
 export * from '@egen-civitas/esm-react-utils/mock';
 export * from '@egen-civitas/esm-state/mock';

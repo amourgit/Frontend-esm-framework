@@ -37,6 +37,10 @@
     },
     "./styles.css": {
       "default": "./dist/styles.css"
+    },
+    "./ui": {
+      "types": "./dist/ui/index.d.ts",
+      "default": "./dist/ui/index.js"
     }
   },
   "source": true,

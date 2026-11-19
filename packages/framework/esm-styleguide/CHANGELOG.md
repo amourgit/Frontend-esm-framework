@@ -1,5 +1,11 @@
 # @egen-civitas/esm-styleguide
 
+## 5.2.3
+
+### Patch Changes
+
+- 939b9aa: `PasswordInput` et `SearchInput` transmettent leur `ref` à l'`<input>` (compatibilité `react-hook-form`, focus programmatique).
+
 ## 5.2.2
 
 ### Patch Changes

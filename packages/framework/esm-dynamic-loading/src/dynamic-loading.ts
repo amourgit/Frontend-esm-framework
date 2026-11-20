@@ -35,7 +35,7 @@ export function slugify(name: string) {
  *   i.e., 10 minutes.
  */
 export async function importDynamic<T = any>(
-  jsPackage: string,
+  requestedPackage: string,
   share: string = './start',
   options?: {
     importMap?: ImportMap;
@@ -45,9 +45,25 @@ export async function importDynamic<T = any>(
   // default to 10 minutes
   const maxLoadingTime = !options?.maxLoadingTime || options.maxLoadingTime <= 0 ? 600_000 : options.maxLoadingTime;
 
+  // Alias de module (`importMap.aliases`) : permet de retrouver un paquet par un nom alternatif
+  // (ex. namespace i18n ≠ nom du paquet). Un nom présent dans `imports` n'est jamais remplacé.
+  // La résolution est incluse dans la course contre le délai maximal (la lecture de l'import map aussi).
+  let importMap = options?.importMap;
+  let jsPackage = requestedPackage;
+  const resolveAndPreload = async () => {
+    if (typeof requestedPackage === 'string' && requestedPackage.trim().length > 0 && !window[slugify(requestedPackage)]) {
+      importMap = importMap ?? (await getCurrentImportMap());
+      const target = importMap.aliases?.[requestedPackage];
+      if (target && !Object.prototype.hasOwnProperty.call(importMap.imports, requestedPackage)) {
+        jsPackage = target;
+      }
+    }
+    await preloadImport(jsPackage, importMap);
+  };
+
   let timeout: ReturnType<typeof setTimeout> | undefined = undefined;
   await Promise.race([
-    preloadImport(jsPackage, options?.importMap),
+    resolveAndPreload(),
     new Promise((_, reject) => {
       timeout = setTimeout(() => {
         reject(

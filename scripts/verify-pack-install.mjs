@@ -36,6 +36,13 @@ const BUNDLER_ONLY = new Set([
   '@egen-civitas/esm-offline',
   '@egen-civitas/esm-data-api',
   '@egen-civitas/esm-react-utils',
+  // esm-angular-utils s'appuie sur @angular/core et @angular/platform-browser,
+  // publiés en compilation partielle (« partial compilation ») : un import Node
+  // brut échoue avec « needs to be compiled using the JIT compiler ». Ces
+  // paquets ne sont consommés que via un bundler (linker Angular / AOT),
+  // comme le font les applications Angular qui l'utilisent. Cause structurelle,
+  // pas un défaut de packaging (exports/types vérifiés par publint et attw).
+  '@egen-civitas/esm-angular-utils',
   // esm-ai-extensions réexporte esm-ai-tools, dont le point d'entrée fait
   // `export * from './native/index.js'`, qui importe showNotification/
   // showSnackbar/showModal depuis esm-styleguide (donc son .scss embarqué,

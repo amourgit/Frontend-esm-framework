@@ -44,6 +44,9 @@ function mergeMaps(maps: ImportMap[]): ImportMap {
     if (map?.imports) {
       Object.assign(merged.imports, map.imports);
     }
+    if (map?.aliases) {
+      merged.aliases = Object.assign(merged.aliases ?? {}, map.aliases);
+    }
   }
   return merged;
 }

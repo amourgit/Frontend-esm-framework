@@ -155,6 +155,12 @@ export type SpaEnvironment = 'production' | 'development' | 'test';
 
 export interface ImportMap {
   imports: Record<string, string>;
+  /**
+   * Noms alternatifs d'un module : `{ "<alias>": "<nom réel dans imports>" }`. Utilisé par `importDynamic`
+   * quand un espace de noms (ex. i18n) diffère du nom du paquet. Une clé présente dans `imports` prime
+   * toujours sur un alias. Facultatif ; ignoré par les versions antérieures.
+   */
+  aliases?: Record<string, string>;
 }
 
 /**

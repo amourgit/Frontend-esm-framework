@@ -422,3 +422,41 @@ describe('dynamic-loading', () => {
     });
   });
 });
+
+describe('importDynamic : alias de module (importMap.aliases)', () => {
+  const real = '_egen_esm_footer_app';
+  const aliasName = '@egen-civitas/esm-footer-app';
+  const importMap = {
+    imports: { '@egen/esm-footer-app': './footer.js' },
+    aliases: { [aliasName]: '@egen/esm-footer-app' },
+  };
+  const fake = (exports: Record<string, unknown>) => ({ init: vi.fn(), get: vi.fn().mockResolvedValue(() => exports) });
+
+  beforeEach(() => {
+    (globalThis as any).__webpack_share_scopes__ = { default: {} };
+  });
+  afterEach(() => {
+    delete (globalThis as any).__webpack_share_scopes__;
+    delete (window as any)[real];
+    delete (window as any)['_egen_civitas_esm_footer_app'];
+  });
+
+  it('retrouve le conteneur du paquet réel à partir de son alias', async () => {
+    (window as any)[real] = fake({ ok: true });
+    await expect(importDynamic(aliasName, './start', { importMap })).resolves.toEqual({ ok: true });
+  });
+
+  it('un nom présent dans imports prime sur un alias identique', async () => {
+    const own = fake({ own: true });
+    (window as any)['_egen_civitas_esm_footer_app'] = own;
+    (window as any)[real] = fake({ other: true });
+    const map = { imports: { ...importMap.imports, [aliasName]: './own.js' }, aliases: importMap.aliases };
+    await expect(importDynamic(aliasName, './start', { importMap: map })).resolves.toEqual({ own: true });
+  });
+
+  it('sans alias, un nom inconnu reste une erreur explicite', async () => {
+    await expect(importDynamic('@egen-civitas/esm-inconnu', './start', { importMap })).rejects.toThrow(
+      /Could not find the package @egen-civitas\/esm-inconnu/,
+    );
+  });
+});

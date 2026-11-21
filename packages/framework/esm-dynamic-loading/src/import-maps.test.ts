@@ -4,7 +4,7 @@ import createFetchMock from 'vitest-fetch-mock';
 createFetchMock(vi).enableMocks();
 
 describe('import-maps', () => {
-  function setDomImportMaps(maps: Array<{ imports: Record<string, string> }>) {
+  function setDomImportMaps(maps: Array<{ imports: Record<string, string>; aliases?: Record<string, string> }>) {
     document.querySelectorAll('script[type="systemjs-importmap"]').forEach((el) => el.remove());
 
     for (const map of maps) {
@@ -44,6 +44,22 @@ describe('import-maps', () => {
       const map = await getCurrentPageMap();
       expect(map.imports['@egen-civitas/esm-foo']).toBe('/foo.js');
       expect(map.imports['@egen-civitas/esm-bar']).toBe('/bar.js');
+    });
+
+    it('getCurrentPageMap fusionne les alias de toutes les import maps (la dernière gagne)', async () => {
+      const { setupImportMapOverrides, getCurrentPageMap } = await import('./import-maps');
+      setupImportMapOverrides();
+
+      setDomImportMaps([
+        { imports: { '@egen/esm-foo-app': '/foo.js' }, aliases: { '@egen-civitas/esm-foo-app': '@egen/esm-foo-app' } },
+        { imports: { '@egen/esm-bar-app': '/bar.js' }, aliases: { '@egen-civitas/esm-bar-app': '@egen/esm-bar-app' } },
+      ]);
+
+      const map = await getCurrentPageMap();
+      expect(map.aliases).toEqual({
+        '@egen-civitas/esm-foo-app': '@egen/esm-foo-app',
+        '@egen-civitas/esm-bar-app': '@egen/esm-bar-app',
+      });
     });
 
     it('getImportMapOverrideMap returns empty imports', async () => {

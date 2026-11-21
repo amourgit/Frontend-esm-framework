@@ -38,7 +38,7 @@ default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src
 font-src 'self'; connect-src 'self' <origine de EGEN_API_URL>; base-uri 'self'; form-action 'self'
 ```
 
-`'unsafe-eval'` est interdit. `'unsafe-inline'` pour les styles est à réexaminer (Carbon) : proposition à valider sur appareil (B5).
+`'unsafe-eval'` est interdit. `'unsafe-inline'` pour les styles est à réexaminer (injection de styles) : proposition à valider sur appareil (B5).
 
 ## Construire et vérifier
 

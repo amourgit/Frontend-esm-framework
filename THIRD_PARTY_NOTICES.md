@@ -8,6 +8,7 @@ permissifs. Chaque fichier concerné rappelle son origine en en-tête ; les lice
 | shadcn/ui — https://github.com/shadcn-ui/ui | MIT, © shadcn | Code de composants de base (Button, Card, Dialog…) copié et adapté |
 | Radix Primitives — https://github.com/radix-ui/primitives | MIT, © WorkOS | Comportements accessibles sans style (dépendance) |
 | class-variance-authority, tailwind-merge, clsx | MIT / MIT / MIT | Variantes et fusion de classes (dépendances) |
+| tw-animate-css — https://github.com/Wombosvideo/tw-animate-css | MIT | Classes d'animation Tailwind (`animate-in`, `fade-in-0`…), dépendance de `@egen-civitas/tailwind-preset` |
 | lucide — https://github.com/lucide-icons/lucide | ISC | Icônes (dépendance `lucide-react`) |
 
 Texte de la licence MIT : permission d'utiliser, copier, modifier, fusionner, publier, distribuer et vendre des copies du logiciel,

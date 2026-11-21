@@ -28,14 +28,14 @@ import styles from './workbench.module.css';
  */
 const ZONE_CONTEXT = { moduleName: '@egen-civitas/esm-styleguide', featureName: 'workbench' } as const;
 
-/** Variable CSS lue par la grille du body (`_general.scss`) pour dimensionner chaque zone. */
+/** Variable CSS lue par la grille du body (`styles.css`) pour dimensionner chaque zone. */
 const ZONE_SIZE_VARIABLES: Readonly<Record<ToolWindowAnchor, string>> = {
   left: '--egen-zone-left-width',
   right: '--egen-zone-right-width',
   bottom: '--egen-zone-bottom-height',
 };
 
-/** Durée de fermeture/ouverture : alignée sur --egen-motion-zone (animations/_tokens.scss). */
+/** Durée de fermeture/ouverture : alignée sur --egen-motion-zone (`styles.css`). */
 const MOTION_MS = 300;
 
 /** Classes d'animation héritées (animations/_animations.scss) selon l'ancre de la zone. */

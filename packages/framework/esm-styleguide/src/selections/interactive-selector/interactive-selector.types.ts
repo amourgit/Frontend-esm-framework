@@ -12,7 +12,7 @@ export interface InteractiveSelectorOption {
   /**
    * Icône affichée dans le badge circulaire de l'étiquette. N'importe quel
    * `ReactNode` — utiliser `currentColor` pour hériter automatiquement du
-   * blanc du badge (voir `interactive-selector.module.scss`).
+   * blanc du badge (voir `interactive-selector.module.css`).
    */
   icon: React.ReactNode;
 }

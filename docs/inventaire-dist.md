@@ -1,3 +1,5 @@
+> **Note (retrait de Carbon)** : les mesures ci-dessous datent d'avant le retrait de Carbon ; le CSS global de 3,7 Mo (Carbon) n'existe plus, `egen.<hash>.css` est maintenant la feuille globale du styleguide (≈ 40 Ko). À remesurer.
+
 # Inventaire du `dist` du shell (A2)
 
 Mesuré le 2026-11-13 sur l'artefact **android** minimal de l'e2e (`yarn e2e:build android`, production, import map et routes de test) : il contient le shell seul, **sans les applications métier**. Reproduire :

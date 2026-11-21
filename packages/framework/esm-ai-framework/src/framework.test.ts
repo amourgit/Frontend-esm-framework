@@ -8,7 +8,7 @@ import { _clearProviderRegistry } from '@egen-civitas/esm-ai-context';
 import { initAIFramework, cleanupAIFramework, isAIFrameworkInitialized } from './orchestrator';
 
 // Les native tools (esm-ai-tools) importent de vrais composants esm-styleguide
-// (showNotification/showSnackbar/showModal), qui embarquent du .scss réel — non
+// (showNotification/showSnackbar/showModal), qui embarquent des composants et feuilles de style réels — non
 // transformable ici puisque le paquet est chargé comme dépendance externe. On
 // mock au même niveau que esm-ai-tools/src/native/native.test.ts pour continuer
 // à exercer le vrai enregistrement des tools sans charger les vrais composants.

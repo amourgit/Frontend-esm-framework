@@ -22,7 +22,7 @@ import styles from './testimonial-card.module.css';
  * visuel (classes Tailwind → tokens EGEN via CSS Module) et le typage
  * changent. Le "verre" translucide de la carte (fond + flou + bordure +
  * ombre) vient du mixin `panel.panel-surface('card')` — voir
- * `testimonial-card.module.scss`.
+ * `testimonial-card.module.css`.
  *
  * @example
  * ```tsx

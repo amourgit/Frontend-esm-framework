@@ -1,6 +1,6 @@
 /** @module @category UI */
 
-/** Noms des classes utilitaires d'animation (voir animations/_animations.scss). */
+/** Noms des classes utilitaires d'animation (voir `animations` dans la feuille globale `styles.css`). */
 export const EGEN_ANIMATIONS = [
   'fade-in',
   'fade-out',

@@ -23,7 +23,7 @@ import styles from './dynamic-field.module.css';
  * Le label flotte au-dessus du texte saisi (pattern "floating label"), l'icône de
  * validation glisse depuis la droite lors d'un changement de sévérité, et une
  * micro-vibration (si le device la supporte) accompagne ce changement — tout est
- * défini dans `dynamic-field.module.scss`, exclusivement via les tokens du thème
+ * défini dans `dynamic-field.module.css`, exclusivement via les tokens du thème
  * EGEN (`var(--colors-*)`, `var(--panel-*)`, `var(--transitions-*)`...).
  *
  * @example
@@ -68,7 +68,7 @@ export const DynamicField: React.FC<DynamicFieldProps> = ({
 
   const [inputValue, setInputValue] = useState(value);
   // Uniquement utilisé par variant='kinetic' (les 3 autres variantes restent
-  // pilotées à 100% par CSS, via :focus/:placeholder-shown — voir le fichier .scss).
+  // pilotées à 100% par CSS, via :focus/:placeholder-shown — voir `dynamic-field.module.css`).
   const [isFocused, setIsFocused] = useState(false);
   const fieldRef = useRef<HTMLDivElement>(null);
 

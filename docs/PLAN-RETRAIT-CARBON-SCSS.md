@@ -1,5 +1,11 @@
 # Plan — Retrait complet de Carbon et de SCSS (framework + core)
 
+> **STATUT : TERMINÉ (framework + core).** Framework publié en version majeure (`esm-styleguide` 5.x, `esm-framework` 5.x, `esm-app-shell` 3.x,
+> `rspack-config` / `webpack-config` / `tailwind-preset` 2.x) ; core migré, builds, types et tests verts. Garde-fous : test d'architecture
+> du styleguide et `yarn verify:no-carbon` du core. Les feuilles de style restantes sont du CSS standard (`*.module.css`, `styles.css`) à
+> convertir en classes Tailwind au fil de l'eau. **Hors périmètre, à traiter à part : CIVITAS TV** (dépôt séparé, encore sur le framework 3.x
+> avec Carbon et SCSS).
+
 > **Décision (Kim)** : plus aucune trace de Carbon (`@carbon/*`) ni de SCSS dans le projet. Tailwind (v4, CSS-first) est le seul
 > système de style. Les composants de base sont de simples composants à nous, copiés depuis des projets open source
 > permissifs puis adaptés, vivant dans `esm-styleguide`. Priorité produit : modularité, flexibilité et personnalisation

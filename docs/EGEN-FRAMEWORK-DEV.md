@@ -173,7 +173,7 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 ### B5 — CSP et scripts inline · L
 - ✅ `index.ejs` contient des `<script>` inline : anti-FOUC thème, ponts `window.egen*`, `initializeSpa({...})`. Une CSP `script-src 'self'` les bloquerait.
 - **Faire (cible native uniquement)** : générer ces scripts en **fichiers émis** (`bootstrap.[hash].js`) référencés par `<script src>` ; poser une balise `<meta http-equiv="Content-Security-Policy" content="…">` issue de `targets.csp`.
-- **CSP de départ (proposition ⚠️ à valider sur appareil)** : `default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' <API_ORIGIN>; base-uri 'self'; form-action 'self'`. `'unsafe-inline'` pour les styles est à réexaminer (Carbon / style injection).
+- **CSP de départ (proposition ⚠️ à valider sur appareil)** : `default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self' <API_ORIGIN>; base-uri 'self'; form-action 'self'`. `'unsafe-inline'` pour les styles est à réexaminer (injection de styles).
 - ✅ **Réalisé** : `tools/bootstrap.js` produit, **en natif seulement**, `bootstrap-head.<hash>.js` (thème anti-FOUC, ponts `window.egen*`) et `bootstrap.<hash>.js` (`initializeSpa`, écouteur délégué `data-egen-action`), émis par `EmitAssetsPlugin` ; `index.ejs` bascule dessus si `egenBootstrap` est défini et pose la `<meta>` CSP issue de `targets.csp`. **Écart avec la doc** : le gabarit contenait aussi des gestionnaires `onclick` inline (`location.reload()`, `copyText(...)`), que `script-src 'self'` bloquerait ; ils sont remplacés en natif par `data-egen-action`. Les blocs `type="systemjs-importmap"` / `type="egen-routes"` restent inline : ce sont des données, jamais exécutées, donc hors CSP.
 - ✅ **HTML Web inchangé (R2)** : directives EJS placées sur les mêmes lignes que le contenu existant ; `dist` Web identique octet pour octet à `main`, et rendu comparé à l'ancien gabarit sur 32 combinaisons ; un rendu de référence est figé dans `tools/__snapshots__/bootstrap.test.ts.snap`.
 - ✅ **Bundle de production mesuré (2026-11-07, build android)** : 137 fichiers JS analysés. `eval(` : 1 occurrence, chemin Node uniquement (`eval("require")`). `Function("return this")` : replis ne s'exécutant que si `globalThis`/`self` manquent (jamais en navigateur). `Function("callbacks", …)` : chargement d'entrées *Module Federation distantes* (`loadEsmEntry`, `loadSystemJsEntry`), **présumé** non utilisé par le shell (les apps passent par SystemJS et l'import map) : inférence lue dans le code, **non mesurée** — à confirmer par le test e2e H2. **Seule source de code généré atteignable** : `@splinetool/runtime` (génération de code type `ndarray`, 4 modules WebAssembly), chargé à la demande par `SplineScene` (le « Robot 3D » de l'assistant) depuis `esm-styleguide`.
@@ -607,7 +607,7 @@ export declare function getPlatform(): Platform;
 2. Production effective de `service-worker.js` (A4).
 3. Liste complète des usages de `offlineEnabled` (E1).
 4. Endpoint de session et jetons côté backend (X-1).
-5. CSP : styles inline requis par Carbon ? (B5).
+5. CSP : styles inline encore requis (injection de styles, composants Radix) ? (B5).
 6. Persistance IndexedDB/`localStorage` en WebView Android et WKWebView (E3).
 7. Comportement de `navigate()` vers une URL externe (G3).
 8. Cohérence de `scripts/ensure-shell-rebuild.mjs` avec le nouveau package (H4).

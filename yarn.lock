@@ -1402,6 +1402,28 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@egen-civitas/esm-nextjs-utils@workspace:packages/framework/esm-nextjs-utils":
+  version: 0.0.0-use.local
+  resolution: "@egen-civitas/esm-nextjs-utils@workspace:packages/framework/esm-nextjs-utils"
+  dependencies:
+    "@egen-civitas/esm-integration-utils": "npm:^0.1.0"
+    "@types/node": "npm:^20"
+    happy-dom: "npm:^20.6.0"
+    single-spa: "npm:^6.0.0"
+    typescript: "npm:^5.8.3"
+    vitest: "npm:^4.1.2"
+    zustand: "npm:^4.5.5"
+  peerDependencies:
+    "@egen-civitas/esm-api": ">=3.0.0"
+    "@egen-civitas/esm-config": ">=2.0.0"
+    "@egen-civitas/esm-extensions": ">=2.0.0"
+    "@egen-civitas/esm-feature-flags": ">=1.0.0"
+    "@egen-civitas/esm-globals": ">=2.0.0"
+    "@egen-civitas/esm-integration-utils": ">=0.1.0"
+    single-spa: 6.x
+  languageName: unknown
+  linkType: soft
+
 "@egen-civitas/esm-offline@npm:^1.0.4, @egen-civitas/esm-offline@workspace:packages/framework/esm-offline":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-offline@workspace:packages/framework/esm-offline"

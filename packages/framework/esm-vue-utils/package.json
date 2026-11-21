@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-vue-utils",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MPL-2.0",
   "description": "Intégration des applications Vue 3 à EGEN : lifecycles, composables et composants d'extensions (pendant de esm-react-utils)",
   "type": "module",
@@ -55,7 +55,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@egen-civitas/esm-integration-utils": "^0.1.0",
+    "@egen-civitas/esm-integration-utils": "^0.2.0",
     "single-spa-vue": "^3.0.1"
   },
   "peerDependencies": {
@@ -63,8 +63,8 @@
     "@egen-civitas/esm-config": ">=2.0.0",
     "@egen-civitas/esm-extensions": ">=2.0.0",
     "@egen-civitas/esm-feature-flags": ">=1.0.0",
-    "@egen-civitas/esm-globals": ">=2.0.0",
-    "@egen-civitas/esm-integration-utils": ">=0.1.0",
+    "@egen-civitas/esm-globals": ">=2.5.0",
+    "@egen-civitas/esm-integration-utils": ">=0.2.0",
     "single-spa": "6.x",
     "vue": "^3.3.0"
   },

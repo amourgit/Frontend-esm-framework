@@ -1,5 +1,11 @@
 # @egen-civitas/esm-globals
 
+## 2.5.0
+
+### Minor Changes
+
+- d9b2c40: L'import map accepte une table facultative `aliases` (`{ "<alias>": "<nom réel>" }`) : `importDynamic` retrouve alors un paquet par un nom alternatif (par exemple un espace de noms i18n différent du nom du paquet). Une clé présente dans `imports` prime toujours sur un alias, la lecture de l'import map reste incluse dans le délai maximal de chargement, et les import maps sans `aliases` se comportent comme avant.
+
 ## 2.4.0
 
 ### Minor Changes

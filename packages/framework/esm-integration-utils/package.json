@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-integration-utils",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MPL-2.0",
   "description": "Socle commun d'intégration des applications EGEN, indépendant de toute technologie d'interface (React, Vue, Angular…)",
   "type": "module",
@@ -58,14 +58,14 @@
     "@egen-civitas/esm-config": "^2.0.0",
     "@egen-civitas/esm-extensions": "^2.5.0",
     "@egen-civitas/esm-feature-flags": "^1.0.3",
-    "@egen-civitas/esm-globals": "^2.4.0"
+    "@egen-civitas/esm-globals": "^2.5.0"
   },
   "peerDependencies": {
     "@egen-civitas/esm-api": ">=3.0.0",
     "@egen-civitas/esm-config": ">=2.0.0",
     "@egen-civitas/esm-extensions": ">=2.0.0",
     "@egen-civitas/esm-feature-flags": ">=1.0.0",
-    "@egen-civitas/esm-globals": ">=2.0.0",
+    "@egen-civitas/esm-globals": ">=2.5.0",
     "single-spa": "6.x"
   },
   "devDependencies": {

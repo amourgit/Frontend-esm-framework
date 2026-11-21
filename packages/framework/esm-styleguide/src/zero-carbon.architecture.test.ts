@@ -36,7 +36,8 @@ const files = SOURCE_DIRS.flatMap((dir) => walk(join(ROOT, dir)))
   .filter((file) => !SKIP_FILES.has(file.split(/[\\/]/).pop() ?? ''))
   .map((file) => ({ file, rel: relative(ROOT, file).split('\\').join('/') }));
 
-describe('zéro Carbon / zéro SCSS', () => {
+// Le parcours de tout le dépôt peut dépasser les 5 s par défaut quand la machine est chargée (tests en parallèle) : 60 s.
+describe('zéro Carbon / zéro SCSS', { timeout: 60_000 }, () => {
   it("aucun fichier .scss ou .sass n'existe", () => {
     expect(files.filter(({ rel }) => /\.(scss|sass)$/.test(rel)).map(({ rel }) => rel)).toEqual([]);
   });

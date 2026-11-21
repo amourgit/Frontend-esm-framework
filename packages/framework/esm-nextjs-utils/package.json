@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-nextjs-utils",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "MPL-2.0",
   "description": "Intégration d'applications autonomes (Next.js, SSR, routeur propre) à EGEN par iframe et pont postMessage sécurisé : lifecycle côté Shell et client côté application",
   "type": "module",
@@ -60,15 +60,15 @@
     "access": "public"
   },
   "dependencies": {
-    "@egen-civitas/esm-integration-utils": "^0.1.0"
+    "@egen-civitas/esm-integration-utils": "^0.2.0"
   },
   "peerDependencies": {
     "@egen-civitas/esm-api": ">=3.0.0",
     "@egen-civitas/esm-config": ">=2.0.0",
     "@egen-civitas/esm-extensions": ">=2.0.0",
     "@egen-civitas/esm-feature-flags": ">=1.0.0",
-    "@egen-civitas/esm-globals": ">=2.0.0",
-    "@egen-civitas/esm-integration-utils": ">=0.1.0",
+    "@egen-civitas/esm-globals": ">=2.5.0",
+    "@egen-civitas/esm-integration-utils": ">=0.2.0",
     "single-spa": "6.x"
   },
   "devDependencies": {

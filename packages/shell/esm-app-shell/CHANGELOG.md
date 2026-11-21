@@ -1,5 +1,13 @@
 # @egen-civitas/esm-app-shell
 
+## 3.0.7
+
+### Patch Changes
+
+- Reconstruit automatiquement : le shell embarque dans son bundle `@egen-civitas/esm-globals`, modifiés dans cette version. Sans cette republication, les apps continueraient d'exécuter l'ancienne copie.
+- Updated dependencies [d9b2c40]
+  - @egen-civitas/esm-globals@2.5.0
+
 ## 3.0.6
 
 ### Patch Changes

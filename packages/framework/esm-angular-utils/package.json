@@ -1,0 +1,86 @@
+{
+  "name": "@egen-civitas/esm-angular-utils",
+  "version": "0.1.0",
+  "license": "MPL-2.0",
+  "description": "Intégration des applications Angular à EGEN : lifecycles, fonctions inject* (signals) et montage d'extensions (pendant de esm-react-utils)",
+  "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src",
+    "!src/**/*.test.*"
+  ],
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": {
+      "default": "./package.json"
+    }
+  },
+  "source": true,
+  "scripts": {
+    "test": "cross-env TZ=UTC vitest run --passWithNoTests",
+    "test:watch": "cross-env TZ=UTC vitest watch --passWithNoTests",
+    "build": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist\" \"tsc --project tsconfig.build.json\"",
+    "build:development": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist\" \"tsc --project tsconfig.build.json\"",
+    "typescript": "tsc --project tsconfig.build.json",
+    "lint": "eslint src --ext ts,tsx"
+  },
+  "keywords": [
+    "egen",
+    "microfrontends",
+    "angular"
+  ],
+  "directories": {
+    "lib": "dist",
+    "src": "src"
+  },
+  "browserslist": [
+    "extends browserslist-config-egen"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amourgit/Frontend-esm-framework.git",
+    "directory": "packages/framework/esm-angular-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/amourgit/Frontend-esm-framework/issues"
+  },
+  "homepage": "https://github.com/amourgit/Frontend-esm-framework#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@egen-civitas/esm-integration-utils": "^0.1.0"
+  },
+  "peerDependencies": {
+    "@angular/core": ">=19.0.0",
+    "@angular/platform-browser": ">=19.0.0",
+    "@egen-civitas/esm-api": ">=3.0.0",
+    "@egen-civitas/esm-config": ">=2.0.0",
+    "@egen-civitas/esm-extensions": ">=2.0.0",
+    "@egen-civitas/esm-feature-flags": ">=1.0.0",
+    "@egen-civitas/esm-globals": ">=2.0.0",
+    "@egen-civitas/esm-integration-utils": ">=0.1.0",
+    "single-spa": "6.x",
+    "single-spa-angular": ">=19.0.0"
+  },
+  "devDependencies": {
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@types/node": "^20",
+    "happy-dom": "^20.6.0",
+    "rxjs": "^7.8.1",
+    "single-spa": "^6.0.0",
+    "single-spa-angular": "^22.0.1",
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.2",
+    "zone.js": "^0.16.0",
+    "zustand": "^4.5.5"
+  }
+}

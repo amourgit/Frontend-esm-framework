@@ -26,6 +26,49 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular/compiler@npm:^22.0.0":
+  version: 22.3.0
+  resolution: "@angular/compiler@npm:22.3.0"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  checksum: 10/00cab786897344e5533b6f65c62806c82e083da4f1e4377d8111631474e1c584f843e06f5fb9031bd1727ff7b671932a52330139076f6b8abdfe4379450e2571
+  languageName: node
+  linkType: hard
+
+"@angular/core@npm:^22.0.0":
+  version: 22.3.0
+  resolution: "@angular/core@npm:22.3.0"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/compiler": 22.3.0
+    rxjs: ^6.5.3 || ^7.4.0
+    zone.js: ~0.15.0 || ~0.16.0
+  peerDependenciesMeta:
+    "@angular/compiler":
+      optional: true
+    zone.js:
+      optional: true
+  checksum: 10/59b73cd809b6323552bcce7df09ccf2bb6c398b5ab1a56cba74b80eee11444f095b7689299998dc247576d7ddb144544eb5665a0d15411085a80ec9047faafdd
+  languageName: node
+  linkType: hard
+
+"@angular/platform-browser@npm:^22.0.0":
+  version: 22.3.0
+  resolution: "@angular/platform-browser@npm:22.3.0"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/animations": 22.3.0
+    "@angular/common": 22.3.0
+    "@angular/core": 22.3.0
+  peerDependenciesMeta:
+    "@angular/animations":
+      optional: true
+  checksum: 10/16d6b60439de2d392658900d43b37b7ee7e4948899ea8ef6fd2058b628e65824782d03eed62018c95abba71149080b6896f6f1344cf23b1992497c041188e6f2
+  languageName: node
+  linkType: hard
+
 "@arethetypeswrong/cli@npm:^0.18.5":
   version: 0.18.5
   resolution: "@arethetypeswrong/cli@npm:0.18.5"
@@ -863,6 +906,37 @@ __metadata:
     "@egen-civitas/esm-state": ^1.0.3
     rxjs: 7.x
     swr: 2.x
+  languageName: unknown
+  linkType: soft
+
+"@egen-civitas/esm-angular-utils@workspace:packages/framework/esm-angular-utils":
+  version: 0.0.0-use.local
+  resolution: "@egen-civitas/esm-angular-utils@workspace:packages/framework/esm-angular-utils"
+  dependencies:
+    "@angular/compiler": "npm:^22.0.0"
+    "@angular/core": "npm:^22.0.0"
+    "@angular/platform-browser": "npm:^22.0.0"
+    "@egen-civitas/esm-integration-utils": "npm:^0.1.0"
+    "@types/node": "npm:^20"
+    happy-dom: "npm:^20.6.0"
+    rxjs: "npm:^7.8.1"
+    single-spa: "npm:^6.0.0"
+    single-spa-angular: "npm:^22.0.1"
+    typescript: "npm:^5.8.3"
+    vitest: "npm:^4.1.2"
+    zone.js: "npm:^0.16.0"
+    zustand: "npm:^4.5.5"
+  peerDependencies:
+    "@angular/core": ">=19.0.0"
+    "@angular/platform-browser": ">=19.0.0"
+    "@egen-civitas/esm-api": ">=3.0.0"
+    "@egen-civitas/esm-config": ">=2.0.0"
+    "@egen-civitas/esm-extensions": ">=2.0.0"
+    "@egen-civitas/esm-feature-flags": ">=1.0.0"
+    "@egen-civitas/esm-globals": ">=2.0.0"
+    "@egen-civitas/esm-integration-utils": ">=0.1.0"
+    single-spa: 6.x
+    single-spa-angular: ">=19.0.0"
   languageName: unknown
   linkType: soft
 
@@ -17786,7 +17860,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:7.8.2, rxjs@npm:^7.8.0":
+"rxjs@npm:7.8.2, rxjs@npm:^7.8.0, rxjs@npm:^7.8.1":
   version: 7.8.2
   resolution: "rxjs@npm:7.8.2"
   dependencies:
@@ -18220,6 +18294,20 @@ __metadata:
     "@sigstore/tuf": "npm:^4.0.2"
     "@sigstore/verify": "npm:^3.1.1"
   checksum: 10/8fb38bbdc3ee1e79b3f19e0015ebf35b7d7f890673722f182960ec88f02a52f2f631fc983e7f8bafa3a37653a760ddc00277721a8f9159ee6ee311159ca3dfbe
+  languageName: node
+  linkType: hard
+
+"single-spa-angular@npm:^22.0.1":
+  version: 22.0.1
+  resolution: "single-spa-angular@npm:22.0.1"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/core": ">=22.0.0 < 23.0.0"
+    json5: "*"
+    single-spa: ">=4.0.0"
+    style-loader: ^3.3.1
+  checksum: 10/e63ef893c61b7fd7c22df324fb8334a61155d0d288a1f9d4e789a23649f23c57e27bc754d8036ab936a6824912237e29a7d5fc9b04260abf65cf761865ea15b4
   languageName: node
   linkType: hard
 
@@ -19448,6 +19536,13 @@ __metadata:
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10/3e2e043d5c2316461cb54e5c7fe02c30ef6dccb3384717ca22ae5c6b5bc95232a6241df19c622d9c73b809bea33b187f6dbc73030963e29950c2141bc32a79f7
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.3.0":
+  version: 2.9.1
+  resolution: "tslib@npm:2.9.1"
+  checksum: 10/20aa8c3282c88f8dd1bf0a62c5b1aa03b35998cbc6db4780f6e84d593ba4ffe232bd967916c6e0f96b9e5d719dade9e329d1b2cfede31043481d8fd13f10ca5f
   languageName: node
   linkType: hard
 
@@ -20969,6 +21064,13 @@ __metadata:
   version: 3.25.76
   resolution: "zod@npm:3.25.76"
   checksum: 10/f0c963ec40cd96858451d1690404d603d36507c1fc9682f2dae59ab38b578687d542708a7fdbf645f77926f78c9ed558f57c3d3aa226c285f798df0c4da16995
+  languageName: node
+  linkType: hard
+
+"zone.js@npm:^0.16.0":
+  version: 0.16.3
+  resolution: "zone.js@npm:0.16.3"
+  checksum: 10/0355ba6140cdd55c387398d0fdc094aaad36d17090fd6f27afa5cba66a38e300cc20e326430b7fde2a93a53bc2226476cc86acbd6813164feb5e47809c88655d
   languageName: node
   linkType: hard
 

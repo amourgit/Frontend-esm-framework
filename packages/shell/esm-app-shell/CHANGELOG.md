@@ -181,8 +181,8 @@
 - d1d2d7d: Contrat d'app multiplateforme (F2) : `EgenAppRoutes.platforms` et `requiredCapabilities`. `registerApp` écarte (sans rien enregistrer) une app non éligible à la plateforme ou dont une capacité requise manque. `esm-globals` : `setCapabilityResolver` / `hasCapability`. `esm-platform` : `registerPlatformCapabilities()`. Shell : capacités rendues consultables avant l'enregistrement des apps. Sans champs dans `routes.json`, comportement inchangé.
 - b3d9419: Le shell peut être reconstruit par cible chez le consommateur (`egen build`).
 
-  - `esm-app-shell` : publie `rspack.config.js`, `dependencies.json`, `src/` et `tools/` en plus de `dist/` (le `dist/` précompilé reste servi tel quel par `egen develop`). Le dossier des thèmes est résolu via le paquet `@egen-civitas/esm-theme` au lieu d'un chemin propre au monorepo.
-  - `esm-theme` : publie `src/themes/` et exporte `./package.json`.
+  - `esm-app-shell` : publie `rspack.config.js`, `dependencies.json`, `src/` et `tools/` en plus de `dist/` (le `dist/` précompilé reste servi tel quel par `egen develop`). Le dossier des thèmes est résolu via le paquet de l'ancien moteur de thème au lieu d'un chemin propre au monorepo.
+  - ancien moteur de thème : publie `src/themes/` et exporte `./package.json`.
   - `esm-translations` : publie `translations/` (fichiers de langue importés par le shell).
 
 - ef3c97f: Cible de build `EGEN_TARGET` (`web` par défaut | `android` | `ios`).
@@ -205,7 +205,7 @@
   - @egen-civitas/esm-platform@1.1.0
   - @egen-civitas/esm-api@3.0.0
   - @egen-civitas/esm-framework@4.0.0
-  - @egen-civitas/esm-theme@1.1.0
+  - ancien moteur de thème@1.1.0
   - @egen-civitas/esm-styleguide@4.0.0
   - @egen-civitas/esm-react-utils@3.0.1
   - @egen-civitas/esm-offline@1.0.4

@@ -1,11 +1,20 @@
 import { importDynamic } from '@egen-civitas/esm-dynamic-loading';
 import { type LifeCycles } from 'single-spa';
 import { registerModuleLoad } from '@egen-civitas/esm-config';
+import { getModuleAliases } from './module-aliases.js';
 
 // Couldn't figure out how to express this as an interface
 type Module = Omit<Record<string, () => LifeCycles | Promise<LifeCycles>>, 'startupApp'> & {
   startupApp?: () => unknown;
 };
+
+/** Marque l'app « chargée » sous son nom de paquet ET sous ses alias (voir module-aliases.ts). */
+function markModuleLoaded(appName: string) {
+  registerModuleLoad(appName);
+  for (const alias of getModuleAliases(appName)) {
+    registerModuleLoad(alias);
+  }
+}
 
 /**
  * @internal
@@ -93,14 +102,14 @@ async function initializeApp(appName: string, module?: Module) {
         if (typeof startup === 'function') {
           return Promise.resolve(startup())
             .then(() => {
-              registerModuleLoad(appName);
+              markModuleLoaded(appName);
               resolve(null);
             })
             .catch(reject);
         }
       }
 
-      registerModuleLoad(appName);
+      markModuleLoaded(appName);
       resolve(null);
     }));
   } else {

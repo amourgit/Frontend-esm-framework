@@ -85,3 +85,32 @@ describe('registerApp — filtrage plateforme / capacité (F2)', () => {
     vi.unstubAllEnvs();
   });
 });
+
+describe('registerApp — alias de module (espace de noms de traduction/configuration)', () => {
+  beforeEach(() => {
+    vi.mocked(registerModuleWithConfigSystem).mockClear();
+  });
+
+  it("enregistre le nom du paquet ET chaque alias dans le système de configuration", () => {
+    registerApp('@egen/app-alias', routesWithExtension as never, ['@egen-civitas/app-alias', '@autre/app-alias']);
+
+    expect(vi.mocked(registerModuleWithConfigSystem).mock.calls.map((c) => c[0])).toEqual([
+      '@egen/app-alias',
+      '@egen-civitas/app-alias',
+      '@autre/app-alias',
+    ]);
+  });
+
+  it("sans alias : seul le nom du paquet est enregistré (comportement historique)", () => {
+    registerApp('@egen/app-simple', routesWithExtension as never);
+
+    expect(vi.mocked(registerModuleWithConfigSystem).mock.calls.map((c) => c[0])).toEqual(['@egen/app-simple']);
+  });
+
+  it("n'enregistre AUCUN alias pour une app écartée (autre plateforme)", () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    registerApp('@egen/ios-alias', { ...routesWithExtension, platforms: ['ios'] } as never, ['@egen-civitas/ios-alias']);
+
+    expect(registerModuleWithConfigSystem).not.toHaveBeenCalled();
+  });
+});

@@ -14,6 +14,7 @@ import {
   getCurrentPageMap,
   getCurrentRouteMap,
   getCurrentUser,
+  invertAliases,
   integrateBreakpoints,
   interpolateUrl,
   messageEgenServiceWorker,
@@ -139,10 +140,20 @@ async function setupApps() {
   await setupRouteMapOverrides();
   const routes = await getCurrentRouteMap();
 
+  // Alias de l'import map (alias -> nom du paquet) : une app est enregistrée dans le système de configuration sous son
+  // nom de paquet ET sous ses alias (son espace de noms de traduction/configuration). Une table illisible ne doit pas
+  // empêcher le démarrage : les apps sont alors enregistrées sous leur seul nom de paquet, comme avant.
+  let aliasesByApp = new Map<string, Array<string>>();
+  try {
+    aliasesByApp = invertAliases((await getCurrentPageMap()).aliases);
+  } catch (error) {
+    console.warn("[egen] Table d'alias de l'import map illisible, alias ignorés :", error);
+  }
+
   const modules: typeof window.installedModules = [];
   const registrationPromises = Object.entries(routes).map(async ([module, appRoutes]) => {
     modules.push([module, appRoutes]);
-    registerApp(module, appRoutes);
+    registerApp(module, appRoutes, aliasesByApp.get(module));
   });
 
   window[REGISTRATION_PROMISES] = Promise.all(registrationPromises);

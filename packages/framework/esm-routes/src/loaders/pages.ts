@@ -1,5 +1,6 @@
 import { type ActivityFn, pathToActiveWhen, registerApplication } from 'single-spa';
 import { registerModuleWithConfigSystem } from '@egen-civitas/esm-config';
+import { setModuleAliases } from './module-aliases.js';
 import {
   type WorkspaceGroupDefinition,
   type ExtensionDefinition,
@@ -96,8 +97,11 @@ function wrapPageActivityFn(
  * @param appName The name of the application, e.g. `@egen-civitas/esm-my-app`
  * @param routes A Javascript object that corresponds to the app's  routes.json`
  * definition.
+ * @param aliases Autres noms de module de l'app (clé `aliases` de l'import map : alias -> nom du paquet). Chacun est
+ * enregistré dans le système de configuration comme `appName` : sans cela, la lecture des surcharges de traduction
+ * sous l'alias attend indéfiniment et les composants qui suspendent sur les traductions ne s'affichent pas.
  */
-export function registerApp(appName: string, routes: EgenAppRoutes) {
+export function registerApp(appName: string, routes: EgenAppRoutes, aliases: ReadonlyArray<string> = []) {
   if (appName && routes && typeof routes === 'object') {
     // Point de filtrage UNIQUE : une app non éligible (plateforme / capacité) est écartée avant tout enregistrement.
     const unavailability = getAppUnavailability(routes);
@@ -110,6 +114,9 @@ export function registerApp(appName: string, routes: EgenAppRoutes) {
     }
 
     registerModuleWithConfigSystem(appName);
+    for (const alias of setModuleAliases(appName, aliases)) {
+      registerModuleWithConfigSystem(alias);
+    }
 
     const availableExtensions: Array<ExtensionDefinition> = routes.extensions ?? [];
     const availableModals: Array<ModalDefinition> = routes.modals ?? [];

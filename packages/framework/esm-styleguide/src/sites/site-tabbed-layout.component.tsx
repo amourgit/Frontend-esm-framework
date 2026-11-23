@@ -60,7 +60,7 @@ export function SiteTabbedLayout<T extends string = string>({
   return (
     <div
       className={cn(
-        'w-full h-[calc(100vh-120px)] my-2 sm:my-3 text-slate-100 overflow-hidden px-3 sm:px-6 lg:px-8 flex flex-col',
+        'w-full h-full my-0 text-slate-100 overflow-hidden px-3 sm:px-6 lg:px-8 flex flex-col',
         className,
       )}
     >

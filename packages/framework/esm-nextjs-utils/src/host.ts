@@ -97,6 +97,9 @@ export function getEmbedLifecycle(userOpts: EmbedLifecycleOptions): LifeCycles {
       iframe.title = opts.title ?? opts.featureName;
       iframe.setAttribute('sandbox', sandbox);
       iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      // Demande au Shell de donner à ce conteneur la hauteur de
+      // #egen-scroll-region (règle :has(> [data-egen-fill]) du styleguide).
+      iframe.setAttribute('data-egen-fill', '');
       iframe.style.cssText = `width:100%;border:0;display:block;min-height:${opts.minHeight ?? 400}px`;
 
       const send = (message: HostToEmbed) => iframe.contentWindow?.postMessage(wrap(opts.moduleName, message), origin);

@@ -274,10 +274,12 @@ html[data-workbench-resizing] {
   overflow: visible;
 }
 
-/* Chaque app montée (div single-spa non vide) peut occuper toute la hauteur
-   de la zone : height:100% devient résolvable jusqu'à la racine de l'app. */
-#egen-apps-container > div:has(> *) {
-  min-height: 100%;
+/* Une app qui déclare data-egen-fill sur son élément racine occupe toute la
+   hauteur de la zone : height:100% devient résolvable jusqu'à sa racine et
+   l'app peut remplir #egen-scroll-region en temps réel. Sans attribut, le
+   conteneur single-spa garde une hauteur automatique (hauteur du contenu). */
+#egen-apps-container > div:has(> [data-egen-fill]) {
+  height: 100%;
 }
 
 #egen-workspaces-container {

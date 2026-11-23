@@ -1,5 +1,14 @@
 # @egen-civitas/esm-nextjs-utils
 
+## 0.3.1
+
+### Patch Changes
+
+- 1d47a26: L'iframe créée par `getEmbedLifecycle` porte désormais `data-egen-fill` :
+  le conteneur single-spa reçoit `height: 100%` de `#egen-scroll-region`
+  (règle opt-in du styleguide), sans travail requis côté application
+  embarquée.
+
 ## 0.3.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-nextjs-utils",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MPL-2.0",
   "description": "Intégration d'applications autonomes (Next.js, SSR, routeur propre) à EGEN par iframe et pont postMessage sécurisé : lifecycle côté Shell et client côté application",
   "type": "module",

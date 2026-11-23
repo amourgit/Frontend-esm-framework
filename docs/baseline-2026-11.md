@@ -1,5 +1,8 @@
 # Baseline du dépôt — novembre 2026 (tâche A1)
 
+> **Statut : DOCUMENT DATÉ (novembre 2026).** Les mentions de `esm-theme` (chemin `src/themes`, publication du shell) décrivent l'**ancien moteur de thème, OBSOLÈTE** (retrait prévu : `docs/ajustement-reforme-configuration.md`, `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`).
+
+
 **Commit de référence** : `460edd3` (branche `main`). Mesurée le 2026-11-06, à partir d'un clone propre.
 Ce document décrit l'existant. **Rien n'a été corrigé ici** (règle A1) : les points rouges sont listés pour être traités à part.
 

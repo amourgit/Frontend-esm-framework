@@ -1,5 +1,10 @@
 # `@egen-civitas/esm-theme` — Moteur de Thème Dynamique
 
+> **Statut : OBSOLÈTE — décrit l'ANCIEN système de thème, en cours de remplacement (réforme du système de design).**
+> Cible validée : chaîne Tweakcn → TokiForge → backend du Core → runtime dans le framework ; l'ancien moteur `@egen-civitas/esm-theme` sera supprimé lors de la bascule. Voir `docs/ajustement-reforme-configuration.md` (ce dépôt) et `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`.
+> Ce qui suit reste exact tant que la bascule n'est pas faite, et ne doit pas servir de base à un nouveau développement.
+
+
 Système de chargement de thèmes JSON par **priorité**, génération dynamique de variables CSS, résolution **clair/sombre**, **hot-reload**, et **surcharges scopées par application avec priorité**. Conçu pour le framework EGEN (Single-SPA, micro-frontends).
 
 **Principe fondamental : zéro valeur codée en dur dans le framework.** Aucun package (`esm-theme`, `esm-styleguide`, apps) ne déclare de valeur de couleur, de flou, d'ombre, etc. en dur dans son code. Tout provient du JSON de thème, chargé et injecté dynamiquement au runtime. Le code ne fait que consommer des `var(--xxx)` dont les noms sont entièrement dérivés du schéma JSON.

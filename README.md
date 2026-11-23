@@ -1,5 +1,8 @@
 # @egen-civitas/esm-framework — Framework Micro-Frontend EGEN
 
+> **Statut de la partie thème :** `@egen-civitas/esm-theme` (tableau des paquets, installation, exemple de dépendances) est l'**ancien moteur de thème, OBSOLÈTE**, en cours de remplacement par le runtime TokiForge — voir `docs/ajustement-reforme-configuration.md` et `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`.
+
+
 Monorepo du framework frontend EGEN. Fournit l'ensemble des packages nécessaires pour construire des applications micro-frontend basées sur **Single-SPA**, **React 18**, **RxJS**, et **@carbon/react**.
 
 ## Architecture

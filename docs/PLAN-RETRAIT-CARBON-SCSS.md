@@ -1,5 +1,8 @@
 # Plan — Retrait complet de Carbon et de SCSS (framework + core)
 
+> **Statut : ACTUEL pour le retrait de Carbon/SCSS ; OBSOLÈTE pour tout ce qui concerne les jetons de thème.** Les variables `--colors-*`, `--border-radius-*`, `--typography-*` du moteur `esm-theme` cités ci-dessous sont l'**ancien contrat** : elles seront remplacées par les variables sémantiques Tweakcn (table de migration : `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`, `ANNEXES.md` B).
+
+
 > **STATUT : TERMINÉ (framework + core).** Framework publié en version majeure (`esm-styleguide` 5.x, `esm-framework` 5.x, `esm-app-shell` 3.x,
 > `rspack-config` / `webpack-config` / `tailwind-preset` 2.x) ; core migré, builds, types et tests verts. Garde-fous : test d'architecture
 > du styleguide et `yarn verify:no-carbon` du core. Les feuilles de style restantes sont du CSS standard (`*.module.css`, `styles.css`) à

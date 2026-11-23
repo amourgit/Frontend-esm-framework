@@ -1,5 +1,8 @@
 # EGEN Framework — Document de développement « Multiplateforme » (Web · Android · iOS)
 
+> **Statut : document de suivi daté.** Les mentions de `esm-theme` (L108, L110, L630) concernent l'**ancien moteur de thème, OBSOLÈTE** (retrait prévu : `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`).
+
+
 **Statut** : document de référence du dépôt `Frontend-esm-framework` pour la réforme multiplateforme.
 **Date de rédaction** : 2026-11-06 · **Base de code lue** : analyse sur `fd3d468` ; existence des chemins cités revérifiée sur `7f6775a` (écarts sur les fichiers concernés : mineurs).
 **Public** : développeurs du framework. Chaque tâche indique *où toucher*, *quoi faire*, *quoi ne pas faire*, *comment valider*.

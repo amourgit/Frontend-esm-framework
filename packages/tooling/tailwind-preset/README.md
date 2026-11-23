@@ -2,6 +2,8 @@
 
 Point d'entrée Tailwind v4 partagé pour les apps EGEN — évite de dupliquer le pont vers les tokens de `@egen-civitas/esm-theme` dans chaque app.
 
+> **Statut : OBSOLÈTE pour le pont de variables.** Le pont vers les tokens de `esm-theme` (ancien moteur, variables `--colors-*`) sera retiré lors de la bascule vers TokiForge (étape P2.5 de `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`) ; le preset y déclarera les constantes (typographie, transitions, z-index, couleurs d'état).
+
 ## Prérequis
 
 La règle rspack `*.tw.css` fournie par `@egen-civitas/rspack-config` (>= version incluant `tailwindRuleConfig`).

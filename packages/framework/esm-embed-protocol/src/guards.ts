@@ -1,4 +1,5 @@
-import type { ConnectMessage, Envelope, HelloMessage, PortMessage, RpcMessage, CapabilityDenied, CapabilityGranted, CapabilityRequest } from './types.js';
+import { EGEN_EMBED_PROTOCOL } from './constants.js';
+import type { ProbeMessage, ConnectMessage, Envelope, HelloMessage, PortMessage, RpcMessage, CapabilityDenied, CapabilityGranted, CapabilityRequest } from './types.js';
 
 export function isPlainObject(v: unknown): v is Record<string, unknown> {
   if (v === null || typeof v !== 'object') return false;
@@ -118,6 +119,15 @@ export function parsePort(m: Record<string, unknown>): PortMessage | null {
     denied.push({ id: d.id, reason: d.reason as CapabilityDenied['reason'] });
   }
   return { kind: 'port', nonce: m.nonce, protocol: m.protocol as number, granted, denied, hostVersion: typeof m.hostVersion === 'string' ? m.hostVersion : undefined };
+}
+
+export function parseProbe(m: Record<string, unknown>): ProbeMessage | null {
+  return m.kind === 'probe' ? { kind: 'probe' } : null;
+}
+
+/** Enveloppe de poignée de main du protocole courant. */
+export function wrapHandshake<T>(moduleName: string, message: T): Envelope<T> {
+  return { egen: EGEN_EMBED_PROTOCOL, moduleName, message };
 }
 
 const uint = (n: unknown): n is number => Number.isInteger(n) && (n as number) >= 0 && (n as number) <= Number.MAX_SAFE_INTEGER;

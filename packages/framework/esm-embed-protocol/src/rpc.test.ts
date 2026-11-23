@@ -74,7 +74,7 @@ describe('RPC sur vrai MessageChannel', () => {
       session: { get: () => { throw new Error('secret interne /etc/passwd'); } },
     });
     await expect(app.call('permissions', 'can', ['x'])).rejects.toMatchObject({ code: 'DENIED', message: 'non' });
-    const e = await app.call('session', 'get').catch((x) => x);
+    const e: any = await app.call('session', 'get').catch((x) => x);
     expect(e.code).toBe('INTERNAL');
     expect(e.message).not.toMatch(/secret|passwd/);
   });

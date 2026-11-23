@@ -69,7 +69,12 @@ export interface PortMessage {
   hostVersion?: string;
 }
 
-export type HandshakeMessage = HelloMessage | ConnectMessage | PortMessage;
+/** L'app, chargée après l'événement `load` de l'iframe, demande à l'hôte de renvoyer `hello`. */
+export interface ProbeMessage {
+  kind: 'probe';
+}
+
+export type HandshakeMessage = HelloMessage | ConnectMessage | PortMessage | ProbeMessage;
 
 /* ───────── RPC (MessagePort) ───────── */
 

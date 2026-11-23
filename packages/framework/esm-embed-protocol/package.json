@@ -25,8 +25,8 @@
   "scripts": {
     "test": "cross-env TZ=UTC vitest run --passWithNoTests",
     "test:watch": "cross-env TZ=UTC vitest watch --passWithNoTests",
-    "build": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist\" \"tsc --project tsconfig.build.json\"",
-    "build:development": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist\" \"tsc --project tsconfig.build.json\"",
+    "build": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist --ignore \\\"**/*.test.*\\\" --ignore \\\"**/__tests__/**\\\"\" \"tsc --project tsconfig.build.json\"",
+    "build:development": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist --ignore \\\"**/*.test.*\\\" --ignore \\\"**/__tests__/**\\\"\" \"tsc --project tsconfig.build.json\"",
     "typescript": "tsc --project tsconfig.build.json",
     "lint": "eslint src --ext ts,tsx"
   },

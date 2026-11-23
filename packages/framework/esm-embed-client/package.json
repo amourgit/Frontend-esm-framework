@@ -1,0 +1,88 @@
+{
+  "name": "@egen-civitas/esm-embed-client",
+  "version": "0.0.0",
+  "license": "MPL-2.0",
+  "description": "SDK côté application embarquée (iframe) : connexion au Shell EGEN, capacités typées (session, thème, événements, notifications, API…), liaison React.",
+  "type": "module",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src",
+    "!src/**/*.test.*"
+  ],
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "default": "./dist/react.js"
+    },
+    "./package.json": {
+      "default": "./package.json"
+    }
+  },
+  "source": true,
+  "scripts": {
+    "test": "cross-env TZ=UTC vitest run --passWithNoTests",
+    "test:watch": "cross-env TZ=UTC vitest watch --passWithNoTests",
+    "build": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist --ignore \\\"**/*.test.*\\\" --ignore \\\"**/__tests__/**\\\"\" \"tsc --project tsconfig.build.json\"",
+    "build:development": "rimraf dist && concurrently \"swc --strip-leading-paths src -d dist --ignore \\\"**/*.test.*\\\" --ignore \\\"**/__tests__/**\\\"\" \"tsc --project tsconfig.build.json\"",
+    "typescript": "tsc --project tsconfig.build.json",
+    "lint": "eslint src --ext ts,tsx"
+  },
+  "keywords": [
+    "egen",
+    "microfrontends",
+    "embed",
+    "iframe",
+    "sdk"
+  ],
+  "directories": {
+    "lib": "dist",
+    "src": "src"
+  },
+  "browserslist": [
+    "extends browserslist-config-egen"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amourgit/Frontend-esm-framework.git",
+    "directory": "packages/framework/esm-embed-client"
+  },
+  "bugs": {
+    "url": "https://github.com/amourgit/Frontend-esm-framework/issues"
+  },
+  "homepage": "https://github.com/amourgit/Frontend-esm-framework#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.21",
+    "@testing-library/react": "^16.1.0",
+    "@types/node": "^20",
+    "@types/react": "^18.3.12",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "rimraf": "^6.1.3",
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.2"
+  },
+  "dependencies": {
+    "@egen-civitas/esm-embed-protocol": "^0.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  }
+}

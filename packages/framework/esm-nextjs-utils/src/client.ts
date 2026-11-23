@@ -26,6 +26,10 @@ export interface EgenBridge {
   setHeight(height: number): void;
   /** Annonce un titre accessible pour l'iframe. */
   setTitle(title: string): void;
+  /** Protocole 1.1 : annonce la page courante de l'application (`/chemin?q#h`) ; `replace` n'ajoute pas d'entrée d'historique. */
+  reportLocation(path: string, options?: { replace?: boolean; title?: string }): void;
+  /** Protocole 1.1 : le Shell demande d'aller à `path` (retour/avance, lien du Core) ; renvoie le désabonnement. */
+  onGoto(listener: (path: string) => void): () => void;
   /** Annonce automatiquement la hauteur du document (ResizeObserver). */
   autoResize(): () => void;
   destroy(): void;
@@ -40,6 +44,7 @@ export function createEgenBridge(opts: EgenBridgeOptions): EgenBridge {
 
   let state: Partial<EmbedInit> = {};
   const listeners = new Set<(s: Partial<EmbedInit>) => void>();
+  const gotoListeners = new Set<(path: string) => void>();
   let resolveReady!: (i: EmbedInit) => void;
   const ready = new Promise<EmbedInit>((r) => (resolveReady = r));
   // L'origine du Shell n'est connue qu'à la première réponse : le message `ready` est donc envoyé à chaque origine autorisée.
@@ -58,6 +63,10 @@ export function createEgenBridge(opts: EgenBridgeOptions): EgenBridge {
     } else if (msg.kind === 'session') {
       state = { ...state, session: msg.session };
       emit();
+    } else if (msg.kind === 'hello') {
+      send({ kind: 'ready', caps: ['location', 'goto'] });
+    } else if (msg.kind === 'goto') {
+      gotoListeners.forEach((l) => l(msg.path));
     } else if (msg.kind === 'locale') {
       state = { ...state, locale: msg.locale };
       emit();
@@ -69,11 +78,16 @@ export function createEgenBridge(opts: EgenBridgeOptions): EgenBridge {
     const targets = hostOrigin ? [hostOrigin] : opts.allowedHostOrigins;
     targets.forEach((o) => host.postMessage(wrap(opts.moduleName, message), o));
   };
-  send({ kind: 'ready' });
+  send({ kind: 'ready', caps: ['location', 'goto'] });
 
   return {
     ready,
     getState: () => state,
+    reportLocation: (path, o) => send({ kind: 'location', path, replace: o?.replace, title: o?.title }),
+    onGoto(l) {
+      gotoListeners.add(l);
+      return () => gotoListeners.delete(l);
+    },
     subscribe(l) {
       listeners.add(l);
       return () => listeners.delete(l);

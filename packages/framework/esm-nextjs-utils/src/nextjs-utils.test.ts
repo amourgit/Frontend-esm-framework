@@ -167,7 +167,7 @@ describe('côté application : createEgenBridge', () => {
 
   it('annonce « prêt » à l’origine autorisée, reçoit init puis les mises à jour', async () => {
     const b = make();
-    expect(host.postMessage).toHaveBeenCalledWith(wrap('@acme/next-app', { kind: 'ready' }), HOST);
+    expect(host.postMessage).toHaveBeenCalledWith(wrap('@acme/next-app', { kind: 'ready', caps: ['location', 'goto'] }), HOST);
     const states: any[] = [];
     b.subscribe((s) => states.push(s));
     post(wrap('@acme/next-app', { kind: 'init', payload: { moduleName: '@acme/next-app', locale: 'fr', spaBase: '/s/', session: { authenticated: true } } }), host, HOST);

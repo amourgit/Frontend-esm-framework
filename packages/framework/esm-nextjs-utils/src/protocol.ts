@@ -13,18 +13,29 @@ export interface EmbedInit {
   spaBase: string;
   /** Session filtrée par liste blanche (voir `sessionFields`) ; absente tant que non chargée. */
   session?: Record<string, unknown>;
+  /** Protocole 1.1 : navigation partagée active pour cette instance (absente = opaque). */
+  navigation?: { mode: NavigationMode; route: string };
 }
+
+/** Mode de navigation partagée (voir `navigation.ts`) : `none` = opaque, `history` = chemins, `hash` = `#/chemin`. */
+export type NavigationMode = 'none' | 'history' | 'hash';
 
 export type HostToEmbed =
   | { kind: 'init'; payload: EmbedInit }
   | { kind: 'session'; session: Record<string, unknown> }
-  | { kind: 'locale'; locale: string };
+  | { kind: 'locale'; locale: string }
+  /** Protocole 1.1 : poignée de main initiée par le Shell (à chaque chargement de l'iframe). */
+  | { kind: 'hello' }
+  /** Protocole 1.1 : le Shell demande à l'application d'aller à `path` (retour/avance, lien du Core). */
+  | { kind: 'goto'; path: string; seq: number };
 
 export type EmbedToHost =
-  | { kind: 'ready' }
+  | { kind: 'ready'; caps?: string[] }
   | { kind: 'navigate'; to: string }
   | { kind: 'resize'; height: number }
-  | { kind: 'title'; title: string };
+  | { kind: 'title'; title: string }
+  /** Protocole 1.1 : l'application annonce sa page courante (chemin interne, requête et fragment compris). */
+  | { kind: 'location'; path: string; replace?: boolean; title?: string };
 
 export interface Envelope<T> {
   egen: typeof EGEN_EMBED_PROTOCOL;

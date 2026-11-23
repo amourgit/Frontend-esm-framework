@@ -9,6 +9,16 @@ import {
   type LifecycleOptions,
   type Unsubscribe,
 } from '@egen-civitas/esm-integration-utils';
+import {
+  buildCoreUrl,
+  buildEmbedSrc,
+  coreSubpath,
+  createRateLimiter,
+  stripSensitive,
+  toAppPath,
+  toCorePath,
+  type NavigationOptions,
+} from './navigation.js';
 import { DEFAULT_SESSION_FIELDS, isEnvelope, pickFields, wrap, type EmbedToHost, type HostToEmbed } from './protocol.js';
 
 export interface EmbedLifecycleOptions extends LifecycleOptions {
@@ -26,6 +36,11 @@ export interface EmbedLifecycleOptions extends LifecycleOptions {
   minHeight?: number;
   /** Navigation demandée par l'application (défaut : `singleSpaNavigate(spaBase + chemin)`). */
   onNavigate?: (to: string) => void;
+  /**
+   * Navigation partagée (protocole 1.1) : l'URL du Core reflète la page courante de l'application et inversement
+   * (actualisation, retour/avance, lien partageable). Absent ou `mode: 'none'` : comportement opaque d'origine.
+   */
+  navigation?: NavigationOptions;
 }
 
 const DEFAULT_SANDBOX = 'allow-scripts allow-same-origin allow-forms allow-popups';
@@ -53,7 +68,20 @@ export function getEmbedLifecycle(userOpts: EmbedLifecycleOptions): LifeCycles {
     bootstrap: () => Promise.resolve(),
     mount: (props: any) => {
       const target = resolveMountTarget(props);
-      const src = typeof opts.url === 'function' ? opts.url(props) : opts.url;
+      const baseUrl = typeof opts.url === 'function' ? opts.url(props) : opts.url;
+      const nav = opts.navigation && (opts.navigation.mode ?? 'history') !== 'none' ? { ...opts.navigation, mode: opts.navigation.mode ?? 'history' } : undefined;
+      const spaBase = (): string => (window as any).getEgenSpaBase?.() ?? '/';
+      /** Page courante du Core, en chemin (`/x?q#h`) relatif à la route de l'application ; `null` hors de cette page. */
+      const currentCorePath = (): string | null => {
+        if (!nav) return null;
+        const sub = coreSubpath(window.location.pathname, spaBase(), nav.route);
+        if (sub === null) return null;
+        const raw = sub + window.location.search + window.location.hash;
+        return stripSensitive(raw, nav.sensitiveParams);
+      };
+      let lastCorePath = currentCorePath() ?? '/';
+      const initialAppPath = nav ? toAppPath(lastCorePath, nav) ?? '/' : '/';
+      const src = nav ? buildEmbedSrc(baseUrl, initialAppPath, nav.mode) : baseUrl;
       const origin = opts.allowedOrigin ?? new URL(src, window.location.href).origin;
       if (origin === '*' || origin === 'null') throw new Error('allowedOrigin invalide : une origine explicite est requise.');
 
@@ -75,6 +103,9 @@ export function getEmbedLifecycle(userOpts: EmbedLifecycleOptions): LifeCycles {
       const stop: Unsubscribe[] = [];
       let ready = false;
       let lastSession: Record<string, unknown> | undefined;
+      let bridgeSeen = false;
+      let seq = 0;
+      const allowLocation = createRateLimiter();
 
       const onMessage = (event: MessageEvent) => {
         if (event.source !== iframe.contentWindow || event.origin !== origin) return;
@@ -83,6 +114,7 @@ export function getEmbedLifecycle(userOpts: EmbedLifecycleOptions): LifeCycles {
         switch (msg.kind) {
           case 'ready':
             ready = true;
+            bridgeSeen = true;
             send({
               kind: 'init',
               payload: {
@@ -90,6 +122,7 @@ export function getEmbedLifecycle(userOpts: EmbedLifecycleOptions): LifeCycles {
                 locale: (window as any).i18next?.language,
                 spaBase: (window as any).getEgenSpaBase?.() ?? '/',
                 session: lastSession,
+                navigation: nav ? { mode: nav.mode!, route: nav.route } : undefined,
               },
             });
             break;
@@ -104,10 +137,48 @@ export function getEmbedLifecycle(userOpts: EmbedLifecycleOptions): LifeCycles {
           case 'title':
             if (typeof msg.title === 'string') iframe.title = msg.title.slice(0, 200);
             break;
+          case 'location': {
+            if (!nav || !allowLocation()) break;
+            bridgeSeen = true;
+            if (typeof msg.title === 'string') {
+              iframe.title = msg.title.slice(0, 200);
+              nav.onTitle?.(iframe.title);
+            }
+            const corePath = toCorePath(msg.path, nav);
+            if (!corePath || corePath === lastCorePath) break;
+            lastCorePath = corePath;
+            const url = buildCoreUrl(spaBase(), nav.route, corePath);
+            // History API (surchargée par Single-SPA) : la page reste active (la route correspond toujours), sans remontage.
+            window.history[msg.replace ? 'replaceState' : 'pushState'](window.history.state, '', url);
+            break;
+          }
         }
       };
       window.addEventListener('message', onMessage);
       stop.push(() => window.removeEventListener('message', onMessage));
+
+      if (nav) {
+        // poignée de main à chaque chargement de l'iframe (le script injectable n'a pas besoin de connaître l'origine du Shell)
+        const onLoad = () => send({ kind: 'hello' });
+        iframe.addEventListener('load', onLoad);
+        stop.push(() => iframe.removeEventListener('load', onLoad));
+        // URL du Core modifiée hors de l'application (retour/avance, lien) → l'application suit
+        const onCoreLocation = () => {
+          const cur = currentCorePath();
+          if (cur === null || cur === lastCorePath) return;
+          lastCorePath = cur;
+          const appPath = toAppPath(cur, nav);
+          if (!appPath) return;
+          if (bridgeSeen) send({ kind: 'goto', path: appPath, seq: ++seq });
+          else iframe.src = buildEmbedSrc(baseUrl, appPath, nav.mode);
+        };
+        window.addEventListener('single-spa:routing-event', onCoreLocation);
+        window.addEventListener('popstate', onCoreLocation);
+        stop.push(() => {
+          window.removeEventListener('single-spa:routing-event', onCoreLocation);
+          window.removeEventListener('popstate', onCoreLocation);
+        });
+      }
 
       stop.push(
         watchSession((session) => {

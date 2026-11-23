@@ -69,3 +69,16 @@ App → Shell : `ready`, `navigate { to }`, `resize { height }`, `title { title 
 - Les apps natives (Android/iOS) exigent un contenu embarqué : une iframe distante n'y est pas adaptée.
 
 Tests : `yarn test` (fenêtres simulées ; l'exécution inter-fenêtres dans un vrai navigateur reste à valider).
+
+## Navigation partagée (protocole 1.1)
+
+L'URL du Core reflète la page courante de l'application embarquée : actualisation, retour/avance et liens partageables fonctionnent comme pour une app interne.
+
+```ts
+getEmbedLifecycle({
+  moduleName, featureName, url,
+  navigation: { route: 'mon-app', mode: 'history' /* | 'hash' | 'none' */, sensitiveParams: ['invite'] },
+});
+```
+
+Côté application : soit le script injectable `assets/egen-bridge.js` (`<script src="/egen-bridge.js" defer data-mode="history">`), soit le client (`bridge.reportLocation(path)`, `bridge.onGoto(fn)`). Sans l'option `navigation`, rien ne change. Détails, sécurité et exemples : `docs/integration-apps/16-navigation-partagee-apps-externes.md` du dépôt Core.

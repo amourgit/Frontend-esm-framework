@@ -37,7 +37,7 @@ describe('createTestHost', () => {
   });
 
   it('API simulée et confirmation', async () => {
-    const sim = createTestHost({ approved: { api: {}, dialogs: {} }, api: (r) => ({ status: 201, headers: {}, body: r.path ?? '' }), confirm: false });
+    const sim = createTestHost({ approved: { api: { paths: ['/x'] }, dialogs: {} }, api: (r) => ({ status: 201, headers: {}, body: r.path ?? '' }), confirm: false });
     const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['api', 'dialogs'] });
     await expect(egen.api.fetch({ path: '/x' })).resolves.toEqual({ status: 201, headers: {}, body: '/x' });
     await expect(egen.dialogs.confirm({ title: 't', message: 'm' })).resolves.toBe(false);

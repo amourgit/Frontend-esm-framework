@@ -79,7 +79,7 @@ describe('application des grants', () => {
   it('API : hôtes et en-têtes autorisés seulement, le jeton reste dans le Core', async () => {
     const fetchImpl = vi.fn(async (_u: string, init: any) => new Response('{"ok":1}', { status: 200, headers: { 'content-type': 'application/json', 'set-cookie': 'a=b', 'x-secret': 's' } }));
     const api = createFetchApiProvider({ baseUrl: 'https://api.exemple.org/v1/', getHeaders: () => ({ Authorization: 'Bearer SECRET' }), fetchImpl: fetchImpl as any });
-    const { client } = await h({ providers: { api }, requested: ['api'], approved: { api: { hosts: ['https://ext.exemple.org'] } } });
+    const { client } = await h({ providers: { api }, requested: ['api'], approved: { api: { hosts: ['https://ext.exemple.org'], paths: ['/users', '/x'] } } });
     const r = await client.api.fetch({ path: '/users', headers: { accept: 'application/json' } });
     expect(r).toEqual({ status: 200, headers: { 'content-type': 'application/json' }, body: '{"ok":1}' });
     expect(fetchImpl.mock.calls[0][0]).toBe('https://api.exemple.org/v1/users');
@@ -89,13 +89,15 @@ describe('application des grants', () => {
     expect(JSON.stringify(fetchImpl.mock.calls[1][1].headers)).not.toMatch(/SECRET/);
     await expect(client.api.fetch({ url: 'https://evil.exemple.org/x' })).rejects.toMatchObject({ code: 'DENIED' });
     await expect(client.api.fetch({ path: '/x', headers: { authorization: 'x' } })).rejects.toMatchObject({ code: 'DENIED' });
+    await expect(client.api.fetch({ path: '/admin/users' })).rejects.toMatchObject({ code: 'DENIED', message: expect.stringMatching(/Chemin d'API non autorisé/) });
+    await expect(client.api.fetch({ path: '/users/../admin' })).rejects.toMatchObject({ code: 'DENIED' });
     expect(fetchImpl).toHaveBeenCalledTimes(2);
   });
 
   it('API : réponse trop volumineuse refusée', async () => {
     const fetchImpl = vi.fn(async () => new Response('x'.repeat(500)));
     const api = createFetchApiProvider({ baseUrl: 'https://api.exemple.org', fetchImpl: fetchImpl as any, maxResponseBytes: 100 });
-    const { client } = await h({ providers: { api }, requested: ['api'], approved: { api: {} } });
+    const { client } = await h({ providers: { api }, requested: ['api'], approved: { api: { paths: ['/gros'] } } });
     await expect(client.api.fetch({ path: '/gros' })).rejects.toMatchObject({ code: 'TOO_LARGE' });
   });
 

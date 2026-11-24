@@ -22,7 +22,7 @@ export interface CapabilityDescriptor {
   events: readonly string[];
   dynamicEvents?: boolean;
   /** Clés de configuration de grant qui sont des listes, avec leur mode de comparaison. */
-  listKeys: Record<string, 'exact' | 'pattern'>;
+  listKeys: Record<string, 'exact' | 'pattern' | 'path'>;
   /** Valeur d'une liste quand ni l'app ni l'opérateur n'en fixent. */
   listDefaults: Record<string, readonly string[]>;
 }
@@ -172,8 +172,8 @@ export const CAPABILITIES: Readonly<Record<CapabilityId, CapabilityDescriptor>> 
       ),
     },
     events: [],
-    listKeys: { hosts: 'exact', headers: 'exact' },
-    listDefaults: { hosts: [], headers: ['accept', 'content-type'] },
+    listKeys: { hosts: 'exact', headers: 'exact', paths: 'path' },
+    listDefaults: { hosts: [], headers: ['accept', 'content-type'], paths: [] },
   },
   flags: {
     id: 'flags',

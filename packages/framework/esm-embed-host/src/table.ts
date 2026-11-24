@@ -2,6 +2,7 @@ import {
   CAPABILITIES,
   DEFAULT_SESSION_FIELDS,
   EmbedError,
+  pathAllowed,
   pickFields,
   topicAllowed,
   type CapabilityGranted,
@@ -121,9 +122,12 @@ export function createCapabilityTable(o: TableOptions): { table: HandlerTable; s
     const cfg = cfgOf.get('api');
     const hosts = list(cfg, 'hosts').map(normOrigin);
     const headers = list(cfg, 'headers').map((h) => h.toLowerCase());
+    const paths = list(cfg, 'paths');
     table.api = {
       fetch: async (req: ApiRequest) => {
         if (req.url !== undefined && !hosts.includes(normOrigin(req.url))) throw denied("Hôte non autorisé par le grant de l'app");
+        // Sans liste de chemins (deny-by-default) une app ne peut PAS appeler l'API du Core avec la session de l'utilisateur.
+        if (req.path !== undefined && !pathAllowed(paths, req.path)) throw denied(`Chemin d'API non autorisé par le grant de l'app : ${req.path}`);
         for (const h of Object.keys(req.headers ?? {})) if (!headers.includes(h.toLowerCase())) throw denied(`En-tête non autorisé : ${h}`);
         return p.api!.fetch(req, ctx);
       },

@@ -155,7 +155,7 @@ describe('grants effectifs (demandé ∩ approuvé)', () => {
     expect(g.session).toEqual({ fields: ['user.display'] });
   });
   it('sans manifeste, l’opérateur définit seul', () => {
-    expect(effectiveGrants(undefined, { api: { hosts: ['https://api.x.org'] } }).api).toEqual({ hosts: ['https://api.x.org'], headers: ['accept', 'content-type'] });
+    expect(effectiveGrants(undefined, { api: { hosts: ['https://api.x.org'] } }).api).toEqual({ hosts: ['https://api.x.org'], headers: ['accept', 'content-type'], paths: [] });
   });
 });
 
@@ -200,5 +200,27 @@ describe('pickFields', () => {
   });
   it('ignore les valeurs non clonables', () => {
     expect(pickFields({ f: () => 1, ok: 1 }, ['f', 'ok'])).toEqual({ ok: 1 });
+  });
+});
+
+import { normalizeApiPath, pathAllowed } from './index.js';
+describe('chemins d’API (deny-by-default)', () => {
+  it('exact, préfixe, requête ignorée', () => {
+    expect(pathAllowed(['/v1/themes', '/v1/users/*'], '/v1/themes?x=1')).toBe(true);
+    expect(pathAllowed(['/v1/users/*'], '/v1/users/42/roles')).toBe(true);
+    expect(pathAllowed(['/v1/users/*'], '/v1/users')).toBe(false);
+    expect(pathAllowed(['/v1/themes'], '/v1/themes/1')).toBe(false);
+    expect(pathAllowed([], '/v1/themes')).toBe(false);
+    expect(pathAllowed(undefined, '/v1/themes')).toBe(false);
+  });
+  it('contournements de filtrage refusés', () => {
+    for (const bad of ['/v1/users/../admin', '/v1/users/%2e%2e/admin', '/v1/users/%2E%2E/admin', '/v1/users/..%2fadmin', '/v1//admin', '/v1\\admin', '/v1/users/./x', 'v1/users', '/v1/users/\u0000']) {
+      expect(normalizeApiPath(bad)).toBeNull();
+      expect(pathAllowed(['/v1/*'], bad)).toBe(false);
+    }
+  });
+  it('grants : intersection des chemins demandés et plafonnés', () => {
+    const g = effectiveGrants({ api: { paths: ['/v1/themes/*', '/v1/admin/*'] } } as any, { api: { paths: ['/v1/themes/*', '/v1/users'] } });
+    expect(g.api).toMatchObject({ paths: ['/v1/themes/*'] });
   });
 });

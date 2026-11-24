@@ -1,7 +1,7 @@
 import { CAPABILITIES, CAPABILITY_IDS, getCapability } from './capabilities.js';
 import { FORBIDDEN_SESSION_FIELDS } from './constants.js';
 import { isPlainObject } from './guards.js';
-import { patternCovers } from './patterns.js';
+import { patternCovers, pathCovers } from './patterns.js';
 import type { CapabilityId, EmbedManifest, EmbedTechnology, GrantConfig, NavigationMode } from './types.js';
 
 const NAME_RE = /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/;
@@ -72,8 +72,9 @@ export type EffectiveGrants = Partial<Record<CapabilityId, GrantConfig>>;
 
 const strings = (v: unknown): string[] | undefined => (Array.isArray(v) && v.every((x) => typeof x === 'string') ? (v as string[]) : undefined);
 
-function intersect(requested: string[], ceiling: string[], mode: 'exact' | 'pattern'): string[] {
+function intersect(requested: string[], ceiling: string[], mode: 'exact' | 'pattern' | 'path'): string[] {
   if (mode === 'exact') return requested.filter((r) => ceiling.includes(r));
+  if (mode === 'path') return requested.filter((r) => ceiling.some((c) => pathCovers(c, r)));
   return requested.filter((r) => ceiling.some((c) => patternCovers(c, r)));
 }
 

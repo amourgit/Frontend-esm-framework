@@ -17,6 +17,8 @@ export function negotiateCapabilities(requested: CapabilityRequest[], effective:
   const denied: CapabilityDenied[] = [];
   const seen = new Set<string>();
   for (const r of requested) {
+    // Entrée de l'API publique : on ne présume pas que l'appelant a déjà validé la forme (ex. `null`, id non texte).
+    if (!r || typeof r !== 'object' || typeof r.id !== 'string' || !Number.isInteger(r.version)) continue;
     if (seen.has(r.id)) continue;
     seen.add(r.id);
     const d = getCapability(r.id);

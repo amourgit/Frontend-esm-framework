@@ -14,20 +14,18 @@ exports[`index.ejs rendu > Web : inchangé > rendu de référence : le HTML Web 
     >
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--
-      Anti-FOUC : pose data-theme AVANT le chargement de la CSS, pour que les
-      blocs [data-theme="light"/"dark"] injectés par @egen-civitas/esm-theme
-      s'appliquent dès la première peinture. Source de vérité : esm-theme
-      n'a plus aucun fallback statique de valeurs en SCSS — seul cet
-      attribut + le moteur JS déterminent le rendu.
+      Anti-FOUC : pose la classe « dark » AVANT le chargement de la CSS, pour que le mode sombre s'applique dès la
+      première peinture. Les variables de thème, elles, sont écrites par @egen-civitas/esm-theme (runtime) ; ce bloc
+      ne fait que reprendre le choix de mode mémorisé (« egen-theme-mode », sombre par défaut).
     -->
     <script>
       (function () {
         try {
           var stored = window.localStorage.getItem('egen-theme-mode');
           var mode = (stored === 'light' || stored === 'dark') ? stored : 'dark';
-          document.documentElement.setAttribute('data-theme', mode);
+          document.documentElement.classList.toggle('dark', mode === 'dark');
         } catch (e) {
-          document.documentElement.setAttribute('data-theme', 'dark');
+          document.documentElement.classList.toggle('dark', true);
         }
       })();
     </script>

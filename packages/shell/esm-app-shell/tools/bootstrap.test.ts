@@ -17,15 +17,15 @@ function run(source: string, globals: Record<string, unknown>) {
 }
 
 function themeAfter(source: string, storage: 'throws' | string | null) {
-  const setAttribute = vi.fn();
+  const toggle = vi.fn();
   const localStorage = {
     getItem: () => {
       if (storage === 'throws') throw new Error('stockage interdit');
       return storage;
     },
   };
-  run(source, { window: { localStorage }, document: { documentElement: { setAttribute } } });
-  return setAttribute.mock.calls;
+  run(source, { window: { localStorage }, document: { documentElement: { classList: { toggle } } } });
+  return toggle.mock.calls;
 }
 
 describe('anti-FOUC du thème : fichier natif ≡ bloc inline Web', () => {
@@ -44,9 +44,9 @@ describe('anti-FOUC du thème : fichier natif ≡ bloc inline Web', () => {
   );
 
   it('la valeur par défaut est « dark » ; « light » est respecté', () => {
-    expect(themeAfter(THEME_SCRIPT, null)).toEqual([['data-theme', 'dark']]);
-    expect(themeAfter(THEME_SCRIPT, 'light')).toEqual([['data-theme', 'light']]);
-    expect(themeAfter(THEME_SCRIPT, 'throws')).toEqual([['data-theme', 'dark']]);
+    expect(themeAfter(THEME_SCRIPT, null)).toEqual([['dark', true]]);
+    expect(themeAfter(THEME_SCRIPT, 'light')).toEqual([['dark', false]]);
+    expect(themeAfter(THEME_SCRIPT, 'throws')).toEqual([['dark', true]]);
   });
 });
 
@@ -72,7 +72,7 @@ describe('buildHeadBootstrap', () => {
     const bridge = JSON.stringify(targetWindowBridge(resolveTarget(nativeEnv())));
     run(buildHeadBootstrap({ bridges: [bridge] }), {
       window: win,
-      document: { documentElement: { setAttribute() {} } },
+      document: { documentElement: { classList: { toggle() {} } } },
     });
     expect(win.egenTarget).toBe('android');
   });

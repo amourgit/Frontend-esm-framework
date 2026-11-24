@@ -14,16 +14,17 @@
 const { createHash } = require('node:crypto');
 
 /**
- * Anti-FOUC du thème : pose `data-theme` AVANT la CSS. Même logique que le bloc inline de `index.ejs` (Web) ;
- * `bootstrap.test.ts` exécute les DEUX et vérifie qu'ils produisent le même résultat (garde-fou contre la dérive).
+ * Anti-FOUC du thème : pose la classe `dark` AVANT la CSS (le runtime de `@egen-civitas/esm-theme` utilise la même
+ * convention). Même logique que le bloc inline de `index.ejs` (Web) ; `bootstrap.test.ts` exécute les DEUX et vérifie
+ * qu'ils produisent le même résultat (garde-fou contre la dérive).
  */
 const THEME_SCRIPT = `(function () {
   try {
     var stored = window.localStorage.getItem('egen-theme-mode');
     var mode = (stored === 'light' || stored === 'dark') ? stored : 'dark';
-    document.documentElement.setAttribute('data-theme', mode);
+    document.documentElement.classList.toggle('dark', mode === 'dark');
   } catch (e) {
-    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.classList.toggle('dark', true);
   }
 })();`;
 

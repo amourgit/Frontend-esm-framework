@@ -1,123 +1,150 @@
-// ============================================================================
-//  EGEN THEME ENGINE — Instance singleton + API globale
-// ============================================================================
-
-import { ThemeEngine } from './engine.js';
-import type { ThemeEngineOptions, ThemeEngineState, ThemeMode, ThemeSchema } from './types.js';
-
 /**
- * Instance singleton du moteur de thème.
- * Elle est initialisée par `setupThemeEngine()` au boot du shell.
+ * Instance unique du runtime de thème, partagée par le shell et les applications.
  *
- * NOTE MICROFRONTENDS : ce module DOIT être partagé en singleton via la
- * configuration Module Federation (`shared: { '@egen-civitas/esm-theme': { singleton: true, eager: true } }`)
- * pour toutes les apps consommatrices. Si chaque remote embarque sa propre
- * copie du module, plusieurs instances de `_engine` coexisteront et se
- * marcheront dessus (chacune réécrivant la même balise `<style>`).
+ * MICRO-FRONTENDS : ce module DOIT être partagé en singleton (`@egen-civitas/esm-theme`, `singleton: true`)
+ * par toutes les applications. Si chaque application embarquait sa propre copie, plusieurs instances
+ * coexisteraient et réécriraient la même balise `<style>`.
+ *
+ * Le shell démarre toujours : le thème de repli embarqué est appliqué immédiatement, puis remplacé par
+ * celui du backend du Core si celui-ci répond à temps et que sa réponse est valide.
  */
-let _engine: ThemeEngine | null = null;
+import { defaultThemeStyles, type ThemeMode } from './theme-styles.js';
+import { ThemeStylesRuntime, type ThemeStylesRuntimeOptions } from './theme-styles-runtime.js';
+import { fetchTheme, reportThemeApplied, type ResolvedTheme } from './client.js';
 
-/**
- * Initialise et démarre le moteur de thème global.
- * À appeler une seule fois, au démarrage de l'app shell (run.ts).
- */
-export async function setupThemeEngine(options: ThemeEngineOptions): Promise<ThemeEngine> {
-  if (_engine) {
-    _engine.destroy();
+export const THEME_MODE_STORAGE_KEY = 'egen-theme-mode';
+
+export interface SetupThemeOptions {
+  /** Identifiant d'application transmis au backend (`?app=`). */
+  app?: string;
+  /** Chemin relatif de même origine du thème. Défaut : `/api/theme`. */
+  endpoint?: string;
+  /** Mode initial si aucun choix n'est mémorisé. Défaut : `dark`. */
+  defaultMode?: ThemeMode;
+  /** Clé `localStorage` du choix de mode ; `null` désactive la mémorisation. Défaut : `egen-theme-mode`. */
+  modeStorageKey?: string | null;
+  /** Délai maximal d'attente du backend avant de garder le thème de repli. Défaut : 3000 ms. */
+  timeoutMs?: number;
+  /** Transmettre au backend l'accusé du thème appliqué. Défaut : `true`. */
+  reportApplied?: boolean;
+  /** Options du runtime (élément racine, identifiant du `<style>`, format des couleurs, classe sombre). */
+  runtime?: ThemeStylesRuntimeOptions;
+  /** Implémentation de `fetch` (tests). */
+  fetch?: typeof fetch;
+}
+
+interface Active {
+  runtime: ThemeStylesRuntime;
+  options: SetupThemeOptions;
+  etag: string | null;
+  unsubscribe: () => void;
+}
+
+let _active: Active | null = null;
+
+function readStoredMode(key: string | null): ThemeMode | null {
+  if (key === null || typeof window === 'undefined') return null;
+  try {
+    const v = window.localStorage.getItem(key);
+    return v === 'light' || v === 'dark' ? v : null;
+  } catch {
+    return null;
   }
-
-  _engine = new ThemeEngine(options);
-  await _engine.apply();
-  return _engine;
 }
 
-/**
- * Retourne l'instance singleton.
- * Lance une erreur si `setupThemeEngine()` n'a pas encore été appelé.
- */
-export function getThemeEngine(): ThemeEngine {
-  if (!_engine) {
-    throw new Error('[egen-civitas/esm-theme] ThemeEngine non initialisé. Appelez setupThemeEngine() au boot du shell.');
+function storeMode(key: string | null, mode: ThemeMode): void {
+  if (key === null || typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(key, mode);
+  } catch {
+    // stockage indisponible (navigation privée, quota…) : non bloquant
   }
-  return _engine;
+}
+
+/** Récupère le thème du backend ; renvoie `null` (en gardant l'état actuel) si indisponible ou invalide. */
+async function pull(a: Active, useEtag: boolean): Promise<ResolvedTheme | null> {
+  const { options } = a;
+  const ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), options.timeoutMs ?? 3000) : null;
+  try {
+    const r = await fetchTheme({
+      app: options.app,
+      endpoint: options.endpoint,
+      etag: useEtag ? a.etag : null,
+      fetch: options.fetch,
+      signal: ctrl?.signal,
+    });
+    if (r.status === 304) return null;
+    a.runtime.apply(r.theme.styles); // contrôle de sécurité des valeurs avant toute écriture
+    a.etag = r.etag;
+    return r.theme;
+  } catch (e) {
+    console.warn('[esm-theme] Thème du backend non appliqué, thème de repli conservé :', (e as Error).message);
+    return null;
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 /**
- * Retourne l'état courant du thème actif (sans abonnement).
- * Retourne null si le moteur n'est pas encore initialisé.
+ * Initialise le thème global. À appeler une seule fois, au démarrage du shell.
+ * Ne lève jamais : en cas d'échec réseau ou de réponse refusée, le thème de repli reste appliqué.
  */
-export function getThemeState(): ThemeEngineState | null {
-  return _engine?.getState() ?? null;
+export async function setupTheme(options: SetupThemeOptions = {}): Promise<ThemeStylesRuntime> {
+  if (_active) {
+    _active.unsubscribe();
+    _active.runtime.destroy();
+    _active = null;
+  }
+  const storageKey = options.modeStorageKey === undefined ? THEME_MODE_STORAGE_KEY : options.modeStorageKey;
+  const mode = readStoredMode(storageKey) ?? options.defaultMode ?? 'dark';
+  const runtime = new ThemeStylesRuntime(options.runtime);
+  runtime.apply(defaultThemeStyles, mode); // le rendu ne dépend jamais du réseau
+  const unsubscribe = runtime.subscribe((e) => {
+    if (e.type === 'mode') storeMode(storageKey, e.mode);
+  });
+  const active: Active = { runtime, options, etag: null, unsubscribe };
+  _active = active;
+
+  const theme = await pull(active, false);
+  if (theme && options.reportApplied !== false) {
+    void reportThemeApplied(theme, { app: options.app, fetch: options.fetch });
+  }
+  return runtime;
 }
 
-/**
- * Raccourci pour recharger manuellement le thème (ex: après upload d'un fichier).
- */
-export async function reloadTheme(): Promise<void> {
-  await _engine?.apply();
+/** Instance du runtime. Lève une erreur si `setupTheme()` n'a pas encore été appelé. */
+export function getTheme(): ThemeStylesRuntime {
+  if (!_active) {
+    throw new Error('[esm-theme] Thème non initialisé. Appelez setupTheme() au démarrage du shell.');
+  }
+  return _active.runtime;
 }
 
-/** Raccourci pour changer le mode clair/sombre depuis n'importe quelle app. */
+/** Mode courant, ou `null` si le thème n'est pas encore initialisé. */
+export function getThemeMode(): ThemeMode | null {
+  return _active?.runtime.getMode() ?? null;
+}
+
+/** Change le mode clair/sombre (mémorisé). Sans effet si le thème n'est pas initialisé. */
 export function setThemeMode(mode: ThemeMode): void {
-  _engine?.setMode(mode);
+  _active?.runtime.setMode(mode);
 }
 
-/** Raccourci pour basculer le mode clair/sombre. */
-export function toggleThemeMode(): void {
-  _engine?.toggleMode();
-}
-
-/**
- * Raccourci — permet à une application microfrontend d'enregistrer sa
- * propre surcharge de thème, scopée à son conteneur racine, avec priorité.
- *
- * Pré-requis côté app : son conteneur racine doit porter l'attribut
- * `data-egen-app="<scope>"` (le même `scope` que celui utilisé ici) pour que
- * la surcharge CSS s'applique.
- *
- * @example
- * ```ts
- * // dans le run.ts d'une app microfrontend
- * applyAppThemeOverride('egen-academique', {
- *   colors: { primary: { '500': '#16a34a', '600': '#15803d' } },
- * }, { priority: 5 });
- * ```
- */
-export function applyAppThemeOverride(
-  scope: string,
-  schema: Partial<ThemeSchema>,
-  options?: { id?: string; priority?: number },
-): void {
-  _engine?.applyAppOverride(scope, schema, options);
-}
-
-/** Raccourci pour retirer une surcharge de thème d'une application. */
-export function removeAppThemeOverride(scope: string, id?: string): void {
-  _engine?.removeAppOverride(scope, id);
+/** Bascule le mode clair/sombre (mémorisé). Renvoie le nouveau mode, ou `null` si non initialisé. */
+export function toggleThemeMode(): ThemeMode | null {
+  return _active?.runtime.toggleMode() ?? null;
 }
 
 /**
- * Raccourci — applique une surcharge de thème GLOBALE (visible sur toute la
- * page, sans qu'aucun conteneur n'ait besoin de porter `data-egen-app`).
- *
- * C'est le mécanisme à utiliser pour un thème de TENANT ou une préférence
- * utilisateur globale — pas `applyAppThemeOverride`, qui ne s'applique qu'à
- * l'intérieur d'un conteneur portant explicitement `data-egen-app="<scope>"`.
- *
- * @example
- * ```ts
- * // dans le run.ts du shell, une fois le tenant résolu
- * applyGlobalThemeOverride({ colors: { primary: { '500': '#16a34a' } } }, { priority: 10 });
- * ```
+ * Redemande le thème au backend (avec l'`ETag` connu) et l'applique s'il a changé.
+ * Renvoie `true` si un nouveau thème a été appliqué.
  */
-export function applyGlobalThemeOverride(
-  schema: Partial<ThemeSchema>,
-  options?: { id?: string; priority?: number },
-): void {
-  _engine?.applyGlobalOverride(schema, options);
-}
-
-/** Raccourci pour retirer une surcharge de thème globale. */
-export function removeGlobalThemeOverride(id?: string): void {
-  _engine?.removeGlobalOverride(id);
+export async function reloadTheme(): Promise<boolean> {
+  if (!_active) return false;
+  const theme = await pull(_active, true);
+  if (theme && _active.options.reportApplied !== false) {
+    void reportThemeApplied(theme, { app: _active.options.app, fetch: _active.options.fetch });
+  }
+  return theme !== null;
 }

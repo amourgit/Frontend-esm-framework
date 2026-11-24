@@ -1,0 +1,17 @@
+@egen-civitas/esm-theme
+Copyright (c) CIVITAS
+
+Ce paquet contient du code de tiers, redistribué sous leur licence d'origine :
+
+1. TokiForge (https://github.com/TokiForge/tokiforge), version 1.1.2, Copyright (c) TokiForge Community,
+   licence MIT (texte : LICENSE-MIT-TOKIFORGE). Seul l'état MIT du projet est repris ; les versions publiées
+   ensuite par l'amont sous licence AGPL-3.0 ne sont ni utilisées ni fusionnées. Code concerné :
+   src/theme-styles-runtime.ts (runtime navigateur, d'après le runtime de TokiForge, réécrit par EGEN).
+
+2. Tweakcn (https://github.com/jnsahaj/tweakcn), Copyright (c) Sahaj Jain et contributeurs,
+   licence Apache-2.0 (texte : LICENSE-APACHE-2.0). Code porté : calcul des variables CSS, des ombres
+   dérivées et conversions de couleurs (utils/theme-style-generator.ts, utils/shadows.ts,
+   utils/color-converter.ts) dans src/theme-styles.ts, ainsi que le thème par défaut (config/theme.ts)
+   dans src/default-theme-styles.ts. Les fichiers portés sont signalés dans leur en-tête.
+
+Ces éléments proviennent du dépôt EGEN TokiForge (https://github.com/amourgit/egen-tokiforge), où ils sont testés.

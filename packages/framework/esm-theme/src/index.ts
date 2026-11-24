@@ -2,51 +2,43 @@
 //  @egen-civitas/esm-theme — Point d'entrée public
 // ============================================================================
 
-// Types
-export type {
-  ThemeSchema,
-  ThemeEngineOptions,
-  ThemeEngineState,
-  ThemeMode,
-  LoadedTheme,
-  FlattenResult,
-  ColorScale,
-  SurfaceTokens,
-  BorderTokens,
-  PanelLayer,
-  PanelTokenSet,
-  AppThemeOverride,
-} from './types.js';
+// Contrat de thème (format Tweakcn), validation, contrastes, diff, forme canonique, sortie CSS
+export * from './theme-styles.js';
 
-// Moteur principal
-export { ThemeEngine } from './engine.js';
-
-// Singleton global (utilisé par le shell et les apps)
+// Runtime navigateur : variables CSS sur :root, classe .dark, surcharges, abonnements
 export {
-  setupThemeEngine,
-  getThemeEngine,
-  getThemeState,
-  reloadTheme,
+  ThemeStylesRuntime,
+  themeKeyToVariable,
+  type ThemeStylesRuntimeOptions,
+  type ThemeRuntimeEvent,
+  type PartialThemeStyles,
+} from './theme-styles-runtime.js';
+
+// Projection DTCG sans perte
+export * from './dtcg.js';
+
+// Client du backend du Core (même origine uniquement)
+export {
+  THEME_ENDPOINT,
+  THEME_APPLIED_ENDPOINT,
+  assertSameOriginPath,
+  fetchTheme,
+  parseResolvedTheme,
+  reportThemeApplied,
+  type FetchThemeResult,
+  type ResolvedTheme,
+  type ResolvedThemeSources,
+  type ThemeClientOptions,
+} from './client.js';
+
+// Instance unique, partagée par le shell et les applications
+export {
+  THEME_MODE_STORAGE_KEY,
+  setupTheme,
+  getTheme,
+  getThemeMode,
   setThemeMode,
   toggleThemeMode,
-  applyAppThemeOverride,
-  removeAppThemeOverride,
-  applyGlobalThemeOverride,
-  removeGlobalThemeOverride,
+  reloadTheme,
+  type SetupThemeOptions,
 } from './singleton.js';
-
-// Utilitaires bas niveau (utiles pour les outils de build, tests, storybook)
-export { flattenToCssVars } from './flatten.js';
-export {
-  buildCssString,
-  buildThemeCssText,
-  injectCssVarsToDocument,
-  removeCssVarsFromDocument,
-  injectScopedCssVars,
-  removeScopedCssVars,
-  applyModeAttribute,
-} from './inject.js';
-export { loadHighestPriorityTheme, loadHighestPriorityThemeIfChanged } from './loader.js';
-export { deepMerge, mergeBySortedPriority } from './deepMerge.js';
-export { validateThemeSchema } from './schema.js';
-export type { ThemeValidationResult } from './schema.js';

@@ -81,7 +81,7 @@
     "@egen-civitas/esm-embed-protocol": "^0.1.0"
   },
   "bin": {
-    "egen-embed-sim": "bin/egen-embed-sim.mjs",
-    "egen-embed-check": "bin/egen-embed-check.mjs"
+    "egen-embed-check": "bin/egen-embed-check.mjs",
+    "egen-embed-sim": "bin/egen-embed-sim.mjs"
   }
 }

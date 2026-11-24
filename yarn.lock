@@ -1217,6 +1217,7 @@ __metadata:
     typescript: "npm:^5.8.3"
     vitest: "npm:^4.1.2"
   bin:
+    egen-embed-check: bin/egen-embed-check.mjs
     egen-embed-sim: bin/egen-embed-sim.mjs
   languageName: unknown
   linkType: soft

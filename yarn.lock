@@ -1167,7 +1167,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-embed-host@workspace:packages/framework/esm-embed-host":
+"@egen-civitas/esm-embed-host@npm:^0.0.0, @egen-civitas/esm-embed-host@workspace:packages/framework/esm-embed-host":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-embed-host@workspace:packages/framework/esm-embed-host"
   dependencies:
@@ -1197,6 +1197,27 @@ __metadata:
     rimraf: "npm:^6.1.3"
     typescript: "npm:^5.8.3"
     vitest: "npm:^4.1.2"
+  languageName: unknown
+  linkType: soft
+
+"@egen-civitas/esm-embed-testing@workspace:packages/framework/esm-embed-testing":
+  version: 0.0.0-use.local
+  resolution: "@egen-civitas/esm-embed-testing@workspace:packages/framework/esm-embed-testing"
+  dependencies:
+    "@egen-civitas/esm-embed-client": "npm:^0.0.0"
+    "@egen-civitas/esm-embed-host": "npm:^0.0.0"
+    "@egen-civitas/esm-embed-protocol": "npm:^0.0.0"
+    "@swc/cli": "npm:0.8.1"
+    "@swc/core": "npm:1.15.21"
+    "@types/node": "npm:^20"
+    concurrently: "npm:^9.2.1"
+    cross-env: "npm:^10.1.0"
+    happy-dom: "npm:^20.6.0"
+    rimraf: "npm:^6.1.3"
+    typescript: "npm:^5.8.3"
+    vitest: "npm:^4.1.2"
+  bin:
+    egen-embed-sim: bin/egen-embed-sim.mjs
   languageName: unknown
   linkType: soft
 

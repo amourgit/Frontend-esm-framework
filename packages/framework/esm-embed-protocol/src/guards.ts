@@ -115,7 +115,7 @@ export function parsePort(m: Record<string, unknown>): PortMessage | null {
   }
   const denied: CapabilityDenied[] = [];
   for (const d of m.denied) {
-    if (!isPlainObject(d) || typeof d.id !== 'string' || !['UNKNOWN', 'VERSION', 'NOT_APPROVED'].includes(d.reason as string)) return null;
+    if (!isPlainObject(d) || typeof d.id !== 'string' || !['UNKNOWN', 'VERSION', 'NOT_APPROVED', 'UNAVAILABLE'].includes(d.reason as string)) return null;
     denied.push({ id: d.id, reason: d.reason as CapabilityDenied['reason'] });
   }
   return { kind: 'port', nonce: m.nonce, protocol: m.protocol as number, granted, denied, hostVersion: typeof m.hostVersion === 'string' ? m.hostVersion : undefined };

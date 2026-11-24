@@ -28,7 +28,7 @@ export interface CapabilityRequest {
 
 export interface CapabilityDenied {
   id: string;
-  reason: 'UNKNOWN' | 'VERSION' | 'NOT_APPROVED';
+  reason: 'UNKNOWN' | 'VERSION' | 'NOT_APPROVED' | 'UNAVAILABLE';
 }
 
 export interface CapabilityGranted {

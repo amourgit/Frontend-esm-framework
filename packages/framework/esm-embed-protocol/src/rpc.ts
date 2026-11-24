@@ -192,6 +192,15 @@ export class RpcEndpoint {
     if (!msg) return;
     if (estimateSize(data, this.limits.maxMessageBytes) > this.limits.maxMessageBytes) {
       if (msg.t === 'req' || msg.t === 'sub') this.reply(msg.id, false, new EmbedError('TOO_LARGE', 'Message trop volumineux'));
+      else if (msg.t === 'res') {
+        // Réponse trop volumineuse : l'appelant est averti au lieu d'attendre le délai.
+        const p = this.pending.get(msg.id);
+        if (p) {
+          this.pending.delete(msg.id);
+          clearTimeout(p.timer);
+          p.reject(new EmbedError('TOO_LARGE', 'Réponse trop volumineuse'));
+        }
+      }
       return;
     }
     switch (msg.t) {

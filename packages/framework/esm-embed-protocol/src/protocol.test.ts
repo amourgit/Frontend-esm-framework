@@ -186,3 +186,19 @@ describe('négociation', () => {
     ]);
   });
 });
+
+import { pickFields } from './index.js';
+describe('pickFields', () => {
+  const src = { authenticated: true, sessionId: 'S', user: { uuid: 'u', display: 'Sam', secret: 'x' }, tokens: { a: 1 } };
+  it('ne copie que les chemins listés', () => {
+    expect(pickFields(src, ['authenticated', 'user.uuid', 'user.display', 'absent.x'])).toEqual({ authenticated: true, user: { uuid: 'u', display: 'Sam' } });
+  });
+  it('ignore les clés dangereuses et les propriétés héritées', () => {
+    const r = pickFields(JSON.parse('{"__proto__":{"x":1},"user":{"a":1}}'), ['__proto__.x', 'constructor.name', 'user.toString']);
+    expect(r).toEqual({});
+    expect(({} as any).x).toBeUndefined();
+  });
+  it('ignore les valeurs non clonables', () => {
+    expect(pickFields({ f: () => 1, ok: 1 }, ['f', 'ok'])).toEqual({ ok: 1 });
+  });
+});

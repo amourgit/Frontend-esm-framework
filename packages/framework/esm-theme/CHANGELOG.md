@@ -1,5 +1,11 @@
 # @egen-civitas/esm-theme
 
+## 2.0.0
+
+### Major Changes
+
+- c8a968b: Bascule du moteur de thème sur TokiForge : suppression de l'ancien moteur (`setupThemeEngine`, `engine.ts`, `loader.ts`, `schema.ts`, `flatten.ts`, `inject.ts`, `types.ts`, `theme.default.json`) au profit du nouveau système `setupTheme` (styles de thème runtime, client, singleton, DTCG). `esm-app-shell` initialise désormais le thème via `setupTheme`.
+
 ## 1.1.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-theme",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "license": "MPL-2.0",
   "description": "Runtime de thème EGEN : contrat de thème au format Tweakcn, validation, variables CSS et mode clair/sombre, projection DTCG, client du backend du Core.",
   "main": "dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-app-shell",
-  "version": "3.0.12",
+  "version": "3.1.0",
   "license": "MPL-2.0",
   "files": [
     "dist",
@@ -52,7 +52,7 @@
     "@egen-civitas/esm-state": "^1.0.3",
     "@egen-civitas/esm-styleguide": "^5.2.7",
     "@egen-civitas/esm-tenant": "^1.1.0",
-    "@egen-civitas/esm-theme": "^1.1.0",
+    "@egen-civitas/esm-theme": "^2.0.0",
     "@egen-civitas/esm-utils": "^2.0.0",
     "@internationalized/date": "^3.8.0",
     "@rspack/cli": "1.7.9",

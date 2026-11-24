@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  font-family: var(--typography-font-family-sans);
+  font-family: var(--font-sans);
 }
 
 .fieldControl {
@@ -13,19 +13,19 @@
 .field--sm .input {
   padding-top: 1.1rem;
   padding-bottom: 0.4rem;
-  font-size: var(--typography-font-size-xs-size);
+  font-size: var(--text-xs);
 }
 
 .field--md .input {
   padding-top: 1.35rem;
   padding-bottom: 0.55rem;
-  font-size: var(--typography-font-size-sm-size);
+  font-size: var(--text-sm);
 }
 
 .field--lg .input {
   padding-top: 1.6rem;
   padding-bottom: 0.7rem;
-  font-size: var(--typography-font-size-base-size);
+  font-size: var(--text-base);
 }
 
 .input {
@@ -33,10 +33,10 @@
   width: 100%;
   appearance: none;
   background: transparent;
-  color: var(--colors-surface-foreground);
+  color: var(--foreground);
   font-family: inherit;
-  line-height: var(--typography-font-size-sm-line-height, 1.4);
-  transition: var(--transitions-colors), var(--transitions-shadow);
+  line-height: var(--text-sm--line-height);
+  transition: var(--transition-colors), var(--transition-shadow);
 }
 .input::placeholder {
   color: transparent;
@@ -68,8 +68,8 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  color: var(--colors-surface-muted-foreground);
-  transition: var(--transitions-colors);
+  color: var(--muted-foreground);
+  transition: var(--transition-colors);
   pointer-events: none;
 }
 
@@ -86,9 +86,9 @@
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  color: var(--colors-surface-muted-foreground);
+  color: var(--muted-foreground);
   pointer-events: none;
-  transition: var(--transitions-default);
+  transition: var(--transition-default);
   white-space: nowrap;
 }
 
@@ -107,13 +107,13 @@
 }
 
 .requiredMark {
-  color: var(--colors-error-500);
+  color: var(--destructive);
 }
 
 .input:focus + .label,
 .input:not(:placeholder-shown) + .label {
   transform: translateY(-1.35rem) scale(0.8);
-  color: var(--colors-primary-500);
+  color: var(--primary);
 }
 
 .field--has-left-icon .input:focus + .label,
@@ -122,13 +122,11 @@
 }
 
 .field--outlined .fieldControl {
-  background: var(--panel-input-background);
-  backdrop-filter: var(--panel-input-backdrop-filter);
-  -webkit-backdrop-filter: var(--panel-input-backdrop-filter);
-  border: var(--panel-input-border);
-  box-shadow: var(--panel-input-box-shadow);
-  transition: var(--transitions-glass);
-  border-radius: var(--border-radius-lg);
+  background: var(--muted);
+  border: 1px solid var(--border);
+  box-shadow: none;
+  transition: var(--transition-surface);
+  border-radius: var(--radius-lg);
 }
 
 .field--outlined .input {
@@ -155,7 +153,7 @@
   left: 0.625rem;
   transform: translateY(-50%) scale(0.8);
   padding: 0 0.25rem;
-  background: var(--colors-surface-card);
+  background: var(--card);
 }
 
 .field--outlined.field--has-left-icon .input:focus + .label,
@@ -164,17 +162,17 @@
 }
 
 .field--outlined .fieldControl:focus-within {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--colors-primary-500) 20%, transparent);
-  border-color: var(--colors-primary-500);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
+  border-color: var(--primary);
 }
 
 .field--filled .fieldControl {
-  background: var(--colors-surface-muted);
+  background: var(--muted);
   border: none;
-  border-bottom: 2px solid var(--colors-border-input);
-  border-top-left-radius: var(--border-radius-md);
-  border-top-right-radius: var(--border-radius-md);
-  transition: var(--transitions-colors);
+  border-bottom: 2px solid var(--input);
+  border-top-left-radius: var(--radius-md);
+  border-top-right-radius: var(--radius-md);
+  transition: var(--transition-colors);
 }
 
 .field--filled .input {
@@ -195,14 +193,14 @@
 }
 
 .field--filled .fieldControl:focus-within {
-  border-bottom-color: var(--colors-primary-500);
+  border-bottom-color: var(--primary);
 }
 
 .field--standard .fieldControl {
   background: transparent;
   border: none;
-  border-bottom: 2px solid var(--colors-border-input);
-  transition: var(--transitions-colors);
+  border-bottom: 2px solid var(--input);
+  transition: var(--transition-colors);
 }
 
 .field--standard .input {
@@ -223,14 +221,14 @@
 }
 
 .field--standard .fieldControl:focus-within {
-  border-bottom-color: var(--colors-primary-500);
+  border-bottom-color: var(--primary);
 }
 
 .field--kinetic .fieldControl {
   background: transparent;
   border: none;
-  border-bottom: 2px solid var(--colors-border-input);
-  transition: var(--transitions-colors);
+  border-bottom: 2px solid var(--input);
+  transition: var(--transition-colors);
 }
 
 .field--kinetic .input {
@@ -243,7 +241,7 @@
 }
 
 .field--kinetic .fieldControl:focus-within {
-  border-bottom-color: var(--colors-primary-500);
+  border-bottom-color: var(--primary);
 }
 
 .kineticLabelWrapper {
@@ -265,72 +263,72 @@
 
 .kineticLetter {
   display: inline-block;
-  font-size: var(--typography-font-size-sm-size);
-  color: var(--colors-surface-foreground);
+  font-size: var(--text-sm);
+  color: var(--foreground);
 }
 
 .field--success .fieldControl {
-  border-color: var(--colors-success-500) !important;
+  border-color: var(--success-500) !important;
 }
 
 .field--success .label,
 .field--success .leftIcon {
-  color: var(--colors-success-600);
+  color: var(--success-600);
 }
 
 .field--success .input {
-  color: var(--colors-success-700);
+  color: var(--success-700);
 }
 
 .field--warning .fieldControl {
-  border-color: var(--colors-warning-500) !important;
+  border-color: var(--warning-500) !important;
 }
 
 .field--warning .label,
 .field--warning .leftIcon {
-  color: var(--colors-warning-600);
+  color: var(--warning-600);
 }
 
 .field--warning .input {
-  color: var(--colors-warning-700);
+  color: var(--warning-700);
 }
 
 .field--error .fieldControl {
-  border-color: var(--colors-error-500) !important;
+  border-color: var(--destructive) !important;
 }
 
 .field--error .label,
 .field--error .leftIcon {
-  color: var(--colors-error-600);
+  color: var(--destructive-600);
 }
 
 .field--error .input {
-  color: var(--colors-error-700);
+  color: var(--destructive-700);
 }
 
 .field--outlined.field--success .fieldControl:focus-within,
 .field--filled.field--success .fieldControl:focus-within,
 .field--standard.field--success .fieldControl:focus-within,
 .field--kinetic.field--success .fieldControl:focus-within {
-  border-color: var(--colors-success-500);
+  border-color: var(--success-500);
 }
 
 .field--outlined.field--warning .fieldControl:focus-within,
 .field--filled.field--warning .fieldControl:focus-within,
 .field--standard.field--warning .fieldControl:focus-within,
 .field--kinetic.field--warning .fieldControl:focus-within {
-  border-color: var(--colors-warning-500);
+  border-color: var(--warning-500);
 }
 
 .field--outlined.field--error .fieldControl:focus-within,
 .field--filled.field--error .fieldControl:focus-within,
 .field--standard.field--error .fieldControl:focus-within,
 .field--kinetic.field--error .fieldControl:focus-within {
-  border-color: var(--colors-error-500);
+  border-color: var(--destructive);
 }
 
 .field--animating .fieldControl {
-  animation: egen-field-shake 0.4s var(--transitions-default, ease) both;
+  animation: egen-field-shake 0.4s var(--transition-default) both;
 }
 
 @keyframes egen-field-shake {
@@ -353,7 +351,7 @@
   display: flex;
   align-items: center;
   opacity: 0;
-  transition: var(--transitions-default);
+  transition: var(--transition-default);
   pointer-events: none;
 }
 
@@ -363,38 +361,38 @@
 }
 
 .validationIcon--success .validationIconGlyph {
-  color: var(--colors-success-500);
+  color: var(--success-500);
 }
 
 .validationIcon--warning .validationIconGlyph {
-  color: var(--colors-warning-500);
+  color: var(--warning-500);
 }
 
 .validationIcon--error .validationIconGlyph {
-  color: var(--colors-error-500);
+  color: var(--destructive);
 }
 
 .message {
   margin: 0.5rem 0 0;
-  font-size: var(--typography-font-size-xs-size);
-  line-height: var(--typography-font-size-xs-line-height, 1.4);
-  animation: egen-field-message-in 0.35s var(--transitions-default, ease) both;
+  font-size: var(--text-xs);
+  line-height: var(--text-xs--line-height);
+  animation: egen-field-message-in 0.35s var(--transition-default) both;
 }
 
 .field--success .message {
-  color: var(--colors-success-600);
+  color: var(--success-600);
 }
 
 .field--warning .message {
-  color: var(--colors-warning-600);
+  color: var(--warning-600);
 }
 
 .field--error .message {
-  color: var(--colors-error-600);
+  color: var(--destructive-600);
 }
 
 .messageLead {
-  font-weight: var(--typography-font-weight-semibold);
+  font-weight: var(--font-weight-semibold);
 }
 
 @keyframes egen-field-message-in {

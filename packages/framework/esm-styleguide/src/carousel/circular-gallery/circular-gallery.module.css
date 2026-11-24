@@ -11,7 +11,7 @@
   max-width: 600px;
   overflow: hidden;
   border-radius: 20px;
-  box-shadow: 0 2.8px 2.2px color-mix(in srgb, var(--colors-surface-foreground) 2%, transparent), 0 6.7px 5.3px color-mix(in srgb, var(--colors-surface-foreground) 2.8%, transparent), 0 12.5px 10px color-mix(in srgb, var(--colors-surface-foreground) 3.5%, transparent), 0 22.3px 17.9px color-mix(in srgb, var(--colors-surface-foreground) 4.2%, transparent), 0 41.8px 33.4px color-mix(in srgb, var(--colors-surface-foreground) 5%, transparent), 0 100px 80px color-mix(in srgb, var(--colors-surface-foreground) 7%, transparent);
+  box-shadow: 0 2.8px 2.2px color-mix(in srgb, var(--foreground) 2%, transparent), 0 6.7px 5.3px color-mix(in srgb, var(--foreground) 2.8%, transparent), 0 12.5px 10px color-mix(in srgb, var(--foreground) 3.5%, transparent), 0 22.3px 17.9px color-mix(in srgb, var(--foreground) 4.2%, transparent), 0 41.8px 33.4px color-mix(in srgb, var(--foreground) 5%, transparent), 0 100px 80px color-mix(in srgb, var(--foreground) 7%, transparent);
 }
 
 .imageLayer {
@@ -48,11 +48,11 @@
 .tabCircle {
   cursor: pointer;
   fill: transparent;
-  stroke: color-mix(in srgb, var(--colors-neutral-50) 70%, transparent);
-  transition: var(--transitions-colors);
+  stroke: color-mix(in srgb, var(--neutral-50) 70%, transparent);
+  transition: var(--transition-colors);
 }
 .tabCircle:hover {
-  stroke: var(--colors-neutral-50);
+  stroke: var(--neutral-50);
 }
 
 .navButton {
@@ -65,26 +65,26 @@
   transform: translateY(-50%);
   align-items: center;
   justify-content: center;
-  border-radius: var(--border-radius-full, 9999px);
-  border: 2px solid color-mix(in srgb, var(--colors-neutral-50) 20%, transparent);
-  background: color-mix(in srgb, var(--colors-neutral-50) 95%, transparent);
-  color: var(--colors-neutral-900);
-  box-shadow: 0 8px 32px color-mix(in srgb, var(--colors-neutral-950) 12%, transparent);
+  border-radius: var(--radius-full);
+  border: 2px solid color-mix(in srgb, var(--neutral-50) 20%, transparent);
+  background: color-mix(in srgb, var(--neutral-50) 95%, transparent);
+  color: var(--neutral-900);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--neutral-950) 12%, transparent);
   cursor: pointer;
   outline: none;
-  transition: var(--transitions-default);
+  transition: var(--transition-default);
 }
 .navButton:hover:not(:disabled) {
   transform: translateY(-50%) scale(1.1);
-  background: var(--colors-neutral-50);
-  border-color: color-mix(in srgb, var(--colors-neutral-50) 40%, transparent);
-  box-shadow: 0 12px 48px color-mix(in srgb, var(--colors-neutral-950) 18%, transparent);
+  background: var(--neutral-50);
+  border-color: color-mix(in srgb, var(--neutral-50) 40%, transparent);
+  box-shadow: 0 12px 48px color-mix(in srgb, var(--neutral-950) 18%, transparent);
 }
 .navButton:active:not(:disabled) {
   transform: translateY(-50%) scale(0.95);
 }
 .navButton:focus-visible {
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--colors-neutral-50) 50%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--neutral-50) 50%, transparent);
 }
 .navButton:disabled {
   opacity: 0.4;

@@ -2,21 +2,21 @@
   position: relative;
   width: 100%;
   max-width: 28rem;
-  color: var(--colors-neutral-50);
-  font-family: var(--typography-font-family-sans);
+  color: var(--neutral-50);
+  font-family: var(--font-sans);
 }
 
 .contentWrapper {
   position: relative;
-  border-radius: var(--border-radius-xl);
+  border-radius: var(--radius-xl);
   overflow: hidden;
-  background: var(--colors-neutral-950);
+  background: var(--neutral-950);
 }
 
 .content {
   position: relative;
   padding: 1.5rem;
-  transition: var(--transitions-default);
+  transition: var(--transition-default);
 }
 
 .content--active {
@@ -47,7 +47,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--radius-lg);
   z-index: 2;
 }
 
@@ -65,9 +65,9 @@
 
 .title {
   margin: 0 0 0.375rem;
-  font-size: var(--typography-font-size-2xl-size, 1.75rem);
-  font-weight: var(--typography-font-weight-bold, 700);
-  color: var(--colors-neutral-50);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--neutral-50);
 }
 
 .titleInfo {
@@ -78,21 +78,21 @@
 
 .light {
   margin: 0;
-  color: color-mix(in srgb, var(--colors-neutral-50) 45%, transparent);
-  font-size: var(--typography-font-size-sm-size);
+  color: color-mix(in srgb, var(--neutral-50) 45%, transparent);
+  font-size: var(--text-sm);
 }
 
 .bold {
   margin: 0;
-  color: var(--colors-neutral-50);
-  font-weight: var(--typography-font-weight-semibold, 600);
-  font-size: var(--typography-font-size-sm-size);
+  color: var(--neutral-50);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-sm);
 }
 
 .divider {
   width: 1px;
   height: 0.75rem;
-  background: color-mix(in srgb, var(--colors-neutral-50) 30%, transparent);
+  background: color-mix(in srgb, var(--neutral-50) 30%, transparent);
 }
 
 .items {
@@ -106,12 +106,12 @@
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.625rem 0.5rem;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: var(--transitions-colors);
+  transition: var(--transition-colors);
 }
 .item:hover {
-  background: color-mix(in srgb, var(--colors-neutral-50) 8%, transparent);
+  background: color-mix(in srgb, var(--neutral-50) 8%, transparent);
 }
 
 .end {
@@ -128,11 +128,11 @@
   padding: 0.25rem;
   background: transparent;
   border: none;
-  border-radius: var(--border-radius-full, 9999px);
-  color: var(--colors-neutral-50);
+  border-radius: var(--radius-full);
+  color: var(--neutral-50);
   opacity: 0.7;
   cursor: pointer;
-  transition: var(--transitions-opacity), var(--transitions-transform);
+  transition: var(--transition-opacity), var(--transition-transform);
 }
 .iconButton:hover {
   opacity: 1;
@@ -151,14 +151,14 @@
   flex-direction: column;
   max-height: 0;
   padding: 0 0.5rem;
-  border-radius: var(--border-radius-lg);
-  background: color-mix(in srgb, var(--colors-neutral-950) 85%, transparent);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--neutral-950) 85%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
-  transition: var(--transitions-default);
+  transition: var(--transition-default);
 }
 .itemModal .item {
   padding-top: 0.75rem;
@@ -187,7 +187,7 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
-  color: color-mix(in srgb, var(--colors-neutral-50) 45%, transparent);
+  color: color-mix(in srgb, var(--neutral-50) 45%, transparent);
 }
 .itemCredits svg {
   flex-shrink: 0;
@@ -200,7 +200,7 @@
   z-index: 40;
   flex-direction: column;
   padding: 1.5rem;
-  background: color-mix(in srgb, var(--colors-neutral-950) 92%, transparent);
+  background: color-mix(in srgb, var(--neutral-950) 92%, transparent);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   overflow-y: auto;
@@ -216,15 +216,15 @@
   justify-content: center;
   width: 2.25rem;
   height: 2.25rem;
-  background: color-mix(in srgb, var(--colors-neutral-50) 12%, transparent);
+  background: color-mix(in srgb, var(--neutral-50) 12%, transparent);
   border: none;
-  border-radius: var(--border-radius-full, 9999px);
-  color: var(--colors-neutral-50);
+  border-radius: var(--radius-full);
+  color: var(--neutral-50);
   cursor: pointer;
-  transition: var(--transitions-colors);
+  transition: var(--transition-colors);
 }
 .toggle:hover {
-  background: color-mix(in srgb, var(--colors-neutral-50) 20%, transparent);
+  background: color-mix(in srgb, var(--neutral-50) 20%, transparent);
 }
 
 .relatedContent {
@@ -258,7 +258,7 @@
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: color-mix(in srgb, var(--colors-neutral-950) 40%, transparent);
+  background: color-mix(in srgb, var(--neutral-950) 40%, transparent);
   pointer-events: none;
 }
 

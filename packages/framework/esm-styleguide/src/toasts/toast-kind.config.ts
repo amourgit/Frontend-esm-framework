@@ -7,15 +7,17 @@ export interface ToastKindConfig {
   icon: React.ComponentType<{ className?: string; size?: number }>;
   /** Libellé de catégorie par défaut (utilisé si `eyebrow` n'est pas fourni). */
   defaultEyebrow: string;
-  /** Racine des tokens de couleur du thème (`--colors-{colorToken}-*`). */
+  /** Famille de couleur du toast (sélectionne la classe de style `card--{colorToken}`). */
   colorToken: 'success' | 'error' | 'warning' | 'info';
+  /** Couleur d'accent du toast : variable du thème (`destructive`) ou constante du styleguide (`success-500`…). */
+  colorVar: string;
 }
 
 export const toastKindConfig: Record<ToastType, ToastKindConfig> = {
-  success: { icon: CheckmarkFilledIcon, defaultEyebrow: 'Succès', colorToken: 'success' },
-  error: { icon: ErrorFilledIcon, defaultEyebrow: 'Erreur', colorToken: 'error' },
-  warning: { icon: WarningIcon, defaultEyebrow: 'Avertissement', colorToken: 'warning' },
-  'warning-alt': { icon: WarningIcon, defaultEyebrow: 'Avertissement', colorToken: 'warning' },
-  info: { icon: InformationFilledIcon, defaultEyebrow: 'Information', colorToken: 'info' },
-  'info-square': { icon: InformationSquareIcon, defaultEyebrow: 'Information', colorToken: 'info' },
+  success: { icon: CheckmarkFilledIcon, defaultEyebrow: 'Succès', colorToken: 'success', colorVar: 'var(--success-500)' },
+  error: { icon: ErrorFilledIcon, defaultEyebrow: 'Erreur', colorToken: 'error', colorVar: 'var(--destructive)' },
+  warning: { icon: WarningIcon, defaultEyebrow: 'Avertissement', colorToken: 'warning', colorVar: 'var(--warning-500)' },
+  'warning-alt': { icon: WarningIcon, defaultEyebrow: 'Avertissement', colorToken: 'warning', colorVar: 'var(--warning-500)' },
+  info: { icon: InformationFilledIcon, defaultEyebrow: 'Information', colorToken: 'info', colorVar: 'var(--info-500)' },
+  'info-square': { icon: InformationSquareIcon, defaultEyebrow: 'Information', colorToken: 'info', colorVar: 'var(--info-500)' },
 };

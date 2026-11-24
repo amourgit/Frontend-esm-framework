@@ -32,6 +32,6 @@ export interface CardProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 't
   /** Classe appliquée au conteneur de contenu interne (padding), pour surcharge fine sans toucher à la bordure décorative. */
   contentClassName?: string;
   contentStyle?: React.CSSProperties;
-  /** Couleur d'accent des pastilles du variant 'dots' — token du thème. Défaut : `var(--colors-success-500)`. */
+  /** Couleur d'accent des pastilles du variant 'dots' — token du thème. Défaut : `var(--success-500)`. */
   dotsColor?: string;
 }

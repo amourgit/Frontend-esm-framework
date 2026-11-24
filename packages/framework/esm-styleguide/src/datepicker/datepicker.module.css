@@ -20,7 +20,7 @@
 .label {
   display: inline-block;
   margin-bottom: 0.5rem;
-  color: var(--colors-surface-muted-foreground, #525252);
+  color: var(--muted-foreground);
   font-size: 0.75rem;
   line-height: 1.33333;
   letter-spacing: 0.32px;
@@ -28,7 +28,7 @@
 }
 
 .labelDisabled {
-  color: var(--colors-surface-muted-foreground, #c6c6c6);
+  color: var(--muted-foreground);
   opacity: 0.6;
 }
 
@@ -478,8 +478,8 @@
   background-color: var(--ui-layer-hover);
 }
 .calendarGrid > tbody > tr > td:has([data-selected]) {
-  background-color: var(--colors-primary-600, #0f62fe);
-  color: var(--colors-surface-background, #ffffff);
+  background-color: var(--primary-600);
+  color: var(--background);
 }
 .calendarGrid > tbody > tr > td[aria-disabled] {
   color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
@@ -488,7 +488,7 @@
 
 .today:not([data-selected]) {
   position: relative;
-  color: var(--colors-primary-600, #0f62fe);
+  color: var(--primary-600);
   font-weight: 600;
   font-size: var(--ui-body-compact-01-font-size, 0.875rem);
   line-height: var(--ui-body-compact-01-line-height, 1.28572);

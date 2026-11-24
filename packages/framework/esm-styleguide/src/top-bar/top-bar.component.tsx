@@ -11,7 +11,7 @@ import { cn } from '../page-background/page-background.utils.js';
 //  optionnellement, une seconde ligne (fil d'Ariane).
 //
 //  Tokens : tout vient des variables injectées par @egen-civitas/esm-theme
-//  (--panel-header-*, --colors-*, --layout-header-height), avec fallback
+//  (--card, --card-foreground, --border, --egen-navbar-height)
 //  statique le temps que le moteur de thème hydrate les variables.
 // =============================================================================
 
@@ -30,7 +30,7 @@ export interface TopBarProps {
   sticky?: boolean;
   /** Décalage `top` en sticky (ex. bannière hors-ligne). @default 'var(--own-offline-banner-height, 0px)' */
   stickyOffset?: string;
-  /** Style visuel : `glass` (flou translucide) ou `solid` (fond plein). @default 'glass' */
+  /** Style visuel : `glass` (surface pleine avec ombre légère) ou `solid` (sans ombre). @default 'glass' */
   variant?: 'glass' | 'solid';
   /** Libellé accessible de la navigation. @default 'Navigation principale' */
   ariaLabel?: string;
@@ -62,7 +62,7 @@ export const TopBar = forwardRef<HTMLElement, TopBarProps>(function TopBar(
 ) {
   return (
     <div
-      className={cn('flex flex-col w-full z-(--z-index-sticky,200)', sticky && 'sticky', wrapperClassName)}
+      className={cn('flex flex-col w-full z-(--z-sticky)', sticky && 'sticky', wrapperClassName)}
       style={sticky ? { top: stickyOffset } : undefined}
     >
       <header
@@ -71,12 +71,9 @@ export const TopBar = forwardRef<HTMLElement, TopBarProps>(function TopBar(
         aria-label={ariaLabel}
         className={cn(
           'relative flex w-full items-center justify-between gap-2 px-3 sm:px-4 select-none',
-          'h-(--layout-header-height,48px) border-b',
-          'border-b-(--panel-header-border,rgba(255,255,255,0.08))',
-          'text-(--colors-surface-foreground,#f4f4f4)',
-          variant === 'glass'
-            ? 'bg-(--panel-header-background,rgba(11,25,44,0.72)) backdrop-blur-xl shadow-(--panel-header-box-shadow,0_1px_12px_rgba(0,0,0,0.25))'
-            : 'bg-(--colors-surface-card,#0b192c) shadow-(--panel-header-box-shadow,none)',
+          'h-(--egen-navbar-height) border-b',
+          'border-b-border bg-card text-card-foreground',
+          variant === 'glass' ? 'shadow-xs' : 'shadow-none',
           className,
         )}
       >
@@ -207,7 +204,7 @@ export const TopBarAvatar = forwardRef<HTMLButtonElement, TopBarAvatarProps>(fun
  *    secondary              seconde ligne (ex. <BreadcrumbNav />), masquée si absente
  *    children               rendu DANS la <header> (ex. panneau latéral en position absolue)
  *    sticky / stickyOffset  collage en haut de page (défaut : true, décalé par la bannière hors-ligne)
- *    variant                'glass' (défaut, flou translucide) | 'solid'
+ *    variant                'glass' (défaut, ombre légère) | 'solid' (sans ombre)
  *    ariaLabel              libellé accessible de la navigation
  *    className              classes Tailwind en plus sur la barre
  *    wrapperClassName       classes Tailwind en plus sur le conteneur racine
@@ -216,8 +213,8 @@ export const TopBarAvatar = forwardRef<HTMLButtonElement, TopBarAvatarProps>(fun
  *    - Garder la logique (session, tenant, panneaux) DANS l'app : la TopBar ne
  *      fait que disposer ce qu'on lui donne.
  *    - Toujours fournir `label` aux TopBarIconButton (accessibilité + infobulle).
- *    - Couleurs/hauteur : pilotées par le thème (--panel-header-*,
- *      --layout-header-height) ; ne pas les coder en dur.
+ *    - Couleurs/hauteur : pilotées par le thème (--card, --card-foreground,
+ *      --border) et par --egen-navbar-height ; ne pas les coder en dur.
  *    - Pour surcharger un style, ajouter des classes Tailwind via `className`
  *      (pas de `!` nécessaire : ce composant ne partage aucun sélecteur SCSS).
  * ===========================================================================*/

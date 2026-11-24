@@ -5,9 +5,9 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  font-family: var(--typography-font-family-sans);
-  color: var(--colors-on-primary);
-  background-color: var(--colors-neutral-900);
+  font-family: var(--font-sans);
+  color: var(--primary-foreground);
+  background-color: var(--neutral-900);
 }
 
 .header {
@@ -21,12 +21,12 @@
 
 .title {
   margin: 0 0 0.75rem;
-  font-size: var(--typography-font-size-4xl-size);
-  line-height: var(--typography-font-size-4xl-line-height);
-  font-weight: var(--typography-font-weight-extrabold);
+  font-size: var(--text-4xl);
+  line-height: var(--text-4xl--line-height);
+  font-weight: var(--font-weight-extrabold);
   letter-spacing: -0.025em;
-  color: var(--colors-on-primary);
-  filter: drop-shadow(0 10px 8px color-mix(in srgb, var(--colors-neutral-950) 4%, transparent)) drop-shadow(0 4px 3px color-mix(in srgb, var(--colors-neutral-950) 10%, transparent));
+  color: var(--primary-foreground);
+  filter: drop-shadow(0 10px 8px color-mix(in srgb, var(--neutral-950) 4%, transparent)) drop-shadow(0 4px 3px color-mix(in srgb, var(--neutral-950) 10%, transparent));
 }
 @media (min-width: 768px) {
   .title {
@@ -37,15 +37,15 @@
 .subtitle {
   margin: 0 auto;
   max-width: 36rem;
-  font-size: var(--typography-font-size-lg-size);
-  line-height: var(--typography-font-size-lg-line-height);
-  font-weight: var(--typography-font-weight-medium);
-  color: var(--colors-neutral-300);
+  font-size: var(--text-lg);
+  line-height: var(--text-lg--line-height);
+  font-weight: var(--font-weight-medium);
+  color: var(--neutral-300);
 }
 @media (min-width: 768px) {
   .subtitle {
-    font-size: var(--typography-font-size-xl-size);
-    line-height: var(--typography-font-size-xl-line-height);
+    font-size: var(--text-xl);
+    line-height: var(--text-xl--line-height);
   }
 }
 
@@ -74,18 +74,18 @@
   min-width: 60px;
   min-height: 100px;
   margin: 0;
-  border-radius: var(--border-radius-none);
+  border-radius: var(--radius-none);
   border-width: 2px;
   border-style: solid;
-  background-color: var(--colors-neutral-900);
+  background-color: var(--neutral-900);
   background-position: center;
   backface-visibility: hidden;
   cursor: pointer;
-  transition: all var(--animation-duration-slower) var(--animation-easing-in-out);
+  transition: all var(--duration-slower) var(--ease-in-out);
   will-change: flex-grow, box-shadow, background-size, background-position;
 }
 .option:focus-visible {
-  outline: 2px solid var(--colors-on-primary);
+  outline: 2px solid var(--primary-foreground);
   outline-offset: -2px;
 }
 
@@ -95,7 +95,7 @@
   right: 0;
   height: 120px;
   pointer-events: none;
-  transition: all var(--animation-duration-slower) var(--animation-easing-in-out);
+  transition: all var(--duration-slower) var(--ease-in-out);
 }
 
 .label {
@@ -123,34 +123,32 @@
   justify-content: center;
   flex-shrink: 0;
   flex-grow: 0;
-  border-radius: var(--border-radius-full);
-  border: 2px solid var(--colors-neutral-700);
-  background: color-mix(in srgb, var(--colors-neutral-900) 85%, transparent);
-  box-shadow: 0 1px 4px color-mix(in srgb, var(--colors-neutral-950) 18%, transparent);
-  backdrop-filter: blur(var(--effects-blur-sm));
-  -webkit-backdrop-filter: blur(var(--effects-blur-sm));
-  color: var(--colors-on-primary);
-  transition: all var(--animation-duration-normal) var(--animation-easing-in-out);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--neutral-700);
+  background: color-mix(in srgb, var(--neutral-900) 85%, transparent);
+  box-shadow: 0 1px 4px color-mix(in srgb, var(--neutral-950) 18%, transparent);
+  color: var(--primary-foreground);
+  transition: all var(--duration-normal) var(--ease-in-out);
 }
 
 .info {
   position: relative;
-  color: var(--colors-on-primary);
+  color: var(--primary-foreground);
   white-space: pre;
 }
 
 .optionTitle {
-  font-weight: var(--typography-font-weight-bold);
-  font-size: var(--typography-font-size-lg-size);
-  line-height: var(--typography-font-size-lg-line-height);
-  transition: all var(--animation-duration-slower) var(--animation-easing-in-out);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-lg);
+  line-height: var(--text-lg--line-height);
+  transition: all var(--duration-slower) var(--ease-in-out);
 }
 
 .optionDescription {
-  font-size: var(--typography-font-size-base-size);
-  line-height: var(--typography-font-size-base-line-height);
-  color: var(--colors-neutral-300);
-  transition: all var(--animation-duration-slower) var(--animation-easing-in-out);
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  color: var(--neutral-300);
+  transition: all var(--duration-slower) var(--ease-in-out);
 }
 
 @keyframes egen-interactive-selector-fade-in-top {

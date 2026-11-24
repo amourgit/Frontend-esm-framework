@@ -38,7 +38,7 @@ function createModalFrame({ size }: { size: ModalSize }) {
   const modalFrame = document.createElement('div');
   modalFrame.className = 'egen-modal-frame';
   // Styles en ligne : le cadre est créé hors React et ne doit dépendre d'aucune feuille de style (ni Tailwind compilé par le shell, ni Tailwind
-  // compilé par le shell). Couleurs et rayons suivent le thème (variables `--colors-*` du moteur de thème).
+  // compilé par le shell). Couleurs et rayons suivent le thème (variables sémantiques du thème : `--card`, `--border`, `--radius`…).
   Object.assign(modalFrame.style, {
     display: 'flex',
     flexDirection: 'column',
@@ -47,10 +47,10 @@ function createModalFrame({ size }: { size: ModalSize }) {
     maxWidth: MODAL_MAX_WIDTH[size] ?? MODAL_MAX_WIDTH.md,
     maxHeight: '90vh',
     overflow: 'hidden',
-    borderRadius: 'var(--border-radius-lg, 0.75rem)',
-    border: '1px solid var(--colors-border-default, #cbd5e1)',
-    background: 'var(--colors-surface-card, #ffffff)',
-    color: 'var(--colors-surface-card-foreground, #0f172a)',
+    borderRadius: 'var(--radius-lg)',
+    border: '1px solid var(--border)',
+    background: 'var(--card)',
+    color: 'var(--card-foreground)',
     boxShadow: '0 20px 40px rgba(0, 0, 0, 0.25)',
     outline: 'none',
   });

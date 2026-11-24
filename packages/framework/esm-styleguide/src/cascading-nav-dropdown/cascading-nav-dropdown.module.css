@@ -7,20 +7,20 @@
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  font-size: var(--typography-font-size-xs-size);
+  font-size: var(--text-xs);
   padding: 0.375rem 0.75rem;
-  background: var(--colors-surface-translucent, transparent);
-  color: var(--colors-surface-foreground);
-  border: 1px solid var(--colors-border-default, transparent);
-  border-radius: var(--border-radius-md);
-  transition: var(--transitions-glass);
+  background: var(--card);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: var(--transition-surface);
   cursor: pointer;
 }
 .trigger:hover {
-  background: var(--colors-surface-translucent-hover, var(--colors-surface-muted));
+  background: var(--muted);
 }
 .trigger:focus-visible {
-  outline: 2px solid var(--colors-primary-500);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 
@@ -31,7 +31,7 @@
 
 .triggerChevron {
   color: inherit;
-  transition: var(--transitions-transform, transform 200ms ease);
+  transition: var(--transition-transform);
   transform: rotate(0deg);
 }
 
@@ -50,23 +50,21 @@
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: var(--z-index-overlay);
-  background: var(--colors-surface-overlay, rgba(22, 22, 22, 0.5));
+  z-index: var(--z-overlay);
+  background: var(--overlay);
 }
 
 .panel {
   position: fixed;
-  z-index: var(--z-index-dropdown);
+  z-index: var(--z-dropdown);
   height: 40vh;
   max-height: 480px;
   overflow: hidden;
-  border-radius: var(--border-radius-xl);
-  background: var(--panel-dropdown-background);
-  backdrop-filter: var(--panel-dropdown-backdrop-filter);
-  -webkit-backdrop-filter: var(--panel-dropdown-backdrop-filter);
-  border: var(--panel-dropdown-border);
-  box-shadow: var(--panel-dropdown-box-shadow);
-  transition: var(--transitions-glass);
+  border-radius: var(--radius-xl);
+  background: var(--popover);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-surface);
 }
 
 .panelInner {
@@ -81,7 +79,7 @@
   min-width: 0;
   height: 100%;
   overflow-y: auto;
-  border-right: 1px solid var(--colors-border-default, transparent);
+  border-right: 1px solid var(--border);
   flex-shrink: 0;
 }
 .column:last-child {
@@ -93,33 +91,33 @@
   display: flex;
   align-items: center;
   padding: 0.625rem 0.75rem;
-  border-bottom: 1px solid var(--colors-border-default, transparent);
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 
 .columnSearchIcon {
   position: absolute;
   left: 1.25rem;
-  color: var(--colors-surface-muted-foreground);
+  color: var(--muted-foreground);
   pointer-events: none;
 }
 
 .columnSearchInput {
   width: 100%;
   padding: 0.375rem 0.5rem 0.375rem 1.5rem;
-  background: var(--colors-surface-muted);
-  color: var(--colors-surface-foreground);
-  border: 1px solid var(--colors-border-default, transparent);
-  border-radius: var(--border-radius-sm);
-  font-size: var(--typography-font-size-xs-size);
-  transition: var(--transitions-colors);
+  background: var(--muted);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  transition: var(--transition-colors);
 }
 .columnSearchInput::placeholder {
-  color: var(--colors-surface-muted-foreground);
+  color: var(--muted-foreground);
 }
 .columnSearchInput:focus {
   outline: none;
-  border-color: var(--colors-primary-500);
+  border-color: var(--primary);
 }
 
 .columnList {
@@ -137,17 +135,17 @@
   width: 100%;
   padding: 0.5rem 0.625rem;
   background: transparent;
-  color: var(--colors-surface-foreground);
+  color: var(--foreground);
   border: none;
-  border-radius: var(--border-radius-sm);
-  font-size: var(--typography-font-size-sm-size);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
   text-align: left;
   cursor: pointer;
-  transition: var(--transitions-colors);
+  transition: var(--transition-colors);
 }
 .columnItem:hover, .columnItem[data-active] {
-  background: var(--colors-surface-muted);
-  color: var(--colors-primary-600);
+  background: var(--muted);
+  color: var(--primary-600);
 }
 
 .columnItemIcon {
@@ -164,15 +162,15 @@
 }
 
 .columnItemChevron {
-  color: var(--colors-surface-muted-foreground);
+  color: var(--muted-foreground);
   flex-shrink: 0;
 }
 
 .columnEmpty {
   padding: 0.75rem;
   text-align: center;
-  color: var(--colors-surface-muted-foreground);
-  font-size: var(--typography-font-size-xs-size);
+  color: var(--muted-foreground);
+  font-size: var(--text-xs);
 }
 
 @media (prefers-reduced-motion: reduce) {

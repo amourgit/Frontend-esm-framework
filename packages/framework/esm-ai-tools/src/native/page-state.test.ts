@@ -30,14 +30,13 @@ afterEach(() => {
   vi.useRealTimers();
   document.body.innerHTML = '';
   document.documentElement.className = '';
-  document.documentElement.removeAttribute('data-theme');
   document.head.innerHTML = '';
 });
 
 describe('getPageState', () => {
   it('décrit URL, titre, langue, viewport, thème, méta et compte les éléments', () => {
     document.documentElement.setAttribute('lang', 'fr');
-    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.classList.add('dark');
     document.head.innerHTML =
       '<meta name="description" content="Pilotage des classes"><meta property="og:title" content="EGEN"><meta name="robots" content="noindex">';
     document.title = 'Tableau de bord'; // après avoir remplacé le <head>
@@ -52,7 +51,7 @@ describe('getPageState', () => {
       lang: 'fr',
       dir: 'ltr',
       readyState: expect.any(String),
-      theme: { dataTheme: 'dark' },
+      theme: { isDark: true },
       meta: { description: 'Pilotage des classes', 'og:title': 'EGEN' },
     });
     expect(state.meta).not.toHaveProperty('robots');

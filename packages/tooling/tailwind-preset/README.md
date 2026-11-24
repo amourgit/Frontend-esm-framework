@@ -1,8 +1,13 @@
 # @egen-civitas/tailwind-preset
 
-Point d'entrée Tailwind v4 partagé pour les apps EGEN — évite de dupliquer le pont vers les tokens de `@egen-civitas/esm-theme` dans chaque app.
+Point d'entrée Tailwind v4 partagé pour les apps EGEN : il rattache les utilitaires (`bg-primary-600`, `bg-card`, `border-border`, `rounded-lg`, `shadow-sm`, `font-sans`…) aux variables du thème, sans rien dupliquer dans chaque app.
 
-> **Statut : OBSOLÈTE pour le pont de variables.** Le pont vers les tokens de `esm-theme` (ancien moteur, variables `--colors-*`) sera retiré lors de la bascule vers TokiForge (étape P2.5 de `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`) ; le preset y déclarera les constantes (typographie, transitions, z-index, couleurs d'état).
+## Ce que le preset fait
+
+- **Utilitaires de couleur** : surfaces, texte et bordures sémantiques (`background`, `foreground`, `card`, `popover`, `primary`, `secondary`, `muted`, `accent`, `destructive`, `border`, `input`, `ring`, `chart-1…5`, `sidebar*`), et échelles `primary-*`, `error-*` (échelle de `destructive`), `neutral-*`, `success-*`, `warning-*`, `info-*`.
+- **Rayons, ombres, polices** : `rounded-*` (échelle calculée sur `--radius` du thème), `shadow-*`, `font-sans|serif|mono`.
+- **Mode sombre** : le variant `dark:` suit la classe `.dark` posée sur la racine par `@egen-civitas/esm-theme` (et non la préférence système du navigateur).
+- Les variables elles-mêmes ne sont **pas** déclarées ici : les clés sémantiques viennent du thème (écrit par `@egen-civitas/esm-theme`), les échelles dérivées et les constantes sont déclarées une seule fois dans la feuille globale du styleguide, que le shell charge toujours. Les utilitaires reprennent directement `var(--…)` (`@theme inline`) : ils suivent donc les changements de thème à l'exécution.
 
 ## Prérequis
 

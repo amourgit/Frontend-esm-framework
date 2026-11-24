@@ -1,6 +1,6 @@
 .loader {
   display: flex;
-  background-color: var(--colors-surface-muted, #f4f4f4);
+  background-color: var(--muted);
   justify-content: center;
   min-height: 3rem;
 }
@@ -31,8 +31,8 @@
 :global(.egen-breakpoint-gt-tablet) .header {
   position: relative;
   box-sizing: content-box;
-  border-bottom: 1px solid var(--colors-surface-muted-foreground, #a8a8a8);
-  background-color: var(--colors-border-default, #e0e0e0);
+  border-bottom: 1px solid var(--muted-foreground);
+  background-color: var(--border);
   height: var(--workspace-header-height);
 }
 :global(.egen-breakpoint-gt-tablet) .header a {
@@ -49,14 +49,14 @@
   left: auto;
 }
 :global(.egen-breakpoint-gt-tablet) .headerButtons button {
-  background-color: var(--colors-surface-card, #ffffff);
+  background-color: var(--card);
   border-right: 1px solid #e0e0e0;
 }
 :global(.egen-breakpoint-gt-tablet) .headerButtons button > svg {
   fill: #121619 !important;
 }
 :global(.egen-breakpoint-gt-tablet) .headerButtons button:hover {
-  background-color: var(--colors-surface-muted, #f4f4f4);
+  background-color: var(--muted);
 }
 :global(.egen-breakpoint-gt-tablet) .maximizedWindow {
   width: calc(100% - 3rem) !important;
@@ -73,7 +73,7 @@
   position: fixed;
   top: var(--egen-navbar-height);
   bottom: var(--egen-footer-height, 0px);
-  border-left: 1px solid var(--colors-surface-muted-foreground, #a8a8a8);
+  border-left: 1px solid var(--muted-foreground);
   z-index: 50;
   background-color: white;
   transition: width 0.5s ease-in-out, right 0.5s ease-in-out;
@@ -115,7 +115,7 @@
   right: -26.25rem !important;
 }
 :global(.egen-breakpoint-gt-tablet) .workspaceContent {
-  background-color: var(--colors-surface-card, #ffffff);
+  background-color: var(--card);
   overflow-y: auto;
   flex-grow: 1;
 }
@@ -126,7 +126,7 @@
   height: 100%;
 }
 :global(.egen-breakpoint-gt-tablet) .overlay {
-  background-color: var(--colors-surface-card, #ffffff);
+  background-color: var(--card);
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -141,10 +141,10 @@
   background-color: var(--brand-02);
 }
 :global(.egen-breakpoint-lt-desktop) .header a {
-  color: var(--colors-surface-card, #ffffff);
+  color: var(--card);
 }
 :global(.egen-breakpoint-lt-desktop) .header button {
-  color: var(--colors-surface-card, #ffffff);
+  color: var(--card);
   background-color: var(--brand-02);
 }
 :global(.egen-breakpoint-lt-desktop) .header button:hover {
@@ -166,7 +166,7 @@
   bottom: var(--bottom-nav-height);
 }
 :global(.egen-breakpoint-lt-desktop) .overlay {
-  background-color: var(--colors-surface-card, #ffffff);
+  background-color: var(--card);
   display: flex;
   flex-direction: column;
 }
@@ -177,7 +177,7 @@
   order: 2;
 }
 :global(.egen-breakpoint-lt-desktop) .workspaceContent {
-  background-color: var(--colors-surface-muted, #f4f4f4);
+  background-color: var(--muted);
   overflow-y: auto;
   height: 100%;
 }

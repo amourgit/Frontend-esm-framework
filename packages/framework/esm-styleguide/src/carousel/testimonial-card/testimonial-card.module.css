@@ -7,13 +7,11 @@
   gap: 1.5rem;
   padding: 1.5rem;
   user-select: none;
-  border-radius: var(--border-radius-2xl);
-  background: var(--panel-card-background);
-  backdrop-filter: var(--panel-card-backdrop-filter);
-  -webkit-backdrop-filter: var(--panel-card-backdrop-filter);
-  border: var(--panel-card-border);
-  box-shadow: var(--panel-card-box-shadow);
-  transition: var(--transitions-glass);
+  border-radius: var(--radius-2xl);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-surface);
 }
 
 .draggable {
@@ -27,25 +25,25 @@
   width: 8rem;
   height: 8rem;
   margin: 0 auto;
-  border-radius: var(--border-radius-full);
-  border: 2px solid var(--colors-border-default, transparent);
-  background: var(--colors-surface-muted);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--border);
+  background: var(--muted);
   object-fit: cover;
   pointer-events: none;
 }
 
 .testimonial {
   text-align: center;
-  font-size: var(--typography-font-size-lg-size);
-  line-height: var(--typography-font-size-lg-line-height);
+  font-size: var(--text-lg);
+  line-height: var(--text-lg--line-height);
   font-style: italic;
-  color: var(--colors-surface-muted-foreground);
+  color: var(--muted-foreground);
 }
 
 .author {
   text-align: center;
-  font-size: var(--typography-font-size-sm-size);
-  line-height: var(--typography-font-size-sm-line-height);
-  font-weight: var(--typography-font-weight-medium);
-  color: var(--colors-surface-accent-foreground);
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+  font-weight: var(--font-weight-medium);
+  color: var(--accent-foreground);
 }

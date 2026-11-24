@@ -88,7 +88,7 @@ export interface CardModalProps {
    * `animation` vaut 'warp', 'none' sinon. Nécessite `showOverlay`.
    */
   overlayEffect?: CardModalOverlayEffect;
-  /** Couleur des halos de l'effet 'warp' (toute valeur CSS, token inclus). Défaut : `var(--colors-error-500)`. */
+  /** Couleur des halos de l'effet 'warp' (toute valeur CSS, token inclus). Défaut : `var(--destructive)`. */
   warpColor?: string;
 
   // ── Apparence du conteneur modal (pas de la carte elle-même) ────────────────

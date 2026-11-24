@@ -105,7 +105,7 @@ export interface PageState {
   };
   focus: { ref: string; tag: string; name: string; selector: string } | null;
   selection: string | null;
-  theme: { prefersDark: boolean | null; dataTheme: string | null };
+  theme: { prefersDark: boolean | null; isDark: boolean };
   meta: Record<string, string>;
   counts: Record<string, number>;
   microfrontends: Array<{ name: string; hasContent: boolean }>;
@@ -225,8 +225,7 @@ export function getPageState(): PageState {
     selection,
     theme: {
       prefersDark: typeof win.matchMedia === 'function' ? win.matchMedia('(prefers-color-scheme: dark)').matches : null,
-      dataTheme:
-        doc.documentElement.getAttribute('data-theme'),
+      isDark: doc.documentElement.classList.contains('dark'),
     },
     meta: readMeta(),
     counts,

@@ -62,7 +62,7 @@
   border: 0;
   border-radius: 0.5rem;
   background: transparent;
-  color: var(--colors-surface-muted-foreground, #9ca3af);
+  color: var(--muted-foreground);
   font: inherit;
   font-size: 0.75rem;
   font-weight: 600;
@@ -70,16 +70,16 @@
   transition: background-color 120ms ease, color 120ms ease;
 }
 .railButton:hover {
-  background: var(--colors-surface-translucent-hover, rgba(255, 255, 255, 0.1));
-  color: var(--colors-surface-foreground, #fff);
+  background: var(--muted);
+  color: var(--foreground);
 }
 .railButton:focus-visible {
-  outline: 2px solid var(--colors-border-ring, var(--colors-primary-500, #3b82f6));
+  outline: 2px solid var(--ring);
   outline-offset: 1px;
 }
 .railButton[data-active=true] {
-  background: var(--colors-surface-translucent-hover, rgba(255, 255, 255, 0.14));
-  color: var(--colors-surface-foreground, #fff);
+  background: var(--muted);
+  color: var(--foreground);
 }
 
 .zone {
@@ -92,7 +92,7 @@
   min-width: 0;
   min-height: 0;
   background: transparent;
-  color: var(--colors-surface-foreground, #fff);
+  color: var(--foreground);
   --egen-anim-distance: 0.75rem;
   --egen-anim-duration: var(--egen-motion-zone, 300ms);
 }
@@ -155,7 +155,7 @@
   left: 0;
   height: 2px;
   border-radius: 999px;
-  background: var(--colors-primary-500, #3b82f6);
+  background: var(--primary);
   opacity: 0;
   transform: translateY(-50%);
   transition: opacity 120ms ease;
@@ -221,15 +221,15 @@
   border: 0;
   border-radius: 0.375rem;
   background: transparent;
-  color: var(--colors-surface-muted-foreground, #9ca3af);
+  color: var(--muted-foreground);
   cursor: pointer;
 }
 .zoneClose:hover {
-  background: var(--colors-surface-translucent-hover, rgba(255, 255, 255, 0.1));
-  color: var(--colors-surface-foreground, #fff);
+  background: var(--muted);
+  color: var(--foreground);
 }
 .zoneClose:focus-visible {
-  outline: 2px solid var(--colors-border-ring, var(--colors-primary-500, #3b82f6));
+  outline: 2px solid var(--ring);
 }
 
 .zoneBody {
@@ -259,7 +259,7 @@
   content: "";
   position: absolute;
   border-radius: 999px;
-  background: var(--colors-primary-500, #3b82f6);
+  background: var(--primary);
   opacity: 0;
   transition: opacity 120ms ease;
 }
@@ -340,7 +340,7 @@
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 999px;
-  background: var(--colors-primary-500, #3b82f6);
+  background: var(--primary);
   opacity: 0;
   transform: translate(-50%, -50%);
   transition: opacity 120ms ease;

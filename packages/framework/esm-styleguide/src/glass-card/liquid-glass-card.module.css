@@ -65,31 +65,31 @@
 }
 
 .glow--none {
-  box-shadow: var(--shadows-xs), 0 0 12px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 5%, transparent);
+  box-shadow: var(--shadow-xs), 0 0 12px color-mix(in srgb, var(--card) 5%, transparent);
 }
 
 .glow--xs {
-  box-shadow: var(--shadows-xs), 0 0 16px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 8%, transparent);
+  box-shadow: var(--shadow-xs), 0 0 16px color-mix(in srgb, var(--card) 8%, transparent);
 }
 
 .glow--sm {
-  box-shadow: var(--shadows-sm), 0 0 24px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 10%, transparent);
+  box-shadow: var(--shadow-sm), 0 0 24px color-mix(in srgb, var(--card) 10%, transparent);
 }
 
 .glow--md {
-  box-shadow: var(--shadows-md), 0 0 32px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 15%, transparent);
+  box-shadow: var(--shadow-md), 0 0 32px color-mix(in srgb, var(--card) 15%, transparent);
 }
 
 .glow--lg {
-  box-shadow: var(--shadows-lg), 0 0 40px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 20%, transparent);
+  box-shadow: var(--shadow-lg), 0 0 40px color-mix(in srgb, var(--card) 20%, transparent);
 }
 
 .glow--xl {
-  box-shadow: var(--shadows-xl), 0 0 48px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 25%, transparent);
+  box-shadow: var(--shadow-xl), 0 0 48px color-mix(in srgb, var(--card) 25%, transparent);
 }
 
 .glow--2xl {
-  box-shadow: var(--shadows-2xl), 0 0 60px color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 30%, transparent);
+  box-shadow: var(--shadow-2xl), 0 0 60px color-mix(in srgb, var(--card) 30%, transparent);
 }
 
 .shadow--none {
@@ -97,25 +97,25 @@
 }
 
 .shadow--xs {
-  box-shadow: inset 1px 1px 1px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 30%, transparent), inset -1px -1px 1px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 30%, transparent);
+  box-shadow: inset 1px 1px 1px 0 color-mix(in srgb, var(--card) 30%, transparent), inset -1px -1px 1px 0 color-mix(in srgb, var(--card) 30%, transparent);
 }
 
 .shadow--sm {
-  box-shadow: inset 2px 2px 2px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 35%, transparent), inset -2px -2px 2px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 35%, transparent);
+  box-shadow: inset 2px 2px 2px 0 color-mix(in srgb, var(--card) 35%, transparent), inset -2px -2px 2px 0 color-mix(in srgb, var(--card) 35%, transparent);
 }
 
 .shadow--md {
-  box-shadow: inset 3px 3px 3px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 45%, transparent), inset -3px -3px 3px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 45%, transparent);
+  box-shadow: inset 3px 3px 3px 0 color-mix(in srgb, var(--card) 45%, transparent), inset -3px -3px 3px 0 color-mix(in srgb, var(--card) 45%, transparent);
 }
 
 .shadow--lg {
-  box-shadow: inset 4px 4px 4px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 50%, transparent), inset -4px -4px 4px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 50%, transparent);
+  box-shadow: inset 4px 4px 4px 0 color-mix(in srgb, var(--card) 50%, transparent), inset -4px -4px 4px 0 color-mix(in srgb, var(--card) 50%, transparent);
 }
 
 .shadow--xl {
-  box-shadow: inset 6px 6px 6px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 55%, transparent), inset -6px -6px 6px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 55%, transparent);
+  box-shadow: inset 6px 6px 6px 0 color-mix(in srgb, var(--card) 55%, transparent), inset -6px -6px 6px 0 color-mix(in srgb, var(--card) 55%, transparent);
 }
 
 .shadow--2xl {
-  box-shadow: inset 8px 8px 8px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 60%, transparent), inset -8px -8px 8px 0 color-mix(in srgb, var(--colors-surface-translucent, rgba(255, 255, 255, 0.55)) 60%, transparent);
+  box-shadow: inset 8px 8px 8px 0 color-mix(in srgb, var(--card) 60%, transparent), inset -8px -8px 8px 0 color-mix(in srgb, var(--card) 60%, transparent);
 }

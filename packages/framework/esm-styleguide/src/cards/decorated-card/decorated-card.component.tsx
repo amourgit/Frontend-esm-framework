@@ -35,7 +35,7 @@ export const DecoratedCard = forwardRef<HTMLDivElement, CardProps>(
     style,
     contentClassName,
     contentStyle,
-    dotsColor = 'var(--colors-success-500)',
+    dotsColor = 'var(--success-500)',
     ...rest
   }, ref) => {
     const content = (

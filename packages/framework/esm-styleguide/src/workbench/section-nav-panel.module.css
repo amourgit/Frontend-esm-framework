@@ -15,7 +15,7 @@
 .groupTitle {
   margin: 0;
   padding: 0 0.5rem;
-  color: var(--colors-surface-muted-foreground, #9ca3af);
+  color: var(--muted-foreground);
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -41,7 +41,7 @@
   border: 0;
   border-radius: 0.5rem;
   background: transparent;
-  color: var(--colors-surface-muted-foreground, #9ca3af);
+  color: var(--muted-foreground);
   font: inherit;
   font-size: 0.8125rem;
   text-align: left;
@@ -49,16 +49,16 @@
   transition: background-color 120ms ease, color 120ms ease;
 }
 .entry:hover {
-  background: var(--colors-surface-translucent-hover, rgba(255, 255, 255, 0.1));
-  color: var(--colors-surface-foreground, #fff);
+  background: var(--muted);
+  color: var(--foreground);
 }
 .entry:focus-visible {
-  outline: 2px solid var(--colors-border-ring, var(--colors-primary-500, #3b82f6));
+  outline: 2px solid var(--ring);
   outline-offset: 1px;
 }
 .entry[data-active=true] {
-  background: var(--colors-surface-translucent-hover, rgba(255, 255, 255, 0.14));
-  color: var(--colors-surface-foreground, #fff);
+  background: var(--muted);
+  color: var(--foreground);
   font-weight: 600;
 }
 

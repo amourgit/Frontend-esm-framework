@@ -133,14 +133,14 @@ export class EgenClient {
     get: () => this.call<ThemeState>('theme', 'get'),
     onChange: (cb: (t: ThemeState) => void) => this.on('theme', 'change', cb),
     /**
-     * Applique le thème du Core au document de l'app (variables CSS sur `:root` + `data-theme`) et le maintient à jour.
+     * Applique le thème du Core au document de l'app (variables CSS sur `:root` + classe `dark` selon le mode) et le maintient à jour.
      * Les clés doivent être des variables CSS (`--nom`) et les valeurs sans `;{}<>` (pas d'injection CSS).
      */
-    sync: async (root: { style: { setProperty(k: string, v: string): void }; setAttribute?(k: string, v: string): void } = (globalThis as any).document?.documentElement): Promise<Unsubscribe> => {
+    sync: async (root: { style: { setProperty(k: string, v: string): void }; classList?: { toggle(name: string, force?: boolean): boolean } } = (globalThis as any).document?.documentElement): Promise<Unsubscribe> => {
       if (!root) return () => undefined;
       const apply = (t: ThemeState) => {
         for (const [k, v] of Object.entries(t.tokens ?? {})) if (THEME_KEY_RE.test(k) && typeof v === 'string' && THEME_VALUE_RE.test(v)) root.style.setProperty(k, v);
-        if (t.mode && root.setAttribute) root.setAttribute('data-theme', String(t.mode));
+        if (t.mode && root.classList) root.classList.toggle('dark', t.mode === 'dark');
       };
       apply(await this.theme.get());
       return this.theme.onChange(apply);

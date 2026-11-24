@@ -9,20 +9,20 @@
 
 .title {
   margin: 0 0 0.25rem;
-  font-size: var(--typography-font-size-lg-size);
-  font-weight: var(--typography-font-weight-bold, 700);
-  color: var(--colors-surface-foreground);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--foreground);
 }
 
 .description {
   margin: 0;
-  color: var(--colors-surface-muted-foreground);
+  color: var(--muted-foreground);
 }
 
 .card--default {
-  border: 1px solid var(--colors-border-default, transparent);
-  border-radius: var(--border-radius-lg);
-  background: var(--colors-surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
 }
 
 .card--dots {
@@ -35,7 +35,7 @@
   left: 0;
   width: 100%;
   height: 1px;
-  background: var(--colors-border-default, transparent);
+  background: var(--border);
   z-index: 0;
 }
 
@@ -50,8 +50,8 @@
 .dotsFrame {
   position: relative;
   width: 100%;
-  border-left: 1px solid var(--colors-border-default, transparent);
-  border-right: 1px solid var(--colors-border-default, transparent);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
   border-style: dashed;
 }
 
@@ -69,8 +69,8 @@
 .dot {
   width: 0.25rem;
   height: 0.25rem;
-  border-radius: var(--border-radius-full, 9999px);
-  outline: 8px solid var(--colors-surface-card);
+  border-radius: var(--radius-full);
+  outline: 8px solid var(--card);
 }
 
 .dotsInner {
@@ -93,12 +93,12 @@
 
 .gradientLineTop {
   top: clamp(1rem, 2vw, 2rem);
-  background: linear-gradient(to left, transparent, var(--colors-border-default, currentColor), transparent);
+  background: linear-gradient(to left, transparent, var(--border), transparent);
 }
 
 .gradientLineBottom {
   bottom: clamp(1rem, 2vw, 2rem);
-  background: linear-gradient(to right, transparent, var(--colors-border-default, currentColor), transparent);
+  background: linear-gradient(to right, transparent, var(--border), transparent);
 }
 
 .gradientSideLeft,
@@ -107,7 +107,7 @@
   top: 0;
   bottom: 0;
   width: 1px;
-  background: linear-gradient(to top, transparent, var(--colors-border-default, currentColor), transparent);
+  background: linear-gradient(to top, transparent, var(--border), transparent);
 }
 
 .gradientSideLeft {
@@ -124,12 +124,12 @@
 }
 
 .card--plus {
-  border: 1px dashed var(--colors-border-default, transparent);
+  border: 1px dashed var(--border);
 }
 
 .plusIcon {
   position: absolute;
-  color: var(--colors-surface-foreground);
+  color: var(--foreground);
 }
 
 .plusIcon--topLeft {
@@ -153,42 +153,42 @@
 }
 
 .card--neubrutalism {
-  border: 1px solid var(--colors-border-default, transparent);
-  border-radius: var(--border-radius-md);
-  background: var(--colors-surface-card);
-  box-shadow: 4px 4px 0 0 color-mix(in srgb, var(--colors-surface-foreground) 100%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  box-shadow: 4px 4px 0 0 color-mix(in srgb, var(--foreground) 100%, transparent);
 }
 
 .card--inner {
-  border: 1px solid var(--colors-border-default, transparent);
-  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   padding: 0.5rem;
 }
 
 .innerPanel {
-  border: 1px solid var(--colors-border-default, transparent);
-  border-radius: var(--border-radius-xs, 0.25rem);
-  background: linear-gradient(to bottom right, var(--colors-surface-card), var(--colors-surface-muted));
-  box-shadow: inset 0 1px 3px color-mix(in srgb, var(--colors-surface-foreground) 10%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  background: linear-gradient(to bottom right, var(--card), var(--muted));
+  box-shadow: inset 0 1px 3px color-mix(in srgb, var(--foreground) 10%, transparent);
 }
 
 .card--lifted {
-  border: 1px solid var(--colors-border-default, transparent);
-  border-radius: var(--border-radius-xl);
-  background: var(--colors-surface-muted);
-  box-shadow: 0 5px 0 0 color-mix(in srgb, var(--colors-surface-foreground) 70%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--muted);
+  box-shadow: 0 5px 0 0 color-mix(in srgb, var(--foreground) 70%, transparent);
 }
 
 .card--corners {
-  border: 2px solid var(--colors-border-default, transparent);
-  border-radius: var(--border-radius-md);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
 }
 
 .cornerBracket {
   position: absolute;
   width: 1.5rem;
   height: 1.5rem;
-  border-color: var(--colors-surface-foreground);
+  border-color: var(--foreground);
   border-style: solid;
   border-width: 0;
 }
@@ -198,7 +198,7 @@
   left: -2px;
   border-left-width: 2px;
   border-top-width: 2px;
-  border-top-left-radius: var(--border-radius-md);
+  border-top-left-radius: var(--radius-md);
 }
 
 .cornerBracket--topRight {
@@ -206,7 +206,7 @@
   right: -2px;
   border-right-width: 2px;
   border-top-width: 2px;
-  border-top-right-radius: var(--border-radius-md);
+  border-top-right-radius: var(--radius-md);
 }
 
 .cornerBracket--bottomLeft {
@@ -214,7 +214,7 @@
   left: -2px;
   border-left-width: 2px;
   border-bottom-width: 2px;
-  border-bottom-left-radius: var(--border-radius-md);
+  border-bottom-left-radius: var(--radius-md);
 }
 
 .cornerBracket--bottomRight {
@@ -222,46 +222,12 @@
   right: -2px;
   border-right-width: 2px;
   border-bottom-width: 2px;
-  border-bottom-right-radius: var(--border-radius-md);
+  border-bottom-right-radius: var(--radius-md);
 }
 
 .card--glass {
-  border-radius: var(--border-radius-xl);
-  background: var(--colors-surface-card);
-  position: relative;
-  isolation: isolate;
-}
-.card--glass::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: var(--effects-glass-specular-background);
-  background-image: var(--effects-glass-specular-highlight);
-  backdrop-filter: var(--effects-glass-specular-backdrop-filter);
-  -webkit-backdrop-filter: var(--effects-glass-specular-backdrop-filter-webkit);
-  box-shadow: var(--effects-glass-bevel-shadow-light), var(--effects-glass-bevel-shadow-dark), var(--effects-glass-bevel-shadow-outer);
-}
-.card--glass::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  border-radius: inherit;
-  padding: 1px;
-  pointer-events: none;
-  background: var(--effects-glass-rim-gradient);
-  opacity: var(--effects-glass-rim-opacity);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-}
-.card--glass > * {
-  position: relative;
-  z-index: 2;
+  border-radius: var(--radius-xl);
+  background: var(--card);
 }
 
 .card--mirror {
@@ -271,15 +237,15 @@
 .mirrorSurface {
   position: relative;
   z-index: 1;
-  border-radius: var(--border-radius-xl);
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--colors-surface-card) 100%, var(--colors-surface-translucent) 40%), var(--colors-surface-card));
-  border: 1px solid var(--colors-surface-translucent-border, rgba(255, 255, 255, 0.8));
-  box-shadow: inset 0 1px 0 0 color-mix(in srgb, var(--colors-surface-translucent) 80%, transparent), inset 0 -1px 0 0 color-mix(in srgb, var(--colors-surface-foreground) 6%, transparent), 0 1px 2px 0 color-mix(in srgb, var(--colors-surface-foreground) 8%, transparent);
-  transition: var(--transitions-default);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--card) 100%, var(--card) 40%), var(--card));
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 0 0 color-mix(in srgb, var(--card) 80%, transparent), inset 0 -1px 0 0 color-mix(in srgb, var(--foreground) 6%, transparent), 0 1px 2px 0 color-mix(in srgb, var(--foreground) 8%, transparent);
+  transition: var(--transition-default);
 }
 
 .card--mirror:hover .mirrorSurface {
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--colors-surface-card) 100%, var(--colors-surface-translucent) 55%), var(--colors-surface-card));
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--card) 100%, var(--card) 55%), var(--card));
 }
 
 .mirrorShadow {
@@ -289,8 +255,8 @@
   right: 6%;
   bottom: -0.5rem;
   height: 1rem;
-  border-radius: var(--border-radius-full, 9999px);
-  background: color-mix(in srgb, var(--colors-surface-foreground) 20%, transparent);
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--foreground) 20%, transparent);
   filter: blur(10px);
   pointer-events: none;
 }
@@ -310,7 +276,7 @@
 .mirrorSurface--icon {
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: var(--border-radius-full, 9999px);
+  border-radius: var(--radius-full);
 }
 
 .mirrorSurface--icon .content {

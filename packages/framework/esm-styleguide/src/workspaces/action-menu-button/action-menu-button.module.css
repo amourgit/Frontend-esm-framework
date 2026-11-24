@@ -2,15 +2,15 @@
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
   border-radius: 50%;
-  color: var(--colors-surface-foreground, #161616);
+  color: var(--foreground);
   max-width: none;
 }
 .container:hover {
-  background-color: var(--colors-neutral-300, #c6c6c6);
-  color: var(--colors-surface-muted-foreground, #525252);
+  background-color: var(--neutral-300);
+  color: var(--muted-foreground);
 }
 .container:focus {
-  border-color: var(--colors-primary-600, #0f62fe);
+  border-color: var(--primary-600);
 }
 .container > span {
   margin-top: 0.25rem;
@@ -18,7 +18,7 @@
   font-weight: var(--ui-body-compact-01-font-weight, 400);
   line-height: var(--ui-body-compact-01-line-height, 1.28572);
   letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
-  color: var(--colors-surface-muted-foreground, #525252);
+  color: var(--muted-foreground);
 }
 .container svg {
   transform: scale(1.25);
@@ -34,8 +34,8 @@
   position: absolute;
   font-size: 10px;
   text-align: center;
-  color: var(--colors-surface-muted, #f4f4f4);
-  background-color: var(--colors-error-500, #da1e28);
+  color: var(--muted);
+  background-color: var(--destructive);
   padding: 0 4px;
   border-radius: 50%;
   top: -14px;
@@ -54,7 +54,7 @@
   border-color: #007d79;
   border-color: var(--brand-03);
   border-radius: 50%;
-  background-color: var(--colors-surface-card, #ffffff);
+  background-color: var(--card);
 }
 :global(.egen-breakpoint-gt-tablet) .active:focus {
   border-color: var(--brand-03) !important;
@@ -68,7 +68,7 @@
   margin-bottom: 0;
   margin-top: 0;
   border-radius: unset;
-  color: var(--colors-surface-foreground, #161616);
+  color: var(--foreground);
   max-width: none;
   display: flex;
   flex-direction: column;
@@ -76,19 +76,19 @@
   width: 100%;
 }
 :global(.egen-breakpoint-lt-desktop) .active {
-  background-color: var(--colors-primary-50, #edf5ff);
-  color: var(--colors-primary-600, #0f62fe);
+  background-color: var(--primary-50);
+  color: var(--primary-600);
 }
 :global(.egen-breakpoint-lt-desktop) .active:hover {
-  color: var(--colors-primary-600, #0f62fe);
+  color: var(--primary-600);
 }
 :global(.egen-breakpoint-lt-desktop) .active > span {
-  color: var(--colors-primary-600, #0f62fe);
+  color: var(--primary-600);
   font-size: var(--ui-heading-compact-01-font-size, 0.875rem);
   font-weight: var(--ui-heading-compact-01-font-weight, 600);
   line-height: var(--ui-heading-compact-01-line-height, 1.28572);
   letter-spacing: var(--ui-heading-compact-01-letter-spacing, 0.16px);
 }
 :global(.egen-breakpoint-lt-desktop) .active svg {
-  fill: var(--colors-primary-600, #0f62fe);
+  fill: var(--primary-600);
 }

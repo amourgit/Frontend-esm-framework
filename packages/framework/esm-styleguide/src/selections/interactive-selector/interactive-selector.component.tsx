@@ -100,10 +100,10 @@ export function InteractiveSelector({
                 backgroundSize: isActive ? 'auto 100%' : 'auto 120%',
                 opacity: isAnimatedIn ? 1 : 0,
                 transform: isAnimatedIn ? 'translateX(0)' : 'translateX(-60px)',
-                borderColor: isActive ? 'var(--colors-on-primary)' : 'var(--colors-neutral-800)',
+                borderColor: isActive ? 'var(--primary-foreground)' : 'var(--neutral-800)',
                 boxShadow: isActive
-                  ? '0 20px 60px color-mix(in srgb, var(--colors-neutral-950) 50%, transparent)'
-                  : '0 10px 30px color-mix(in srgb, var(--colors-neutral-950) 30%, transparent)',
+                  ? '0 20px 60px color-mix(in srgb, var(--neutral-950) 50%, transparent)'
+                  : '0 10px 30px color-mix(in srgb, var(--neutral-950) 30%, transparent)',
                 flex: isActive ? '7 1 0%' : '1 1 0%',
                 zIndex: isActive ? 10 : 1,
               }}
@@ -120,8 +120,8 @@ export function InteractiveSelector({
                 style={{
                   bottom: isActive ? '0' : '-40px',
                   boxShadow: isActive
-                    ? 'inset 0 -120px 120px -120px var(--colors-neutral-950), inset 0 -120px 120px -80px var(--colors-neutral-950)'
-                    : 'inset 0 -120px 0px -120px var(--colors-neutral-950), inset 0 -120px 0px -80px var(--colors-neutral-950)',
+                    ? 'inset 0 -120px 120px -120px var(--neutral-950), inset 0 -120px 120px -80px var(--neutral-950)'
+                    : 'inset 0 -120px 0px -120px var(--neutral-950), inset 0 -120px 0px -80px var(--neutral-950)',
                 }}
               />
 

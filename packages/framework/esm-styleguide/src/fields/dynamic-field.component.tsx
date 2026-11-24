@@ -14,7 +14,7 @@ import styles from './dynamic-field.module.css';
  *
  * Quatre variantes visuelles (`variant`), pilotées uniquement par des classes CSS —
  * aucune logique de style en JS (sauf `kinetic`, animée lettre par lettre) :
- * - `outlined` (par défaut) : cadre complet façon "panel" (`--panel-input-*`).
+ * - `outlined` (par défaut) : cadre complet (`--border`, `--muted`).
  * - `filled` : fond plein arrondi en haut, bordure inférieure épaisse.
  * - `standard` : pas de fond, simple bordure inférieure (le plus discret).
  * - `kinetic` : label dont chaque lettre s'anime individuellement (décalage +
@@ -24,7 +24,7 @@ import styles from './dynamic-field.module.css';
  * validation glisse depuis la droite lors d'un changement de sévérité, et une
  * micro-vibration (si le device la supporte) accompagne ce changement — tout est
  * défini dans `dynamic-field.module.css`, exclusivement via les tokens du thème
- * EGEN (`var(--colors-*)`, `var(--panel-*)`, `var(--transitions-*)`...).
+ * EGEN (`var(--background)`, `var(--border)`, `var(--transition-*)`...).
  *
  * @example
  * ```tsx

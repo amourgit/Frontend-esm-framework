@@ -99,16 +99,17 @@ describe('capacités', () => {
 
   it('theme.sync applique les variables valides et ignore les injections', async () => {
     const set: Record<string, string> = {};
-    const attrs: Record<string, string> = {};
-    const root = { style: { setProperty: (k: string, v: string) => (set[k] = v) }, setAttribute: (k: string, v: string) => (attrs[k] = v) };
+    const dark: boolean[] = [];
+    const root = { style: { setProperty: (k: string, v: string) => (set[k] = v) }, classList: { toggle: (_n: string, f?: boolean) => (dark.push(!!f), !!f) } };
     let emit: any;
     const { c } = await connected(undefined, { theme: { get: () => ({ mode: 'dark', tokens: { '--primary': '#fff', 'color': 'red', '--bad': 'red;}body{display:none', '--ok': 'rgb(1 2 3)' } }) } }, (_cap: string, _ev: string, e: any) => ((emit = e), () => undefined));
     const off = await c.theme.sync(root);
     expect(set).toEqual({ '--primary': '#fff', '--ok': 'rgb(1 2 3)' });
-    expect(attrs['data-theme']).toBe('dark');
+    expect(dark).toEqual([true]);
     emit({ mode: 'light', tokens: { '--primary': '#000' } });
     await tick();
     expect(set['--primary']).toBe('#000');
+    expect(dark).toEqual([true, false]);
     off();
   });
 

@@ -10,16 +10,16 @@
   padding: 0.875rem 1rem;
   border: 0;
   background: transparent;
-  color: var(--colors-primary-600, #0f62fe);
+  color: var(--primary-600);
   font: inherit;
   cursor: pointer;
 }
 .trigger:hover,
 .triggerOpen {
-  background-color: var(--colors-surface-muted, #e8e8e8);
+  background-color: var(--muted);
 }
 .trigger:focus-visible {
-  outline: 2px solid var(--colors-primary-500, #0f62fe);
+  outline: 2px solid var(--primary);
   outline-offset: -2px;
 }
 
@@ -31,7 +31,7 @@
   z-index: 6000;
   min-width: 10rem;
   margin-right: 0.2rem;
-  background-color: var(--colors-surface-muted, #f4f4f4);
+  background-color: var(--muted);
   box-shadow: 0 6px 6px rgba(0, 0, 0, 0.3);
 }
 .show {
@@ -48,7 +48,7 @@
   list-style: none;
 }
 .itemDivider {
-  border-top: 1px solid var(--colors-border-default, #cbd5e1);
+  border-top: 1px solid var(--border);
 }
 
 .item {
@@ -59,7 +59,7 @@
   padding: 0 1rem;
   border: 0;
   background: transparent;
-  color: var(--colors-surface-foreground, #161616);
+  color: var(--foreground);
   font: inherit;
   text-align: left;
   text-decoration: none;
@@ -70,13 +70,13 @@
 }
 .item:hover,
 .item:focus-visible {
-  background-color: var(--colors-surface-card, #e8e8e8);
+  background-color: var(--card);
   outline: none;
 }
 .item:disabled {
-  color: var(--colors-surface-muted-foreground, #8d8d8d);
+  color: var(--muted-foreground);
   cursor: not-allowed;
 }
 .itemDelete {
-  color: var(--colors-destructive, #da1e28);
+  color: var(--destructive);
 }

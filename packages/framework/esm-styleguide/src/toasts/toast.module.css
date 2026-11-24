@@ -5,28 +5,28 @@
 
 .card {
   border: 1px solid transparent;
-  background: var(--colors-surface-translucent, rgba(255, 255, 255, 0.55));
+  background: var(--card);
   overflow: hidden;
 }
 
 .card--success {
-  border-color: color-mix(in srgb, var(--colors-success-500) 30%, transparent);
+  border-color: color-mix(in srgb, var(--success-500) 30%, transparent);
 }
 
 .card--error {
-  border-color: color-mix(in srgb, var(--colors-error-500) 30%, transparent);
+  border-color: color-mix(in srgb, var(--destructive) 30%, transparent);
 }
 
 .card--warning {
-  border-color: color-mix(in srgb, var(--colors-warning-500) 30%, transparent);
+  border-color: color-mix(in srgb, var(--warning-500) 30%, transparent);
 }
 
 .card--info {
-  border-color: color-mix(in srgb, var(--colors-info-500) 30%, transparent);
+  border-color: color-mix(in srgb, var(--info-500) 30%, transparent);
 }
 
 .card--error {
-  border-color: color-mix(in srgb, var(--colors-error-500) 40%, transparent);
+  border-color: color-mix(in srgb, var(--destructive) 40%, transparent);
 }
 
 .body {
@@ -39,23 +39,23 @@
 .icon {
   flex-shrink: 0;
   margin-top: 0.125rem;
-  color: var(--colors-surface-foreground);
+  color: var(--foreground);
 }
 
 .card--success .icon {
-  color: var(--colors-success-500);
+  color: var(--success-500);
 }
 
 .card--error .icon {
-  color: var(--colors-error-500);
+  color: var(--destructive);
 }
 
 .card--warning .icon {
-  color: var(--colors-warning-500);
+  color: var(--warning-500);
 }
 
 .card--info .icon {
-  color: var(--colors-info-500);
+  color: var(--info-500);
 }
 
 .textArea {
@@ -66,26 +66,26 @@
 .eyebrow {
   display: block;
   font-size: 0.6875rem;
-  font-weight: var(--typography-font-weight-bold, 700);
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   opacity: 0.65;
-  color: var(--colors-surface-foreground);
+  color: var(--foreground);
   margin-bottom: 0.125rem;
 }
 
 .title {
   margin: 0 0 0.125rem;
-  font-size: var(--typography-font-size-sm-size);
-  font-weight: var(--typography-font-weight-bold, 700);
-  color: var(--colors-surface-foreground);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--foreground);
 }
 
 .description {
-  font-size: var(--typography-font-size-xs-size);
-  font-weight: var(--typography-font-weight-medium, 500);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
   line-height: 1.5;
-  color: var(--colors-surface-foreground);
+  color: var(--foreground);
 }
 
 .closeButton {
@@ -95,17 +95,17 @@
   align-items: center;
   justify-content: center;
   padding: 0.25rem;
-  border-radius: var(--border-radius-full, 9999px);
+  border-radius: var(--radius-full);
   background: transparent;
   border: none;
-  color: var(--colors-surface-foreground);
+  color: var(--foreground);
   opacity: 0.5;
   cursor: pointer;
-  transition: var(--transitions-colors), var(--transitions-opacity);
+  transition: var(--transition-colors), var(--transition-opacity);
 }
 .closeButton:hover {
   opacity: 1;
-  background: color-mix(in srgb, var(--colors-surface-foreground) 8%, transparent);
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
 }
 
 .actionsRow {
@@ -122,43 +122,43 @@
 
 .actionButton {
   padding: 0.375rem 0.75rem;
-  font-size: var(--typography-font-size-xs-size);
-  font-weight: var(--typography-font-weight-semibold, 600);
-  border-radius: var(--border-radius-sm);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: var(--transitions-colors);
+  transition: var(--transition-colors);
   border: 1px solid transparent;
 }
 
 .actionButton--primary {
-  background: var(--colors-primary-500);
-  color: var(--colors-on-primary, #fff);
+  background: var(--primary);
+  color: var(--primary-foreground);
 }
 .actionButton--primary:hover {
-  background: var(--colors-primary-600);
+  background: var(--primary-600);
 }
 
 .actionButton--secondary {
   background: transparent;
-  border-color: var(--colors-border-default, transparent);
-  color: var(--colors-surface-foreground);
+  border-color: var(--border);
+  color: var(--foreground);
 }
 .actionButton--secondary:hover {
-  background: color-mix(in srgb, var(--colors-surface-foreground) 8%, transparent);
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
 }
 
 .actionButton--danger {
-  background: var(--colors-error-500);
-  color: var(--colors-on-primary, #fff);
+  background: var(--destructive);
+  color: var(--primary-foreground);
 }
 .actionButton--danger:hover {
-  background: var(--colors-error-600);
+  background: var(--destructive-600);
 }
 
 .progressTrack {
   height: 3px;
   width: 100%;
-  background: color-mix(in srgb, var(--colors-surface-foreground) 8%, transparent);
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
   overflow: hidden;
 }
 

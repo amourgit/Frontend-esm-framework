@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 export interface MenuToggleButtonProps {
   isOpen: boolean;
   onToggle: () => void;
-  /** Couleur du bouton à l'état fermé. Aucune valeur par défaut : à fournir (ex. `var(--colors-surface-foreground)`). */
+  /** Couleur du bouton à l'état fermé. Aucune valeur par défaut : à fournir (ex. `var(--foreground)`). */
   menuButtonColor?: string;
   /** Couleur du bouton à l'état ouvert (si `changeMenuColorOnOpen`). Aucune valeur par défaut. */
   openMenuButtonColor?: string;
@@ -16,7 +16,7 @@ export interface MenuToggleButtonProps {
  * `MenuToggleButton` — déclencheur (hamburger animé + texte cyclique) du
  * `StaggeredMenuPanel`. Aucune couleur n'est pré-remplie : `menuButtonColor`
  * et `openMenuButtonColor` doivent être fournies par le consommateur
- * (typiquement des tokens du thème EGEN, ex. `var(--colors-surface-foreground)`).
+ * (typiquement des tokens du thème EGEN, ex. `var(--foreground)`).
  * Design et animation GSAP (icône +/×, cycle de texte "Menu" ↔ "Close")
  * repris à l'identique — non modifiés.
  */

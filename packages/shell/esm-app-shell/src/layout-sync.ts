@@ -20,14 +20,25 @@ const BARS = [
 function syncHeight(container: HTMLElement, cssVar: string): () => void {
   const root = document.documentElement;
   let last = -1;
+  let pending = -1;
+  let raf = 0;
+
+  // L'écriture DOM est différée à la frame suivante : écrire une variable CSS
+  // dans le callback ResizeObserver peut déclencher une nouvelle notification
+  // dans la même frame (« ResizeObserver loop completed with undelivered
+  // notifications »).
+  const flush = () => {
+    raf = 0;
+    if (pending !== last) {
+      last = pending;
+      root.style.setProperty(cssVar, `${pending}px`);
+    }
+  };
 
   const apply = () => {
     // display:none (routes publiques) -> 0 ; sinon hauteur mesurée.
-    const height = Math.round(container.getBoundingClientRect().height);
-    if (height !== last) {
-      last = height;
-      root.style.setProperty(cssVar, `${height}px`);
-    }
+    pending = Math.round(container.getBoundingClientRect().height);
+    if (!raf) raf = requestAnimationFrame(flush);
   };
 
   const observer = new ResizeObserver(apply);
@@ -36,6 +47,7 @@ function syncHeight(container: HTMLElement, cssVar: string): () => void {
 
   return () => {
     observer.disconnect();
+    if (raf) cancelAnimationFrame(raf);
     root.style.removeProperty(cssVar);
   };
 }

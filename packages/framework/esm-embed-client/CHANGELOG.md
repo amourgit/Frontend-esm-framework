@@ -1,5 +1,12 @@
 # @egen-civitas/esm-embed-client
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [18cec62]
+  - @egen-civitas/esm-embed-protocol@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1142,11 +1142,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-embed-client@npm:^0.1.0, @egen-civitas/esm-embed-client@workspace:packages/framework/esm-embed-client":
+"@egen-civitas/esm-embed-client@npm:^0.1.1, @egen-civitas/esm-embed-client@workspace:packages/framework/esm-embed-client":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-embed-client@workspace:packages/framework/esm-embed-client"
   dependencies:
-    "@egen-civitas/esm-embed-protocol": "npm:^0.1.0"
+    "@egen-civitas/esm-embed-protocol": "npm:^0.2.0"
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.21"
     "@testing-library/react": "npm:^16.1.0"
@@ -1167,12 +1167,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-embed-host@npm:^0.1.0, @egen-civitas/esm-embed-host@workspace:packages/framework/esm-embed-host":
+"@egen-civitas/esm-embed-host@npm:^0.2.0, @egen-civitas/esm-embed-host@workspace:packages/framework/esm-embed-host":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-embed-host@workspace:packages/framework/esm-embed-host"
   dependencies:
-    "@egen-civitas/esm-embed-client": "npm:^0.1.0"
-    "@egen-civitas/esm-embed-protocol": "npm:^0.1.0"
+    "@egen-civitas/esm-embed-client": "npm:^0.1.1"
+    "@egen-civitas/esm-embed-protocol": "npm:^0.2.0"
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.21"
     "@types/node": "npm:^20"
@@ -1185,7 +1185,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-embed-protocol@npm:^0.1.0, @egen-civitas/esm-embed-protocol@workspace:packages/framework/esm-embed-protocol":
+"@egen-civitas/esm-embed-protocol@npm:^0.2.0, @egen-civitas/esm-embed-protocol@workspace:packages/framework/esm-embed-protocol":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-embed-protocol@workspace:packages/framework/esm-embed-protocol"
   dependencies:
@@ -1204,9 +1204,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-embed-testing@workspace:packages/framework/esm-embed-testing"
   dependencies:
-    "@egen-civitas/esm-embed-client": "npm:^0.1.0"
-    "@egen-civitas/esm-embed-host": "npm:^0.1.0"
-    "@egen-civitas/esm-embed-protocol": "npm:^0.1.0"
+    "@egen-civitas/esm-embed-client": "npm:^0.1.1"
+    "@egen-civitas/esm-embed-host": "npm:^0.2.0"
+    "@egen-civitas/esm-embed-protocol": "npm:^0.2.0"
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.21"
     "@types/node": "npm:^20"

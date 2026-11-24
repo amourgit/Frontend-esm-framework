@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-embed-host",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MPL-2.0",
   "description": "Hôte (côté Shell/Core) des applications embarquées : iframe sécurisée, poignée de main v2, grants, fournisseurs de capacités, navigation partagée, compatibilité du pont 1.1.",
   "type": "module",
@@ -57,7 +57,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@egen-civitas/esm-embed-client": "^0.0.0",
+    "@egen-civitas/esm-embed-client": "^0.1.0",
     "@swc/cli": "0.8.1",
     "@swc/core": "1.15.21",
     "@types/node": "^20",
@@ -69,6 +69,6 @@
     "vitest": "^4.1.2"
   },
   "dependencies": {
-    "@egen-civitas/esm-embed-protocol": "^0.0.0"
+    "@egen-civitas/esm-embed-protocol": "^0.1.0"
   }
 }

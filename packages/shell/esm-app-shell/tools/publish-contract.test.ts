@@ -52,9 +52,11 @@ describe('contrat de publication du shell (reconstruction par le consommateur)',
   });
 
   it(
-    'esm-theme publie le thème par défaut copié dans chaque build',
+    "esm-theme publie son code compilé et ses attributions, sans fichier de thème statique ni de test",
     () => {
-      expect(packedFiles(frameworkDir('esm-theme'))).toContain('src/themes/theme.default.json');
+      const files = packedFiles(frameworkDir('esm-theme'));
+      expect(files).toEqual(expect.arrayContaining(['dist/index.js', 'NOTICE', 'LICENSE-MIT-TOKIFORGE', 'LICENSE-APACHE-2.0']));
+      expect(files.filter((f) => f.startsWith('src/') || /\.test\.[jt]sx?$/.test(f))).toEqual([]);
     },
     PACK_TIMEOUT_MS,
   );

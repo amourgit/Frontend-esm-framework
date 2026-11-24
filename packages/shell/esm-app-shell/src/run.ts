@@ -1,6 +1,6 @@
 import { setupLayoutHeightSync } from './layout-sync';
 import { start, triggerAppChange } from 'single-spa';
-import { setupThemeEngine } from '@egen-civitas/esm-theme';
+import { setupTheme } from '@egen-civitas/esm-theme';
 import { setupTenantSystem } from '@egen-civitas/esm-tenant';
 import { type CalendarIdentifier } from '@internationalized/date';
 import {
@@ -442,59 +442,10 @@ export function run(configUrls: Array<string>) {
   const closeLoading = showLoadingSpinner();
   const provideConfigs = createConfigLoader(configUrls);
 
-  // ── Moteur de thème EGEN : initialisation anticipée ──────────────────────
-  // Démarrer le moteur en parallèle de l'import styleguide.
-  // Les URLs de thème peuvent être surchargées via window.egenThemeUrls (optionnel).
-  // Le thème par défaut (theme.default.json) est toujours chargé en premier.
-  // ── Construction des URLs de thème ──────────────────────────────────────
-  // On NE PEUT PAS utiliser `new URL('./assets/themes/...', import.meta.url)`
-  // dans un bundle rspack : import.meta.url pointe vers le fichier bundle JS,
-  // et la résolution relative rate la destination réelle du CopyPlugin
-  // (qui copie src/assets/* → dist/* SANS le préfixe 'assets/').
-  //
-  // On utilise à la place une URL construite depuis la racine de la page :
-  //   - document.baseURI  → respecte la balise <base> si présente
-  //   - window.egenPublicPath → injecté par le serveur si le contexte est sous-chemin
-  //
-  // Le fichier est accessible à : <publicPath>/themes/theme.default.json
-  function resolveThemeUrl(filename: string): string {
-    const publicPath: string =
-      (window as any).egenPublicPath ??
-      (window as any).__webpack_public_path__ ??
-      '';
-    const base = publicPath
-      ? `${window.location.origin}/${publicPath.replace(/^\/|\/$/g, '')}/`
-      : document.baseURI || `${window.location.origin}/`;
-    return new URL(`themes/${filename}`, base).href;
-  }
-
-  const themeUrls: string[] = [
-    // Thème par défaut (priority=1) — toujours chargé
-    resolveThemeUrl('theme.default.json'),
-    // Surcharge optionnelle tenant/marque : window.egenThemeUrls[] (priority>1)
-    ...(Array.isArray((window as any).egenThemeUrls) ? (window as any).egenThemeUrls : []),
-  ];
-
-  const themeReady = setupThemeEngine({
-    themeUrls,
-    // Hot-reload uniquement en développement
-    pollIntervalMs: process.env.NODE_ENV === 'development' ? 4000 : 0,
-    onApplied: (theme, cssVars) => {
-      if (process.env.NODE_ENV !== 'production') {
-        const name = theme.schema?.meta?.name ?? theme.url;
-        const count =
-          Object.keys(cssVars.base).length + Object.keys(cssVars.light).length + Object.keys(cssVars.dark).length;
-        // eslint-disable-next-line no-console
-        console.info(`[egen-civitas/esm-theme] ✅ Thème appliqué : "${name}" (${count} vars CSS)`);
-      }
-    },
-    onError: (err) => {
-      console.warn('[egen-civitas/esm-theme] Le thème par défaut sera utilisé.', err.message);
-    },
-  }).catch((err) => {
-    // Erreur non bloquante : l'app démarre quand même avec les fallbacks SCSS
-    console.warn('[egen-civitas/esm-theme] Initialisation thème échouée (fallback SCSS actif):', err);
-  });
+  // ── Thème EGEN : une seule source, le backend du Core (même origine) ─────
+  // Démarré en parallèle de l'import du styleguide. Le thème de repli embarqué est appliqué tout de suite ;
+  // `setupTheme()` ne lève jamais : si le backend ne répond pas ou renvoie un thème refusé, le repli reste.
+  const themeReady = setupTheme();
 
   // ── Tenant system setup ─────────────────────────────────────────────────
   // Initialisé juste avant le boot des apps. COMPLÈTEMENT INERTE si

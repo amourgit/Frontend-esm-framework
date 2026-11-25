@@ -1,7 +1,5 @@
 # Baseline du dépôt — novembre 2026 (tâche A1)
 
-> **Statut : DOCUMENT DATÉ (novembre 2026).** Les mentions de `esm-theme` (chemin `src/themes`, publication du shell) décrivent l'**ancien moteur de thème, OBSOLÈTE** (retrait prévu : `docs/ajustement-reforme-configuration.md`, `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`).
-
 
 **Commit de référence** : `460edd3` (branche `main`). Mesurée le 2026-11-06, à partir d'un clone propre.
 Ce document décrit l'existant. **Rien n'a été corrigé ici** (règle A1) : les points rouges sont listés pour être traités à part.
@@ -50,9 +48,9 @@ lance tous les paquets en parallèle ; lancé seul, le fichier passe (5/5, ≈ 2
 
 **Le remède proposé par la doc (ajouter ces 3 entrées à `files`) ne suffit pas.** Le config lit aussi, à l'exécution :
 `dependencies.json`, `src/index.ts` (point d'entrée, en TypeScript), `src/assets/`, et
-`../../framework/esm-theme/src/themes` (chemin qui n'existe que dans le monorepo). Rendre `egen build` possible hors monorepo demande donc
+un dossier de thèmes situé dans le monorepo (le shell ne lit plus aucun fichier de thème). Rendre `egen build` possible hors monorepo demande donc
 de publier les sources du shell et de remplacer ce chemin relatif.
-**Statut : résolu** (décision du 2026-11-06 : le shell est publié avec ses sources de construction, le build final par cible reste chez le consommateur ; le paquet `esm-theme` et `esm-translations` publient aussi les fichiers lus par le config). Voir la PR « publier les sources de construction » et `docs/EGEN-FRAMEWORK-DEV.md` § A3.
+**Statut : résolu** (décision du 2026-11-06 : le shell est publié avec ses sources de construction, le build final par cible reste chez le consommateur ; le paquet `esm-translations` publie aussi les fichiers lus par le config). Voir la PR « publier les sources de construction » et `docs/EGEN-FRAMEWORK-DEV.md` § A3.
 En contrepartie, `egen develop` et `egen start` n'ont pas ce problème : ils servent le `dist` précompilé (`develop.ts`, l.97).
 
 ## A4 — Qui produit `service-worker.js` ? (⚠️ → ✅)

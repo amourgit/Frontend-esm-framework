@@ -1,7 +1,5 @@
 # EGEN Framework — Document de développement « Multiplateforme » (Web · Android · iOS)
 
-> **Statut : document de suivi daté.** Les mentions de `esm-theme` (L108, L110, L630) concernent l'**ancien moteur de thème, OBSOLÈTE** (retrait prévu : `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`).
-
 
 **Statut** : document de référence du dépôt `Frontend-esm-framework` pour la réforme multiplateforme.
 **Date de rédaction** : 2026-11-06 · **Base de code lue** : analyse sur `fd3d468` ; existence des chemins cités revérifiée sur `7f6775a` (écarts sur les fichiers concernés : mineurs).
@@ -108,9 +106,9 @@ Taille : **S** ≤ 0,5 j · **M** 1–2 j · **L** 3–5 j · **XL** > 5 j (à d
 ### A3 — Contenu publié du package Shell · S
 - ✅ `esm-app-shell/package.json` déclare `"files": ["dist"]`, alors que `tooling/egen/src/utils/config.ts` fait `require('@egen-civitas/esm-app-shell/rspack.config.js')`.
 - ✅ **Confirmé le 2026-11-06** (`npm pack --dry-run`, v2.8.2) : seuls `README.md`, `package.json` et `dist/` étaient publiés ; `rspack.config.js`, `src/index.ejs` et `tools/` étaient **absents** ⇒ `egen build` inutilisable hors monorepo.
-- ✅ **Le remède initial (ajouter ces 3 entrées) ne suffisait pas.** Le config lit aussi `dependencies.json`, `src/index.ts`, `src/assets/`, le dossier des thèmes (`esm-theme/src/themes`, absent du paquet `esm-theme`) et `esm-translations/translations` (absent du paquet `esm-translations`).
+- ✅ **Le remède initial (ajouter ces 3 entrées) ne suffisait pas.** Le config lit aussi `dependencies.json`, `src/index.ts`, `src/assets/`, (le dossier des thèmes lu à l'époque n'existe plus : le shell ne lit plus aucun fichier de thème) et `esm-translations/translations` (absent du paquet `esm-translations`).
 - ✅ **Décision (2026-11-06)** : le shell est publié **avec ses sources de construction** (`dist` précompilé conservé pour `egen develop`/`start`) ; le build final spécifique à la cible reste **chez le consommateur** (`egen build`). Les chemins propres au monorepo sont résolus via les paquets. Installation hoistée requise.
-- ✅ **Fait** (PR « publier les sources de construction ») : `files` du shell, `esm-theme` (`src/themes`, export `./package.json`), `esm-translations` (`translations`), test `tools/publish-contract.test.ts`.
+- ✅ **Fait** (PR « publier les sources de construction ») : `files` du shell, `esm-translations` (`translations`), test `tools/publish-contract.test.ts`.
 - ✅ **Validé** : projet vide + tarballs locaux + `@egen-civitas/egen@2.2.0` ⇒ `egen build --importmap … --routes … --spa-path /app/ --api-url https://…` OK en 28 s ; `dist` du monorepo identique à la baseline.
 
 ### A4 — Service worker : qui produit `service-worker.js` ? · S
@@ -630,7 +628,7 @@ Branche de référence : **`main`** · mise à jour : 2026-11-07.
 |---|---|---|
 | A1 Baseline | **fait** | `docs/baseline-2026-11.md` (install 2 min 14 s, build 3 min 03 s, tests 8 min 24 s). Défauts préexistants consignés : lint (corrigé #103, 5 paquets gardent d'anciennes erreurs), `build.integration.test.ts` fragile sous charge |
 | A2 Inventaire du `dist` | **fait** (fusionné #131) | `docs/inventaire-dist.md` + `scripts/inventory-dist.mjs` (reproductible) : shell seul 33,0 Mo / 384 fichiers ; **12,2 Mo de `.map` livrés en natif**, **5,2 Mo de runtime Spline (`.wasm`) émis alors que `SplineScene` n'y est neutralisé qu'à l'exécution**, aucun service worker. Pistes consignées, non appliquées. |
-| A3 Contenu publié du shell | **fait** | #104 : shell publié avec ses sources de construction ; `esm-theme` (`src/themes`) et `esm-translations` (`translations/`) complétés ; projet vide + `egen build` OK ; `tools/publish-contract.test.ts` |
+| A3 Contenu publié du shell | **fait** | #104 : shell publié avec ses sources de construction ; `esm-translations` (`translations/`) complété ; projet vide + `egen build` OK ; `tools/publish-contract.test.ts` |
 | A4 Service worker | **fait** (décision) | non produit par personne (Workbox perdu) ; non supporté en l'état, désactivé en natif ; tâche Web dédiée à ouvrir |
 | B1 `targets.js` | **fait** | #105 + intégration : contrat `TargetConfig` de la doc (`importmapMode`, `routesMode`, `csp`), `isMeaningful*` dans `helpers.js` (une seule définition), `EGEN_ENV` **obligatoire** et déjà résolu, URL d'import map/routes interdites en natif ; 74 tests |
 | B2 branchement `rspack.config.js` | **fait** | #105 : `dist` Web identique octet pour octet ; en natif `offline` du HTML = `serviceWorker` (faux) : aucune référence à un service worker |

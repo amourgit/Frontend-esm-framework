@@ -29,7 +29,7 @@ Cette version majeure retire Carbon et SCSS. Les composants se remplacent un à 
 
 ## Styles
 
-- Plus de SCSS : `*.module.scss` → `*.module.css` (CSS standard) ou classes Tailwind. `@use '@carbon/…'`, `@egen-civitas/esm-styleguide/src/vars` n'existent plus : utiliser des valeurs en `rem` ou les variables CSS du thème (`--colors-*`, `--border-radius-*`, `--ui-*`).
+- Plus de SCSS : `*.module.scss` → `*.module.css` (CSS standard) ou classes Tailwind. `@use '@carbon/…'`, `@egen-civitas/esm-styleguide/src/vars` n'existent plus : utiliser des valeurs en `rem` ou les variables CSS du thème (`--background`, `--primary`, `--border`, `--radius`…, `--ui-*`).
 - Tokens `var(--cds-…)` → `var(--ui-…)`.
 - `import styles from './x.scss'` → `./x.module.css`.
 - Garde-fou : `esm-styleguide/src/zero-carbon.architecture.test.ts` échoue si Carbon ou SCSS revient.

@@ -1,7 +1,5 @@
 # Politique de stockage (E3)
 
-> **Statut :** la ligne « thème (mode) » mentionne `esm-theme`, **ancien moteur OBSOLÈTE** (retrait prévu, `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`) ; le reste de la politique est inchangé.
-
 
 Inventaire réalisé le 2026-11-13 (`grep -rn "localStorage\|sessionStorage\|indexedDB\|Dexie" --include=*.ts --include=*.tsx packages`, hors tests/dist).
 

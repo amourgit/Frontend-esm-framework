@@ -1,6 +1,6 @@
 # REFONTE RADICALE DU SYSTÈME DE DESIGN THEME D’EGEN
 
-> **Statut : VISION (non réalisé).** Document d'intention d'origine ; il est précisé et en partie corrigé par `docs/ajustement-reforme-configuration.md` (statut `ACTUEL`) et par `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`. Écart principal : TokiForge n'est **pas** intégré au framework comme moteur ; c'est un **projet local autonome**, non joignable par le framework, qui ne contient que le **runtime** d'application ; le frontend ne parle qu'au backend du Core.
+> **Statut : VISION D'ORIGINE (réalisée par la réforme du système de design).** Document d'intention ; il est précisé et en partie corrigé par `docs/ajustement-reforme-configuration.md` (statut `ACTUEL`) et par `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`. Écart principal : TokiForge n'est **pas** intégré au framework comme moteur ; c'est un **projet local autonome**, non joignable par le framework, qui ne contient que le **runtime** d'application ; le frontend ne parle qu'au backend du Core.
 
 ## 1. OBJECTIF GÉNÉRAL
 

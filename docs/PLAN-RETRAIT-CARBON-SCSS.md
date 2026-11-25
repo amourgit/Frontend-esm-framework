@@ -1,7 +1,5 @@
 # Plan — Retrait complet de Carbon et de SCSS (framework + core)
 
-> **Statut : ACTUEL pour le retrait de Carbon/SCSS ; OBSOLÈTE pour tout ce qui concerne les jetons de thème.** Les variables `--colors-*`, `--border-radius-*`, `--typography-*` du moteur `esm-theme` cités ci-dessous sont l'**ancien contrat** : elles seront remplacées par les variables sémantiques Tweakcn (table de migration : `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`, `ANNEXES.md` B).
-
 
 > **STATUT : TERMINÉ (framework + core).** Framework publié en version majeure (`esm-styleguide` 5.x, `esm-framework` 5.x, `esm-app-shell` 3.x,
 > `rspack-config` / `webpack-config` / `tailwind-preset` 2.x) ; core migré, builds, types et tests verts. Garde-fous : test d'architecture
@@ -34,7 +32,7 @@ Composants Carbon réellement utilisés : `Button` (18), `Tile`, `Layer`, `IconB
 
 ## 2. Cible
 
-- **Style** : Tailwind v4 seul. Jetons de thème = variables CSS `--colors-*`, `--border-radius-*`, `--typography-*` du moteur `esm-theme`, déjà
+- **Style** : Tailwind v4 seul. Jetons de thème = variables CSS sémantiques du thème (`--background`, `--primary`, `--card`, `--border`, `--radius`…, contrat Tweakcn, écrites par `esm-theme`),
   reliées à Tailwind par `@egen-civitas/tailwind-preset` (`bg-background`, `bg-card`, `bg-primary`, `border-input`…, noms shadcn) ; elles
   remplacent `_vars.scss` et les jetons Carbon (`$layer`, `$text-primary`, `spacing-*`, `type-style(...)`).
 - **Composants de base** (dans `esm-styleguide/src/ui/`) : copiés de **shadcn/ui** (MIT) ; comportements accessibles via **Radix

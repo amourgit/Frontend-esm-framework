@@ -32,11 +32,10 @@
  *      d'articles.
  *
  * Couleurs : ce composant ne code aucune couleur en dur. Toutes les couleurs
- * passent par des variables CSS (`--fb-*`) définies dans la section 1. Si
- * votre application expose déjà les tokens de theme.default.json, il suffit
- * de faire pointer ces variables vers les vraies (ex :
- * `--fb-fg: var(--color-fg-default)`) pour que ce composant hérite
- * immédiatement de votre thème réel, sans toucher au reste du fichier.
+ * passent par des variables CSS (`--fb-*`) définies dans la section 1. Il suffit
+ * de faire pointer ces variables vers celles du thème (ex :
+ * `--fb-fg: var(--foreground)`) pour que ce composant hérite
+ * immédiatement du thème réel, sans toucher au reste du fichier.
  */
 
 import * as React from "react";
@@ -906,10 +905,9 @@ export function FilterBar({
       ].join(" ")}
     >
       {/*
-        Tokens de couleur locaux, avec valeurs de repli neutres. Si
-        theme.default.json (ou l'équivalent de votre application) expose déjà
-        ses propres variables, redéfinissez simplement les `--fb-*`
-        ci-dessous pour pointer dessus (ex: --fb-fg: var(--color-fg-default)) :
+        Tokens de couleur locaux, avec valeurs de repli neutres. Pour suivre le
+        thème, redéfinissez simplement les `--fb-*` ci-dessous pour pointer sur
+        ses variables (ex: --fb-fg: var(--foreground)) :
         aucune autre ligne du composant n'a besoin de changer.
       */}
       <style>{`

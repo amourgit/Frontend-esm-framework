@@ -1,7 +1,5 @@
 # @egen-civitas/esm-framework — Framework Micro-Frontend EGEN
 
-> **Statut de la partie thème :** `@egen-civitas/esm-theme` (tableau des paquets, installation, exemple de dépendances) est l'**ancien moteur de thème, OBSOLÈTE**, en cours de remplacement par le runtime TokiForge — voir `docs/ajustement-reforme-configuration.md` et `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`.
-
 
 Monorepo du framework frontend EGEN. Fournit l'ensemble des packages nécessaires pour construire des applications micro-frontend basées sur **Single-SPA**, **React 18**, **RxJS**, et **@carbon/react**.
 
@@ -18,7 +16,7 @@ Ce repo contient **3 familles de packages** :
 | `@egen-civitas/esm-state` | Store réactif (RxJS) |
 | `@egen-civitas/esm-translations` | Internationalisation (i18next) |
 | `@egen-civitas/esm-config` | Configuration dynamique runtime |
-| `@egen-civitas/esm-theme` | Moteur de thème dynamique (tokens CSS) |
+| `@egen-civitas/esm-theme` | Runtime de thème (contrat Tweakcn, mode clair/sombre, backend du Core) |
 | `@egen-civitas/esm-navigation` | Router SPA |
 | `@egen-civitas/esm-api` | Couche HTTP (fetch + SWR) |
 | `@egen-civitas/esm-data-api` | Abstraction données (types de ressources génériques) |
@@ -73,7 +71,7 @@ afficher, capturer/lire l'audio, et exécuter les *tools frontend* demandés par
 - **Build** : Yarn 4 Berry + Turborepo + Rspack + SWC
 - **Runtime** : React 18 + Single-SPA 6 + RxJS 6
 - **UI** : Tailwind CSS v4 + composants de base maison (copiés de shadcn/ui, Radix) + Framer Motion + D3 + GSAP
-- **Styling** : Tailwind CSS v4 + variables CSS du moteur de thème
+- **Styling** : Tailwind CSS v4 + variables CSS du thème (contrat Tweakcn)
 - **Tests** : Vitest + @testing-library + Playwright
 - **Versionnement** : Changesets
 

@@ -10,9 +10,8 @@ import { cn } from '../page-background/page-background.utils.js';
 //  fournit que le CONTENU des trois zones (gauche / centre / droite) et,
 //  optionnellement, une seconde ligne (fil d'Ariane).
 //
-//  Tokens : tout vient des variables injectées par @egen-civitas/esm-theme
-//  (--card, --card-foreground, --border, --egen-navbar-height)
-//  statique le temps que le moteur de thème hydrate les variables.
+//  Tokens : tout vient des variables du thème, écrites par @egen-civitas/esm-theme
+//  (--card, --card-foreground, --border), et de --egen-navbar-height (styles.css).
 // =============================================================================
 
 export interface TopBarProps {

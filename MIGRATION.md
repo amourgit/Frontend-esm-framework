@@ -1,7 +1,5 @@
 # Guide de Migration — Consommer @egen-civitas/esm-framework dans un Projet Externe
 
-> **Statut :** les références à `@egen-civitas/esm-theme` ci-dessous désignent l'**ancien moteur de thème, OBSOLÈTE** (retrait prévu, voir `docs/ajustement-reforme-configuration.md` et `Frontend-esm-core`, `docs/reforme-tokiforge/SUIVI.md` et `PARCOURS-COMPLET.md`). Ne pas le déclarer dans un nouveau projet sans avoir lu la réforme.
-
 
 Ce document explique comment extraire une application ou un projet métier existant (ou en créer un nouveau) pour consommer le framework `@egen-civitas/esm-framework` isolé.
 

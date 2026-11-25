@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-embed-client",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "license": "MPL-2.0",
   "description": "SDK côté application embarquée (iframe) : connexion au Shell EGEN, capacités typées (session, thème, événements, notifications, API…), liaison React.",
   "type": "module",
@@ -75,7 +75,7 @@
     "vitest": "^4.1.2"
   },
   "dependencies": {
-    "@egen-civitas/esm-embed-protocol": "^0.2.0"
+    "@egen-civitas/esm-embed-protocol": "^0.3.0"
   },
   "peerDependencies": {
     "react": ">=18"

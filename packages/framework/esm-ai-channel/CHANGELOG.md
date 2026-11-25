@@ -1,5 +1,12 @@
 # @egen-civitas/esm-ai-channel
 
+## 2.2.4
+
+### Patch Changes
+
+- Updated dependencies [cfe1cd4]
+  - @egen-civitas/esm-ai-tools@3.0.0
+
 ## 2.2.3
 
 ### Patch Changes

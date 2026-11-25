@@ -1,5 +1,12 @@
 # @egen-civitas/esm-ai-extensions
 
+## 1.0.4
+
+### Patch Changes
+
+- Updated dependencies [cfe1cd4]
+  - @egen-civitas/esm-ai-tools@3.0.0
+
 ## 1.0.3
 
 ### Patch Changes

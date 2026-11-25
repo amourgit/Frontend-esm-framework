@@ -1,5 +1,13 @@
 # @egen-civitas/esm-framework
 
+## 5.0.2
+
+### Patch Changes
+
+- Updated dependencies [cfe1cd4]
+  - @egen-civitas/esm-styleguide@6.0.0
+  - @egen-civitas/esm-ai-framework@1.3.6
+
 ## 5.0.1
 
 ### Patch Changes

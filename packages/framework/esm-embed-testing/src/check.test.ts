@@ -4,7 +4,7 @@ import { checkEmbedApp, hasErrors } from './check.js';
 
 const manifest = (over: Record<string, unknown> = {}) => ({
   manifestVersion: 1, name: '@civitas/esm-studio-app', version: '1.0.0', title: 'Studio', url: 'https://studio.exemple.org', route: 'studio', technology: 'nextjs',
-  navigation: { mode: 'history' }, capabilities: { theme: {}, notifications: {}, events: { publish: ['app.studio.*'] } }, ...over,
+  navigation: { mode: 'history' }, capabilities: { locale: {}, notifications: {}, events: { publish: ['app.studio.*'] } }, ...over,
 });
 const msgs = (i: Array<{ level: string; message: string }>, level?: string) => i.filter((x) => !level || x.level === level).map((x) => x.message);
 
@@ -12,21 +12,30 @@ describe('checkEmbedApp (manifeste)', () => {
   it('cas nominal : seulement des informations', async () => {
     const i = await checkEmbedApp({ manifest: manifest() });
     expect(hasErrors(i)).toBe(false);
-    expect(msgs(i, 'info')[0]).toMatch(/notifications, events/);
+    expect(msgs(i, 'info').join()).toMatch(/notifications, events/);
   });
   it('manifeste invalide : erreurs de validation', async () => {
     const i = await checkEmbedApp({ manifest: manifest({ route: 'A B' }) });
     expect(hasErrors(i)).toBe(true);
   });
-  it('champs de session interdits, motifs d’événements, hôtes d’API, outils non préfixés', async () => {
-    const i = await checkEmbedApp({
-      manifest: manifest({ capabilities: { session: { fields: ['sessionId', 'user.display'] }, events: { publish: ['*', 'core.x', 'app.studio.*'] }, api: { hosts: ['http://a.org'] }, 'ai-tools': { tools: ['apply'] } } }),
-    });
-    expect(msgs(i, 'error').join('|')).toMatch(/sessionId/);
+  it('capacités retirées du SDK : message explicite', async () => {
+    for (const id of ['session', 'theme', 'permissions', 'api']) {
+      const i = await checkEmbedApp({ manifest: manifest({ capabilities: { [id]: {} } }) });
+      expect(msgs(i, 'error').join()).toMatch(/absente du SDK/);
+    }
+  });
+  it('motifs d’événements et outils non préfixés', async () => {
+    const i = await checkEmbedApp({ manifest: manifest({ capabilities: { events: { publish: ['*', 'core.x', 'app.studio.*'] }, 'ai-tools': { tools: ['apply'] } } }) });
     expect(msgs(i, 'error').join('|')).toMatch(/pas supporté/);
-    expect(msgs(i, 'error').join('|')).toMatch(/api\.hosts/);
     expect(msgs(i, 'warn').join('|')).toMatch(/core\.x/);
     expect(msgs(i, 'warn').join('|')).toMatch(/préfixés/);
+  });
+  it('extensions : slots à approuver et vues intégrées en iframe', async () => {
+    const i = await checkEmbedApp({ manifest: manifest({ extensions: [{ name: 'nav', slot: 'topbar-nav-slot' }, { name: 'chip', slot: 'shell-rail-left-slot', view: '/_egen/chip' }] }) });
+    expect(msgs(i, 'info').join('|')).toMatch(/topbar-nav-slot, shell-rail-left-slot/);
+    expect(msgs(i, 'info').join('|')).toMatch(/vue \/_egen\/chip/);
+    expect(hasErrors(await checkEmbedApp({ manifest: manifest({ extensions: [{ name: 'N X', slot: 'a' }] }) }))).toBe(true);
+    expect(msgs(await checkEmbedApp({ manifest: manifest({ capabilities: { extensions: { discover: ['*'] } } }) }), 'error').join()).toMatch(/« \* » n'est pas supporté/);
   });
 });
 

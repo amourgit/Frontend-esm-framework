@@ -3,10 +3,14 @@ import { EmbedError, type CapabilityDenied, type CapabilityGranted, type Capabil
 export type Unsubscribe = () => void;
 export type JsonObject = Record<string, unknown>;
 
-export interface ThemeState {
-  mode?: 'light' | 'dark' | string;
-  /** Variables CSS du Core : `{ '--color-primary': '#…' }`. */
-  tokens: Record<string, string>;
+export interface ExtensionInfo {
+  /** Nom de l'extension (unique dans son module). */
+  name: string;
+  /** Module qui la déclare. */
+  moduleName: string;
+  order?: number;
+  /** Données publiées par l'extension pour le slot (libellé, icône, route…). */
+  meta: Record<string, unknown>;
 }
 
 export interface NotificationInput {
@@ -14,22 +18,6 @@ export interface NotificationInput {
   title: string;
   subtitle?: string;
   timeoutMs?: number;
-}
-
-export interface ApiRequest {
-  /** Chemin relatif à l'API du Core (`/x`) — exclusif avec `url`. */
-  path?: string;
-  /** URL https absolue d'un hôte autorisé par le grant — exclusif avec `path`. */
-  url?: string;
-  method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-  headers?: Record<string, string>;
-  body?: string;
-}
-
-export interface ApiResponse {
-  status: number;
-  headers: Record<string, string>;
-  body: string;
 }
 
 export interface AiToolDefinition {
@@ -48,9 +36,6 @@ export interface ClientInit {
   rpc: RpcEndpoint | undefined;
   protocol?: number;
 }
-
-const THEME_KEY_RE = /^--[a-z0-9-]{1,100}$/i;
-const THEME_VALUE_RE = /^[^;{}<>\\]{0,300}$/;
 
 /**
  * Client d'une application embarquée. Chaque capacité est une façade typée ;
@@ -117,10 +102,6 @@ export class EgenClient {
     return this.rpc.subscribe(cap, ev, cb);
   }
 
-  readonly session = {
-    get: () => this.call<JsonObject>('session', 'get'),
-    onChange: (cb: (s: JsonObject) => void) => this.on('session', 'change', cb),
-  };
   readonly tenant = {
     get: () => this.call<{ id: string | null }>('tenant', 'get'),
     onChange: (cb: (t: { id: string | null }) => void) => this.on('tenant', 'change', cb),
@@ -129,26 +110,14 @@ export class EgenClient {
     get: () => this.call<string>('locale', 'get'),
     onChange: (cb: (l: string) => void) => this.on('locale', 'change', cb),
   };
-  readonly theme = {
-    get: () => this.call<ThemeState>('theme', 'get'),
-    onChange: (cb: (t: ThemeState) => void) => this.on('theme', 'change', cb),
+  readonly extensions = {
     /**
-     * Applique le thème du Core au document de l'app (variables CSS sur `:root` + `data-theme`) et le maintient à jour.
-     * Les clés doivent être des variables CSS (`--nom`) et les valeurs sans `;{}<>` (pas d'injection CSS).
+     * Métadonnées des extensions attachées à un slot du Core (apps internes, framework, autres apps), filtrées par les privilèges
+     * de l'utilisateur côté Core. Sert à construire sa propre interface (menus, liens). Slot soumis au grant `extensions.discover`.
+     * Les composants du Core ne s'affichent pas dans l'iframe : l'app reçoit leurs métadonnées, pas leur rendu.
      */
-    sync: async (root: { style: { setProperty(k: string, v: string): void }; setAttribute?(k: string, v: string): void } = (globalThis as any).document?.documentElement): Promise<Unsubscribe> => {
-      if (!root) return () => undefined;
-      const apply = (t: ThemeState) => {
-        for (const [k, v] of Object.entries(t.tokens ?? {})) if (THEME_KEY_RE.test(k) && typeof v === 'string' && THEME_VALUE_RE.test(v)) root.style.setProperty(k, v);
-        if (t.mode && root.setAttribute) root.setAttribute('data-theme', String(t.mode));
-      };
-      apply(await this.theme.get());
-      return this.theme.onChange(apply);
-    },
-  };
-  readonly permissions = {
-    can: (permission: string) => this.call<boolean>('permissions', 'can', [permission]),
-    onChange: (cb: () => void) => this.on('permissions', 'change', cb),
+    list: (slot: string) => this.call<ExtensionInfo[]>('extensions', 'list', [slot]),
+    onChange: (slot: string, cb: (list: ExtensionInfo[]) => void) => this.on('extensions', slot, cb),
   };
   readonly navigation = {
     report: (path: string, opts?: { replace?: boolean; title?: string }) => this.call<void>('navigation', 'report', opts ? [path, opts] : [path]),
@@ -167,9 +136,6 @@ export class EgenClient {
   };
   readonly dialogs = {
     confirm: (d: { title: string; message: string; danger?: boolean }) => this.call<boolean>('dialogs', 'confirm', [d]),
-  };
-  readonly api = {
-    fetch: (req: ApiRequest) => this.call<ApiResponse>('api', 'fetch', [req]),
   };
   readonly flags = {
     isEnabled: (name: string) => this.call<boolean>('flags', 'isEnabled', [name]),

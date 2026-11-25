@@ -6,9 +6,9 @@ Spécification : `docs/integration-apps/17-sdk-embed-protocole-v2.md` du dépôt
 
 ```ts
 import { effectiveGrants } from '@egen-civitas/esm-embed-protocol';
-import { createEmbedHost, createFetchApiProvider } from '@egen-civitas/esm-embed-host';
+import { createEmbedHost } from '@egen-civitas/esm-embed-host';
 
-const grants = effectiveGrants(manifest.capabilities, { theme: {}, notifications: {}, events: { publish: ['app.studio.*'] } });
+const grants = effectiveGrants(manifest.capabilities, { notifications: {}, events: { publish: ['app.studio.*'] } });
 
 const host = createEmbedHost({
   moduleName: manifest.name,
@@ -16,17 +16,16 @@ const host = createEmbedHost({
   grants,
   navigation: { route: manifest.route, mode: manifest.navigation.mode },
   providers: {
-    session: { get, subscribe },                      // services du Core
-    theme: { get, subscribe },
+    locale: { get, subscribe },                       // services dont le Core est la source
     notifications: { show: (n, from) => toast(n) },
     events: { publish: bus.publish, subscribe: bus.subscribe },
-    api: createFetchApiProvider({ baseUrl: API_URL, getHeaders: authHeaders }),
+    extensions: { list: (slot) => infos(slot), subscribe },
   },
 });
 host.mount(container);       // …; host.destroy() au démontage
 ```
 
 - **Moindre privilège** : la table d'appels de la connexion ne contient que les capacités accordées **et** servies. Une capacité accordée sans fournisseur est refusée (`UNAVAILABLE`).
-- **Jamais de jeton ni de `sessionId`** : `session` est filtrée par liste blanche ; `api.fetch` s'exécute côté Core (`createFetchApiProvider`), sans cookies ni authentification vers les hôtes externes, sans redirection.
-- **Pont 1.1** : une app qui ne parle pas le protocole 2 continue de fonctionner (`ready`, `location`, `navigate`, `resize`, `title`). Désactivable : `legacy: false`.
+- **Règle d'or** : le Core ne relaie ni identité/session, ni droits, ni thème, ni appels API authentifiés (ils viennent de Keycloak, des backends, du service de thèmes). Aucun jeton ne transite.
+- **Pont 1.1** : une app qui ne parle pas le protocole 2 continue de fonctionner (`ready`, `location`, `navigate`, `resize`, `title`, langue) — sans session. Désactivable : `legacy: false`.
 - `HostConnection` est indépendante du DOM (testable avec le vrai client, voir `src/__tests__/harness.ts`).

@@ -1,4 +1,3 @@
-import { DEFAULT_SESSION_FIELDS } from './constants.js';
 import { isPlainObject } from './guards.js';
 import type { CapabilityId } from './types.js';
 
@@ -22,7 +21,7 @@ export interface CapabilityDescriptor {
   events: readonly string[];
   dynamicEvents?: boolean;
   /** Clés de configuration de grant qui sont des listes, avec leur mode de comparaison. */
-  listKeys: Record<string, 'exact' | 'pattern' | 'path'>;
+  listKeys: Record<string, 'exact' | 'pattern' | 'slot'>;
   /** Valeur d'une liste quand ni l'app ni l'opérateur n'en fixent. */
   listDefaults: Record<string, readonly string[]>;
 }
@@ -45,6 +44,8 @@ export function isInternalPath(p: unknown): p is string {
   return !/[\s\u0000-\u001f\u007f\\]/.test(p) && !/^\/[a-z][a-z0-9+.-]*:/i.test(p);
 }
 
+const SLOT_RE = /^[a-z0-9][a-z0-9-]{0,99}$/;
+export const isSlotName = (s: unknown): s is string => typeof s === 'string' && SLOT_RE.test(s);
 const TOPIC_RE = /^[a-z0-9][a-z0-9._-]{0,127}$/;
 export const isTopic = (t: unknown): t is string => typeof t === 'string' && TOPIC_RE.test(t);
 
@@ -56,33 +57,19 @@ const objectArg = (a: unknown[], check: (o: Record<string, unknown>) => string |
 
 const KINDS = ['info', 'success', 'warning', 'error'];
 const LEVELS = ['debug', 'info', 'warn', 'error'];
-const HEADER_RE = /^[a-z0-9-]{1,64}$/i;
 
 const m = (validate: Validator, direction?: MethodDescriptor['direction']): MethodDescriptor => ({ validate, direction });
 
-/** Catalogue des capacités v1 (doc 17 §5). Toute capacité hors catalogue est refusée. */
+/**
+ * Catalogue des capacités v1 (doc 17 §5). Toute capacité hors catalogue est refusée.
+ *
+ * RÈGLE D'OR (doc 17 §2) : le SDK ne transporte que ce dont le Core est LUI-MÊME la source (état d'interface et services propres
+ * du Core). Identité/session, droits, thème et appels API viennent de leurs sources (Keycloak, backends, source de thème) :
+ * une app embarquée les obtient directement, jamais relayés par le Core (voir `REMOVED_CAPABILITIES`).
+ */
 export const CAPABILITIES: Readonly<Record<CapabilityId, CapabilityDescriptor>> = Object.freeze({
-  session: {
-    id: 'session',
-    version: 1,
-    defaultGrant: true,
-    methods: { get: m(none) },
-    events: ['change'],
-    listKeys: { fields: 'exact' },
-    listDefaults: { fields: DEFAULT_SESSION_FIELDS },
-  },
   tenant: { id: 'tenant', version: 1, defaultGrant: true, methods: { get: m(none) }, events: ['change'], listKeys: {}, listDefaults: {} },
   locale: { id: 'locale', version: 1, defaultGrant: true, methods: { get: m(none) }, events: ['change'], listKeys: {}, listDefaults: {} },
-  theme: { id: 'theme', version: 1, defaultGrant: true, methods: { get: m(none) }, events: ['change'], listKeys: {}, listDefaults: {} },
-  permissions: {
-    id: 'permissions',
-    version: 1,
-    defaultGrant: false,
-    methods: { can: m(oneString(200)) },
-    events: ['change'],
-    listKeys: { probe: 'exact' },
-    listDefaults: { probe: [] },
-  },
   navigation: {
     id: 'navigation',
     version: 1,
@@ -151,30 +138,6 @@ export const CAPABILITIES: Readonly<Record<CapabilityId, CapabilityDescriptor>> 
     listKeys: {},
     listDefaults: {},
   },
-  api: {
-    id: 'api',
-    version: 1,
-    defaultGrant: false,
-    methods: {
-      fetch: m((a) =>
-        objectArg(a, (o) => {
-          if ((o.path === undefined) === (o.url === undefined)) return 'exactement un de path ou url';
-          if (o.path !== undefined && !isInternalPath(o.path)) return 'path : chemin interne attendu';
-          if (o.url !== undefined && !(str(o.url, 2000) && /^https:\/\//i.test(o.url as string))) return 'url : https attendue';
-          if (o.method !== undefined && !['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].includes(o.method as string)) return 'method invalide';
-          if (o.headers !== undefined) {
-            if (!isPlainObject(o.headers)) return 'headers : objet attendu';
-            for (const [k, v] of Object.entries(o.headers)) if (!HEADER_RE.test(k) || typeof v !== 'string' || v.length > 2000) return `en-tête invalide : ${k}`;
-          }
-          if (o.body !== undefined && typeof o.body !== 'string') return 'body : texte attendu';
-          return null;
-        }),
-      ),
-    },
-    events: [],
-    listKeys: { hosts: 'exact', headers: 'exact', paths: 'path' },
-    listDefaults: { hosts: [], headers: ['accept', 'content-type'], paths: [] },
-  },
   flags: {
     id: 'flags',
     version: 1,
@@ -215,6 +178,20 @@ export const CAPABILITIES: Readonly<Record<CapabilityId, CapabilityDescriptor>> 
     listKeys: { tools: 'pattern' },
     listDefaults: { tools: [] },
   },
+  extensions: {
+    id: 'extensions',
+    version: 1,
+    defaultGrant: false,
+    methods: {
+      // Découverte : métadonnées des extensions attachées à un slot du Core (filtrées par les privilèges de l'utilisateur côté Core).
+      list: m((a) => (a.length === 1 && isSlotName(a[0]) ? null : 'nom de slot attendu (minuscules, chiffres, tirets)')),
+    },
+    events: [],
+    dynamicEvents: true,
+    // `discover` : slots dont l'app peut LIRE les extensions ; `contribute` : slots où l'app peut AJOUTER ses composants (approbation opérateur).
+    listKeys: { discover: 'slot', contribute: 'slot' },
+    listDefaults: { discover: [], contribute: [] },
+  },
   lifecycle: {
     id: 'lifecycle',
     version: 1,
@@ -241,3 +218,15 @@ export function validateCall(cap: string, method: string, args: unknown[], direc
   if ((md.direction ?? 'app-to-host') !== direction) return `sens interdit pour ${cap}.${method}`;
   return md.validate(args);
 }
+
+/**
+ * Capacités volontairement ABSENTES du SDK, avec la raison et la voie à suivre. Demandées dans un manifeste, elles sont
+ * rejetées avec ce message (au lieu d'un « capacité inconnue » sans explication).
+ */
+export const REMOVED_CAPABILITIES: Readonly<Record<string, string>> = Object.freeze({
+  session: "l'identité ne vient pas du Core : l'app obtient son jeton auprès de Keycloak (OIDC)",
+  auth: "l'authentification ne vient pas du Core : l'app obtient son jeton auprès de Keycloak (OIDC)",
+  permissions: "les droits sont portés par le jeton et le backend de l'app, pas par le Core",
+  theme: "le thème vient de sa source (service de thèmes), pas du Core",
+  api: "l'app appelle ses backends avec son propre jeton Keycloak ; le Core ne relaie pas d'appels authentifiés",
+});

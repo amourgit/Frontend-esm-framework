@@ -11,7 +11,7 @@ const tick = (ms = 25) => new Promise((r) => setTimeout(r, ms));
 describe('createTestHost', () => {
   it('journalise les services sollicités et publie les événements', async () => {
     const sim = createTestHost({ manifestCapabilities: { events: { publish: ['app.t.*'], subscribe: ['core.*'] }, notifications: {} }, approved: { events: { publish: ['app.*'], subscribe: ['core.*'] }, notifications: {} } });
-    const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['session', 'events', 'notifications'] });
+    const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['events', 'notifications'] });
     await egen.events.publish('app.t.saved', { id: 1 });
     await egen.notifications.show({ kind: 'success', title: 'OK' });
     const got: unknown[] = [];
@@ -36,11 +36,24 @@ describe('createTestHost', () => {
     sim.destroy();
   });
 
-  it('API simulée et confirmation', async () => {
-    const sim = createTestHost({ approved: { api: { paths: ['/x'] }, dialogs: {} }, api: (r) => ({ status: 201, headers: {}, body: r.path ?? '' }), confirm: false });
-    const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['api', 'dialogs'] });
-    await expect(egen.api.fetch({ path: '/x' })).resolves.toEqual({ status: 201, headers: {}, body: '/x' });
+  it('drapeaux simulés et confirmation', async () => {
+    const sim = createTestHost({ approved: { dialogs: {}, flags: { names: ['beta'] } }, flags: { beta: true }, confirm: false });
+    const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['dialogs', 'flags'] });
+    await expect(egen.flags.isEnabled('beta')).resolves.toBe(true);
     await expect(egen.dialogs.confirm({ title: 't', message: 'm' })).resolves.toBe(false);
+    egen.close();
+    sim.destroy();
+  });
+
+  it('extensions simulées : découverte et changements poussés', async () => {
+    const sim = createTestHost({ extensions: { 'topbar-nav-slot': [] }, manifestCapabilities: { extensions: { discover: ['topbar-nav-slot'] } }, approved: { extensions: { discover: ['topbar-nav-slot'] } } });
+    const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['extensions'] });
+    await expect(egen.extensions.list('topbar-nav-slot')).resolves.toEqual([]);
+    const got: unknown[] = [];
+    await egen.extensions.onChange('topbar-nav-slot', (l) => got.push(l.length));
+    sim.emit.extensions('topbar-nav-slot', [{ name: 'a', moduleName: 'm', meta: {} }]);
+    await tick();
+    expect(got).toEqual([1]);
     egen.close();
     sim.destroy();
   });
@@ -67,7 +80,7 @@ describe('simulateur de Shell (serveur)', () => {
   afterEach(async () => void (await sim?.close()));
 
   it('sert la page, la configuration et les modules ; refuse la traversée de chemin', async () => {
-    sim = await startSimulator({ app: 'http://localhost:3000', port: 0, manifest: { manifestVersion: 1, name: '@a/b', version: '1.0.0', title: 'T', url: 'http://localhost:3000', route: 'b', technology: 'react', navigation: { mode: 'none' }, capabilities: { theme: {}, notifications: {} } } });
+    sim = await startSimulator({ app: 'http://localhost:3000', port: 0, manifest: { manifestVersion: 1, name: '@a/b', version: '1.0.0', title: 'T', url: 'http://localhost:3000', route: 'b', technology: 'react', navigation: { mode: 'none' }, capabilities: { locale: {}, notifications: {} } } });
     const page = await fetch(sim.url + '/');
     expect(page.status).toBe(200);
     const html = await page.text();
@@ -76,6 +89,7 @@ describe('simulateur de Shell (serveur)', () => {
     const cfg = await (await fetch(sim.url + '/api/config')).json();
     expect(cfg.moduleName).toBe('@a/b');
     expect(cfg.approved).toEqual({ notifications: {} });
+    expect(cfg.extensions['topbar-nav-slot']).toHaveLength(1);
     const mod = await fetch(sim.url + '/vendor/host/index.js');
     expect(mod.status).toBe(200);
     expect(mod.headers.get('content-type')).toMatch(/javascript/);

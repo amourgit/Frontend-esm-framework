@@ -13,23 +13,16 @@ export function topicAllowed(patterns: readonly string[] | undefined, topic: str
   return !!patterns && patterns.some((p) => patternCovers(p, topic));
 }
 
+
 /**
- * Chemins d'API : `/a/b` (exact) ou `/a/b/*` (préfixe, le `/` est inclus). Requête et fragment ignorés pour la comparaison.
- * Refusés d'office : `..`, `%2e`, `%2f`, `%5c`, `//`, `\\`, caractères de contrôle (contournements classiques de filtrage de chemin).
+ * Motifs de noms de slots d'extension : `topbar-nav-slot` (exact) ou `annuaire-*` (préfixe, `*` final obligatoire).
+ * Le motif seul `*` n'est volontairement PAS supporté : un grant doit nommer les slots qu'il ouvre.
  */
-export function normalizeApiPath(path: string): string | null {
-  const p = path.split(/[?#]/)[0];
-  // eslint-disable-next-line no-control-regex
-  if (!p.startsWith('/') || /(^|\/)\.\.?(\/|$)|%2e|%2f|%5c|\/\/|\\|[\u0000-\u001f\u007f]/i.test(p)) return null;
-  return p;
-}
-
-export function pathCovers(ceiling: string, q: string): boolean {
+export function slotCovers(ceiling: string, q: string): boolean {
   if (ceiling === q) return true;
-  return ceiling.endsWith('/*') && q.startsWith(ceiling.slice(0, -1));
+  return ceiling.length > 1 && ceiling.endsWith('*') && q.startsWith(ceiling.slice(0, -1));
 }
 
-export function pathAllowed(patterns: readonly string[] | undefined, path: string): boolean {
-  const p = normalizeApiPath(path);
-  return p !== null && !!patterns && patterns.some((c) => pathCovers(c, p));
+export function slotAllowed(patterns: readonly string[] | undefined, slot: string): boolean {
+  return !!patterns && patterns.some((p) => slotCovers(p, slot));
 }

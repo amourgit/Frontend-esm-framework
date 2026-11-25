@@ -26,17 +26,17 @@ describe('validation des options', () => {
 
 describe('poignée de main', () => {
   it('sonde, hello, connect (nonce, origine cible explicite), port : client connecté', async () => {
-    const { shell, p } = setup({ capabilities: ['session', 'theme', 'events'] });
+    const { shell, p } = setup({ capabilities: ['tenant', 'locale', 'events'] });
     expect(shell.hostWindow.posted[0]).toMatchObject({ message: { egen: 2, moduleName: shell.moduleName, message: { kind: 'probe' } }, targetOrigin: shell.origin });
     shell.hello();
-    expect(shell.connectMsg).toMatchObject({ kind: 'connect', nonce: 'nonce-0123456789', protocol: 2, requested: [{ id: 'session', version: 1 }, { id: 'theme', version: 1 }, { id: 'events', version: 1 }] });
+    expect(shell.connectMsg).toMatchObject({ kind: 'connect', nonce: 'nonce-0123456789', protocol: 2, requested: [{ id: 'tenant', version: 1 }, { id: 'locale', version: 1 }, { id: 'events', version: 1 }] });
     expect(shell.hostWindow.posted.at(-1)!.targetOrigin).toBe(shell.origin);
-    shell.accept([grant('session', { fields: ['user.display'] }), grant('theme')], { session: { get: () => ({ user: { display: 'Sam' } }) } });
+    shell.accept([grant('tenant'), grant('locale')], { tenant: { get: () => ({ id: 't1' }) } });
     const c = await p;
     expect(c.connected).toBe(true);
-    expect(c.has('session')).toBe(true);
+    expect(c.has('tenant')).toBe(true);
     expect(c.has('events')).toBe(false);
-    await expect(c.session.get()).resolves.toEqual({ user: { display: 'Sam' } });
+    await expect(c.tenant.get()).resolves.toEqual({ id: 't1' });
   });
 
   it('ignore une origine ou une source inattendue, puis repli autonome', async () => {
@@ -46,13 +46,13 @@ describe('poignée de main', () => {
     expect(shell.connectMsg).toBeUndefined();
     const c = await p;
     expect(c.connected).toBe(false);
-    await expect(c.session.get()).rejects.toMatchObject({ code: 'DENIED' });
+    await expect(c.tenant.get()).rejects.toMatchObject({ code: 'DENIED' });
   });
 
   it('ignore un port avec un mauvais nonce ou sans port', async () => {
     const { shell, p } = setup();
     shell.hello();
-    shell.accept([grant('session')], { session: { get: () => 1 } }, 'autre-nonce-0123456');
+    shell.accept([grant('tenant')], { tenant: { get: () => 1 } }, 'autre-nonce-0123456');
     shell.deliver({ egen: 2, moduleName: shell.moduleName, message: { kind: 'port', nonce: 'nonce-0123456789', protocol: 2, granted: [], denied: [] } });
     expect((await p).connected).toBe(false);
   });
@@ -65,7 +65,7 @@ describe('poignée de main', () => {
     shell.hello('nonce-bbbbbbbbbb');
     expect(shell.hostWindow.posted.filter((m) => m.message.message.kind === 'connect')).toHaveLength(1);
     expect(shell.connectMsg.nonce).toBe('nonce-aaaaaaaaaa');
-    shell.accept([grant('session')], { session: { get: () => 1 } }, 'nonce-aaaaaaaaaa');
+    shell.accept([grant('tenant')], { tenant: { get: () => 1 } }, 'nonce-aaaaaaaaaa');
     expect((await p).connected).toBe(true);
   });
 
@@ -82,7 +82,7 @@ describe('poignée de main', () => {
 });
 
 describe('capacités', () => {
-  async function connected(granted = [grant('session'), grant('theme'), grant('ai-tools'), grant('lifecycle'), grant('events')], handlers: any = {}, subscribe?: any) {
+  async function connected(granted = [grant('tenant'), grant('locale'), grant('ai-tools'), grant('lifecycle'), grant('events'), grant('extensions')], handlers: any = {}, subscribe?: any) {
     const { shell, p } = setup();
     shell.hello();
     shell.accept(granted, handlers, 'nonce-0123456789', { subscribe });
@@ -91,25 +91,22 @@ describe('capacités', () => {
 
   it('capacité non accordée : rejet local sans aller-retour', async () => {
     let called = false;
-    const { c } = await connected([grant('session')], { api: { fetch: () => (called = true) } });
-    await expect(c.api.fetch({ path: '/x' })).rejects.toMatchObject({ code: 'DENIED', message: expect.stringMatching(/api/) });
+    const { c } = await connected([grant('tenant')], { notifications: { show: () => (called = true) } });
+    await expect(c.dialogs.confirm({ title: 't', message: 'm' })).rejects.toMatchObject({ code: 'DENIED', message: expect.stringMatching(/dialogs/) });
     await expect(c.notifications.show({ kind: 'info', title: 'a' })).rejects.toMatchObject({ code: 'DENIED' });
     expect(called).toBe(false);
   });
 
-  it('theme.sync applique les variables valides et ignore les injections', async () => {
-    const set: Record<string, string> = {};
-    const attrs: Record<string, string> = {};
-    const root = { style: { setProperty: (k: string, v: string) => (set[k] = v) }, setAttribute: (k: string, v: string) => (attrs[k] = v) };
+  it('extensions : découverte d’un slot et changements poussés', async () => {
     let emit: any;
-    const { c } = await connected(undefined, { theme: { get: () => ({ mode: 'dark', tokens: { '--primary': '#fff', 'color': 'red', '--bad': 'red;}body{display:none', '--ok': 'rgb(1 2 3)' } }) } }, (_cap: string, _ev: string, e: any) => ((emit = e), () => undefined));
-    const off = await c.theme.sync(root);
-    expect(set).toEqual({ '--primary': '#fff', '--ok': 'rgb(1 2 3)' });
-    expect(attrs['data-theme']).toBe('dark');
-    emit({ mode: 'light', tokens: { '--primary': '#000' } });
+    const list = [{ name: 'nav-annuaire', moduleName: '@egen/esm-annuaire-app', order: 1, meta: { label: 'Annuaire' } }];
+    const { c } = await connected(undefined, { extensions: { list: (slot: string) => (slot === 'topbar-nav-slot' ? list : []) } }, (cap: string, ev: string, e: any) => (cap === 'extensions' ? ((emit = e), () => undefined) : undefined));
+    await expect(c.extensions.list('topbar-nav-slot')).resolves.toEqual(list);
+    const got: unknown[] = [];
+    await c.extensions.onChange('topbar-nav-slot', (l) => got.push(l));
+    emit([]);
     await tick();
-    expect(set['--primary']).toBe('#000');
-    off();
+    expect(got).toEqual([[]]);
   });
 
   it('événements : abonnement filtré par l’hôte', async () => {
@@ -138,9 +135,9 @@ describe('capacités', () => {
   });
 
   it('fermeture : client fermé, appels rejetés', async () => {
-    const { c } = await connected(undefined, { session: { get: () => 1 } });
+    const { c } = await connected(undefined, { tenant: { get: () => 1 } });
     c.close();
     expect(c.closed).toBe(true);
-    await expect(c.session.get()).rejects.toMatchObject({ code: 'DENIED' });
+    await expect(c.tenant.get()).rejects.toMatchObject({ code: 'DENIED' });
   });
 });

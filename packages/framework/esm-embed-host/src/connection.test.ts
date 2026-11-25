@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { harness, tick } from './__tests__/harness.js';
-import { createFetchApiProvider, type HostProviders } from './index.js';
+import { type ExtensionInfo, type HostProviders } from './index.js';
 
 const closers: Array<() => void> = [];
 afterEach(() => {
@@ -12,46 +12,51 @@ async function h(opts: Parameters<typeof harness>[0] = {}) {
   return r;
 }
 
-const session = { authenticated: true, sessionId: 'SECRET', user: { uuid: 'u1', display: 'Sam', email: 'x@y.z' } };
 const watch = <T>(v: T) => {
   const subs = new Set<(x: T) => void>();
   return { get: () => v, subscribe: (cb: (x: T) => void) => (subs.add(cb), () => subs.delete(cb)), push: (x: T) => subs.forEach((s) => s(x)) };
 };
 
 describe('poignée de main bout en bout (vrai client ↔ vraie connexion hôte)', () => {
-  it('l’app (sonde) déclenche hello, connect, port ; capacités par défaut accordées', async () => {
-    const { client, conn } = await h({ providers: { session: watch(session) as any } });
+  it('l’app (sonde) déclenche hello, connect, port ; capacités par défaut servies accordées', async () => {
+    const { client, conn } = await h({ providers: { locale: watch('fr') as any, tenant: watch({ id: 't1' }) as any } });
     expect(client.connected).toBe(true);
     expect(conn.connected).toBe(true);
-    expect(client.has('session')).toBe(true);
+    expect(client.has('locale')).toBe(true);
     expect(client.protocol).toBe(2);
+    await expect(client.locale.get()).resolves.toBe('fr');
+    await expect(client.tenant.get()).resolves.toEqual({ id: 't1' });
   });
 
-  it('session filtrée : jamais de sessionId ni de champ hors liste', async () => {
-    const { client } = await h({ providers: { session: watch(session) as any } });
-    const s = await client.session.get();
-    expect(s).toEqual({ authenticated: true, user: { uuid: 'u1', display: 'Sam' } });
-    expect(JSON.stringify(s)).not.toMatch(/SECRET|x@y\.z/);
-  });
-
-  it('session : changement poussé, filtré', async () => {
-    const w = watch<any>(session);
-    const { client } = await h({ providers: { session: w as any } });
-    const got: any[] = [];
-    await client.session.onChange((v) => got.push(v));
-    w.push({ ...session, user: { ...session.user, display: 'Sam2' }, sessionId: 'AUTRE' });
+  it('langue et tenant : changements poussés', async () => {
+    const locale = watch('fr');
+    const { client } = await h({ providers: { locale: locale as any } });
+    const got: string[] = [];
+    await client.locale.onChange((l) => got.push(l));
+    locale.push('en');
     await tick();
-    expect(got.at(-1)).toEqual({ authenticated: true, user: { uuid: 'u1', display: 'Sam2' } });
+    expect(got).toEqual(['en']);
   });
 
-  it('refus par défaut : api, events, notifications non accordées sans approbation', async () => {
-    const { client } = await h({ providers: { session: watch(session) as any, api: { fetch: vi.fn() }, events: { publish: vi.fn(), subscribe: vi.fn() }, notifications: { show: vi.fn() } } as any, requested: ['session', 'api', 'events', 'notifications'] });
-    expect(client.has('api')).toBe(false);
-    expect(client.denied.map((d) => [d.id, d.reason])).toEqual([['api', 'NOT_APPROVED'], ['events', 'NOT_APPROVED'], ['notifications', 'NOT_APPROVED']]);
+  it('capacités retirées du SDK (session, thème, droits, api) : refusées, inconnues', async () => {
+    const { client } = await h({ providers: { locale: watch('fr') as any }, requested: ['locale', 'session' as any, 'theme' as any, 'permissions' as any, 'api' as any] });
+    expect(client.has('locale')).toBe(true);
+    expect(client.denied).toEqual([
+      { id: 'session', reason: 'UNKNOWN' },
+      { id: 'theme', reason: 'UNKNOWN' },
+      { id: 'permissions', reason: 'UNKNOWN' },
+      { id: 'api', reason: 'UNKNOWN' },
+    ]);
+  });
+
+  it('refus par défaut : events, notifications non accordées sans approbation', async () => {
+    const { client } = await h({ providers: { locale: watch('fr') as any, events: { publish: vi.fn(), subscribe: vi.fn() }, notifications: { show: vi.fn() } } as any, requested: ['locale', 'events', 'notifications'] });
+    expect(client.has('events')).toBe(false);
+    expect(client.denied.map((d) => [d.id, d.reason])).toEqual([['events', 'NOT_APPROVED'], ['notifications', 'NOT_APPROVED']]);
   });
 
   it('capacité accordée mais sans fournisseur : UNAVAILABLE', async () => {
-    const { client } = await h({ approved: { notifications: {} }, requested: ['session', 'notifications'], providers: { session: watch(session) as any } });
+    const { client } = await h({ approved: { notifications: {} }, requested: ['locale', 'notifications'], providers: { locale: watch('fr') as any } });
     expect(client.has('notifications')).toBe(false);
     expect(client.denied).toEqual([{ id: 'notifications', reason: 'UNAVAILABLE' }]);
   });
@@ -62,11 +67,7 @@ describe('application des grants', () => {
     const publish = vi.fn();
     const subscribed: string[] = [];
     const providers: HostProviders = { events: { publish, subscribe: (t) => (subscribed.push(t), () => undefined) } };
-    const { client } = await h({
-      providers,
-      requested: ['events'],
-      approved: { events: { publish: ['app.demo.*'], subscribe: ['core.theme.*'] } },
-    });
+    const { client } = await h({ providers, requested: ['events'], approved: { events: { publish: ['app.demo.*'], subscribe: ['core.theme.*'] } } });
     await client.events.publish('app.demo.saved', { id: 1 });
     expect(publish).toHaveBeenCalledWith('app.demo.saved', { id: 1 }, { moduleName: '@acme/esm-demo-app' });
     await expect(client.events.publish('core.theme.changed', {})).rejects.toMatchObject({ code: 'DENIED' });
@@ -76,36 +77,9 @@ describe('application des grants', () => {
     await expect(client.events.subscribe('core.secret', () => undefined)).rejects.toMatchObject({ code: 'DENIED' });
   });
 
-  it('API : hôtes et en-têtes autorisés seulement, le jeton reste dans le Core', async () => {
-    const fetchImpl = vi.fn(async (_u: string, init: any) => new Response('{"ok":1}', { status: 200, headers: { 'content-type': 'application/json', 'set-cookie': 'a=b', 'x-secret': 's' } }));
-    const api = createFetchApiProvider({ baseUrl: 'https://api.exemple.org/v1/', getHeaders: () => ({ Authorization: 'Bearer SECRET' }), fetchImpl: fetchImpl as any });
-    const { client } = await h({ providers: { api }, requested: ['api'], approved: { api: { hosts: ['https://ext.exemple.org'], paths: ['/users', '/x'] } } });
-    const r = await client.api.fetch({ path: '/users', headers: { accept: 'application/json' } });
-    expect(r).toEqual({ status: 200, headers: { 'content-type': 'application/json' }, body: '{"ok":1}' });
-    expect(fetchImpl.mock.calls[0][0]).toBe('https://api.exemple.org/v1/users');
-    expect(fetchImpl.mock.calls[0][1]).toMatchObject({ credentials: 'include', headers: { Authorization: 'Bearer SECRET' } });
-    await client.api.fetch({ url: 'https://ext.exemple.org/x' });
-    expect(fetchImpl.mock.calls[1][1]).toMatchObject({ credentials: 'omit', redirect: 'error' });
-    expect(JSON.stringify(fetchImpl.mock.calls[1][1].headers)).not.toMatch(/SECRET/);
-    await expect(client.api.fetch({ url: 'https://evil.exemple.org/x' })).rejects.toMatchObject({ code: 'DENIED' });
-    await expect(client.api.fetch({ path: '/x', headers: { authorization: 'x' } })).rejects.toMatchObject({ code: 'DENIED' });
-    await expect(client.api.fetch({ path: '/admin/users' })).rejects.toMatchObject({ code: 'DENIED', message: expect.stringMatching(/Chemin d'API non autorisé/) });
-    await expect(client.api.fetch({ path: '/users/../admin' })).rejects.toMatchObject({ code: 'DENIED' });
-    expect(fetchImpl).toHaveBeenCalledTimes(2);
-  });
-
-  it('API : réponse trop volumineuse refusée', async () => {
-    const fetchImpl = vi.fn(async () => new Response('x'.repeat(500)));
-    const api = createFetchApiProvider({ baseUrl: 'https://api.exemple.org', fetchImpl: fetchImpl as any, maxResponseBytes: 100 });
-    const { client } = await h({ providers: { api }, requested: ['api'], approved: { api: { paths: ['/gros'] } } });
-    await expect(client.api.fetch({ path: '/gros' })).rejects.toMatchObject({ code: 'TOO_LARGE' });
-  });
-
-  it('permissions et drapeaux : seulement ce qui est sondable', async () => {
-    const providers: HostProviders = { permissions: { can: (p) => p === 'admin' }, flags: { isEnabled: (n) => n === 'beta' } };
-    const { client } = await h({ providers, requested: ['permissions', 'flags'], approved: { permissions: { probe: ['admin'] }, flags: { names: ['beta'] } } });
-    await expect(client.permissions.can('admin')).resolves.toBe(true);
-    await expect(client.permissions.can('root')).rejects.toMatchObject({ code: 'DENIED' });
+  it('drapeaux : seulement ceux que le grant nomme', async () => {
+    const providers: HostProviders = { flags: { isEnabled: (n) => n === 'beta' } };
+    const { client } = await h({ providers, requested: ['flags'], approved: { flags: { names: ['beta'] } } });
     await expect(client.flags.isEnabled('beta')).resolves.toBe(true);
     await expect(client.flags.isEnabled('autre')).rejects.toMatchObject({ code: 'DENIED' });
   });
@@ -123,15 +97,20 @@ describe('application des grants', () => {
     expect(unreg).toHaveBeenCalledWith('@acme/esm-demo-app', ['demo.apply']);
   });
 
-  it('thème : lecture et changements', async () => {
-    const w = watch({ mode: 'dark', tokens: { '--primary': '#111' } });
-    const { client } = await h({ providers: { theme: w as any } });
-    await expect(client.theme.get()).resolves.toEqual({ mode: 'dark', tokens: { '--primary': '#111' } });
-    const got: any[] = [];
-    await client.theme.onChange((t) => got.push(t));
-    w.push({ mode: 'light', tokens: { '--primary': '#fff' } });
+  it('extensions : découverte limitée aux slots du grant, changements poussés', async () => {
+    const list: ExtensionInfo[] = [{ name: 'nav-annuaire', moduleName: '@egen/esm-annuaire-app', order: 1, meta: { label: 'Annuaire' } }];
+    const subs = new Map<string, (l: ExtensionInfo[]) => void>();
+    const providers: HostProviders = { extensions: { list: (slot) => (slot === 'topbar-nav-slot' ? list : []), subscribe: (slot, cb) => (subs.set(slot, cb), () => subs.delete(slot)) } };
+    const { client } = await h({ providers, requested: ['extensions'], approved: { extensions: { discover: ['topbar-nav-slot', 'annuaire-*'] } } });
+    await expect(client.extensions.list('topbar-nav-slot')).resolves.toEqual(list);
+    await expect(client.extensions.list('annuaire-detail-slot')).resolves.toEqual([]);
+    await expect(client.extensions.list('shell-rail-left-slot')).rejects.toMatchObject({ code: 'DENIED', message: expect.stringMatching(/Slot non découvrable/) });
+    const got: unknown[] = [];
+    await client.extensions.onChange('topbar-nav-slot', (l) => got.push(l));
+    subs.get('topbar-nav-slot')!([]);
     await tick();
-    expect(got).toEqual([{ mode: 'light', tokens: { '--primary': '#fff' } }]);
+    expect(got).toEqual([[]]);
+    await expect(client.extensions.onChange('shell-rail-left-slot', () => undefined)).rejects.toMatchObject({ code: 'DENIED' });
   });
 
   it('navigation et cycle de vie : contrôles du Shell appelés, goto poussé', async () => {
@@ -155,7 +134,7 @@ describe('application des grants', () => {
 
   it('une capacité non accordée n’existe pas côté hôte (dispatch fermé)', async () => {
     const providers: HostProviders = { notifications: { show: vi.fn() } };
-    const { client, conn } = await h({ providers, requested: ['session', 'notifications'] });
+    const { client, conn } = await h({ providers, requested: ['locale', 'notifications'] });
     expect(client.has('notifications')).toBe(false);
     await expect(conn.callApp('lifecycle', 'canLeave')).resolves.toBe(true);
   });
@@ -163,15 +142,15 @@ describe('application des grants', () => {
 
 describe('cycle de connexion', () => {
   it('hello ferme la connexion précédente (rechargement de l’iframe)', async () => {
-    const { conn, client } = await h({ providers: { session: watch(session) as any } });
+    const { conn, client } = await h({ providers: { locale: watch('fr') as any } });
     expect(conn.connected).toBe(true);
     conn.hello();
     expect(conn.connected).toBe(false);
     await tick();
-    await expect(client.session.get()).rejects.toBeTruthy();
+    await expect(client.locale.get()).rejects.toBeTruthy();
   });
 
-  it('un second connect est ignoré ; une origine/protocole inconnu ne connecte pas', async () => {
+  it('un second connect est ignoré ; un message v1 n’est pas consommé', async () => {
     const { conn, sentByApp } = await h();
     const before = conn.state;
     conn.handle({ egen: 2, moduleName: '@acme/esm-demo-app', message: { kind: 'connect', nonce: 'x'.repeat(16), protocol: 2, requested: [] } });

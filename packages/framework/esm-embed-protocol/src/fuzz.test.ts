@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { RpcEndpoint, effectiveGrants, negotiateCapabilities, parseConnect, parseEnvelope, parseHello, parsePort, parseRpc, pickFields, validateCall, validateManifest } from './index.js';
+import { RpcEndpoint, effectiveGrants, negotiateCapabilities, parseConnect, parseEnvelope, parseHello, parsePort, parseRpc, validateCall, validateManifest } from './index.js';
 
 /** PRNG déterministe (mulberry32) : le test est reproductible. */
 function rng(seed: number) {
@@ -12,7 +12,7 @@ function rng(seed: number) {
   };
 }
 const NASTY_KEYS = ['__proto__', 'constructor', 'prototype', 'toString', 'hasOwnProperty', 't', 'id', 'cap', 'm', 'a', 'kind', 'nonce', 'egen', 'moduleName', 'message', 'protocol', 'requested', 'granted', 'denied', 'e', 'v', 'sid', 'ev'];
-const NASTY_STRINGS = ['', '__proto__', 'constructor', 'session', 'get', 'req', 'res', 'hello', 'connect', 'port', '../../x', 'a'.repeat(300), '\u0000', '<script>', 'app.x.*', '*'];
+const NASTY_STRINGS = ['', '__proto__', 'constructor', 'tenant', 'get', 'req', 'res', 'hello', 'connect', 'port', '../../x', 'a'.repeat(300), '\u0000', '<script>', 'app.x.*', '*'];
 
 function gen(r: () => number, depth = 0): unknown {
   const k = Math.floor(r() * 10);
@@ -25,7 +25,7 @@ function gen(r: () => number, depth = 0): unknown {
 }
 
 describe('fuzz déterministe : aucune entrée hostile ne lève ni ne pollue', () => {
-  it('gardes, validateurs, manifeste, grants, négociation, pickFields', () => {
+  it('gardes, validateurs, manifeste, grants, négociation', () => {
     const r = rng(1234);
     for (let i = 0; i < 3000; i++) {
       const v = gen(r);
@@ -37,11 +37,10 @@ describe('fuzz déterministe : aucune entrée hostile ne lève ni ne pollue', ()
         parseConnect(m);
         parsePort(m);
         parseRpc(v);
-        validateCall(str(m.cap, 'session'), str(m.m, 'get'), Array.isArray(m.a) ? m.a : [v]);
+        validateCall(str(m.cap, 'tenant'), str(m.m, 'get'), Array.isArray(m.a) ? m.a : [v]);
         validateManifest(v);
         effectiveGrants(m as any, m as any);
         negotiateCapabilities(Array.isArray(m.requested) ? (m.requested as any) : [], effectiveGrants(undefined, {}));
-        pickFields(v, [str(m.cap, 'c'), 'a.b', '__proto__.x', 'constructor.name']);
       }).not.toThrow();
     }
     expect(({} as any).x).toBeUndefined();
@@ -56,15 +55,15 @@ describe('fuzz du moteur RPC sur un vrai MessagePort', () => {
   it('des milliers de messages hostiles : aucun handler appelé hors contrat, le canal reste sain', async () => {
     const { port1, port2 } = new MessageChannel();
     let calls = 0;
-    const host = new RpcEndpoint({ port: port1, handlers: { session: { get: () => (calls++, { ok: true }) } }, validate: validateCall, limits: { pingIntervalMs: 0, requestsPerSecond: 1_000_000 } });
+    const host = new RpcEndpoint({ port: port1, handlers: { tenant: { get: () => (calls++, { ok: true }) } }, validate: validateCall, limits: { pingIntervalMs: 0, requestsPerSecond: 1_000_000 } });
     const app = new RpcEndpoint({ port: port2, limits: { pingIntervalMs: 0, callTimeoutMs: 1000 } });
     open.push(host, app);
     const r = rng(99);
     let sentValid = 0;
     for (let i = 0; i < 3000; i++) {
       const v = gen(r);
-      // un message structurellement valide sur `session.get` sans argument est légitime ; on le compte
-      if (v && typeof v === 'object' && (v as any).t === 'req' && (v as any).cap === 'session' && (v as any).m === 'get' && Array.isArray((v as any).a) && (v as any).a.length === 0 && Number.isInteger((v as any).id) && (v as any).id >= 0) sentValid++;
+      // un message structurellement valide sur `tenant.get` sans argument est légitime ; on le compte
+      if (v && typeof v === 'object' && (v as any).t === 'req' && (v as any).cap === 'tenant' && (v as any).m === 'get' && Array.isArray((v as any).a) && (v as any).a.length === 0 && Number.isInteger((v as any).id) && (v as any).id >= 0) sentValid++;
       try {
         port2.postMessage(v);
       } catch {
@@ -74,6 +73,6 @@ describe('fuzz du moteur RPC sur un vrai MessagePort', () => {
     await new Promise((res) => setTimeout(res, 100));
     expect(calls).toBe(sentValid);
     expect(host.closed).toBe(false);
-    await expect(app.call('session', 'get')).resolves.toEqual({ ok: true });
+    await expect(app.call('tenant', 'get')).resolves.toEqual({ ok: true });
   });
 });

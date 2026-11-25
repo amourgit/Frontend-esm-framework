@@ -1,6 +1,6 @@
 import { effectiveGrants, type ApprovedGrants, type CapabilityId, type GrantConfig } from '@egen-civitas/esm-embed-protocol';
 import type { ConnectOptions } from '@egen-civitas/esm-embed-client';
-import { createBus, HostConnection, type ApiRequest, type ApiResponse, type HostProviders, type ThemeState } from '@egen-civitas/esm-embed-host';
+import { createBus, HostConnection, type ExtensionInfo, type HostProviders } from '@egen-civitas/esm-embed-host';
 
 export interface TestHostOptions {
   moduleName?: string;
@@ -10,15 +10,12 @@ export interface TestHostOptions {
   manifestCapabilities?: Partial<Record<CapabilityId, GrantConfig>>;
   /** Plafond fixé par l'opérateur (défaut : rien d'approuvé hors capacités « par défaut »). */
   approved?: ApprovedGrants;
-  session?: Record<string, unknown>;
   tenant?: { id: string | null };
   locale?: string;
-  theme?: ThemeState;
   config?: Record<string, unknown>;
   flags?: Record<string, boolean>;
-  /** Permissions que l'utilisateur simulé possède. */
-  permissions?: string[];
-  api?: (req: ApiRequest) => ApiResponse | Promise<ApiResponse>;
+  /** Extensions attachées à chaque slot (`{ 'topbar-nav-slot': [...] }`). */
+  extensions?: Record<string, ExtensionInfo[]>;
   confirm?: boolean | ((d: { title: string; message: string; danger?: boolean }) => boolean);
 }
 
@@ -39,10 +36,9 @@ export interface TestHost {
   tools: Map<string, { description: string }>;
   /** Pousse un changement vers l'app (comme le ferait le Core). */
   emit: {
-    session(v: Record<string, unknown>): void;
     tenant(v: { id: string | null }): void;
     locale(v: string): void;
-    theme(v: ThemeState): void;
+    extensions(slot: string, list: ExtensionInfo[]): void;
     config(v: Record<string, unknown>): void;
     event(topic: string, payload?: unknown): void;
     goto(path: string): void;
@@ -71,8 +67,8 @@ function watchable<T>(initial: T) {
  * relié à votre app par de fausses fenêtres et un vrai `MessageChannel`. Aucun navigateur, aucun Core.
  *
  * ```ts
- * const sim = createTestHost({ session: { authenticated: true, user: { display: 'Sam' } } });
- * const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['session'] });
+ * const sim = createTestHost({ locale: 'fr', tenant: { id: 'acme' } });
+ * const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['locale', 'tenant'] });
  * ```
  */
 export function createTestHost(o: TestHostOptions = {}): TestHost {
@@ -85,10 +81,10 @@ export function createTestHost(o: TestHostOptions = {}): TestHost {
   const toolInvokers = new Map<string, (name: string, args: Record<string, unknown>) => Promise<unknown>>();
   const log = (cap: string, method: string, ...args: unknown[]) => void calls.push({ cap, method, args });
 
-  const session = watchable<Record<string, unknown> | undefined>(o.session ?? { authenticated: true });
   const tenant = watchable(o.tenant ?? { id: null });
   const locale = watchable(o.locale ?? 'fr');
-  const theme = watchable<ThemeState>(o.theme ?? { mode: 'light', tokens: {} });
+  const extList = new Map<string, ExtensionInfo[]>(Object.entries(o.extensions ?? {}));
+  const extSubs = new Map<string, Set<(l: ExtensionInfo[]) => void>>();
   const config = watchable(o.config ?? {});
   const flagSubs = new Set<() => void>();
   const eventSubs = new Map<string, Set<(p: unknown) => void>>();
@@ -103,10 +99,8 @@ export function createTestHost(o: TestHostOptions = {}): TestHost {
   });
 
   const providers: HostProviders = {
-    session: wrapWatch('session', session),
     tenant: wrapWatch('tenant', tenant),
     locale: wrapWatch('locale', locale),
-    theme: wrapWatch('theme', theme),
     config: wrapWatch('config', config),
     flags: {
       isEnabled: (n) => {
@@ -115,10 +109,16 @@ export function createTestHost(o: TestHostOptions = {}): TestHost {
       },
       subscribe: (cb) => (flagSubs.add(cb), () => void flagSubs.delete(cb)),
     },
-    permissions: {
-      can: (p) => {
-        log('permissions', 'can', p);
-        return !!o.permissions?.includes(p);
+    extensions: {
+      list: (slot) => {
+        log('extensions', 'list', slot);
+        return extList.get(slot) ?? [];
+      },
+      subscribe: (slot, cb) => {
+        let set = extSubs.get(slot);
+        if (!set) extSubs.set(slot, (set = new Set()));
+        set.add(cb);
+        return () => void set!.delete(cb);
       },
     },
     events: {
@@ -143,12 +143,6 @@ export function createTestHost(o: TestHostOptions = {}): TestHost {
       confirm: (d) => {
         log('dialogs', 'confirm', d);
         return typeof o.confirm === 'function' ? o.confirm(d) : (o.confirm ?? true);
-      },
-    },
-    api: {
-      fetch: async (req) => {
-        log('api', 'fetch', req);
-        return o.api ? o.api(req) : { status: 200, headers: { 'content-type': 'application/json' }, body: '{}' };
       },
     },
     telemetry: { log: (l, m, c) => log('telemetry', 'log', l, m, c), metric: (n, v, t) => log('telemetry', 'metric', n, v, t) },
@@ -204,10 +198,12 @@ export function createTestHost(o: TestHostOptions = {}): TestHost {
     published,
     tools,
     emit: {
-      session: (v) => session.set(v),
       tenant: (v) => tenant.set(v),
       locale: (v) => locale.set(v),
-      theme: (v) => theme.set(v),
+      extensions: (slot, list) => {
+        extList.set(slot, list);
+        extSubs.get(slot)?.forEach((cb) => cb(list));
+      },
       config: (v) => config.set(v),
       event: (topic, payload) => eventSubs.get(topic)?.forEach((cb) => cb(payload)),
       goto: (path) => channel.emit('goto', { path, seq: Date.now() }),

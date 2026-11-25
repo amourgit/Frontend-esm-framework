@@ -32,19 +32,6 @@ export const DEFAULT_LIMITS: Readonly<Limits> = Object.freeze({
   pingIntervalMs: 30_000,
 });
 
-/** Champs de session transmis par défaut. `sessionId` n'y figure JAMAIS. */
-export const DEFAULT_SESSION_FIELDS: readonly string[] = [
-  'authenticated',
-  'locale',
-  'allowedLocales',
-  'user.uuid',
-  'user.display',
-  'user.username',
-];
-
-/** Champs qu'aucun grant ne peut jamais ouvrir. */
-export const FORBIDDEN_SESSION_FIELDS: readonly string[] = ['sessionId', 'token', 'accessToken', 'refreshToken', 'idToken', 'password'];
-
 export const ERROR_CODES = [
   'DENIED',
   'UNKNOWN_CAPABILITY',

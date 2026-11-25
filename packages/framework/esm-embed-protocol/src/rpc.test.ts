@@ -34,26 +34,26 @@ const tick = (ms = 20) => new Promise((r) => setTimeout(r, ms));
 
 describe('RPC sur vrai MessageChannel', () => {
   it('appel nominal et résultat', async () => {
-    const { app } = pair({ session: { get: async () => ({ user: { display: 'Sam' } }) } });
-    await expect(app.call('session', 'get')).resolves.toEqual({ user: { display: 'Sam' } });
+    const { app } = pair({ tenant: { get: async () => ({ id: 't1' }) } });
+    await expect(app.call('tenant', 'get')).resolves.toEqual({ id: 't1' });
   });
 
   it('capacité et méthode inconnues', async () => {
-    const { app } = pair({ session: { get: () => 1 } });
-    await expect(app.call('theme', 'get')).rejects.toMatchObject({ code: 'UNKNOWN_CAPABILITY' });
-    await expect(app.call('session', 'set')).rejects.toMatchObject({ code: 'UNKNOWN_METHOD' });
+    const { app } = pair({ tenant: { get: () => 1 } });
+    await expect(app.call('locale', 'get')).rejects.toMatchObject({ code: 'UNKNOWN_CAPABILITY' });
+    await expect(app.call('tenant', 'set')).rejects.toMatchObject({ code: 'UNKNOWN_METHOD' });
   });
 
   it('dispatch fermé : constructor, __proto__, toString inatteignables', async () => {
     let touched = false;
-    const { app } = pair({ session: { get: () => (touched = true) } });
+    const { app } = pair({ tenant: { get: () => (touched = true) } });
     for (const [cap, m] of [
       ['constructor', 'constructor'],
       ['__proto__', 'get'],
-      ['session', 'constructor'],
-      ['session', '__proto__'],
-      ['session', 'toString'],
-      ['session', 'hasOwnProperty'],
+      ['tenant', 'constructor'],
+      ['tenant', '__proto__'],
+      ['tenant', 'toString'],
+      ['tenant', 'hasOwnProperty'],
     ]) {
       await expect(app.call(cap, m)).rejects.toMatchObject({ code: expect.stringMatching(/UNKNOWN_(CAPABILITY|METHOD)/) });
     }
@@ -70,18 +70,18 @@ describe('RPC sur vrai MessageChannel', () => {
 
   it('erreurs : EmbedError conservée, erreur interne masquée', async () => {
     const { app } = pair({
-      permissions: { can: () => { throw new EmbedError('DENIED', 'non'); } },
-      session: { get: () => { throw new Error('secret interne /etc/passwd'); } },
+      flags: { isEnabled: () => { throw new EmbedError('DENIED', 'non'); } },
+      tenant: { get: () => { throw new Error('secret interne /etc/passwd'); } },
     });
-    await expect(app.call('permissions', 'can', ['x'])).rejects.toMatchObject({ code: 'DENIED', message: 'non' });
-    const e: any = await app.call('session', 'get').catch((x) => x);
+    await expect(app.call('flags', 'isEnabled', ['x'])).rejects.toMatchObject({ code: 'DENIED', message: 'non' });
+    const e: any = await app.call('tenant', 'get').catch((x) => x);
     expect(e.code).toBe('INTERNAL');
     expect(e.message).not.toMatch(/secret|passwd/);
   });
 
   it('délai dépassé', async () => {
-    const { app } = pair({ session: { get: () => new Promise(() => undefined) } });
-    await expect(app.call('session', 'get', [], 50)).rejects.toMatchObject({ code: 'TIMEOUT' });
+    const { app } = pair({ tenant: { get: () => new Promise(() => undefined) } });
+    await expect(app.call('tenant', 'get', [], 50)).rejects.toMatchObject({ code: 'TIMEOUT' });
   });
 
   it('appels hôte → app (rappel)', async () => {
@@ -92,7 +92,7 @@ describe('RPC sur vrai MessageChannel', () => {
   it('abonnement : valeur initiale après la réponse, événements, désabonnement', async () => {
     const { app, subs } = pair();
     const got: unknown[] = [];
-    const off = await app.subscribe('theme', 'change', (v) => got.push(v));
+    const off = await app.subscribe('locale', 'change', (v) => got.push(v));
     await tick();
     expect(got).toEqual(['initial']);
     subs[0].emit('b');
@@ -108,46 +108,46 @@ describe('RPC sur vrai MessageChannel', () => {
 
   it('abonnement refusé', async () => {
     const { app } = pair();
-    await expect(app.subscribe('theme', 'refus', () => undefined)).rejects.toMatchObject({ code: 'DENIED' });
+    await expect(app.subscribe('locale', 'refus', () => undefined)).rejects.toMatchObject({ code: 'DENIED' });
   });
 
   it('limite d’abonnements', async () => {
     const { app } = pair({}, {}, { limits: { pingIntervalMs: 0, maxSubscriptions: 2 } });
-    await app.subscribe('theme', 'a', () => undefined);
-    await app.subscribe('theme', 'b', () => undefined);
-    await expect(app.subscribe('theme', 'c', () => undefined)).rejects.toMatchObject({ code: 'RATE_LIMITED' });
+    await app.subscribe('locale', 'a', () => undefined);
+    await app.subscribe('locale', 'b', () => undefined);
+    await expect(app.subscribe('locale', 'c', () => undefined)).rejects.toMatchObject({ code: 'RATE_LIMITED' });
   });
 
   it('limite de débit puis coupure', async () => {
-    const { app, host } = pair({ session: { get: () => 1 } }, {}, { limits: { pingIntervalMs: 0, requestsPerSecond: 5 } });
-    const results = await Promise.allSettled(Array.from({ length: 8 }, () => app.call('session', 'get')));
+    const { app, host } = pair({ tenant: { get: () => 1 } }, {}, { limits: { pingIntervalMs: 0, requestsPerSecond: 5 } });
+    const results = await Promise.allSettled(Array.from({ length: 8 }, () => app.call('tenant', 'get')));
     expect(results.filter((r) => r.status === 'fulfilled')).toHaveLength(5);
     expect(results.filter((r) => r.status === 'rejected' && (r.reason as any).code === 'RATE_LIMITED').length).toBeGreaterThan(0);
-    const burst = await Promise.allSettled(Array.from({ length: 30 }, () => app.call('session', 'get')));
+    const burst = await Promise.allSettled(Array.from({ length: 30 }, () => app.call('tenant', 'get')));
     expect(burst.some((r) => r.status === 'rejected')).toBe(true);
     await tick();
     expect(host.closed).toBe(true);
   });
 
   it('message trop volumineux', async () => {
-    const { app } = pair({ session: { get: () => 1 } }, {}, { limits: { pingIntervalMs: 0, maxMessageBytes: 1000 } });
-    await expect(app.call('session', 'get', ['x'.repeat(5000)])).rejects.toMatchObject({ code: 'TOO_LARGE' });
+    const { app } = pair({ tenant: { get: () => 1 } }, {}, { limits: { pingIntervalMs: 0, maxMessageBytes: 1000 } });
+    await expect(app.call('tenant', 'get', ['x'.repeat(5000)])).rejects.toMatchObject({ code: 'TOO_LARGE' });
   });
 
   it('fermeture : appels en cours rejetés, appels suivants refusés, pair prévenu', async () => {
-    const { app, host } = pair({ session: { get: () => new Promise(() => undefined) } });
-    const p = app.call('session', 'get');
+    const { app, host } = pair({ tenant: { get: () => new Promise(() => undefined) } });
+    const p = app.call('tenant', 'get');
     await tick();
     app.close();
     await expect(p).rejects.toMatchObject({ code: 'CLOSED' });
-    await expect(app.call('session', 'get')).rejects.toMatchObject({ code: 'CLOSED' });
+    await expect(app.call('tenant', 'get')).rejects.toMatchObject({ code: 'CLOSED' });
     await tick();
     expect(host.closed).toBe(true);
   });
 
   it('nettoie les abonnements à la fermeture', async () => {
     const { app, host, subs } = pair();
-    await app.subscribe('theme', 'change', () => undefined);
+    await app.subscribe('locale', 'change', () => undefined);
     host.close('test');
     expect(subs[0].cleaned).toBe(true);
   });

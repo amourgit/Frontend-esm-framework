@@ -20,7 +20,7 @@ export function defineConformance(connect: ConnectFn, t: ConformanceApi): void {
   describe('conformité protocole v2 (client)', () => {
     it('poignée de main : connecté en protocole 2', async () => {
       const sim = createTestHost();
-      const c = await connect({ ...sim.connectOptions, capabilities: ['session'] });
+      const c = await connect({ ...sim.connectOptions, capabilities: ['tenant'] });
       expect(c.connected).toBe(true);
       expect(c.protocol).toBe(2);
       c.close();
@@ -32,7 +32,7 @@ export function defineConformance(connect: ConnectFn, t: ConformanceApi): void {
       const silent = { postMessage: () => undefined };
       const c = await connect({ ...sim.connectOptions, host: silent as any, timeoutMs: 80 });
       expect(c.connected).toBe(false);
-      await expect(c.session.get()).rejects.toMatchObject({ code: 'DENIED' });
+      await expect(c.tenant.get()).rejects.toMatchObject({ code: 'DENIED' });
       sim.destroy();
     });
 
@@ -50,54 +50,54 @@ export function defineConformance(connect: ConnectFn, t: ConformanceApi): void {
       sim.destroy();
     });
 
-    it('session : champs listés seulement, jamais de sessionId', async () => {
-      const sim = createTestHost({ session: { authenticated: true, sessionId: 'SECRET', user: { uuid: 'u', display: 'Sam', email: 'e@x.y' } } });
-      const c = await connect({ ...sim.connectOptions, capabilities: ['session'] });
-      const s = await c.session.get();
-      expect(JSON.stringify(s)).not.toMatch(/SECRET|e@x\.y/);
-      expect(s).toMatchObject({ authenticated: true, user: { uuid: 'u', display: 'Sam' } });
+    it('règle d’or : identité, droits, thème et api ne sont pas des capacités du SDK', async () => {
+      const sim = createTestHost();
+      const c = await connect({ ...sim.connectOptions, capabilities: ['tenant', 'session', 'theme', 'permissions', 'api'] as any });
+      expect(c.has('tenant')).toBe(true);
+      expect(c.denied.map((d) => d.id).sort()).toEqual(['api', 'permissions', 'session', 'theme']);
+      expect(c.denied.every((d) => d.reason === 'UNKNOWN')).toBe(true);
       c.close();
       sim.destroy();
     });
 
     it('moindre privilège : capacité non approuvée refusée à la négociation et localement', async () => {
       const sim = createTestHost();
-      const c = await connect({ ...sim.connectOptions, capabilities: ['session', 'api', 'notifications'] });
-      expect(c.has('api')).toBe(false);
-      expect(c.denied.map((d) => d.id).sort()).toEqual(['api', 'notifications']);
-      await expect(c.api.fetch({ path: '/x' })).rejects.toMatchObject({ code: 'DENIED' });
-      expect(sim.calls.some((x) => x.cap === 'api')).toBe(false);
+      const c = await connect({ ...sim.connectOptions, capabilities: ['tenant', 'events', 'notifications'] });
+      expect(c.has('events')).toBe(false);
+      expect(c.denied.map((d) => d.id).sort()).toEqual(['events', 'notifications']);
+      await expect(c.notifications.show({ kind: 'info', title: 'x' })).rejects.toMatchObject({ code: 'DENIED' });
+      expect(sim.calls.some((x) => x.cap === 'notifications')).toBe(false);
       c.close();
       sim.destroy();
     });
 
-    it('changements poussés par l’hôte (thème)', async () => {
-      const sim = createTestHost({ theme: { mode: 'light', tokens: { '--p': '#fff' } } });
-      const c = await connect({ ...sim.connectOptions, capabilities: ['session', 'theme'] });
-      const themes: unknown[] = [];
-      await c.theme.onChange((x) => themes.push(x));
-      sim.emit.theme({ mode: 'dark', tokens: { '--p': '#000' } });
+    it('changements poussés par l’hôte (langue)', async () => {
+      const sim = createTestHost({ locale: 'fr' });
+      const c = await connect({ ...sim.connectOptions, capabilities: ['locale'] });
+      const seen: unknown[] = [];
+      await c.locale.onChange((x) => seen.push(x));
+      sim.emit.locale('en');
       await tick();
-      expect(themes).toEqual([{ mode: 'dark', tokens: { '--p': '#000' } }]);
+      expect(seen).toEqual(['en']);
       c.close();
       sim.destroy();
     });
 
-    it('thème : variables CSS invalides ignorées (pas d’injection)', async () => {
-      const set: Record<string, string> = {};
-      const sim = createTestHost({ theme: { mode: 'dark', tokens: { '--ok': '#111', color: 'red', '--bad': 'x;}body{display:none' } } });
-      const c = await connect({ ...sim.connectOptions, capabilities: ['theme'] });
-      await c.theme.sync({ style: { setProperty: (k: string, v: string) => (set[k] = v) } });
-      expect(set).toEqual({ '--ok': '#111' });
+    it('extensions : découverte limitée aux slots approuvés', async () => {
+      const list = [{ name: 'nav-x', moduleName: '@egen/esm-x-app', meta: { label: 'X' } }];
+      const sim = createTestHost({ extensions: { 'topbar-nav-slot': list }, manifestCapabilities: { extensions: { discover: ['topbar-nav-slot'] } }, approved: { extensions: { discover: ['topbar-nav-slot'] } } });
+      const c = await connect({ ...sim.connectOptions, capabilities: ['extensions'] });
+      await expect(c.extensions.list('topbar-nav-slot')).resolves.toEqual(list);
+      await expect(c.extensions.list('shell-rail-left-slot')).rejects.toMatchObject({ code: 'DENIED' });
       c.close();
       sim.destroy();
     });
 
     it('fermeture : appels suivants rejetés', async () => {
       const sim = createTestHost();
-      const c = await connect({ ...sim.connectOptions, capabilities: ['session'] });
+      const c = await connect({ ...sim.connectOptions, capabilities: ['tenant'] });
       c.close();
-      await expect(c.session.get()).rejects.toMatchObject({ code: 'DENIED' });
+      await expect(c.tenant.get()).rejects.toMatchObject({ code: 'DENIED' });
       sim.destroy();
     });
   });

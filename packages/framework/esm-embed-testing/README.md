@@ -11,14 +11,14 @@ import { connectToEgen } from '@egen-civitas/esm-embed-client';
 import { createTestHost } from '@egen-civitas/esm-embed-testing';
 
 const sim = createTestHost({
-  session: { authenticated: true, user: { display: 'Sam' } },
+  locale: 'fr',
   manifestCapabilities: { notifications: {} },
   approved: { notifications: {} },
 });
-const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['session', 'notifications'] });
+const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['locale', 'notifications'] });
 await egen.notifications.show({ kind: 'success', title: 'OK' });
 expect(sim.notifications).toEqual([{ kind: 'success', title: 'OK' }]);
-sim.emit.theme({ mode: 'dark', tokens: { '--primary': '#000' } }); // le Core pousse un changement
+sim.emit.locale('en'); // le Core pousse un changement
 ```
 
 `sim.calls` (journal des services sollicités), `sim.published`, `sim.tools` + `sim.invokeTool()` (agent IA), `sim.emit.*`.
@@ -38,4 +38,4 @@ npx egen-embed-sim --app http://localhost:3000 --manifest egen-app.json
 # → déclarez dans l'app : hostOrigins: ['http://127.0.0.1:4100']
 ```
 
-Page avec votre app dans une iframe, l'hôte EGEN réel (`esm-embed-host`), des boutons (thème, langue, session, événement) et le journal de tous les échanges. Par défaut les capacités demandées par le manifeste sont approuvées ; `--strict` n'approuve que les capacités « par défaut ».
+Page avec votre app dans une iframe, l'hôte EGEN réel (`esm-embed-host`), des boutons (langue, événement, extensions) et le journal de tous les échanges. Par défaut les capacités demandées par le manifeste sont approuvées ; `--strict` n'approuve que les capacités « par défaut ».

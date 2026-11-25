@@ -14,7 +14,6 @@ export interface SimulatorOptions {
   manifest?: unknown;
   /** Approuver toutes les capacités demandées (défaut) ou seulement celles « par défaut » (`strict`). */
   strict?: boolean;
-  session?: Record<string, unknown>;
 }
 
 export interface Simulator {
@@ -52,7 +51,7 @@ export async function startSimulator(o: SimulatorOptions): Promise<Simulator> {
     moduleName: manifest?.name ?? '@acme/esm-sim-app',
     manifestCapabilities: manifest?.capabilities,
     approved: approvedFor(manifest, !!o.strict),
-    session: o.session ?? { authenticated: true, locale: 'fr', user: { uuid: 'sim-user', display: 'Utilisateur simulé', username: 'sim' }, sessionId: 'NE-DOIT-JAMAIS-ETRE-VISIBLE' },
+    extensions: { 'topbar-nav-slot': [{ name: 'nav-demo', moduleName: '@egen/esm-demo-app', order: 1, meta: { label: 'Démo', route: 'demo' } }] },
   };
   const roots: Record<string, string> = { protocol: pkgDist('@egen-civitas/esm-embed-protocol'), host: pkgDist('@egen-civitas/esm-embed-host') };
 
@@ -99,7 +98,7 @@ h1{font-size:14px;margin:0 0 8px}h2{font-size:12px;margin:12px 0 4px;text-transf
 <aside><h1>Simulateur de Shell EGEN</h1>
 <div id="info"></div>
 <h2>Pousser vers l'app</h2>
-<button id="theme">Thème clair/sombre</button><button id="locale">Langue fr/en</button><button id="session">Session (autre nom)</button><button id="event">Événement core.sim.ping</button>
+<button id="locale">Langue fr/en</button><button id="event">Événement core.sim.ping</button><button id="ext">Changer les extensions de topbar-nav-slot</button>
 <h2>Notifications</h2><div id="toasts"></div>
 <h2>Journal des échanges</h2><pre id="log"></pre></aside>
 <script type="module">
@@ -109,17 +108,17 @@ const cfg = await (await fetch('/api/config')).json();
 const $ = (id) => document.getElementById(id);
 const log = (...a) => { $('log').textContent = new Date().toLocaleTimeString() + ' ' + a.map((x) => typeof x === 'string' ? x : JSON.stringify(x)).join(' ') + '\\n' + $('log').textContent; };
 const watch = (v) => { const s = new Set(); return { get: () => v, subscribe: (cb) => (s.add(cb), () => s.delete(cb)), set: (n) => { v = n; s.forEach((f) => f(n)); } }; };
-const session = watch(cfg.session), theme = watch({ mode: 'light', tokens: { '--primary': '#2563eb', '--background': '#ffffff', '--foreground': '#111111' } }), locale = watch('fr');
-const tenant = watch({ id: 'sim-tenant' }), conf = watch({});
+const locale = watch('fr'), tenant = watch({ id: 'sim-tenant' }), conf = watch({});
 const topics = new Map();
+const extState = new Map(Object.entries(cfg.extensions)), extSubs = new Map();
 const wrap = (cap, p) => Object.fromEntries(Object.entries(p).map(([k, f]) => [k, typeof f === 'function' ? (...a) => { log('←', cap + '.' + k, a); return f(...a); } : f]));
 const providers = {
-  session: wrap('session', session), theme: wrap('theme', theme), locale: wrap('locale', locale), tenant: wrap('tenant', tenant), config: wrap('config', conf),
-  flags: wrap('flags', { isEnabled: () => true }), permissions: wrap('permissions', { can: () => true }),
+  locale: wrap('locale', locale), tenant: wrap('tenant', tenant), config: wrap('config', conf),
+  flags: wrap('flags', { isEnabled: () => true }),
+  extensions: { list: (slot) => { log('← extensions.list', slot); return extState.get(slot) || []; }, subscribe: (slot, cb) => { const s = extSubs.get(slot) || new Set(); s.add(cb); extSubs.set(slot, s); return () => s.delete(cb); } },
   events: { publish: (t, p, c) => { log('← events.publish', t, p, 'de', c.moduleName); (topics.get(t) || []).forEach((f) => f(p)); }, subscribe: (t, cb) => { log('← events.subscribe', t); const l = topics.get(t) || []; l.push(cb); topics.set(t, l); return () => topics.set(t, (topics.get(t) || []).filter((f) => f !== cb)); } },
   notifications: { show: (n) => { log('← notifications.show', n); const d = document.createElement('div'); d.className = 'toast'; d.textContent = '[' + n.kind + '] ' + n.title + (n.subtitle ? ' — ' + n.subtitle : ''); $('toasts').prepend(d); } },
   dialogs: { confirm: (d) => { log('← dialogs.confirm', d); return confirm(d.title + '\\n\\n' + d.message); } },
-  api: { fetch: async (r) => { log('← api.fetch', r); return { status: 200, headers: { 'content-type': 'application/json' }, body: JSON.stringify({ simulated: true, request: r }) }; } },
   telemetry: { log: (...a) => log('← telemetry.log', a.slice(0, 3)), metric: (...a) => log('← telemetry.metric', a.slice(0, 3)) },
   aiTools: { register: (m, t) => log('← ai-tools.register', t.map((x) => x.name)), unregister: (m, n) => log('← ai-tools.unregister', n) },
 };
@@ -127,8 +126,7 @@ const grants = effectiveGrants(cfg.manifestCapabilities, cfg.approved);
 $('info').innerHTML = '<b>App</b> ' + cfg.app + '<br><b>Module</b> ' + cfg.moduleName + '<br><b>hostOrigins à déclarer dans l’app</b> <code>' + location.origin + '</code><br><b>Capacités accordées</b> ' + Object.keys(grants).join(', ');
 const host = createEmbedHost({ moduleName: cfg.moduleName, src: cfg.app, grants, providers, onConnect: (g, d) => log('✔ connecté', { accordées: g.map((x) => x.id), refusées: d }), onClose: (r) => log('✖ fermé', r) });
 host.mount($('stage'));
-$('theme').onclick = () => { const t = theme.get(); const dark = t.mode !== 'dark'; theme.set({ mode: dark ? 'dark' : 'light', tokens: { ...t.tokens, '--background': dark ? '#0b0b0f' : '#ffffff', '--foreground': dark ? '#f5f5f5' : '#111111' } }); };
 $('locale').onclick = () => locale.set(locale.get() === 'fr' ? 'en' : 'fr');
-$('session').onclick = () => { const s = session.get(); session.set({ ...s, user: { ...s.user, display: 'Autre ' + Math.floor(Math.random() * 100) } }); };
 $('event').onclick = () => (topics.get('core.sim.ping') || []).forEach((f) => f({ at: Date.now() }));
+$('ext').onclick = () => { const n = [{ name: 'nav-' + Math.floor(Math.random() * 100), moduleName: '@egen/esm-demo-app', meta: { label: 'Nouvelle extension' } }]; extState.set('topbar-nav-slot', n); (extSubs.get('topbar-nav-slot') || []).forEach((f) => f(n)); };
 </script></body></html>`;

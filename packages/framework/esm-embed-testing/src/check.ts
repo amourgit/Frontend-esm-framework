@@ -1,4 +1,4 @@
-import { CAPABILITIES, FORBIDDEN_SESSION_FIELDS, patternCovers, validateManifest, type EmbedManifest } from '@egen-civitas/esm-embed-protocol';
+import { CAPABILITIES, patternCovers, validateManifest, type EmbedManifest } from '@egen-civitas/esm-embed-protocol';
 
 export interface CheckIssue {
   level: 'error' | 'warn' | 'info';
@@ -32,9 +32,6 @@ export async function checkEmbedApp(o: CheckOptions): Promise<CheckIssue[]> {
   const needApproval = Object.keys(caps).filter((id) => !CAPABILITIES[id as keyof typeof CAPABILITIES].defaultGrant);
   if (needApproval.length) add('info', `Capacités à faire approuver par l'opérateur (grants) : ${needApproval.join(', ')}`);
 
-  const fields = caps.session?.fields;
-  if (Array.isArray(fields)) for (const f of fields) if (FORBIDDEN_SESSION_FIELDS.includes(String(f).split('.')[0])) add('error', `session.fields : « ${f} » ne sera jamais transmis (identifiant de session ou jeton)`);
-
   const pub = caps.events?.publish;
   if (Array.isArray(pub)) {
     const own = `app.${m.route}.*`;
@@ -46,14 +43,13 @@ export async function checkEmbedApp(o: CheckOptions): Promise<CheckIssue[]> {
   const tools = caps['ai-tools']?.tools;
   if (Array.isArray(tools) && tools.some((t) => !String(t).includes('.'))) add('warn', 'ai-tools.tools : préférer des noms d’outils préfixés (ex. studio.apply) pour éviter les collisions');
 
-  if (caps.api && !(Array.isArray(caps.api.paths) && caps.api.paths.length) && !(Array.isArray(caps.api.hosts) && caps.api.hosts.length)) add('warn', 'api : ni paths ni hosts demandés : aucun appel ne sera possible (deny-by-default)');
-  const apiPaths = caps.api?.paths;
-  if (Array.isArray(apiPaths)) for (const p of apiPaths) if (p === '/*' || p === '*') add('warn', `api.paths : « ${p} » ouvre toute l'API du Core avec la session de l'utilisateur ; nommer les chemins nécessaires`);
-  const hosts = caps.api?.hosts;
-  if (Array.isArray(hosts)) for (const h of hosts) if (!/^https:\/\//i.test(String(h))) add('error', `api.hosts : « ${h} » doit être une origine https`);
+  const slots = [...new Set((m.extensions ?? []).map((e) => e.slot))];
+  if (slots.length) add('info', `Contributions d'extension : l'opérateur doit approuver les slots (extensions.contribute) : ${slots.join(', ')}`);
+  for (const e of m.extensions ?? []) if (e.view) add('info', `Extension « ${e.name} » : la vue ${e.view} sera affichée dans une iframe du Core (frame-ancestors à autoriser pour le Shell, hauteur via navigation.resize)`);
+  const discover = caps.extensions?.discover;
+  if (Array.isArray(discover) && discover.some((s) => s === '*')) add('error', "extensions.discover : le motif « * » n'est pas supporté (nommer les slots)");
 
   if (m.technology === 'nextjs' && m.navigation.mode === 'none') add('info', 'Next.js avec navigation « none » : l’URL du Core ne reflétera pas la page courante (partage de lien, F5)');
-  if (!caps.lifecycle && !caps.navigation) add('info', 'Aucune capacité navigation/lifecycle demandée : l’app ne pourra ni redimensionner l’iframe ni signaler qu’elle est prête (valeurs par défaut accordées si utilisées)');
 
   if (o.probe) {
     const f = o.fetchImpl ?? fetch;

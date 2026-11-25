@@ -2,23 +2,20 @@ import type { ErrorCode } from './constants.js';
 import type { WireError } from './errors.js';
 
 export type CapabilityId =
-  | 'session'
   | 'tenant'
   | 'locale'
-  | 'theme'
-  | 'permissions'
   | 'navigation'
   | 'events'
   | 'notifications'
   | 'dialogs'
-  | 'api'
   | 'flags'
   | 'config'
   | 'telemetry'
   | 'ai-tools'
+  | 'extensions'
   | 'lifecycle';
 
-/** Configuration d'un grant (ex. `{ fields: [...] }` pour `session`). Objet simple, valeurs clonables. */
+/** Configuration d'un grant (ex. `{ publish: [...] }` pour `events`). Objet simple, valeurs clonables. */
 export type GrantConfig = Record<string, unknown>;
 
 export interface CapabilityRequest {
@@ -96,6 +93,28 @@ export type { ErrorCode, WireError };
 export type EmbedTechnology = 'nextjs' | 'react' | 'vue' | 'angular' | 'static' | 'other';
 export type NavigationMode = 'none' | 'history' | 'hash';
 
+/**
+ * Contribution d'une app embarquée à un slot d'extension du Core (apps internes ou framework).
+ * Rendue par le Core : `view` absent → contribution déclarative (seule `meta` est lue par le slot, ex. entrée de navigation) ;
+ * `view` présent → le Core affiche cette page de l'app dans une iframe dédiée à l'intérieur du slot.
+ */
+export interface EmbedExtensionDecl {
+  /** Nom unique dans l'app (`[a-z0-9-]`). */
+  name: string;
+  /** Slot cible (ex. `topbar-nav-slot`, `shell-rail-left-slot`, un slot d'une app interne). Soumis à l'approbation de l'opérateur. */
+  slot: string;
+  /** Chemin interne de l'app affiché dans le slot (`/_egen/chip`). */
+  view?: string;
+  order?: number;
+  /** Privilèges EGEN requis pour afficher la contribution (appliqués par le Core, qui reste l'autorité d'affichage). */
+  privileges?: string[];
+  featureFlag?: string;
+  /** Données lues par le slot (≤ 4 Ko). `iconUrl` doit être https de la même origine que l'app. */
+  meta?: Record<string, unknown>;
+  /** Hauteur initiale (px) de la vue ; l'app peut la modifier via `navigation.resize`. */
+  height?: number;
+}
+
 export interface EmbedManifest {
   manifestVersion: 1;
   name: string;
@@ -107,4 +126,6 @@ export interface EmbedManifest {
   navigation: { mode: NavigationMode; basePath?: string; sensitiveParams?: string[] };
   placement?: { rail?: 'left' | 'right' | 'bottom'; group?: string; icon?: string };
   capabilities: Partial<Record<CapabilityId, GrantConfig>>;
+  /** Composants que l'app contribue aux slots du Core. */
+  extensions?: EmbedExtensionDecl[];
 }

@@ -1,9 +1,7 @@
 import {
   CAPABILITIES,
-  DEFAULT_SESSION_FIELDS,
   EmbedError,
-  pathAllowed,
-  pickFields,
+  slotAllowed,
   topicAllowed,
   type CapabilityGranted,
   type CapabilityId,
@@ -12,7 +10,7 @@ import {
   type SubscribeHandler,
 } from '@egen-civitas/esm-embed-protocol';
 import type { Bus } from './bus.js';
-import type { ApiRequest, CallerContext, HostProviders } from './providers.js';
+import type { CallerContext, HostProviders } from './providers.js';
 
 /** Actions du Shell pilotées par les capacités `navigation` et `lifecycle`. */
 export interface HostControls {
@@ -29,17 +27,14 @@ export interface HostControls {
 export function availableCapabilities(p: HostProviders): Set<CapabilityId> {
   const s = new Set<CapabilityId>(['navigation', 'lifecycle', 'telemetry']);
   const map: Array<[CapabilityId, unknown]> = [
-    ['session', p.session],
     ['tenant', p.tenant],
     ['locale', p.locale],
-    ['theme', p.theme],
     ['config', p.config],
     ['flags', p.flags],
-    ['permissions', p.permissions],
     ['events', p.events],
     ['notifications', p.notifications],
     ['dialogs', p.dialogs],
-    ['api', p.api],
+    ['extensions', p.extensions],
     ['ai-tools', p.aiTools],
   ];
   for (const [id, prov] of map) if (prov) s.add(id);
@@ -47,14 +42,6 @@ export function availableCapabilities(p: HostProviders): Set<CapabilityId> {
 }
 
 const list = (cfg: GrantConfig | undefined, key: string): string[] => (Array.isArray(cfg?.[key]) ? (cfg![key] as string[]) : []);
-
-function normOrigin(u: string): string {
-  try {
-    return new URL(u).origin;
-  } catch {
-    return u;
-  }
-}
 
 export interface TableOptions {
   moduleName: string;
@@ -67,7 +54,7 @@ export interface TableOptions {
 
 /**
  * Construit la table de dispatch FERMÉE d'une connexion : seules les capacités accordées (et servies) y figurent,
- * chaque méthode applique son grant (champs de session, sujets d'événements, hôtes d'API, outils IA, sondes).
+ * chaque méthode applique son grant (sujets d'événements, slots découvrables, drapeaux, outils IA).
  */
 export function createCapabilityTable(o: TableOptions): { table: HandlerTable; subscribe: SubscribeHandler; cleanup: () => void } {
   const { providers: p, controls: c } = o;
@@ -76,28 +63,12 @@ export function createCapabilityTable(o: TableOptions): { table: HandlerTable; s
   const table: HandlerTable = {};
   const registeredTools = new Set<string>();
 
-  const sessionFields = () => {
-    const f = list(cfgOf.get('session'), 'fields');
-    return f.length ? f : [...DEFAULT_SESSION_FIELDS];
-  };
-  const pick = (s: unknown) => pickFields(s, sessionFields());
   const denied = (msg: string) => new EmbedError('DENIED', msg);
 
-  if (cfgOf.has('session') && p.session) table.session = { get: async () => pick(await p.session!.get()) };
   if (cfgOf.has('tenant') && p.tenant) table.tenant = { get: async () => p.tenant!.get() };
   if (cfgOf.has('locale') && p.locale) table.locale = { get: async () => p.locale!.get() };
-  if (cfgOf.has('theme') && p.theme) table.theme = { get: async () => p.theme!.get() };
   if (cfgOf.has('config') && p.config) table.config = { get: async () => p.config!.get() };
 
-  if (cfgOf.has('permissions') && p.permissions) {
-    const probe = list(cfgOf.get('permissions'), 'probe');
-    table.permissions = {
-      can: async (perm: string) => {
-        if (!probe.includes(perm)) throw denied(`Permission non sondable : ${perm}`);
-        return !!(await p.permissions!.can(perm));
-      },
-    };
-  }
   if (cfgOf.has('flags') && p.flags) {
     const names = list(cfgOf.get('flags'), 'names');
     table.flags = {
@@ -118,18 +89,12 @@ export function createCapabilityTable(o: TableOptions): { table: HandlerTable; s
   }
   if (cfgOf.has('notifications') && p.notifications) table.notifications = { show: async (n: any) => void (await p.notifications!.show(n, ctx)) };
   if (cfgOf.has('dialogs') && p.dialogs) table.dialogs = { confirm: async (d: any) => !!(await p.dialogs!.confirm(d, ctx)) };
-  if (cfgOf.has('api') && p.api) {
-    const cfg = cfgOf.get('api');
-    const hosts = list(cfg, 'hosts').map(normOrigin);
-    const headers = list(cfg, 'headers').map((h) => h.toLowerCase());
-    const paths = list(cfg, 'paths');
-    table.api = {
-      fetch: async (req: ApiRequest) => {
-        if (req.url !== undefined && !hosts.includes(normOrigin(req.url))) throw denied("Hôte non autorisé par le grant de l'app");
-        // Sans liste de chemins (deny-by-default) une app ne peut PAS appeler l'API du Core avec la session de l'utilisateur.
-        if (req.path !== undefined && !pathAllowed(paths, req.path)) throw denied(`Chemin d'API non autorisé par le grant de l'app : ${req.path}`);
-        for (const h of Object.keys(req.headers ?? {})) if (!headers.includes(h.toLowerCase())) throw denied(`En-tête non autorisé : ${h}`);
-        return p.api!.fetch(req, ctx);
+  if (cfgOf.has('extensions') && p.extensions) {
+    const discover = list(cfgOf.get('extensions'), 'discover');
+    table.extensions = {
+      list: async (slot: string) => {
+        if (!slotAllowed(discover, slot)) throw denied(`Slot non découvrable par le grant de l'app : ${slot}`);
+        return p.extensions!.list(slot);
       },
     };
   }
@@ -168,22 +133,17 @@ export function createCapabilityTable(o: TableOptions): { table: HandlerTable; s
     const desc = CAPABILITIES[cap as CapabilityId];
     if (!cfg || !desc || !table[cap]) return undefined;
     if (cap === 'events') return topicAllowed(list(cfg, 'subscribe'), ev) ? p.events!.subscribe(ev, emit) : undefined;
+    if (cap === 'extensions') return slotAllowed(list(cfg, 'discover'), ev) && p.extensions!.subscribe ? p.extensions!.subscribe(ev, emit as (l: any) => void) : undefined;
     if (!desc.events.includes(ev)) return undefined;
     switch (cap) {
-      case 'session':
-        return p.session!.subscribe?.((v) => emit(pick(v)));
       case 'tenant':
         return p.tenant!.subscribe?.(emit);
       case 'locale':
         return p.locale!.subscribe?.(emit);
-      case 'theme':
-        return p.theme!.subscribe?.(emit);
       case 'config':
         return p.config!.subscribe?.(emit);
       case 'flags':
         return p.flags!.subscribe?.(() => emit());
-      case 'permissions':
-        return p.permissions!.subscribe?.(() => emit());
       case 'navigation':
       case 'lifecycle':
         return c.channel.on(ev, emit);

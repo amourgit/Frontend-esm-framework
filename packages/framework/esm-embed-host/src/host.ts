@@ -1,4 +1,4 @@
-import { DEFAULT_SESSION_FIELDS, pickFields, type CapabilityDenied, type CapabilityGranted, type EffectiveGrants, type Limits } from '@egen-civitas/esm-embed-protocol';
+import { type CapabilityDenied, type CapabilityGranted, type EffectiveGrants, type Limits } from '@egen-civitas/esm-embed-protocol';
 import { createBus } from './bus.js';
 import { HostConnection } from './connection.js';
 import { buildCoreUrl, buildEmbedSrc, coreSubpath, createRateLimiter, stripSensitive, toAppPath, toCorePath, normalizeAppPath, type NavigationOptions } from './navigation.js';
@@ -124,12 +124,10 @@ export function createEmbedHost(opts: EmbedHostOptions): EmbedHost {
     onClose: opts.onClose,
   });
 
-  const sessionFields = () => {
-    const f = opts.grants.session?.fields;
-    return Array.isArray(f) && f.length ? (f as string[]) : [...DEFAULT_SESSION_FIELDS];
-  };
-
-  /** Pont 1.1 : mêmes services, ancien format. Inactif dès qu'une connexion v2 est ouverte. */
+  /**
+   * Pont 1.1 : compatibilité des apps qui ne parlent pas encore le protocole 2. La session n'est PLUS transmise (règle d'or,
+   * doc 17 §2) : une app obtient son identité auprès de Keycloak. Seuls restent la langue, la navigation, le titre et la hauteur.
+   */
   const handleLegacy = async (data: any) => {
     if (opts.legacy === false || connection.connected) return;
     if (!data || data.egen !== 1 || data.moduleName !== opts.moduleName || !data.message || typeof data.message.kind !== 'string') return;
@@ -138,9 +136,8 @@ export function createEmbedHost(opts: EmbedHostOptions): EmbedHost {
       case 'ready': {
         legacySeen = true;
         legacyReady = true;
-        const session = opts.providers.session ? pickFields(await opts.providers.session.get(), sessionFields()) : undefined;
         const locale = opts.providers.locale ? await opts.providers.locale.get() : (win as any).i18next?.language;
-        legacySend({ kind: 'init', payload: { moduleName: opts.moduleName, locale, spaBase: spaBase(), session, navigation: nav ? { mode: nav.mode, route: nav.route } : undefined } });
+        legacySend({ kind: 'init', payload: { moduleName: opts.moduleName, locale, spaBase: spaBase(), navigation: nav ? { mode: nav.mode, route: nav.route } : undefined } });
         break;
       }
       case 'navigate':
@@ -206,9 +203,8 @@ export function createEmbedHost(opts: EmbedHostOptions): EmbedHost {
         win.removeEventListener('blur', onBlur);
       });
 
-      // Pont 1.1 : session et langue poussées après `ready`.
+      // Pont 1.1 : la langue est poussée après `ready`.
       const p = opts.providers;
-      if (p.session?.subscribe) stop.push(p.session.subscribe((s) => legacyReady && !connection.connected && legacySend({ kind: 'session', session: pickFields(s, sessionFields()) })));
       if (p.locale?.subscribe) stop.push(p.locale.subscribe((l) => legacyReady && !connection.connected && l && legacySend({ kind: 'locale', locale: l })));
 
       container.appendChild(iframe);

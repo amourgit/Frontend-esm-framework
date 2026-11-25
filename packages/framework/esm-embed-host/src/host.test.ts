@@ -24,10 +24,7 @@ afterEach(() => {
   document.body.replaceChildren();
 });
 
-const providers: HostProviders = {
-  session: { get: () => ({ authenticated: true, sessionId: 'SECRET', user: { uuid: 'u', display: 'Sam', email: 'e@x.y' } }) },
-  locale: { get: () => 'fr' },
-};
+const providers: HostProviders = { locale: { get: () => 'fr' } };
 
 function mount(extra: Partial<Parameters<typeof createEmbedHost>[0]> = {}) {
   host = createEmbedHost({ moduleName: MODULE, src: APP, grants: effectiveGrants(undefined, {}), providers, navigation: { route: 'studio' }, ...extra });
@@ -77,10 +74,10 @@ describe('protocole 2', () => {
     const hello = posted.find((p) => p.message.message?.kind === 'hello')!;
     expect(hello.origin).toBe(APP);
     expect(hello.message).toMatchObject({ egen: 2, moduleName: MODULE });
-    fromApp({ egen: 2, moduleName: MODULE, message: { kind: 'connect', nonce: hello.message.message.nonce, protocol: 2, requested: [{ id: 'session', version: 1 }] } });
+    fromApp({ egen: 2, moduleName: MODULE, message: { kind: 'connect', nonce: hello.message.message.nonce, protocol: 2, requested: [{ id: 'locale', version: 1 }] } });
     const port = posted.find((p) => p.message.message?.kind === 'port')!;
     expect(port.transfer).toHaveLength(1);
-    expect(port.message.message.granted.map((g: any) => g.id)).toEqual(['session']);
+    expect(port.message.message.granted.map((g: any) => g.id)).toEqual(['locale']);
     expect(h.connection.connected).toBe(true);
   });
 
@@ -130,14 +127,15 @@ describe('protocole 2', () => {
 });
 
 describe('pont 1.1 (compatibilité)', () => {
-  it('ready → init : session filtrée, jamais de sessionId, enveloppe egen:1', async () => {
+  it('ready → init : langue et base SPA, jamais de session ni de jeton ; enveloppe egen:1', async () => {
     mount();
     fromApp({ egen: 1, moduleName: MODULE, message: { kind: 'ready' } });
     await tick();
     const init = posted.find((p) => p.message.egen === 1 && p.message.message.kind === 'init')!;
     expect(init.origin).toBe(APP);
-    expect(init.message.message.payload).toMatchObject({ moduleName: MODULE, locale: 'fr', spaBase: '/egen/spa/', session: { authenticated: true, user: { uuid: 'u', display: 'Sam' } } });
-    expect(JSON.stringify(init.message)).not.toMatch(/SECRET|e@x\.y/);
+    expect(init.message.message.payload).toMatchObject({ moduleName: MODULE, locale: 'fr', spaBase: '/egen/spa/' });
+    expect(init.message.message.payload.session).toBeUndefined();
+    expect(JSON.stringify(init.message)).not.toMatch(/session|token/i);
   });
 
   it('location → URL du Core mise à jour, sans paramètres sensibles', async () => {

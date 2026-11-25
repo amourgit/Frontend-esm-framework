@@ -1,6 +1,6 @@
 import { createContext, createElement, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { connectToEgen, type ConnectOptions } from './connect.js';
-import type { EgenClient, JsonObject, ThemeState } from './client.js';
+import type { EgenClient, ExtensionInfo } from './client.js';
 
 const EgenContext = createContext<EgenClient | null>(null);
 
@@ -67,14 +67,20 @@ function useLive<T>(client: EgenClient, enabled: boolean, get: () => Promise<T>,
   return state;
 }
 
-export function useEgenSession(): Live<JsonObject> {
+export function useEgenLocale(): Live<string> {
   const c = useEgen();
-  return useLive(c, c.has('session'), () => c.session.get(), (cb) => c.session.onChange(cb));
+  return useLive(c, c.has('locale'), () => c.locale.get(), (cb) => c.locale.onChange(cb));
 }
 
-export function useEgenTheme(): Live<ThemeState> {
+export function useEgenTenant(): Live<{ id: string | null }> {
   const c = useEgen();
-  return useLive(c, c.has('theme'), () => c.theme.get(), (cb) => c.theme.onChange(cb));
+  return useLive(c, c.has('tenant'), () => c.tenant.get(), (cb) => c.tenant.onChange(cb));
+}
+
+/** Extensions attachées à un slot du Core (grant `extensions.discover`). */
+export function useEgenExtensions(slot: string): Live<ExtensionInfo[]> {
+  const c = useEgen();
+  return useLive(c, c.has('extensions'), () => c.extensions.list(slot), (cb) => c.extensions.onChange(slot, cb));
 }
 
 /** Abonnement à un sujet du bus d'événements (grant `events.subscribe`). */

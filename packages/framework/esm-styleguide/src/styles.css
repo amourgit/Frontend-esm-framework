@@ -73,9 +73,18 @@
   --info-800: #1e40af;
   --info-900: #1e3a8a;
   --info-950: #172554;
-  /* secondary : constantes d'accent (liens visités, exemples) */
+  /* secondary : constantes d'accent */
+  --secondary-50: #fdf4ff;
+  --secondary-100: #fae8ff;
+  --secondary-200: #f5d0fe;
   --secondary-300: #f0abfc;
+  --secondary-400: #e879f9;
   --secondary-500: #d946ef;
+  --secondary-600: #c026d3;
+  --secondary-700: #a21caf;
+  --secondary-800: #86198f;
+  --secondary-900: #701a75;
+  --secondary-950: #4a044e;
   /* Voile derrière les modales et panneaux */
   --overlay: rgb(15 23 42 / 0.45);
   /* Rayons : échelle calculée sur --radius du thème */

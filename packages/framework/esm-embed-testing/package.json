@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-embed-testing",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MPL-2.0",
   "description": "Développer et tester une app embarquée sans le Core : hôte de test en mémoire, suite de conformité du protocole v2, simulateur de Shell (egen-embed-sim).",
   "type": "module",
@@ -76,9 +76,9 @@
     "vitest": "^4.1.2"
   },
   "dependencies": {
-    "@egen-civitas/esm-embed-client": "^0.1.1",
-    "@egen-civitas/esm-embed-host": "^0.2.0",
-    "@egen-civitas/esm-embed-protocol": "^0.2.0"
+    "@egen-civitas/esm-embed-client": "^0.2.0",
+    "@egen-civitas/esm-embed-host": "^0.3.0",
+    "@egen-civitas/esm-embed-protocol": "^0.3.0"
   },
   "bin": {
     "egen-embed-check": "bin/egen-embed-check.mjs",

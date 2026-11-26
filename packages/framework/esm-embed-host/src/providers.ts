@@ -12,6 +12,8 @@ export interface CallerContext {
 }
 
 export interface NotificationInput {
+  /** Clé de dédoublonnage facultative : un même `id` ne produit pas deux toasts rapprochés. */
+  id?: string;
   kind: 'info' | 'success' | 'warning' | 'error';
   title: string;
   subtitle?: string;
@@ -44,7 +46,8 @@ export interface HostProviders {
   config?: Watchable<Record<string, unknown>>;
   flags?: { isEnabled(name: string): boolean | Promise<boolean>; subscribe?(cb: () => void): Unsub };
   events?: { publish(topic: string, payload: unknown, ctx: CallerContext): void; subscribe(topic: string, cb: (payload: unknown) => void): Unsub };
-  notifications?: { show(n: NotificationInput, ctx: CallerContext): void | Promise<void> };
+  /** Affiche le toast dans l'interface du Core ; retourne `false` si non affiché (doublon, etc.). Le Core attribue le toast à son app d'origine. */
+  notifications?: { show(n: NotificationInput, ctx: CallerContext): void | boolean | Promise<void | boolean> };
   dialogs?: { confirm(d: { title: string; message: string; danger?: boolean }, ctx: CallerContext): boolean | Promise<boolean> };
   /** Extensions attachées à un slot du Core (apps internes, framework, autres apps) : métadonnées seulement, jamais le rendu. */
   extensions?: { list(slot: string): ExtensionInfo[] | Promise<ExtensionInfo[]>; subscribe?(slot: string, cb: (list: ExtensionInfo[]) => void): Unsub };

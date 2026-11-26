@@ -93,6 +93,42 @@ export function defineConformance(connect: ConnectFn, t: ConformanceApi): void {
       sim.destroy();
     });
 
+    it('toasts : le Core affiche seul, l’app n’affiche pas les siens (notify sans doublon)', async () => {
+      const sim = createTestHost({ manifestCapabilities: { notifications: {} }, approved: { notifications: {} } });
+      const c = await connect({ ...sim.connectOptions, capabilities: ['notifications'] });
+      const local: unknown[] = [];
+      expect(c.coreDisplaysNotifications).toBe(true);
+      await c.notify({ kind: 'success', title: 'Enregistré', id: 't1' }, (t) => local.push(t));
+      await c.notify({ kind: 'success', title: 'Enregistré', id: 't1' }, (t) => local.push(t));
+      expect(local).toEqual([]);
+      expect(sim.notifications).toHaveLength(1); // le doublon (même id) n'est pas réaffiché par le Core
+      c.close();
+      sim.destroy();
+    });
+
+    it('toasts : sans approbation, l’app affiche elle-même (jamais de perte, jamais de doublon)', async () => {
+      const sim = createTestHost();
+      const c = await connect({ ...sim.connectOptions, capabilities: ['notifications'] });
+      const local: unknown[] = [];
+      expect(c.coreDisplaysNotifications).toBe(false);
+      await c.notify({ kind: 'info', title: 'x' }, (t) => local.push(t));
+      expect(local).toHaveLength(1);
+      expect(sim.notifications).toHaveLength(0);
+      c.close();
+      sim.destroy();
+    });
+
+    it('toasts : anti-spam (rate) — au-delà, abandonné, ni Core ni local', async () => {
+      const sim = createTestHost({ manifestCapabilities: { notifications: {} }, approved: { notifications: { rate: { max: 2, perSeconds: 60 } } } });
+      const c = await connect({ ...sim.connectOptions, capabilities: ['notifications'] });
+      const local: unknown[] = [];
+      for (let i = 0; i < 5; i++) await c.notify({ kind: 'info', title: `t${i}` }, (t) => local.push(t));
+      expect(sim.notifications).toHaveLength(2);
+      expect(local).toEqual([]);
+      c.close();
+      sim.destroy();
+    });
+
     it('fermeture : appels suivants rejetés', async () => {
       const sim = createTestHost();
       const c = await connect({ ...sim.connectOptions, capabilities: ['tenant'] });

@@ -18,6 +18,9 @@ describe('checkEmbedApp (manifeste)', () => {
     const i = await checkEmbedApp({ manifest: manifest({ route: 'A B' }) });
     expect(hasErrors(i)).toBe(true);
   });
+  it('notifications : rappel du modèle sans doublon', async () => {
+    expect(msgs(await checkEmbedApp({ manifest: manifest() }), 'info').join()).toMatch(/egen\.notify/);
+  });
   it('capacités retirées du SDK : message explicite', async () => {
     for (const id of ['session', 'theme', 'permissions', 'api']) {
       const i = await checkEmbedApp({ manifest: manifest({ capabilities: { [id]: {} } }) });

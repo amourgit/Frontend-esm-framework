@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { createElement } from 'react';
 import { act, render, screen, waitFor } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
-import { EgenProvider, useEgen, useEgenTenant } from './react.js';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { EgenProvider, useEgen, useEgenNotify, useEgenTenant } from './react.js';
 import { FakeShell, grant } from './__tests__/fake-shell.js';
 
 afterEach(() => document.body.replaceChildren());
@@ -36,5 +36,43 @@ describe('liaison React', () => {
     console.error = () => undefined;
     expect(() => render(createElement(Who))).toThrow(/EgenProvider/);
     console.error = orig;
+  });
+});
+
+function Toaster({ local }: { local: (t: unknown) => void }) {
+  const { notify, coreDisplays } = useEgenNotify(local);
+  return createElement(
+    'div',
+    null,
+    coreDisplays ? null : createElement('div', { 'data-testid': 'local-toaster' }, 'toaster local'),
+    createElement('button', { onClick: () => void notify({ kind: 'info', title: 'hello' }) }, 'notifier'),
+  );
+}
+
+describe('useEgenNotify', () => {
+  it('le Core affiche : l’app ne rend pas son toaster et n’appelle pas l’affichage local', async () => {
+    const shell = new FakeShell();
+    const local = vi.fn();
+    const shown = vi.fn(async () => ({ displayed: true }));
+    render(createElement(EgenProvider, { options: { moduleName: shell.moduleName, hostOrigins: [shell.origin], window: shell.appWindow as any, host: shell.hostWindow as any, timeoutMs: 500, capabilities: ['notifications'] } }, createElement(Toaster, { local })));
+    await act(async () => {
+      shell.hello();
+      shell.accept([grant('notifications')], { notifications: { show: shown } });
+    });
+    const btn = await screen.findByRole('button', { name: 'notifier' });
+    expect(screen.queryByTestId('local-toaster')).toBeNull();
+    await act(async () => btn.click());
+    await waitFor(() => expect(shown).toHaveBeenCalledTimes(1));
+    expect(local).not.toHaveBeenCalled();
+  });
+
+  it('autonome : l’app rend son toaster et affiche elle-même', async () => {
+    const shell = new FakeShell();
+    const local = vi.fn();
+    render(createElement(EgenProvider, { options: { moduleName: shell.moduleName, hostOrigins: [shell.origin], window: shell.appWindow as any, host: shell.hostWindow as any, timeoutMs: 40 } }, createElement(Toaster, { local })));
+    const btn = await screen.findByRole('button', { name: 'notifier' });
+    expect(screen.getByTestId('local-toaster')).not.toBeNull();
+    await act(async () => btn.click());
+    expect(local).toHaveBeenCalledTimes(1);
   });
 });

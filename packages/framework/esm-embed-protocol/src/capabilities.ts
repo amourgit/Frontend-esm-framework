@@ -110,8 +110,9 @@ export const CAPABILITIES: Readonly<Record<CapabilityId, CapabilityDescriptor>> 
       show: m((a) =>
         objectArg(a, (o) => {
           if (!KINDS.includes(o.kind as string)) return 'kind invalide';
+          if (o.id !== undefined && !(typeof o.id === 'string' && /^[A-Za-z0-9._:-]{1,100}$/.test(o.id))) return 'id : [A-Za-z0-9._:-], ≤ 100';
           if (!str(o.title, 200)) return 'title : texte ≤ 200 attendu';
-          if (o.subtitle !== undefined && !str(o.subtitle, 1000)) return 'subtitle : texte ≤ 1000 attendu';
+          if (o.subtitle !== undefined && !str(o.subtitle, 500)) return 'subtitle : texte ≤ 500 attendu';
           if (o.timeoutMs !== undefined && !(typeof o.timeoutMs === 'number' && o.timeoutMs >= 0 && o.timeoutMs <= 60_000)) return 'timeoutMs : 0 à 60000';
           return null;
         }),

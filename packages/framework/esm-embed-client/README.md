@@ -24,6 +24,14 @@ if (egen.connected) {
 l'app les obtient directement : jeton auprès de **Keycloak** (OIDC), droits via son jeton et son backend, thème via le service de thèmes.
 
 - **Mode autonome** : hors du Core (ou hôte sans protocole v2, ou délai dépassé), `connected === false` ; les appels sont rejetés (`DENIED`), jamais d'exception synchrone. Testez `egen.has('theme')` pour dégrader proprement.
+- **Toasts sans doublon** : le Core affiche les notifications de l'app, en temps réel, attribuées à elle. N'affichez pas les vôtres : un seul point d'entrée,
+
+  ```ts
+  await egen.notify({ kind: 'success', title: 'Enregistré', id: 'theme.saved' }, (t) => sonner.success(t.title)); // 2e argument : affichage local de repli
+  {!egen.coreDisplaysNotifications && <Toaster />}   // ne rendre son toaster que si le Core ne s'en charge pas
+  ```
+
+  Core affiche seul (défaut) → envoyé au Core, `local` non appelé. Capacité non accordée ou client autonome → `local`. Politique `exclusive: false` de l'opérateur → les deux. Trop de toasts (`rate`) → abandonnés. React : `useEgenNotify(local)` → `{ notify, coreDisplays }`.
 - **Moindre privilège** : un appel sur une capacité non accordée est rejeté localement. Les refus de négociation sont dans `egen.denied`.
 - **Extensions** : `egen.extensions.list(slot)` / `onChange` (slots à approuver : grant `extensions.discover`). Pour *contribuer* un composant à un slot du Core, déclarer `extensions[]` dans `egen-app.json` (doc 17 §5 bis).
 - **Outils IA** : `egen.aiTools.register([{ name, description, handler }])` : le backend IA appelle, valide et garde l'autorité.

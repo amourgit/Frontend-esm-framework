@@ -31,7 +31,7 @@ export interface TestHost {
   connection: HostConnection;
   /** Journal des services du Core sollicités par l'app. */
   calls: CallRecord[];
-  notifications: Array<{ kind: string; title: string; subtitle?: string }>;
+  notifications: Array<{ id?: string; kind: string; title: string; subtitle?: string }>;
   published: Array<{ topic: string; payload: unknown; from: string }>;
   tools: Map<string, { description: string }>;
   /** Pousse un changement vers l'app (comme le ferait le Core). */
@@ -136,7 +136,10 @@ export function createTestHost(o: TestHostOptions = {}): TestHost {
     notifications: {
       show: (n) => {
         log('notifications', 'show', n);
+        // même dédoublonnage que le Core : un `id` déjà affiché n'est pas réaffiché
+        if (n.id && notifications.some((x) => x.id === n.id)) return false;
         notifications.push(n);
+        return true;
       },
     },
     dialogs: {

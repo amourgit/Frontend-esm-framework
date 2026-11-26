@@ -1,4 +1,4 @@
-import { EmbedError, type CapabilityDenied, type CapabilityGranted, type CapabilityId, type RpcEndpoint } from '@egen-civitas/esm-embed-protocol';
+import { EmbedError, notificationPolicy, type CapabilityDenied, type CapabilityGranted, type CapabilityId, type RpcEndpoint } from '@egen-civitas/esm-embed-protocol';
 
 export type Unsubscribe = () => void;
 export type JsonObject = Record<string, unknown>;
@@ -14,6 +14,8 @@ export interface ExtensionInfo {
 }
 
 export interface NotificationInput {
+  /** Clé de dédoublonnage facultative (un même `id` ne produit pas deux toasts rapprochés). */
+  id?: string;
   kind: 'info' | 'success' | 'warning' | 'error';
   title: string;
   subtitle?: string;
@@ -70,6 +72,37 @@ export class EgenClient {
   /** @internal Rappel hôte → app (`lifecycle.canLeave`). */
   async _canLeave(): Promise<boolean> {
     return this.beforeLeave ? !!(await this.beforeLeave()) : true;
+  }
+
+  /**
+   * Le Core affiche-t-il les toasts de cette app ET seul (politique `exclusive`, par défaut) ? Si oui, l'app ne doit PAS afficher les siens
+   * (deux toasts identiques) : ne rendre son propre composant de toasts que si `!egen.coreDisplaysNotifications`.
+   */
+  get coreDisplaysNotifications(): boolean {
+    const g = this.granted.get('notifications');
+    return !!this.rpc && !this.rpc.closed && !!g && notificationPolicy(g.config).exclusive;
+  }
+
+  /**
+   * Point d'entrée UNIQUE pour notifier l'utilisateur, sans doublon :
+   *  - Core affiche seul (défaut) → envoyé au Core ; `local` n'est PAS appelé ;
+   *  - capacité refusée, fermée ou indisponible → `local` (affichage propre à l'app) ;
+   *  - politique `exclusive: false` → envoyé au Core ET `local`.
+   * Trop de toasts (`RATE_LIMITED`) : abandonnés (ni Core ni local : contourner la limite par l'affichage local serait un doublon).
+   */
+  async notify(toast: NotificationInput, local?: (toast: NotificationInput) => void): Promise<void> {
+    const g = this.granted.get('notifications');
+    if (this.rpc && !this.rpc.closed && g) {
+      try {
+        await this.notifications.show(toast);
+        if (!notificationPolicy(g.config).exclusive) local?.(toast);
+        return;
+      } catch (e) {
+        if ((e as { code?: string }).code === 'RATE_LIMITED') return;
+        // DENIED, TIMEOUT, CLOSED… : repli sur l'affichage de l'app
+      }
+    }
+    local?.(toast);
   }
 
   /** La capacité est-elle accordée par l'hôte ? */
@@ -132,7 +165,8 @@ export class EgenClient {
     subscribe: (topic: string, cb: (payload: unknown) => void) => this.on('events', topic, cb),
   };
   readonly notifications = {
-    show: (n: NotificationInput) => this.call<void>('notifications', 'show', [n]),
+    /** Envoie le toast au Core, qui l'affiche en temps réel, attribué à cette app. `displayed: false` : non affiché (doublon). */
+    show: (n: NotificationInput) => this.call<{ displayed: boolean }>('notifications', 'show', [n]),
   };
   readonly dialogs = {
     confirm: (d: { title: string; message: string; danger?: boolean }) => this.call<boolean>('dialogs', 'confirm', [d]),

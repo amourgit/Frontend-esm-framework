@@ -7,3 +7,4 @@ export * from './patterns.js';
 export * from './manifest.js';
 export * from './negotiate.js';
 export * from './rpc.js';
+export * from './notifications.js';

@@ -159,3 +159,70 @@ describe('cycle de connexion', () => {
     expect(sentByApp.length).toBeGreaterThan(0);
   });
 });
+
+describe('toasts partagés (le Core est l’afficheur)', () => {
+  it('temps réel : l’app envoie, le Core affiche (attribué au module), la réponse indique si affiché', async () => {
+    const shown: Array<{ n: any; from: string }> = [];
+    const providers: HostProviders = { notifications: { show: (n, ctx) => void shown.push({ n, from: ctx.moduleName }) } };
+    const { client } = await h({ providers, requested: ['notifications'], approved: { notifications: {} } });
+    await expect(client.notifications.show({ kind: 'success', title: 'Enregistré', id: 'theme.saved' })).resolves.toEqual({ displayed: true });
+    expect(shown).toEqual([{ n: { kind: 'success', title: 'Enregistré', id: 'theme.saved' }, from: '@acme/esm-demo-app' }]);
+  });
+
+  it('un doublon écarté par le Core (provider → false) est signalé : displayed false', async () => {
+    const providers: HostProviders = { notifications: { show: () => false } };
+    const { client } = await h({ providers, requested: ['notifications'], approved: { notifications: {} } });
+    await expect(client.notifications.show({ kind: 'info', title: 'x', id: 'dup' })).resolves.toEqual({ displayed: false });
+  });
+
+  it('anti-spam : au-delà de la fenêtre (rate) → RATE_LIMITED, le Core n’affiche pas', async () => {
+    const show = vi.fn();
+    const { client } = await h({ providers: { notifications: { show } }, requested: ['notifications'], approved: { notifications: { rate: { max: 2, perSeconds: 60 } } } });
+    await client.notifications.show({ kind: 'info', title: '1' });
+    await client.notifications.show({ kind: 'info', title: '2' });
+    await expect(client.notifications.show({ kind: 'info', title: '3' })).rejects.toMatchObject({ code: 'RATE_LIMITED' });
+    expect(show).toHaveBeenCalledTimes(2);
+  });
+
+  it('politique transmise à l’app : exclusive par défaut ; exclusive:false si l’opérateur le décide', async () => {
+    const providers: HostProviders = { notifications: { show: vi.fn() } };
+    const a = await h({ providers, requested: ['notifications'], approved: { notifications: {} } });
+    expect(a.client.coreDisplaysNotifications).toBe(true);
+    const b = await h({ providers, requested: ['notifications'], approved: { notifications: { exclusive: false } } });
+    expect(b.client.coreDisplaysNotifications).toBe(false);
+    const c = await h({ providers, requested: ['notifications'] });
+    expect(c.client.coreDisplaysNotifications).toBe(false); // non accordée : l'app affiche elle-même
+  });
+
+  it('egen.notify : le Core affiche, l’affichage local n’est PAS appelé (pas de doublon)', async () => {
+    const show = vi.fn();
+    const local = vi.fn();
+    const { client } = await h({ providers: { notifications: { show } }, requested: ['notifications'], approved: { notifications: {} } });
+    await client.notify({ kind: 'success', title: 'OK' }, local);
+    expect(show).toHaveBeenCalledTimes(1);
+    expect(local).not.toHaveBeenCalled();
+  });
+
+  it('egen.notify : capacité non accordée → affichage local ; exclusive:false → Core ET local ; rate → abandonné', async () => {
+    const show = vi.fn();
+    const local = vi.fn();
+    const none = await h({ providers: { notifications: { show } }, requested: ['notifications'] });
+    await none.client.notify({ kind: 'info', title: 'a' }, local);
+    expect(local).toHaveBeenCalledTimes(1);
+    expect(show).not.toHaveBeenCalled();
+
+    local.mockClear();
+    const both = await h({ providers: { notifications: { show } }, requested: ['notifications'], approved: { notifications: { exclusive: false } } });
+    await both.client.notify({ kind: 'info', title: 'b' }, local);
+    expect(show).toHaveBeenCalledTimes(1);
+    expect(local).toHaveBeenCalledTimes(1);
+
+    show.mockClear();
+    local.mockClear();
+    const limited = await h({ providers: { notifications: { show } }, requested: ['notifications'], approved: { notifications: { rate: { max: 1, perSeconds: 60 } } } });
+    await limited.client.notify({ kind: 'info', title: '1' }, local);
+    await limited.client.notify({ kind: 'info', title: '2' }, local);
+    expect(show).toHaveBeenCalledTimes(1);
+    expect(local).not.toHaveBeenCalled();
+  });
+});

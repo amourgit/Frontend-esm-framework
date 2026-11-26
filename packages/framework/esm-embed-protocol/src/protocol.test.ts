@@ -250,3 +250,38 @@ describe('contributions déclarées dans le manifeste', () => {
     expect(allowedContributions(decls, { extensions: false })).toEqual([]);
   });
 });
+
+import { NOTIFICATION_DEFAULTS, createSlidingLimiter, notificationPolicy, validateNotificationConfig } from './index.js';
+
+describe('politique des notifications (toasts)', () => {
+  it('défauts : le Core affiche seul, 10 toasts par 10 s', () => {
+    expect(notificationPolicy(undefined)).toEqual({ exclusive: true, rate: { max: 10, perSeconds: 10 } });
+    expect(notificationPolicy({})).toEqual(NOTIFICATION_DEFAULTS);
+  });
+  it('valeurs de l’opérateur ; toute valeur invalide retombe sur le défaut (jamais plus permissif)', () => {
+    expect(notificationPolicy({ exclusive: false, rate: { max: 3, perSeconds: 60 } })).toEqual({ exclusive: false, rate: { max: 3, perSeconds: 60 } });
+    expect(notificationPolicy({ exclusive: 'non', rate: { max: 9999, perSeconds: -1 } })).toEqual(NOTIFICATION_DEFAULTS);
+    expect(notificationPolicy('x')).toEqual(NOTIFICATION_DEFAULTS);
+  });
+  it('validation de la config (outils)', () => {
+    expect(validateNotificationConfig({})).toEqual([]);
+    expect(validateNotificationConfig({ exclusive: true, rate: { max: 5, perSeconds: 10 } })).toEqual([]);
+    expect(validateNotificationConfig({ exclusive: 1 }).length).toBe(1);
+    expect(validateNotificationConfig({ rate: { max: 0, perSeconds: 5000 } }).length).toBe(2);
+    expect(validateNotificationConfig([]).length).toBe(1);
+  });
+  it('fenêtre glissante', () => {
+    let t = 0;
+    const ok = createSlidingLimiter(2, 10, () => t);
+    expect([ok(), ok(), ok()]).toEqual([true, true, false]);
+    t = 9_999;
+    expect(ok()).toBe(false);
+    t = 10_001;
+    expect(ok()).toBe(true);
+  });
+  it('toast : id optionnel validé, sous-titre ≤ 500', () => {
+    expect(validateCall('notifications', 'show', [{ kind: 'info', title: 'a', id: 'theme.saved:42' }])).toBeNull();
+    expect(validateCall('notifications', 'show', [{ kind: 'info', title: 'a', id: 'a b' }])).toBeTruthy();
+    expect(validateCall('notifications', 'show', [{ kind: 'info', title: 'a', subtitle: 'x'.repeat(501) }])).toBeTruthy();
+  });
+});

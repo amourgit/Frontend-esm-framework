@@ -1,5 +1,7 @@
 import {
   CAPABILITIES,
+  createSlidingLimiter,
+  notificationPolicy,
   EmbedError,
   slotAllowed,
   topicAllowed,
@@ -87,7 +89,17 @@ export function createCapabilityTable(o: TableOptions): { table: HandlerTable; s
       },
     };
   }
-  if (cfgOf.has('notifications') && p.notifications) table.notifications = { show: async (n: any) => void (await p.notifications!.show(n, ctx)) };
+  if (cfgOf.has('notifications') && p.notifications) {
+    // Anti-spam : une iframe ne doit pas pouvoir inonder l'interface du Core (ni imiter des messages système en rafale).
+    const policy = notificationPolicy(cfgOf.get('notifications'));
+    const allow = createSlidingLimiter(policy.rate.max, policy.rate.perSeconds);
+    table.notifications = {
+      show: async (n: any) => {
+        if (!allow()) throw new EmbedError('RATE_LIMITED', 'Trop de notifications');
+        return { displayed: (await p.notifications!.show(n, ctx)) !== false };
+      },
+    };
+  }
   if (cfgOf.has('dialogs') && p.dialogs) table.dialogs = { confirm: async (d: any) => !!(await p.dialogs!.confirm(d, ctx)) };
   if (cfgOf.has('extensions') && p.extensions) {
     const discover = list(cfgOf.get('extensions'), 'discover');

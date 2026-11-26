@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { connectToEgen, type EgenClient } from './index.js';
 import { FakeShell, grant } from './__tests__/fake-shell.js';
 
@@ -139,5 +139,72 @@ describe('capacités', () => {
     c.close();
     expect(c.closed).toBe(true);
     await expect(c.tenant.get()).rejects.toMatchObject({ code: 'DENIED' });
+  });
+});
+
+describe('notify : un seul afficheur, jamais de doublon', () => {
+  async function connectedWith(granted: any[], handlers: any) {
+    const { shell, p } = setup();
+    shell.hello();
+    shell.accept(granted, handlers, 'nonce-0123456789');
+    return { shell, c: await p };
+  }
+
+  it('Core affiche seul (défaut) : envoyé au Core, affichage local non appelé', async () => {
+    const show = vi.fn(async () => ({ displayed: true }));
+    const { c } = await connectedWith([grant('tenant'), grant('notifications')], { notifications: { show } });
+    const local = vi.fn();
+    expect(c.coreDisplaysNotifications).toBe(true);
+    await c.notify({ kind: 'success', title: 'OK' }, local);
+    expect(show).toHaveBeenCalledTimes(1);
+    expect(local).not.toHaveBeenCalled();
+  });
+
+  it('exclusive:false : Core ET local', async () => {
+    const show = vi.fn(async () => ({ displayed: true }));
+    const { c } = await connectedWith([grant('notifications', { exclusive: false })], { notifications: { show } });
+    const local = vi.fn();
+    expect(c.coreDisplaysNotifications).toBe(false);
+    await c.notify({ kind: 'info', title: 'x' }, local);
+    expect(show).toHaveBeenCalledTimes(1);
+    expect(local).toHaveBeenCalledTimes(1);
+  });
+
+  it('capacité non accordée ou client autonome : affichage local', async () => {
+    const { c } = await connectedWith([grant('tenant')], { tenant: { get: () => 1 } });
+    const local = vi.fn();
+    expect(c.coreDisplaysNotifications).toBe(false);
+    await c.notify({ kind: 'info', title: 'x' }, local);
+    expect(local).toHaveBeenCalledTimes(1);
+    const { shell, p } = setup({ timeoutMs: 40 });
+    void shell;
+    const standalone = await p;
+    const local2 = vi.fn();
+    await standalone.notify({ kind: 'info', title: 'y' }, local2);
+    expect(local2).toHaveBeenCalledTimes(1);
+  });
+
+  it('erreur côté hôte (DENIED/TIMEOUT) : repli local ; RATE_LIMITED : abandonné', async () => {
+    const { EmbedError } = await import('@egen-civitas/esm-embed-protocol');
+    let mode: 'denied' | 'rate' = 'denied';
+    const show = vi.fn(async () => {
+      throw new EmbedError(mode === 'denied' ? 'DENIED' : 'RATE_LIMITED', 'non');
+    });
+    const { c } = await connectedWith([grant('notifications')], { notifications: { show } });
+    const local = vi.fn();
+    await c.notify({ kind: 'info', title: 'a' }, local);
+    expect(local).toHaveBeenCalledTimes(1);
+    mode = 'rate';
+    await c.notify({ kind: 'info', title: 'b' }, local);
+    expect(local).toHaveBeenCalledTimes(1);
+  });
+
+  it('connexion fermée : affichage local', async () => {
+    const { c } = await connectedWith([grant('notifications')], { notifications: { show: async () => ({ displayed: true }) } });
+    c.close();
+    const local = vi.fn();
+    expect(c.coreDisplaysNotifications).toBe(false);
+    await c.notify({ kind: 'info', title: 'z' }, local);
+    expect(local).toHaveBeenCalledTimes(1);
   });
 });

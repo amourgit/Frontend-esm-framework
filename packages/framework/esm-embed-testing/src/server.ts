@@ -109,7 +109,7 @@ const $ = (id) => document.getElementById(id);
 const log = (...a) => { $('log').textContent = new Date().toLocaleTimeString() + ' ' + a.map((x) => typeof x === 'string' ? x : JSON.stringify(x)).join(' ') + '\\n' + $('log').textContent; };
 const watch = (v) => { const s = new Set(); return { get: () => v, subscribe: (cb) => (s.add(cb), () => s.delete(cb)), set: (n) => { v = n; s.forEach((f) => f(n)); } }; };
 const locale = watch('fr'), tenant = watch({ id: 'sim-tenant' }), conf = watch({});
-const topics = new Map();
+const topics = new Map(), seenToasts = new Set();
 const extState = new Map(Object.entries(cfg.extensions)), extSubs = new Map();
 const wrap = (cap, p) => Object.fromEntries(Object.entries(p).map(([k, f]) => [k, typeof f === 'function' ? (...a) => { log('←', cap + '.' + k, a); return f(...a); } : f]));
 const providers = {
@@ -117,7 +117,7 @@ const providers = {
   flags: wrap('flags', { isEnabled: () => true }),
   extensions: { list: (slot) => { log('← extensions.list', slot); return extState.get(slot) || []; }, subscribe: (slot, cb) => { const s = extSubs.get(slot) || new Set(); s.add(cb); extSubs.set(slot, s); return () => s.delete(cb); } },
   events: { publish: (t, p, c) => { log('← events.publish', t, p, 'de', c.moduleName); (topics.get(t) || []).forEach((f) => f(p)); }, subscribe: (t, cb) => { log('← events.subscribe', t); const l = topics.get(t) || []; l.push(cb); topics.set(t, l); return () => topics.set(t, (topics.get(t) || []).filter((f) => f !== cb)); } },
-  notifications: { show: (n) => { log('← notifications.show', n); const d = document.createElement('div'); d.className = 'toast'; d.textContent = '[' + n.kind + '] ' + n.title + (n.subtitle ? ' — ' + n.subtitle : ''); $('toasts').prepend(d); } },
+  notifications: { show: (n, c) => { log('← notifications.show', n, 'de', c.moduleName); if (n.id && seenToasts.has(n.id)) return false; if (n.id) seenToasts.add(n.id); const d = document.createElement('div'); d.className = 'toast'; d.textContent = '[' + n.kind + '] ' + cfg.moduleName + ' · ' + n.title + (n.subtitle ? ' — ' + n.subtitle : ''); $('toasts').prepend(d); return true; } },
   dialogs: { confirm: (d) => { log('← dialogs.confirm', d); return confirm(d.title + '\\n\\n' + d.message); } },
   telemetry: { log: (...a) => log('← telemetry.log', a.slice(0, 3)), metric: (...a) => log('← telemetry.metric', a.slice(0, 3)) },
   aiTools: { register: (m, t) => log('← ai-tools.register', t.map((x) => x.name)), unregister: (m, n) => log('← ai-tools.unregister', n) },

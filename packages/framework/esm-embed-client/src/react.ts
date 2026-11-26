@@ -1,6 +1,6 @@
 import { createContext, createElement, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { connectToEgen, type ConnectOptions } from './connect.js';
-import type { EgenClient, ExtensionInfo } from './client.js';
+import type { EgenClient, ExtensionInfo, NotificationInput } from './client.js';
 
 const EgenContext = createContext<EgenClient | null>(null);
 
@@ -81,6 +81,17 @@ export function useEgenTenant(): Live<{ id: string | null }> {
 export function useEgenExtensions(slot: string): Live<ExtensionInfo[]> {
   const c = useEgen();
   return useLive(c, c.has('extensions'), () => c.extensions.list(slot), (cb) => c.extensions.onChange(slot, cb));
+}
+
+/**
+ * Notifier sans doublon : `notify(toast)` envoie au Core quand c'est lui qui affiche, sinon appelle `local` (l'affichage de l'app).
+ * `coreDisplays` : à utiliser pour NE PAS rendre son propre composant de toasts quand le Core s'en charge.
+ */
+export function useEgenNotify(local?: (toast: NotificationInput) => void): { notify: (toast: NotificationInput) => Promise<void>; coreDisplays: boolean } {
+  const c = useEgen();
+  const ref = useRef(local);
+  ref.current = local;
+  return { notify: (toast) => c.notify(toast, (t) => ref.current?.(t)), coreDisplays: c.coreDisplaysNotifications };
 }
 
 /** Abonnement à un sujet du bus d'événements (grant `events.subscribe`). */

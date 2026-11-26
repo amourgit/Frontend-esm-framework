@@ -7,7 +7,7 @@ Spécification : `docs/integration-apps/17-sdk-embed-protocole-v2.md` du dépôt
 | --- | --- |
 | `constants` | version, limites par défaut, champs de session |
 | `guards` | validation de la poignée de main (`hello`/`connect`/`port`) et des messages RPC, estimation de taille bornée |
-| `capabilities` | catalogue des 11 capacités v1 (`REMOVED_CAPABILITIES` : identité, droits, thème, api, volontairement absentes) et validateurs d'arguments (`validateCall`) |
+| `capabilities` | catalogue des 12 capacités v1 (`REMOVED_CAPABILITIES` : identité, droits, thème, api, volontairement absentes) et validateurs d'arguments (`validateCall`) |
 | `manifest` | `validateManifest`, `effectiveGrants` (demandé ∩ approuvé), contributions d'extension (`validateExtensionDecls`, `allowedContributions`) |
 | `negotiate` | `negotiateProtocol`, `negotiateCapabilities` |
 | `patterns` | motifs de sujets (`a.b`, `a.b.*`) |

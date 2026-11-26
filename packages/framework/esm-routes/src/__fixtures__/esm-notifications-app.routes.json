@@ -6,7 +6,7 @@
       "routeRegex": "^(?!(?:login|logout|change-password)/?)",
       "online": true,
       "offline": true,
-      "containerDomId": "egen-ai-assistant-app-container"
+      "containerDomId": "egen-notifications-app-container"
     }
   ],
   "extensions": [

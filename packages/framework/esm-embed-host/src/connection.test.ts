@@ -84,19 +84,6 @@ describe('application des grants', () => {
     await expect(client.flags.isEnabled('autre')).rejects.toMatchObject({ code: 'DENIED' });
   });
 
-  it('outils IA : namespace imposé, invocation hôte → app, nettoyage à la fermeture', async () => {
-    const reg: any[] = [];
-    const unreg = vi.fn();
-    const providers: HostProviders = { aiTools: { register: (m, tools, invoke) => reg.push({ m, tools, invoke }), unregister: unreg } };
-    const { client, conn } = await h({ providers, requested: ['ai-tools'], approved: { 'ai-tools': { tools: ['demo.*'] } } });
-    await client.aiTools.register([{ name: 'demo.apply', description: 'x', handler: (a) => ({ got: a }) }]);
-    expect(reg[0].m).toBe('@acme/esm-demo-app');
-    await expect(reg[0].invoke('demo.apply', { n: 1 })).resolves.toEqual({ got: { n: 1 } });
-    await expect(client.aiTools.register([{ name: 'core.admin', description: 'x', handler: () => 1 }])).rejects.toMatchObject({ code: 'DENIED' });
-    conn.reset();
-    expect(unreg).toHaveBeenCalledWith('@acme/esm-demo-app', ['demo.apply']);
-  });
-
   it('extensions : découverte limitée aux slots du grant, changements poussés', async () => {
     const list: ExtensionInfo[] = [{ name: 'nav-annuaire', moduleName: '@egen/esm-annuaire-app', order: 1, meta: { label: 'Annuaire' } }];
     const subs = new Map<string, (l: ExtensionInfo[]) => void>();

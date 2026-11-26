@@ -21,7 +21,7 @@ expect(sim.notifications).toEqual([{ kind: 'success', title: 'OK' }]);
 sim.emit.locale('en'); // le Core pousse un changement
 ```
 
-`sim.calls` (journal des services sollicités), `sim.published`, `sim.tools` + `sim.invokeTool()` (agent IA), `sim.emit.*`.
+`sim.calls` (journal des services sollicités), `sim.published`, `sim.emit.*`.
 
 ## 2. Suite de conformité
 

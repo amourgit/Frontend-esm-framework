@@ -161,24 +161,6 @@ export const CAPABILITIES: Readonly<Record<CapabilityId, CapabilityDescriptor>> 
     listKeys: {},
     listDefaults: {},
   },
-  'ai-tools': {
-    id: 'ai-tools',
-    version: 1,
-    defaultGrant: false,
-    methods: {
-      register: m((a) =>
-        a.length === 1 && Array.isArray(a[0]) && a[0].length > 0 && a[0].length <= 50 &&
-        a[0].every((t) => isPlainObject(t) && str(t.name, 100) && str(t.description, 1000) && (t.inputSchema === undefined || isPlainObject(t.inputSchema)))
-          ? null
-          : 'tableau de { name, description, inputSchema? } attendu',
-      ),
-      unregister: m((a) => (a.length === 1 && Array.isArray(a[0]) && a[0].length <= 50 && a[0].every((n) => str(n, 100)) ? null : 'tableau de noms attendu')),
-      invoke: m((a) => (a.length === 2 && str(a[0], 100) && isPlainObject(a[1]) ? null : 'invoke(name, args)'), 'host-to-app'),
-    },
-    events: [],
-    listKeys: { tools: 'pattern' },
-    listDefaults: { tools: [] },
-  },
   extensions: {
     id: 'extensions',
     version: 1,

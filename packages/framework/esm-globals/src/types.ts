@@ -65,8 +65,7 @@ declare global {
 
     // ── Tenant system globals ──────────────────────────────────────────────
     // Injectées par le shell (esm-app-shell/rspack.config.js + src/index.ejs)
-    // à partir des variables EGEN_TENANT_* de .env, sur le modèle exact du
-    // pont EGEN_AI_* → window.egenAi*. Lues par @egen-civitas/esm-tenant/config/env.ts.
+    // à partir des variables EGEN_TENANT_* de .env. Lues par @egen-civitas/esm-tenant/config/env.ts.
     // C'est l'UNIQUE canal de configuration par environnement — il n'existe
     // pas d'équivalent `import.meta.env` fonctionnel dans ce projet (rspack).
     //

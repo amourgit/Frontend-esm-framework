@@ -99,7 +99,7 @@ describe('dev-auth-bypass', () => {
       const { sessionStore: freshSessionStore } = await import('./current-user');
       initDevAuthBypass();
 
-      // Simule un package qui n'a jamais touché à /login (ex: esm-ai-assistant-app) :
+      // Simule un package qui n'a jamais touché à /login (ex: une app sans écran de connexion) :
       // lit sessionStore comme le ferait useSession()/getSessionStore().
       const state = freshSessionStore.getState();
       expect(state.loaded).toBe(true);

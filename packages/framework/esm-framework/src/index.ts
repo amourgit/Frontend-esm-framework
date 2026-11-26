@@ -17,4 +17,3 @@ export * from '@egen-civitas/esm-state';
 export * from '@egen-civitas/esm-styleguide';
 export * from '@egen-civitas/esm-translations';
 export * from '@egen-civitas/esm-utils';
-export * from '@egen-civitas/esm-ai-framework';

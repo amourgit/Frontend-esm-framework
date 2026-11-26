@@ -37,7 +37,6 @@ export function availableCapabilities(p: HostProviders): Set<CapabilityId> {
     ['notifications', p.notifications],
     ['dialogs', p.dialogs],
     ['extensions', p.extensions],
-    ['ai-tools', p.aiTools],
   ];
   for (const [id, prov] of map) if (prov) s.add(id);
   return s;
@@ -50,20 +49,17 @@ export interface TableOptions {
   granted: CapabilityGranted[];
   providers: HostProviders;
   controls: HostControls;
-  /** Appel hôte → app (`ai-tools.invoke`). */
-  callApp: (cap: string, method: string, args: unknown[]) => Promise<unknown>;
 }
 
 /**
  * Construit la table de dispatch FERMÉE d'une connexion : seules les capacités accordées (et servies) y figurent,
- * chaque méthode applique son grant (sujets d'événements, slots découvrables, drapeaux, outils IA).
+ * chaque méthode applique son grant (sujets d'événements, slots découvrables, drapeaux).
  */
-export function createCapabilityTable(o: TableOptions): { table: HandlerTable; subscribe: SubscribeHandler; cleanup: () => void } {
+export function createCapabilityTable(o: TableOptions): { table: HandlerTable; subscribe: SubscribeHandler } {
   const { providers: p, controls: c } = o;
   const ctx: CallerContext = { moduleName: o.moduleName };
   const cfgOf = new Map(o.granted.map((g) => [g.id, g.config]));
   const table: HandlerTable = {};
-  const registeredTools = new Set<string>();
 
   const denied = (msg: string) => new EmbedError('DENIED', msg);
 
@@ -110,20 +106,6 @@ export function createCapabilityTable(o: TableOptions): { table: HandlerTable; s
       },
     };
   }
-  if (cfgOf.has('ai-tools') && p.aiTools) {
-    const allowed = list(cfgOf.get('ai-tools'), 'tools');
-    table['ai-tools'] = {
-      register: (tools: Array<{ name: string; description: string; inputSchema?: Record<string, unknown> }>) => {
-        for (const t of tools) if (!topicAllowed(allowed, t.name)) throw denied(`Outil non autorisé : ${t.name}`);
-        p.aiTools!.register(o.moduleName, tools, (name, args) => o.callApp('ai-tools', 'invoke', [name, args]));
-        for (const t of tools) registeredTools.add(t.name);
-      },
-      unregister: (names: string[]) => {
-        p.aiTools!.unregister(o.moduleName, names);
-        for (const n of names) registeredTools.delete(n);
-      },
-    };
-  }
   if (cfgOf.has('telemetry')) {
     table.telemetry = {
       log: (level: any, message: string, extra?: Record<string, unknown>) => void p.telemetry?.log(level, message, extra, ctx),
@@ -167,9 +149,5 @@ export function createCapabilityTable(o: TableOptions): { table: HandlerTable; s
   return {
     table,
     subscribe,
-    cleanup: () => {
-      if (registeredTools.size && p.aiTools) p.aiTools.unregister(o.moduleName, [...registeredTools]);
-      registeredTools.clear();
-    },
   };
 }

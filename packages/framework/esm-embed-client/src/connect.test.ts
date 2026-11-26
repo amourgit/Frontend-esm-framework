@@ -82,7 +82,7 @@ describe('poignée de main', () => {
 });
 
 describe('capacités', () => {
-  async function connected(granted = [grant('tenant'), grant('locale'), grant('ai-tools'), grant('lifecycle'), grant('events'), grant('extensions')], handlers: any = {}, subscribe?: any) {
+  async function connected(granted = [grant('tenant'), grant('locale'), grant('lifecycle'), grant('events'), grant('extensions')], handlers: any = {}, subscribe?: any) {
     const { shell, p } = setup();
     shell.hello();
     shell.accept(granted, handlers, 'nonce-0123456789', { subscribe });
@@ -116,15 +116,6 @@ describe('capacités', () => {
     await tick();
     expect(got).toEqual(['x']);
     await expect(c.events.subscribe('core.secret', () => undefined)).rejects.toMatchObject({ code: 'DENIED' });
-  });
-
-  it('outils IA : l’hôte invoque le handler enregistré', async () => {
-    const { c, shell } = await connected(undefined, { 'ai-tools': { register: () => undefined, unregister: () => undefined } });
-    await c.aiTools.register([{ name: 'palette.apply', description: 'Applique', handler: (a) => ({ applied: a.name }) }]);
-    await expect(shell.rpc!.call('ai-tools', 'invoke', ['palette.apply', { name: 'sunset' }])).resolves.toEqual({ applied: 'sunset' });
-    await expect(shell.rpc!.call('ai-tools', 'invoke', ['inconnu', {}])).rejects.toMatchObject({ code: 'UNKNOWN_METHOD' });
-    await c.aiTools.unregister(['palette.apply']);
-    await expect(shell.rpc!.call('ai-tools', 'invoke', ['palette.apply', {}])).rejects.toMatchObject({ code: 'UNKNOWN_METHOD' });
   });
 
   it('cycle de vie : canLeave', async () => {

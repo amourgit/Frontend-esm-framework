@@ -22,14 +22,6 @@ export interface NotificationInput {
   timeoutMs?: number;
 }
 
-export interface AiToolDefinition {
-  name: string;
-  description: string;
-  inputSchema?: JsonObject;
-  /** Exécutée dans l'app quand le backend IA appelle l'outil (l'autorité et la validation restent au backend). */
-  handler: (args: JsonObject) => unknown | Promise<unknown>;
-}
-
 export interface ClientInit {
   connected: boolean;
   moduleName: string;
@@ -50,7 +42,6 @@ export class EgenClient {
   readonly denied: CapabilityDenied[];
   private readonly granted: Map<string, CapabilityGranted>;
   private readonly rpc: RpcEndpoint | undefined;
-  private readonly tools = new Map<string, AiToolDefinition['handler']>();
   private beforeLeave: (() => boolean | Promise<boolean>) | undefined;
 
   constructor(init: ClientInit) {
@@ -60,13 +51,6 @@ export class EgenClient {
     this.denied = init.denied;
     this.rpc = init.rpc;
     this.granted = new Map(init.granted.map((g) => [g.id, g]));
-  }
-
-  /** @internal Rappel hôte → app (`ai-tools.invoke`). */
-  async _invokeTool(name: string, args: JsonObject): Promise<unknown> {
-    const h = this.tools.get(name);
-    if (!h) throw new EmbedError('UNKNOWN_METHOD', `Outil inconnu : ${name}`);
-    return h(args);
   }
 
   /** @internal Rappel hôte → app (`lifecycle.canLeave`). */
@@ -182,17 +166,6 @@ export class EgenClient {
   readonly telemetry = {
     log: (level: 'debug' | 'info' | 'warn' | 'error', message: string, ctx?: JsonObject) => this.call<void>('telemetry', 'log', ctx ? [level, message, ctx] : [level, message]),
     metric: (name: string, value: number, tags?: JsonObject) => this.call<void>('telemetry', 'metric', tags ? [name, value, tags] : [name, value]),
-  };
-  readonly aiTools = {
-    /** Déclare des outils exécutables par l'agent IA (le backend appelle, valide et garde l'autorité). */
-    register: async (tools: AiToolDefinition[]) => {
-      await this.call<void>('ai-tools', 'register', [tools.map(({ name, description, inputSchema }) => ({ name, description, ...(inputSchema ? { inputSchema } : {}) }))]);
-      for (const t of tools) this.tools.set(t.name, t.handler);
-    },
-    unregister: async (names: string[]) => {
-      await this.call<void>('ai-tools', 'unregister', [names]);
-      for (const n of names) this.tools.delete(n);
-    },
   };
   readonly lifecycle = {
     /** À appeler quand l'app est prête (l'hôte peut alors masquer son indicateur de chargement). */

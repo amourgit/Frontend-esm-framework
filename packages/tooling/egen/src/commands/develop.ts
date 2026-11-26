@@ -23,8 +23,8 @@ import {
  * plus être changé par le .env du consommateur — seule une valeur posée sur
  * `window` APRÈS coup, au moment où la page est servie, le peut encore.
  *
- * `windowKey` suit la même convention que window.egenTenantMode /
- * window.egenAi* (voir esm-globals/src/types.ts) — la table EGEN_TENANT_*
+ * `windowKey` suit la même convention que window.egenTenantMode
+ * (voir esm-globals/src/types.ts) — la table EGEN_TENANT_*
  * ci-dessous est recopiée à l'identique depuis EGEN_TENANT_ENV_TO_WINDOW_KEY
  * dans esm-app-shell/rspack.config.js (même mapping, deux moments différents
  * : build du framework là-bas, service par `egen develop` ici).
@@ -98,7 +98,7 @@ export async function runDevelop(args: DevelopArgs, signal?: AbortSignal) {
   const index = resolve(source, 'index.html');
 
   // @egen-civitas/esm-app-shell est un paquet npm PRÉ-COMPILÉ : son bundle a
-  // déjà été construit (et process.env.EGEN_DEV_NO_AUTH/EGEN_AI_*/etc. figés
+  // déjà été construit (et process.env.EGEN_DEV_NO_AUTH/etc. figés
   // par rspack DefinePlugin) au moment du build du repo framework, bien
   // avant que `egen develop` ne tourne ici avec le .env de l'app
   // consommatrice. Un DefinePlugin ne peut plus aider — il faudrait rebuild

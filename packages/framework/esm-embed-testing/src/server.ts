@@ -120,7 +120,6 @@ const providers = {
   notifications: { show: (n, c) => { log('← notifications.show', n, 'de', c.moduleName); if (n.id && seenToasts.has(n.id)) return false; if (n.id) seenToasts.add(n.id); const d = document.createElement('div'); d.className = 'toast'; d.textContent = '[' + n.kind + '] ' + cfg.moduleName + ' · ' + n.title + (n.subtitle ? ' — ' + n.subtitle : ''); $('toasts').prepend(d); return true; } },
   dialogs: { confirm: (d) => { log('← dialogs.confirm', d); return confirm(d.title + '\\n\\n' + d.message); } },
   telemetry: { log: (...a) => log('← telemetry.log', a.slice(0, 3)), metric: (...a) => log('← telemetry.metric', a.slice(0, 3)) },
-  aiTools: { register: (m, t) => log('← ai-tools.register', t.map((x) => x.name)), unregister: (m, n) => log('← ai-tools.unregister', n) },
 };
 const grants = effectiveGrants(cfg.manifestCapabilities, cfg.approved);
 $('info').innerHTML = '<b>App</b> ' + cfg.app + '<br><b>Module</b> ' + cfg.moduleName + '<br><b>hostOrigins à déclarer dans l’app</b> <code>' + location.origin + '</code><br><b>Capacités accordées</b> ' + Object.keys(grants).join(', ');

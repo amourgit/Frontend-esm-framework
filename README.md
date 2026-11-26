@@ -33,20 +33,6 @@ Ce repo contient **3 familles de packages** :
 | `@egen-civitas/esm-expression-evaluator` | Évaluateur d'expressions |
 | **`@egen-civitas/esm-framework`** | **Façade publique — point d'entrée unique** |
 
-### `packages/framework/esm-ai-*` — Layer AI (interface frontend uniquement)
-
-Le moteur IA (LLM, prompt, mémoire, STT/TTS) vit dans le **backend**. Le frontend ne fait que :
-afficher, capturer/lire l'audio, et exécuter les *tools frontend* demandés par le backend (navigation, lecture d'écran…).
-
-| Package | Rôle |
-|---|---|
-| `@egen-civitas/esm-ai-config` | Adresse/transport du backend IA, sécurité d'exécution des tools |
-| `@egen-civitas/esm-ai-events` | Événements AI |
-| `@egen-civitas/esm-ai-context` | Snapshot du contexte EGEN (utilisateur, tenant, navigation) envoyé au backend |
-| `@egen-civitas/esm-ai-tools` | Tools frontend exécutables à la demande du backend (navigate, lecture de page — read_page / read_component / find_in_page —, inspect-element, describe_screen...) |
-| `@egen-civitas/esm-ai-extensions` | Bridge AI ↔ extensions |
-| **`@egen-civitas/esm-ai-framework`** | **Façade publique AI** |
-
 ### `packages/tooling/` — Outils de build
 
 | Package | Rôle |
@@ -84,9 +70,6 @@ afficher, capturer/lire l'audio, et exécuter les *tools frontend* demandés par
 ```bash
 # Dans le package.json de ton projet
 yarn add @egen-civitas/esm-framework @egen-civitas/esm-theme @egen-civitas/esm-styleguide
-
-# Pour le layer AI (optionnel)
-yarn add @egen-civitas/esm-ai-framework
 
 # CLI de développement
 yarn add --dev @egen-civitas/egen

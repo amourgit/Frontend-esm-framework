@@ -458,15 +458,15 @@ function calculateAssignedIds(config: ExtensionSlotConfig, attachedIds: Array<st
   return [...attachedIds, ...addedIds]
     .filter((id) => !removedIds.includes(id))
     .sort((idA, idB) => {
-      const ai = getOrder(idA, idOrder, extensions[getExtensionNameFromId(idA)]?.order, attachedIds);
-      const bi = getOrder(idB, idOrder, extensions[getExtensionNameFromId(idB)]?.order, attachedIds);
+      const orderA = getOrder(idA, idOrder, extensions[getExtensionNameFromId(idA)]?.order, attachedIds);
+      const orderB = getOrder(idB, idOrder, extensions[getExtensionNameFromId(idB)]?.order, attachedIds);
 
-      if (bi === -1) {
+      if (orderB === -1) {
         return -1;
-      } else if (ai === -1) {
+      } else if (orderA === -1) {
         return 1;
       } else {
-        return ai - bi;
+        return orderA - orderB;
       }
     });
 }

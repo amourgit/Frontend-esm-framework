@@ -34,7 +34,6 @@ l'app les obtient directement : jeton auprès de **Keycloak** (OIDC), droits via
   Core affiche seul (défaut) → envoyé au Core, `local` non appelé. Capacité non accordée ou client autonome → `local`. Politique `exclusive: false` de l'opérateur → les deux. Trop de toasts (`rate`) → abandonnés. React : `useEgenNotify(local)` → `{ notify, coreDisplays }`.
 - **Moindre privilège** : un appel sur une capacité non accordée est rejeté localement. Les refus de négociation sont dans `egen.denied`.
 - **Extensions** : `egen.extensions.list(slot)` / `onChange` (slots à approuver : grant `extensions.discover`). Pour *contribuer* un composant à un slot du Core, déclarer `extensions[]` dans `egen-app.json` (doc 17 §5 bis).
-- **Outils IA** : `egen.aiTools.register([{ name, description, handler }])` : le backend IA appelle, valide et garde l'autorité.
 
 ## React
 

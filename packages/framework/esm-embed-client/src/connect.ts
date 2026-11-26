@@ -91,7 +91,6 @@ export function connectToEgen(options: ConnectOptions): Promise<EgenClient> {
     const ref: { client?: EgenClient } = {};
     // Table de rappels hôte → app, fermée et prête AVANT l'ouverture du port.
     const handlers: HandlerTable = {
-      'ai-tools': { invoke: (name: string, args: Record<string, unknown>) => ref.client!._invokeTool(name, args) },
       lifecycle: { canLeave: () => ref.client!._canLeave() },
     };
     const client = (rpc: RpcEndpoint | undefined, granted: CapabilityGranted[], denied: CapabilityDenied[], protocol?: number) =>

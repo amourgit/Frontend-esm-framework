@@ -33,7 +33,6 @@ export interface TestHost {
   calls: CallRecord[];
   notifications: Array<{ id?: string; kind: string; title: string; subtitle?: string }>;
   published: Array<{ topic: string; payload: unknown; from: string }>;
-  tools: Map<string, { description: string }>;
   /** Pousse un changement vers l'app (comme le ferait le Core). */
   emit: {
     tenant(v: { id: string | null }): void;
@@ -44,8 +43,6 @@ export interface TestHost {
     goto(path: string): void;
     visibility(visible: boolean): void;
   };
-  /** L'agent IA appelle un outil déclaré par l'app. */
-  invokeTool(name: string, args?: Record<string, unknown>): Promise<unknown>;
   destroy(): void;
 }
 
@@ -77,8 +74,6 @@ export function createTestHost(o: TestHostOptions = {}): TestHost {
   const calls: CallRecord[] = [];
   const notifications: TestHost['notifications'] = [];
   const published: TestHost['published'] = [];
-  const tools = new Map<string, { description: string }>();
-  const toolInvokers = new Map<string, (name: string, args: Record<string, unknown>) => Promise<unknown>>();
   const log = (cap: string, method: string, ...args: unknown[]) => void calls.push({ cap, method, args });
 
   const tenant = watchable(o.tenant ?? { id: null });
@@ -149,21 +144,6 @@ export function createTestHost(o: TestHostOptions = {}): TestHost {
       },
     },
     telemetry: { log: (l, m, c) => log('telemetry', 'log', l, m, c), metric: (n, v, t) => log('telemetry', 'metric', n, v, t) },
-    aiTools: {
-      register: (_m, list, invoke) => {
-        log('ai-tools', 'register', list.map((t) => t.name));
-        for (const t of list) {
-          tools.set(t.name, { description: t.description });
-          toolInvokers.set(t.name, invoke);
-        }
-      },
-      unregister: (_m, names) => {
-        for (const n of names) {
-          tools.delete(n);
-          toolInvokers.delete(n);
-        }
-      },
-    },
   };
 
   const appWindow = new EventTarget();
@@ -199,7 +179,6 @@ export function createTestHost(o: TestHostOptions = {}): TestHost {
     calls,
     notifications,
     published,
-    tools,
     emit: {
       tenant: (v) => tenant.set(v),
       locale: (v) => locale.set(v),
@@ -211,11 +190,6 @@ export function createTestHost(o: TestHostOptions = {}): TestHost {
       event: (topic, payload) => eventSubs.get(topic)?.forEach((cb) => cb(payload)),
       goto: (path) => channel.emit('goto', { path, seq: Date.now() }),
       visibility: (v) => channel.emit('visibility', v),
-    },
-    invokeTool: async (name, args = {}) => {
-      const inv = toolInvokers.get(name);
-      if (!inv) throw new Error(`Outil non enregistré : ${name}`);
-      return inv(name, args);
     },
     destroy: () => connection.destroy(),
   };

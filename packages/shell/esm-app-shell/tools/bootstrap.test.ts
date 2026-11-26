@@ -208,7 +208,6 @@ describe('index.ejs rendu', () => {
       egenRoutesUrl: '/app/routes.registry.json',
       egenCoreImportmap: false,
       egenCoreRoutes: false,
-      egenAiConfigDef: '{"egenAiEnabled":true}',
       egenTenantConfigDef: '{"egenTenantMode":"off"}',
       egenTargetConfigDef: null,
       egenApiUrl: '/egen',
@@ -240,7 +239,7 @@ describe('index.ejs rendu', () => {
       expect(webHtml).toContain('initializeSpa({');
       expect(webHtml).toContain('onclick="location.reload()"');
       expect(webHtml).toContain('onclick="copyText(this.parentElement)"');
-      expect(webHtml).toContain('Object.assign(window, {"egenAiEnabled":true});');
+      expect(webHtml).toContain('Object.assign(window, {"egenTenantMode":"off"});');
       expect(webHtml).not.toContain('data-egen-action');
       expect(webHtml).not.toContain('bootstrap');
     });

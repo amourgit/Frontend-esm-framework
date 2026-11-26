@@ -273,11 +273,6 @@
   --ui-button-danger-active: var(--destructive-800);
   --ui-button-separator: var(--border);
   --ui-button-disabled: var(--border);
-  --ui-ai-border-strong: var(--primary);
-  --ui-ai-overlay: color-mix(in srgb, var(--primary-900) 50%, transparent);
-  --ui-ai-drop-shadow: color-mix(in srgb, var(--primary-600) 10%, transparent);
-  --ui-ai-inner-shadow: color-mix(in srgb, var(--primary-400) 10%, transparent);
-  --ui-ai-skeleton-background: var(--primary-100);
 }
 
 html {

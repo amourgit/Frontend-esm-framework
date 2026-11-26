@@ -85,8 +85,8 @@ describe('RPC sur vrai MessageChannel', () => {
   });
 
   it('appels hôte → app (rappel)', async () => {
-    const { host } = pair({}, { 'ai-tools': { invoke: (n: string) => `ok:${n}` } });
-    await expect(host.call('ai-tools', 'invoke', ['outil', {}])).resolves.toBe('ok:outil');
+    const { host } = pair({}, { lifecycle: { canLeave: () => 'ok' } });
+    await expect(host.call('lifecycle', 'canLeave', [])).resolves.toBe('ok');
   });
 
   it('abonnement : valeur initiale après la réponse, événements, désabonnement', async () => {

@@ -11,7 +11,6 @@ export type CapabilityId =
   | 'flags'
   | 'config'
   | 'telemetry'
-  | 'ai-tools'
   | 'extensions'
   | 'lifecycle';
 

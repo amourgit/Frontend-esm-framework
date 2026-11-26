@@ -27,11 +27,10 @@ describe('checkEmbedApp (manifeste)', () => {
       expect(msgs(i, 'error').join()).toMatch(/absente du SDK/);
     }
   });
-  it('motifs d’événements et outils non préfixés', async () => {
-    const i = await checkEmbedApp({ manifest: manifest({ capabilities: { events: { publish: ['*', 'core.x', 'app.studio.*'] }, 'ai-tools': { tools: ['apply'] } } }) });
+  it('motifs d’événements', async () => {
+    const i = await checkEmbedApp({ manifest: manifest({ capabilities: { events: { publish: ['*', 'core.x', 'app.studio.*'] } } }) });
     expect(msgs(i, 'error').join('|')).toMatch(/pas supporté/);
     expect(msgs(i, 'warn').join('|')).toMatch(/core\.x/);
-    expect(msgs(i, 'warn').join('|')).toMatch(/préfixés/);
   });
   it('extensions : slots à approuver et vues intégrées en iframe', async () => {
     const i = await checkEmbedApp({ manifest: manifest({ extensions: [{ name: 'nav', slot: 'topbar-nav-slot' }, { name: 'chip', slot: 'shell-rail-left-slot', view: '/_egen/chip' }] }) });

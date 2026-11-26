@@ -39,7 +39,6 @@ export class HostConnection {
   state: ConnectionState = 'idle';
   private nonce?: string;
   private rpc?: RpcEndpoint;
-  private cleanup?: () => void;
 
   constructor(private readonly o: ConnectionOptions) {}
 
@@ -76,18 +75,13 @@ export class HostConnection {
       if (avail.has(g.id)) granted.push(g);
       else denied.push({ id: g.id, reason: 'UNAVAILABLE' });
     }
-    const { table, subscribe, cleanup } = createCapabilityTable({
+    const { table, subscribe } = createCapabilityTable({
       moduleName: this.o.moduleName,
       granted,
       providers: this.o.providers,
       controls: this.o.controls,
-      callApp: (cap, method, args) => {
-        if (!this.rpc) return Promise.reject(new Error('non connecté'));
-        return this.rpc.call(cap, method, args);
-      },
     });
     const { port1, port2 } = new MessageChannel();
-    this.cleanup = cleanup;
     this.rpc = new RpcEndpoint({
       port: port1,
       handlers: table,
@@ -95,8 +89,6 @@ export class HostConnection {
       validate: (cap, method, args) => validateCall(cap, method, args, 'app-to-host'),
       limits: this.o.limits,
       onClose: (reason) => {
-        this.cleanup?.();
-        this.cleanup = undefined;
         if (this.state !== 'closed') this.state = 'idle';
         this.o.onClose?.(reason);
       },
@@ -119,8 +111,6 @@ export class HostConnection {
   reset(): void {
     this.rpc?.close();
     this.rpc = undefined;
-    this.cleanup?.();
-    this.cleanup = undefined;
     this.nonce = undefined;
     if (this.state !== 'closed') this.state = 'idle';
   }

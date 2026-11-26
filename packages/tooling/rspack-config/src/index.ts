@@ -227,7 +227,7 @@ export function loadMonorepoEnv(root: string, mode?: string): Record<string, str
  * afin que les deux canaux (DefinePlugin ici, window.* là-bas) ne puissent
  * jamais diverger sur ce qui est considéré "public".
  */
-export const PUBLIC_ENV_PREFIXES = ['EGEN_AI_', 'EGEN_DEV_', 'EGEN_TENANT_'];
+export const PUBLIC_ENV_PREFIXES = ['EGEN_DEV_', 'EGEN_TENANT_'];
 
 export function isPublicEnvKey(key: string): boolean {
   return PUBLIC_ENV_PREFIXES.some((prefix) => key.startsWith(prefix));
@@ -299,10 +299,10 @@ export function resolvePublicEnv(root: string, mode?: string): Record<string, st
 }
 
 /**
- * Prépare les variables `EGEN_AI_*`/`EGEN_DEV_*` (voir resolvePublicEnv
+ * Prépare les variables `EGEN_DEV_*` (voir resolvePublicEnv
  * ci-dessus) pour `DefinePlugin`, afin que le code qui lit
- * `process.env.EGEN_AI_*`/`EGEN_DEV_*` côté navigateur (ex.
- * `@egen-civitas/esm-ai-config`, `@egen-civitas/esm-api`) reçoive de vraies
+ * `process.env.EGEN_DEV_*` côté navigateur (ex.
+ * `@egen-civitas/esm-api`) reçoive de vraies
  * valeurs au lieu de retomber systématiquement sur ses défauts internes.
  */
 function loadPublicEnvDefines(root: string, mode: string | undefined): Record<string, string> {

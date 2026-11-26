@@ -26,16 +26,6 @@ describe('createTestHost', () => {
     sim.destroy();
   });
 
-  it('outils IA : l’agent invoque l’outil déclaré par l’app', async () => {
-    const sim = createTestHost({ manifestCapabilities: { 'ai-tools': { tools: ['t.*'] } }, approved: { 'ai-tools': { tools: ['t.*'] } } });
-    const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['ai-tools'] });
-    await egen.aiTools.register([{ name: 't.sum', description: 'somme', handler: (a) => (a.a as number) + (a.b as number) }]);
-    expect([...sim.tools.keys()]).toEqual(['t.sum']);
-    await expect(sim.invokeTool('t.sum', { a: 1, b: 2 })).resolves.toBe(3);
-    egen.close();
-    sim.destroy();
-  });
-
   it('drapeaux simulés et confirmation', async () => {
     const sim = createTestHost({ approved: { dialogs: {}, flags: { names: ['beta'] } }, flags: { beta: true }, confirm: false });
     const egen = await connectToEgen({ ...sim.connectOptions, capabilities: ['dialogs', 'flags'] });

@@ -40,8 +40,6 @@ export async function checkEmbedApp(o: CheckOptions): Promise<CheckIssue[]> {
       else if (!patternCovers(own, String(p).replace(/\.\*$/, '.x'))) add('warn', `events.publish : « ${p} » sort de l'espace conseillé ${own}`);
     }
   }
-  const tools = caps['ai-tools']?.tools;
-  if (Array.isArray(tools) && tools.some((t) => !String(t).includes('.'))) add('warn', 'ai-tools.tools : préférer des noms d’outils préfixés (ex. studio.apply) pour éviter les collisions');
 
   if (caps.notifications) add('info', "Notifications : le Core affiche les toasts (par défaut seul). N'affichez pas les vôtres : appelez egen.notify(toast, local) et ne rendez votre composant de toasts que si !egen.coreDisplaysNotifications");
   const slots = [...new Set((m.extensions ?? []).map((e) => e.slot))];

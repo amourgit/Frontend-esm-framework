@@ -51,66 +51,11 @@ const egenThemeColor = process.env.EGEN_THEME_COLOR || '#161616';
 const egenBranding = resolveBranding(process.env, { defaultAssetsDir: resolve(__dirname, 'src/assets') });
 
 /**
- * Pont EGEN_AI_* (process.env, coté build Node) → window.egenAi* (runtime navigateur).
- *
- * Nécessaire car le bundle shell est construit avec rspack/webpack : il n'y a
- * pas d'`import.meta.env` (spécifique à Vite) dans le bundle produit, et
- * `process.env[key]` en accès dynamique (voir `esm-ai-config/src/defaults.ts`)
- * n'est de toute façon pas remplaçable par un `DefinePlugin` (qui ne fait que
- * du remplacement textuel statique). Sans ce pont, tout `.env` EGEN_AI_* est
- * silencieusement ignoré dans le navigateur — seul `window.egenAi*` fonctionne.
- *
- * La transformation de nom DOIT rester strictement identique à celle de
- * `readEnv()` dans `esm-ai-config/src/defaults.ts` : "EGEN_AI_MAX_TOKENS" →
- * "egenAiMAXTOKENS" (les mots ne sont pas mis en camelCase, seuls les
- * underscores sont supprimés — comportement hérité, pas idéal mais il faut
- * rester cohérent des deux côtés).
- */
-// Liste EXACTE des variables lues par esm-ai-config/src/defaults.ts (garde-fou : tools/env-bridge.js — le build échoue).
-// Tout ce qui est ajouté ici est embarqué en clair dans le bundle navigateur : jamais de secret.
-const EGEN_AI_ENV_KEYS = [
-  'EGEN_AI_ENABLED',
-  'EGEN_AI_CHANNEL_URL',
-  'EGEN_AI_HEARTBEAT_MS',
-  'EGEN_AI_RECONNECT_MIN_MS',
-  'EGEN_AI_RECONNECT_MAX_MS',
-  'EGEN_AI_REQUEST_TIMEOUT',
-  'EGEN_AI_CONTEXT_MAX_SIZE',
-  'EGEN_AI_CONTEXT_EXTENSIONS',
-  'EGEN_AI_CONTEXT_NAVIGATION',
-  'EGEN_AI_CONTEXT_FLAGS',
-  'EGEN_AI_CONTEXT_DEPTH',
-  'EGEN_AI_REQUIRED_PRIVILEGES',
-  'EGEN_AI_VALIDATE_TOOLS',
-  'EGEN_AI_TOOL_TIMEOUT',
-  // Authentification des ordres du backend (JWKS = clés PUBLIQUES : sans risque dans le bundle).
-  'EGEN_AI_SIGNED_CALLS',
-  'EGEN_AI_CHANNEL_JWKS',
-  'EGEN_AI_CHANNEL_JWKS_URL',
-  'EGEN_AI_CHANNEL_ALGORITHMS',
-  'EGEN_AI_ALLOW_INSECURE_CHANNEL',
-  'EGEN_AI_CHANNEL_ALLOWED_HOSTS',
-  'EGEN_AI_DEBUG',
-];
-
-assertSafeBridgeKeys('EGEN_AI_*', EGEN_AI_ENV_KEYS);
-
-function egenAiWindowKey(envKey) {
-  return `egenAi${envKey.replace(/^EGEN_AI_/, '').replace(/_([A-Z])/g, (_, l) => l.toUpperCase())}`;
-}
-
-const egenAiWindowOverrides = EGEN_AI_ENV_KEYS.reduce((acc, key) => {
-  if (process.env[key] !== undefined) {
-    acc[egenAiWindowKey(key)] = process.env[key];
-  }
-  return acc;
-}, {});
-const egenAiConfigDef = Object.keys(egenAiWindowOverrides).length > 0 ? JSON.stringify(egenAiWindowOverrides) : null;
-
-/**
  * Pont EGEN_TENANT_* (process.env, coté build Node) → window.egenTenant*
- * (runtime navigateur). Même raison d'être que le pont EGEN_AI_* ci-dessus —
- * voir @egen-civitas/esm-tenant/src/config/env.ts pour le détail complet et le
+ * (runtime navigateur).
+ * Nécessaire car le bundle shell est construit avec rspack : il n'y a pas d'`import.meta.env` dans le bundle
+ * produit, et `process.env[key]` en accès dynamique n'est pas remplaçable par un `DefinePlugin` (remplacement
+ * textuel statique). Voir @egen-civitas/esm-tenant/src/config/env.ts pour le détail complet et le
  * tableau de correspondance. Sans ce pont, tout `.env` EGEN_TENANT_* est
  * silencieusement ignoré et `setupTenantSystem()` démarre toujours en
  * mode "off", quelle que soit la configuration.
@@ -256,7 +201,7 @@ module.exports = (env, argv = []) => {
   const egenEnvironment = resolveEnvironment(mode);
   const appPatterns = [];
 
-  // Variables "publiques" (EGEN_AI_*/EGEN_DEV_*) résolues selon la même
+  // Variables "publiques" (EGEN_DEV_*) résolues selon la même
   // hiérarchie que partout ailleurs dans le framework — voir
   // resolvePublicEnv() dans @egen-civitas/rspack-config : .env.defaults du
   // framework < .env* trouvé en remontant depuis ce dossier (racine du
@@ -292,7 +237,7 @@ module.exports = (env, argv = []) => {
   let egenBootstrap = null;
   let bootstrapFiles = [];
   if (target.native) {
-    const headSource = buildHeadBootstrap({ bridges: [egenTargetConfigDef, egenAiConfigDef, egenTenantConfigDef] });
+    const headSource = buildHeadBootstrap({ bridges: [egenTargetConfigDef, egenTenantConfigDef] });
     const bodySource = buildBodyBootstrap({
       apiUrl: egenApiUrl,
       spaPath: egenPublicPath,
@@ -584,7 +529,6 @@ module.exports = (env, argv = []) => {
           egenCoreRoutes: Object.keys(coreRoutes).length > 0 && JSON.stringify(coreRoutes),
           egenCssFilename,
           egenExtraAssets: egenJsCssAssets.map((fileName) => 'assets/' + basename(fileName)),
-          egenAiConfigDef,
           egenTenantConfigDef,
           egenTargetConfigDef,
           egenBootstrap,

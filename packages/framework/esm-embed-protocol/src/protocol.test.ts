@@ -89,8 +89,8 @@ describe('validation des appels', () => {
     expect(validateCall('tenant', 'get', [1])).toBeTruthy();
     expect(validateCall('nope', 'x', [])).toMatch(/inconnue/);
     expect(validateCall('tenant', 'constructor', [])).toMatch(/inconnue/);
-    expect(validateCall('ai-tools', 'invoke', ['t', {}])).toMatch(/sens/);
-    expect(validateCall('ai-tools', 'invoke', ['t', {}], 'host-to-app')).toBeNull();
+    expect(validateCall('lifecycle', 'canLeave', [])).toMatch(/sens/);
+    expect(validateCall('lifecycle', 'canLeave', [], 'host-to-app')).toBeNull();
     expect(validateCall('navigation', 'report', ['//evil'])).toBeTruthy();
     expect(validateCall('notifications', 'show', [{ kind: 'info', title: 'ok' }])).toBeNull();
     expect(validateCall('notifications', 'show', [{ kind: 'x', title: 'ok' }])).toBeTruthy();

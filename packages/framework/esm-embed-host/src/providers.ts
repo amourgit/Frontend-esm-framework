@@ -27,12 +27,6 @@ export interface ExtensionInfo {
   meta: Record<string, unknown>;
 }
 
-export interface AiToolDescriptor {
-  name: string;
-  description: string;
-  inputSchema?: Record<string, unknown>;
-}
-
 /**
  * Services du Core mis à disposition des apps embarquées. Toute capacité sans fournisseur est
  * automatiquement refusée à la négociation (`UNAVAILABLE`) : on ne promet que ce qu'on sait servir.
@@ -54,9 +48,5 @@ export interface HostProviders {
   telemetry?: {
     log(level: 'debug' | 'info' | 'warn' | 'error', message: string, ctx: Record<string, unknown> | undefined, from: CallerContext): void;
     metric(name: string, value: number, tags: Record<string, unknown> | undefined, from: CallerContext): void;
-  };
-  aiTools?: {
-    register(moduleName: string, tools: AiToolDescriptor[], invoke: (name: string, args: Record<string, unknown>) => Promise<unknown>): void;
-    unregister(moduleName: string, names: string[]): void;
   };
 }

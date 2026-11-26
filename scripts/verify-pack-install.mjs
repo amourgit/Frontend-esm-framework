@@ -12,7 +12,7 @@
  * via le vrai registre npm pour tout le reste (react, rxjs, etc). Si une
  * dépendance interne n'est pas déclarée, `npm install` échoue ou
  * l'import() plante — exactement les bugs trouvés (esm-framework /
- * esm-ai-framework, esm-extensions / esm-globals+esm-translations,
+ * esm-extensions / esm-globals+esm-translations,
  * esm-app-shell / esm-globals+esm-offline+esm-utils, esm-navigation).
  */
 import { spawnSync } from 'node:child_process';
@@ -43,19 +43,6 @@ const BUNDLER_ONLY = new Set([
   // comme le font les applications Angular qui l'utilisent. Cause structurelle,
   // pas un défaut de packaging (exports/types vérifiés par publint et attw).
   '@egen-civitas/esm-angular-utils',
-  // esm-ai-extensions réexporte esm-ai-tools, dont le point d'entrée fait
-  // `export * from './native/index.js'`, qui importe showNotification/
-  // showSnackbar/showModal depuis esm-styleguide (donc son .scss embarqué,
-  // cf ci-dessus). Détecté via un run réel : l'import échoue à chaque
-  // fois, mais le message précis n'est PAS déterministe (parfois un
-  // '.scss' remonté par la détection dynamique ci-dessous, parfois une
-  // autre importation non résolue de la même arborescence styleguide
-  // rapportée en premier selon l'ordre de résolution ESM) — sans entrée
-  // explicite ici, ce même test passe ou échoue au hasard d'un run à
-  // l'autre pour la même cause structurelle. Voir aussi esm-ai-tools,
-  // déjà exclu ci-dessous via la détection dynamique (son échec est lui
-  // toujours et uniquement le .scss, jamais ambigu).
-  '@egen-civitas/esm-ai-extensions',
 ]);
 
 // Les paquets qui ne sont pas des librairies importables (ex. esm-app-shell, bundle applicatif navigateur servi tel quel

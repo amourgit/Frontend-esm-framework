@@ -29,7 +29,7 @@
 //  PHILOSOPHIE : ce mode doit être un cas de connexion RÉEL du point de vue
 //  de tout le reste du framework — pas un raccourci propre à une app. Une
 //  fois activé, TOUTE app ou package (y compris ceux qui ne touchent jamais
-//  à /login, comme esm-ai-assistant-app) doit pouvoir lire un utilisateur
+//  à /login) doit pouvoir lire un utilisateur
 //  authentifié via les mêmes canaux qu'une vraie connexion backend :
 //  useSession(), getSessionStore(), getCurrentUser(), getLoggedInUser().
 //  Aucun appel réseau n'est jamais fait vers le backend.

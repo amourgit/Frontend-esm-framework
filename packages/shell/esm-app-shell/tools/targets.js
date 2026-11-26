@@ -188,7 +188,7 @@ function resolveTarget(env) {
 }
 
 /**
- * Pont build → runtime : clés posées sur `window` par le HTML, sur le modèle des ponts `egenAi*` / `egenTenant*`.
+ * Pont build → runtime : clés posées sur `window` par le HTML, sur le modèle du pont `egenTenant*`.
  * Liste blanche : toute clé ajoutée ici doit être ajoutée au test (`targets.test.ts`) et ne jamais porter de secret (N3).
  *
  * Web : `null` (rien n'est injecté, le HTML Web reste identique, R2) ; l'absence de `window.egenTarget` vaut `web`.

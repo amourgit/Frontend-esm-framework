@@ -7,12 +7,11 @@
 //  dynamique par clé (`import.meta.env[key]`) ne serait de toute façon pas
 //  remplaçable par un `DefinePlugin` (qui ne fait que du remplacement
 //  textuel statique d'expressions littérales). C'est le même principe déjà
-//  documenté pour `process.env[key]` dans `esm-ai-config/src/defaults.ts`.
+//  connu pour `process.env[key]`.
 //
 //  La configuration passe donc par un unique canal : des variables globales
 //  `window.egenTenant*`, injectées côté serveur/build dans `index.html` par
-//  le shell (`esm-app-shell/rspack.config.js` + `src/index.ejs`), sur le
-//  modèle exact du pont déjà utilisé pour `EGEN_AI_*` → `window.egenAi*`.
+//  le shell (`esm-app-shell/rspack.config.js` + `src/index.ejs`).
 //
 //  VARIABLE D'ENVIRONNEMENT (.env, lue côté build par le shell)  →  GLOBAL RUNTIME
 //  ──────────────────────────────────────────────────────────────────────────────

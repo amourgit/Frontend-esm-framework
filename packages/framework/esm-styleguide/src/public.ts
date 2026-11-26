@@ -57,7 +57,6 @@ export * from './section/index.js';
 export * from './hero-mosaic/index.js';
 export * from './top-bar/index.js';
 export * from './sites/index.js';
-export * from './assistant/index.js';
 export * from './filters/index.js';
 export { Loader, type LoaderProps, showPageLoader, usePageLoading } from './spinner/index.js';
 export * from './ui/index.js';

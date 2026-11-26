@@ -3,3 +3,4 @@ export * from './page-background.utils.js';
 export * from './page-background.context.js';
 export * from './page-background.component.js';
 export * from './page-background.render.js';
+export * from './theme-palette.js';

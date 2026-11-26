@@ -4,24 +4,29 @@ import { GradientWave } from './gradient-wave.component.js';
 import { usePageBackground } from './page-background.context.js';
 import { claimPageBackground, releasePageBackground } from './page-background.store.js';
 import { cn } from './page-background.utils.js';
+import { hexWithAlpha, useThemePalette } from './theme-palette.js';
 
-/** Palette par défaut du fond animé de la page d'accueil. */
-const DEFAULT_HOME_GRADIENT_COLORS = ['#008080', '#0b192c', '#0ea5e9', '#042f2e', '#0284c7', '#064e3b'];
+const FALLBACK_GLOW_ACCENT = '#10b981';
 
 /**
  * Arrière-plan animé par défaut de l'application (fond WebGL `GradientWave`).
  * Sert de secours quand aucune page n'a déclaré d'image via `<PageBackground>`.
+ * Couleurs dérivées des tokens du thème (`--background`, `--primary`, `--accent`,
+ * `--chart-*`) : le fond suit le thème clair/sombre et les surcharges à chaud.
  */
 export function AnimatedHomeBackground({ className }: { className?: string }) {
+  const { colors, accent, key } = useThemePalette();
+  const glow = accent ?? FALLBACK_GLOW_ACCENT;
   return (
     <div
       className={cn(
-        'fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden select-none bg-[#030708]',
+        'fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden select-none bg-background',
         className,
       )}
     >
       <GradientWave
-        colors={DEFAULT_HOME_GRADIENT_COLORS}
+        key={key}
+        colors={colors}
         isPlaying={true}
         shadowPower={8}
         darkenTop={false}
@@ -33,7 +38,7 @@ export function AnimatedHomeBackground({ className }: { className?: string }) {
       <div
         className="absolute bottom-[-10%] left-[10%] w-[80%] h-[350px] rounded-full opacity-30 blur-[120px] pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(16,185,129,0.3) 0%, rgba(6,78,59,0.12) 50%, transparent 80%)',
+          background: `radial-gradient(ellipse at center, ${hexWithAlpha(glow, 0.3)} 0%, ${hexWithAlpha(glow, 0.12)} 50%, transparent 80%)`,
         }}
       />
     </div>
@@ -107,18 +112,20 @@ export function DefaultPageBackground({
   accent,
   children,
 }: DefaultBackgroundProps) {
+  const themePalette = useThemePalette();
   if (!imageSrc) {
     return <AnimatedHomeBackground className={className} />;
   }
 
   const fitClass =
     imageFit === 'fill' ? 'object-fill' : imageFit === 'contain' ? 'object-contain object-center' : 'object-cover object-center';
+  const glowAccent = accent ?? themePalette.accent ?? FALLBACK_GLOW_ACCENT;
 
   return (
     <div
       className={cn(
         'fixed inset-0 pointer-events-none overflow-hidden z-0 select-none',
-        !className?.includes('bg-') && 'bg-[#030708]',
+        !className?.includes('bg-') && 'bg-background',
         className,
       )}
     >
@@ -191,7 +198,7 @@ export function DefaultPageBackground({
           style={{
             background: accent
               ? `radial-gradient(ellipse at center, ${accent}66 0%, ${accent}22 50%, transparent 80%)`
-              : 'radial-gradient(ellipse at center, rgba(16,185,129,0.3) 0%, rgba(6,78,59,0.12) 50%, transparent 80%)',
+              : `radial-gradient(ellipse at center, ${hexWithAlpha(glowAccent, 0.3)} 0%, ${hexWithAlpha(glowAccent, 0.12)} 50%, transparent 80%)`,
           }}
         />
       )}
@@ -231,7 +238,7 @@ export function GlobalPageBackground({ fallback = 'animated' }: GlobalPageBackgr
 
   if (config?.customComponent) {
     return (
-      <div className={cn('fixed inset-0 pointer-events-none overflow-hidden z-0 select-none bg-[#030708]', config.className)}>
+      <div className={cn('fixed inset-0 pointer-events-none overflow-hidden z-0 select-none bg-background', config.className)}>
         {config.customComponent}
       </div>
     );

@@ -1,5 +1,13 @@
 # @egen-civitas/egen
 
+## 3.0.1
+
+### Patch Changes
+
+- Updated dependencies [b2d283e]
+  - @egen-civitas/esm-app-shell@4.0.0
+  - @egen-civitas/rspack-config@3.0.0
+
 ## 3.0.0
 
 ### Major Changes

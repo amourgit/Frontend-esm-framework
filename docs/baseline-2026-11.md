@@ -63,7 +63,7 @@ Après `yarn build`, `packages/shell/esm-app-shell/dist` (287 fichiers) **ne con
 
 ## Écarts entre la doc de développement et le code (à reporter dans `EGEN-FRAMEWORK-DEV.md`)
 
-1. **`env-bridge.test.ts` (B3, G1)** : le « garde-fou existant » est dans `esm-ai-config/src/env-bridge.test.ts` et ne couvre que `EGEN_AI_*`
+1. **`env-bridge.test.ts` (B3, G1)** : le « garde-fou existant » ne couvrait que le pont de l'ancienne couche d'assistance (retirée depuis)
    (synchro avec `defaults.ts`). Il n'y a **aucun** test sur le pont `EGEN_TENANT_*`. Le test pour `egenTarget` et le contrôle
    `SECRET/TOKEN/…` sont donc à **créer** dans le shell.
 2. **`resolveTarget(process.env)` (B1/B2)** : les validations « `EGEN_ENV` ≠ production » et « `EGEN_DEV_NO_AUTH` » ne peuvent pas lire `process.env` brut :
@@ -71,4 +71,3 @@ Après `yarn build`, `packages/shell/esm-app-shell/dist` (287 fichiers) **ne con
    L'appel se fait donc **dans** `module.exports`, avec ces deux valeurs résolues injectées dans l'objet passé à `resolveTarget`.
 3. **`isMeaningfulImportmap` (B1)** : définie dans `rspack.config.js`, elle n'est pas importable depuis `tools/targets.js` (dépendance circulaire).
    Elle est déplacée dans `tools/helpers.js` et importée aux deux endroits (une seule définition).
-4. **`resolveTarget` homonyme** : `esm-ai-tools/src/native/target.ts` exporte aussi un `resolveTarget` (cible d'outils IA). Pas de collision (autre paquet), mais à connaître.

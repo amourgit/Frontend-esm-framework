@@ -16,7 +16,7 @@
 
 | | Framework | Core |
 | --- | --- | --- |
-| Fichiers `.scss` | 65 (dont 6 globaux : `_all`, `_carbon-bridge` 194 l., `_overrides` 731 l., `_vars`, `_glass`, `_panel`) | 75 (17 `implementer-tools`, 16 `offline-tools`, 5 `login`, 5 `ai-assistant`, 4 `quick-access`…) |
+| Fichiers `.scss` | 65 (dont 6 globaux : `_all`, `_carbon-bridge` 194 l., `_overrides` 731 l., `_vars`, `_glass`, `_panel`) | 75 (17 `implementer-tools`, 16 `offline-tools`, 5 `login`, 4 `quick-access`…) |
 | `.ts/.tsx` important `@carbon/*` | 25 (24 dans `esm-styleguide`, 1 dans `esm-app-shell`) | 45 (18 `implementer-tools`, 12 `offline-tools`, 5 `login`, 3 `help-menu`…) |
 | SCSS important `@carbon/*` | 26 | `@carbon/layout` 37×, `@carbon/type` 17×, thème/boutons/couleurs ~11× |
 | Dépendances | `@carbon/react`, `@carbon/charts`, `sass`, `sass-loader`, `sass-embedded` (styleguide, shell, egen, rspack/webpack-config, storybook) | `@carbon/react`, `@carbon/styles`, `@carbon/icons-react` (apps), `sass` |
@@ -78,7 +78,7 @@ Changesets en `major` pour `esm-styleguide`, `esm-framework`, `esm-app-shell`, `
 
 **Phase 6 — Core (75 SCSS + 45 TSX)**
 `yarn deps:egen` sur les nouvelles versions, puis, **app par app, du plus lourd au plus léger** : `implementer-tools` (35), `offline-tools` (28),
-`login` (10), `ai-assistant`, `quick-access`, `devtools`, `help-menu`, `home`, `language`, `user-profile`, `side-panel`, `footer`…
+`login` (10), `quick-access`, `devtools`, `help-menu`, `home`, `language`, `user-profile`, `side-panel`, `footer`…
 Chaque app : composants Carbon → composants du styleguide, `.scss` → classes Tailwind (ou variables CSS pour les valeurs dynamiques),
 suppression de `@carbon/*`/`sass` de son `package.json`, tests, build, push sur `main`.
 Fin : test d'architecture sans allow-list, `@carbon/*` et `sass` retirés de la racine, `yarn.lock` régénéré, suivi mis à jour.

@@ -15,7 +15,7 @@ Inventaire réalisé le 2026-11-13 (`grep -rn "localStorage\|sessionStorage\|ind
 | `egen:devtools` | localStorage | `esm-api`, shell | Drapeau de développement | Sans effet en natif (build `production`) |
 | langue de session / par défaut (dev bypass) | sessionStorage / localStorage | `esm-api` | Préférence | Bypass d'auth désactivé en natif (F1) |
 | `egen:temporaryConfig` | localStorage | `esm-config` | Configuration temporaire | Inchangé |
-| `egen:feature-flag:*`, `…-meta:*` | localStorage | `esm-feature-flags`, `esm-ai-context` | Préférences | Inchangé |
+| `egen:feature-flag:*`, `…-meta:*` | localStorage | `esm-feature-flags` | Préférences | Inchangé |
 | mode hors ligne (`offlineModeStorageKey`) | localStorage / sessionStorage | `esm-offline` | Préférence | Inchangé |
 | Bases Dexie (`OfflineDb`, données hors ligne) | IndexedDB | `esm-offline` | **Données métier** potentiellement sensibles | Inchangé — **à valider sur appareil** |
 | Base du service worker (`ServiceWorkerDb`) | IndexedDB | `shell/esm-app-shell` | Cache technique | Inchangé |

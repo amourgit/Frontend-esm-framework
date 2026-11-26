@@ -29,7 +29,7 @@ Pont build → runtime : en natif seulement, le HTML pose `window.egenTarget` (`
 - `EGEN_ESM_IMPORTMAP` : JSON valide, import map non vide ; `EGEN_ESM_IMPORTMAP_URL` interdit.
 - `EGEN_ROUTES` : JSON valide, registre non vide ; `EGEN_ROUTES_URL` interdit.
 - Un artefact natif est **autonome** : aucune ressource de composition distante.
-- Les noms des ponts `EGEN_AI_*` / `EGEN_TENANT_*` ne doivent pas évoquer un secret (G1).
+- Les noms du pont `EGEN_TENANT_*` ne doivent pas évoquer un secret (G1).
 
 ## CSP native
 

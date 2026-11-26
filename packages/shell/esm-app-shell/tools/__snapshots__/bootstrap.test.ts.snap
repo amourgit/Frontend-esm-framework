@@ -43,12 +43,6 @@ exports[`index.ejs rendu > Web : inchangé > rendu de référence : le HTML Web 
 
 
     <script>
-      // Pont EGEN_AI_* (.env, build) → window.egenAi* (lu par @egen-civitas/esm-ai-config au runtime)
-      Object.assign(window, {"egenAiEnabled":true});
-    </script>
-
-
-    <script>
       // Pont EGEN_TENANT_* (.env, build) → window.egenTenant* (lu par @egen-civitas/esm-tenant au runtime)
       Object.assign(window, {"egenTenantMode":"off"});
     </script>
@@ -112,7 +106,6 @@ exports[`index.ejs rendu > Web : inchangé > rendu de référence : le HTML Web 
     <div id="egen-page-background-container"></div>
     <div id="egen-workspaces-container"></div>
     <div id="egen-top-nav-app-container"></div>
-    <div id="egen-ai-assistant-app-container"></div>
     <!-- Plan de travail (façon IntelliJ), rendu par le shell (voir renderWorkbench) :
          rails fixes gauche/droit, puis zones gauche, droite et bas redimensionnables.
          Les apps y déclarent leurs fenêtres d'outils par extensions (slots shell-rail-*). -->

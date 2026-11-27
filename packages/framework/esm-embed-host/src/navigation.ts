@@ -1,5 +1,5 @@
 /**
- * Navigation partagée Shell ↔ application embarquée (protocole 1.1, additif).
+ * Navigation partagée Shell ↔ application embarquée (capacité `navigation` du protocole 2).
  *
  * L'URL du Core reste la source de vérité, comme pour une app interne : `<base>/<route>/<chemin-de-l'app>?q#h`.
  * Ce module ne contient que des fonctions pures (aucun accès au DOM), testées isolément.

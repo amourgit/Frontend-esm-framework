@@ -34,7 +34,7 @@ defineConformance(myConnectFn, { describe, it, expect }); // SDK officiel ou imp
 ## 3. Simulateur de Shell dans le navigateur
 
 ```bash
-npx egen-embed-sim --app http://localhost:3000 --manifest egen-app.json
+npx egen-embed-sim --app http://localhost:3000 --manifest egen-config.json
 # → déclarez dans l'app : hostOrigins: ['http://127.0.0.1:4100']
 ```
 

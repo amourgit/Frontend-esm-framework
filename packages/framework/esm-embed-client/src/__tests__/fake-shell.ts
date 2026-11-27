@@ -22,7 +22,7 @@ export class FakeShell {
   }
 
   hello(nonce = 'nonce-0123456789', opts: Parameters<FakeShell['deliver']>[1] = {}) {
-    this.deliver(wrapHandshake(this.moduleName, { kind: 'hello', nonce, protocols: [EGEN_EMBED_PROTOCOL, 1] }), opts);
+    this.deliver(wrapHandshake(this.moduleName, { kind: 'hello', nonce, protocols: [EGEN_EMBED_PROTOCOL] }), opts);
   }
 
   /** Accepte la connexion : ouvre un vrai canal et envoie `port`. */

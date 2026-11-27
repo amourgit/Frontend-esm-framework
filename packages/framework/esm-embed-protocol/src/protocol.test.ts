@@ -22,9 +22,9 @@ const NONCE = 'abcdef0123456789';
 
 describe('gardes de poignée de main', () => {
   it('accepte une enveloppe et un hello valides', () => {
-    const env = parseEnvelope({ egen: 2, moduleName: '@a/b', message: { kind: 'hello', nonce: NONCE, protocols: [2, 1] } });
+    const env = parseEnvelope({ egen: 2, moduleName: '@a/b', message: { kind: 'hello', nonce: NONCE, protocols: [2] } });
     expect(env?.message.kind).toBe('hello');
-    expect(parseHello(env!.message)?.protocols).toEqual([2, 1]);
+    expect(parseHello(env!.message)?.protocols).toEqual([2]);
   });
   it('rejette formes invalides', () => {
     expect(parseEnvelope(null)).toBeNull();
@@ -169,7 +169,7 @@ describe('grants effectifs (demandé ∩ approuvé)', () => {
 describe('négociation', () => {
   it('protocole', () => {
     expect(negotiateProtocol(2)).toBe(2);
-    expect(negotiateProtocol(1)).toBe(1);
+    expect(negotiateProtocol(1)).toBeNull();
     expect(negotiateProtocol(3)).toBeNull();
   });
   it('capacités', () => {

@@ -10,7 +10,7 @@ export interface SimulatorOptions {
   app: string;
   port?: number;
   host?: string;
-  /** Manifeste `egen-app.json` de l'app (objet déjà lu). Sans manifeste : l'opérateur simulé définit seul. */
+  /** Déclaration `egen-config.json` de l'app (objet déjà lu). Sans manifeste : l'opérateur simulé définit seul. */
   manifest?: unknown;
   /** Approuver toutes les capacités demandées (défaut) ou seulement celles « par défaut » (`strict`). */
   strict?: boolean;
@@ -35,6 +35,8 @@ function approvedFor(manifest: EmbedManifest | undefined, strict: boolean): Appr
     const asked = manifest.capabilities[id];
     if (asked !== undefined && !CAPABILITIES[id].defaultGrant) out[id] = asked;
   }
+  // droits d'iframe : la demande de l'app est approuvée telle quelle (le simulateur joue l'opérateur indulgent)
+  if (manifest.iframe) out.iframe = manifest.iframe;
   return out;
 }
 
@@ -50,6 +52,7 @@ export async function startSimulator(o: SimulatorOptions): Promise<Simulator> {
     app: appUrl.href,
     moduleName: manifest?.name ?? '@acme/esm-sim-app',
     manifestCapabilities: manifest?.capabilities,
+    manifestIframe: manifest?.iframe,
     approved: approvedFor(manifest, !!o.strict),
     extensions: { 'topbar-nav-slot': [{ name: 'nav-demo', moduleName: '@egen/esm-demo-app', order: 1, meta: { label: 'Démo', route: 'demo' } }] },
   };
@@ -102,7 +105,7 @@ h1{font-size:14px;margin:0 0 8px}h2{font-size:12px;margin:12px 0 4px;text-transf
 <h2>Notifications</h2><div id="toasts"></div>
 <h2>Journal des échanges</h2><pre id="log"></pre></aside>
 <script type="module">
-import { effectiveGrants } from '@egen-civitas/esm-embed-protocol';
+import { effectiveGrants, effectiveIframe } from '@egen-civitas/esm-embed-protocol';
 import { createEmbedHost } from '/vendor/host/index.js';
 const cfg = await (await fetch('/api/config')).json();
 const $ = (id) => document.getElementById(id);
@@ -122,8 +125,9 @@ const providers = {
   telemetry: { log: (...a) => log('← telemetry.log', a.slice(0, 3)), metric: (...a) => log('← telemetry.metric', a.slice(0, 3)) },
 };
 const grants = effectiveGrants(cfg.manifestCapabilities, cfg.approved);
-$('info').innerHTML = '<b>App</b> ' + cfg.app + '<br><b>Module</b> ' + cfg.moduleName + '<br><b>hostOrigins à déclarer dans l’app</b> <code>' + location.origin + '</code><br><b>Capacités accordées</b> ' + Object.keys(grants).join(', ');
-const host = createEmbedHost({ moduleName: cfg.moduleName, src: cfg.app, grants, providers, onConnect: (g, d) => log('✔ connecté', { accordées: g.map((x) => x.id), refusées: d }), onClose: (r) => log('✖ fermé', r) });
+const iframe = effectiveIframe(cfg.manifestIframe, cfg.approved.iframe);
+$('info').innerHTML = '<b>App</b> ' + cfg.app + '<br><b>Module</b> ' + cfg.moduleName + '<br><b>hostOrigins à déclarer dans l’app</b> <code>' + location.origin + '</code><br><b>Capacités accordées</b> ' + Object.keys(grants).join(', ') + '<br><b>Droits d’iframe accordés</b> ' + (iframe.sandbox.concat(iframe.allow).join(', ') || 'socle seul');
+const host = createEmbedHost({ moduleName: cfg.moduleName, src: cfg.app, grants, iframe, providers, onConnect: (g, d) => log('✔ connecté', { accordées: g.map((x) => x.id), refusées: d }), onClose: (r) => log('✖ fermé', r) });
 host.mount($('stage'));
 $('locale').onclick = () => locale.set(locale.get() === 'fr' ? 'en' : 'fr');
 $('event').onclick = () => (topics.get('core.sim.ping') || []).forEach((f) => f({ at: Date.now() }));

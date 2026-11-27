@@ -1,4 +1,4 @@
-import { effectiveGrants, type ApprovedGrants, type CapabilityId, type GrantConfig } from '@egen-civitas/esm-embed-protocol';
+import { effectiveGrants, effectiveIframe, type ApprovedGrants, type CapabilityId, type EffectiveIframeRights, type GrantConfig, type IframeRights } from '@egen-civitas/esm-embed-protocol';
 import type { ConnectOptions } from '@egen-civitas/esm-embed-client';
 import { createBus, HostConnection, type ExtensionInfo, type HostProviders } from '@egen-civitas/esm-embed-host';
 
@@ -8,7 +8,9 @@ export interface TestHostOptions {
   origin?: string;
   /** Capacités demandées par le manifeste de l'app (défaut : aucune demande explicite = l'opérateur définit seul). */
   manifestCapabilities?: Partial<Record<CapabilityId, GrantConfig>>;
-  /** Plafond fixé par l'opérateur (défaut : rien d'approuvé hors capacités « par défaut »). */
+  /** Droits d'iframe demandés par l'app (`iframe` de `egen-config.json`). */
+  manifestIframe?: IframeRights;
+  /** Plafond fixé par l'opérateur (défaut : rien d'approuvé hors capacités « par défaut » ; `iframe` : plafond des droits d'iframe). */
   approved?: ApprovedGrants;
   tenant?: { id: string | null };
   locale?: string;
@@ -29,6 +31,8 @@ export interface TestHost {
   /** À passer à `connectToEgen({ ...host.connectOptions, capabilities: [...] })`. */
   connectOptions: Pick<ConnectOptions, 'moduleName' | 'hostOrigins' | 'window' | 'host' | 'timeoutMs'>;
   connection: HostConnection;
+  /** Droits d'iframe que le Core appliquerait (`demande ∩ plafond`) : de quoi vérifier ce que l'app obtient réellement. */
+  iframe: EffectiveIframeRights;
   /** Journal des services du Core sollicités par l'app. */
   calls: CallRecord[];
   notifications: Array<{ id?: string; kind: string; title: string; subtitle?: string }>;
@@ -176,6 +180,7 @@ export function createTestHost(o: TestHostOptions = {}): TestHost {
   return {
     connectOptions: { moduleName, hostOrigins: [origin], window: appWindow as any, host: hostWindow as any, timeoutMs: 500 },
     connection,
+    iframe: effectiveIframe(o.manifestIframe, o.approved?.iframe),
     calls,
     notifications,
     published,

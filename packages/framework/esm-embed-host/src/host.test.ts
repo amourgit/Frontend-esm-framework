@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { connectToEgen } from '@egen-civitas/esm-embed-client';
-import { effectiveGrants } from '@egen-civitas/esm-embed-protocol';
+import { effectiveGrants, effectiveIframe } from '@egen-civitas/esm-embed-protocol';
 import { createEmbedHost, type EmbedHost, type HostProviders } from './index.js';
 
 const SHELL = 'https://shell.exemple.org';
@@ -126,47 +126,71 @@ describe('protocole 2', () => {
   });
 });
 
-describe('pont 1.1 (compatibilité)', () => {
-  it('ready → init : langue et base SPA, jamais de session ni de jeton ; enveloppe egen:1', async () => {
-    mount();
-    fromApp({ egen: 1, moduleName: MODULE, message: { kind: 'ready' } });
-    await tick();
-    const init = posted.find((p) => p.message.egen === 1 && p.message.message.kind === 'init')!;
-    expect(init.origin).toBe(APP);
-    expect(init.message.message.payload).toMatchObject({ moduleName: MODULE, locale: 'fr', spaBase: '/egen/spa/' });
-    expect(init.message.message.payload.session).toBeUndefined();
-    expect(JSON.stringify(init.message)).not.toMatch(/session|token/i);
-  });
-
-  it('location → URL du Core mise à jour, sans paramètres sensibles', async () => {
-    mount();
-    fromApp({ egen: 1, moduleName: MODULE, message: { kind: 'location', path: '/themes/7?tab=a&token=ABC', title: 'Thème 7' } });
-    expect(window.location.pathname).toBe('/egen/spa/studio/themes/7');
-    expect(window.location.search).toBe('?tab=a');
-    expect(host!.iframe.title).toBe('Thème 7');
-  });
-
-  it('resize et navigation interne ; chemins externes refusés', () => {
+describe('protocole 1 retiré (voie unique)', () => {
+  it('un ancien message `{ egen: 1 }` est ignoré : aucune réponse, aucune navigation, aucune mise à jour du Core', async () => {
     const onNavigate = vi.fn();
     const h = mount({ onNavigate });
-    fromApp({ egen: 1, moduleName: MODULE, message: { kind: 'resize', height: 733.2 } });
-    expect(h.iframe.style.height).toBe('734px');
-    fromApp({ egen: 1, moduleName: MODULE, message: { kind: 'navigate', to: '//evil.com' } });
-    fromApp({ egen: 1, moduleName: MODULE, message: { kind: 'navigate', to: '/dashboard' } });
-    expect(onNavigate).toHaveBeenCalledTimes(1);
-    expect(onNavigate).toHaveBeenCalledWith('/dashboard');
-  });
-
-  it('désactivable : legacy:false', async () => {
-    mount({ legacy: false });
+    const before = window.location.href;
     fromApp({ egen: 1, moduleName: MODULE, message: { kind: 'ready' } });
+    fromApp({ egen: 1, moduleName: MODULE, message: { kind: 'location', path: '/themes/7' } });
+    fromApp({ egen: 1, moduleName: MODULE, message: { kind: 'navigate', to: '/dashboard' } });
+    fromApp({ egen: 1, moduleName: MODULE, message: { kind: 'resize', height: 733 } });
     await tick();
-    expect(posted.some((p) => p.message.egen === 1)).toBe(false);
+    expect(posted).toHaveLength(0);
+    expect(onNavigate).not.toHaveBeenCalled();
+    expect(window.location.href).toBe(before);
+    expect(h.iframe.style.height).toBe('');
   });
 
+  it('la poignée de main ne propose que le protocole 2', async () => {
+    const h = mount();
+    h.connection.hello();
+    const hello = posted.find((p) => p.message?.message?.kind === 'hello');
+    expect(hello?.message.message.protocols).toEqual([2]);
+  });
+});
+
+describe('droits d’iframe négociés (sandbox / allow)', () => {
+  it('étendent le socle sans jamais le réduire, et posent l’attribut allow', () => {
+    const h = mount({ iframe: { sandbox: ['allow-downloads', 'allow-modals', 'allow-popups-to-escape-sandbox'], allow: ['clipboard-read', 'clipboard-write', 'fullscreen'] } });
+    expect(h.iframe.getAttribute('sandbox')).toBe('allow-scripts allow-same-origin allow-forms allow-popups allow-downloads allow-modals allow-popups-to-escape-sandbox');
+    expect(h.iframe.getAttribute('allow')).toBe('clipboard-read; clipboard-write; fullscreen');
+  });
+
+  it('sans droits négociés : socle seul, pas d’attribut allow', () => {
+    const h = mount({ iframe: { sandbox: [], allow: [] } });
+    expect(h.iframe.getAttribute('sandbox')).toBe('allow-scripts allow-same-origin allow-forms allow-popups');
+    expect(h.iframe.hasAttribute('allow')).toBe(false);
+  });
+
+  it('garde de l’hôte : jetons hors liste blanche et doublons écartés (jamais d’auto-octroi, jamais de top-navigation)', () => {
+    const h = mount({ iframe: { sandbox: ['allow-top-navigation', 'allow-downloads', 'allow-downloads', 'allow-popups'], allow: ['usb', 'fullscreen', 'fullscreen'] } });
+    const sandbox = h.iframe.getAttribute('sandbox')!;
+    expect(sandbox).toBe('allow-scripts allow-same-origin allow-forms allow-popups allow-downloads');
+    expect(sandbox).not.toMatch(/top-navigation/);
+    expect(h.iframe.getAttribute('allow')).toBe('fullscreen');
+  });
+
+  it('le calcul demandé ∩ approuvé du protocole alimente l’hôte', () => {
+    const rights = effectiveIframe({ sandbox: ['allow-downloads', 'allow-modals'], allow: ['clipboard-write', 'camera'] }, { sandbox: ['allow-downloads'], allow: ['clipboard-write', 'fullscreen'] });
+    const h = mount({ iframe: rights });
+    expect(h.iframe.getAttribute('sandbox')).toContain('allow-downloads');
+    expect(h.iframe.getAttribute('sandbox')).not.toContain('allow-modals');
+    expect(h.iframe.getAttribute('allow')).toBe('clipboard-write');
+  });
+
+  it('l’avertissement « bac à sable sans effet » reste actif avec des droits négociés', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    createEmbedHost({ moduleName: MODULE, src: `${SHELL}/app`, grants: {}, providers, iframe: { sandbox: ['allow-downloads'] } });
+    expect(warn).toHaveBeenCalled();
+    warn.mockRestore();
+  });
+});
+
+describe('origine', () => {
   it('messages d’une autre origine ignorés', async () => {
     mount();
-    fromApp({ egen: 1, moduleName: MODULE, message: { kind: 'ready' } }, { origin: 'https://evil.exemple.org' });
+    fromApp({ egen: 2, moduleName: MODULE, message: { kind: 'probe' } }, { origin: 'https://evil.exemple.org' });
     await tick();
     expect(posted).toHaveLength(0);
   });

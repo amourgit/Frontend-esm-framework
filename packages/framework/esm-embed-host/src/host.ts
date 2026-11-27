@@ -1,4 +1,4 @@
-import { type CapabilityDenied, type CapabilityGranted, type EffectiveGrants, type Limits } from '@egen-civitas/esm-embed-protocol';
+import { sanitizeIframeRights, type CapabilityDenied, type CapabilityGranted, type EffectiveGrants, type IframeRights, type Limits } from '@egen-civitas/esm-embed-protocol';
 import { createBus } from './bus.js';
 import { HostConnection } from './connection.js';
 import { buildCoreUrl, buildEmbedSrc, coreSubpath, createRateLimiter, stripSensitive, toAppPath, toCorePath, normalizeAppPath, type NavigationOptions } from './navigation.js';
@@ -6,7 +6,7 @@ import type { HostProviders, Unsub } from './providers.js';
 import type { HostControls } from './table.js';
 
 export interface EmbedHostOptions {
-  /** Nom du module (= `name` du manifeste). */
+  /** Nom du module (= `name` de `egen-config.json`). */
   moduleName: string;
   /** URL de base de l'application embarquée. */
   src: string;
@@ -15,8 +15,11 @@ export interface EmbedHostOptions {
   /** Grants effectifs (`effectiveGrants(manifeste.capabilities, approuvés)`). */
   grants: EffectiveGrants;
   providers: HostProviders;
-  /** Attribut `sandbox` (défaut : scripts, même origine, formulaires, popups). */
-  sandbox?: string;
+  /**
+   * Droits d'iframe EFFECTIFS (`effectiveIframe(manifeste.iframe, approuvés.iframe)`) : ils étendent le socle
+   * (`allow-scripts allow-same-origin allow-forms allow-popups`). Les jetons hors liste blanche sont écartés.
+   */
+  iframe?: IframeRights;
   title?: string;
   minHeight?: number;
   /** Navigation partagée Core ↔ app (URL du Core = source de vérité). Absent ou `none` : opaque. */
@@ -25,8 +28,6 @@ export interface EmbedHostOptions {
   onNavigate?: (to: string) => void;
   limits?: Partial<Limits>;
   hostVersion?: string;
-  /** Accepter aussi les apps qui parlent encore le pont 1.1 (défaut : oui). */
-  legacy?: boolean;
   window?: Window;
   onConnect?(granted: CapabilityGranted[], denied: CapabilityDenied[]): void;
   onClose?(reason: string): void;
@@ -41,11 +42,12 @@ export interface EmbedHost {
   destroy(): void;
 }
 
-const DEFAULT_SANDBOX = 'allow-scripts allow-same-origin allow-forms allow-popups';
+/** Socle d'isolation appliqué à toute app embarquée ; les droits négociés (`iframe`) ne peuvent que l'étendre. */
+const BASE_SANDBOX = ['allow-scripts', 'allow-same-origin', 'allow-forms', 'allow-popups'];
 
 /**
  * Hôte d'une app embarquée : iframe sécurisée, poignée de main v2 (`HostConnection`), navigation partagée,
- * événements de cycle de vie, et pont 1.1 pour les apps qui ne parlent pas encore le protocole 2.
+ * événements de cycle de vie. Une seule voie : le protocole 2 (SDK `esm-embed-client`).
  * Sécurité : messages acceptés seulement de l'iframe elle-même ET de l'origine autorisée ; envoi toujours avec une origine explicite.
  */
 export function createEmbedHost(opts: EmbedHostOptions): EmbedHost {
@@ -63,7 +65,8 @@ export function createEmbedHost(opts: EmbedHostOptions): EmbedHost {
   const src = nav ? buildEmbedSrc(opts.src, initialAppPath, nav.mode) : opts.src;
   const origin = opts.allowedOrigin ?? new URL(src, win.location.href).origin;
   if (origin === '*' || origin === 'null') throw new Error('allowedOrigin invalide : une origine explicite est requise.');
-  const sandbox = opts.sandbox ?? DEFAULT_SANDBOX;
+  const rights = sanitizeIframeRights(opts.iframe);
+  const sandbox = [...new Set([...BASE_SANDBOX, ...rights.sandbox])].join(' ');
   if (origin === win.location.origin && /allow-scripts/.test(sandbox) && /allow-same-origin/.test(sandbox)) {
     console.warn(`[egen] ${opts.moduleName} : application embarquée de même origine que le Shell avec « allow-scripts allow-same-origin » : le bac à sable est sans effet. Héberger l'application sur une autre origine (sous-domaine).`);
   }
@@ -72,6 +75,7 @@ export function createEmbedHost(opts: EmbedHostOptions): EmbedHost {
   iframe.src = src;
   iframe.title = opts.title ?? opts.moduleName;
   iframe.setAttribute('sandbox', sandbox);
+  if (rights.allow.length) iframe.setAttribute('allow', rights.allow.join('; '));
   iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
   iframe.setAttribute('data-egen-fill', '');
   iframe.style.cssText = `width:100%;border:0;display:block;min-height:${opts.minHeight ?? 400}px`;
@@ -80,13 +84,10 @@ export function createEmbedHost(opts: EmbedHostOptions): EmbedHost {
   const allowLocation = createRateLimiter();
   const stop: Unsub[] = [];
   let seq = 0;
-  let legacySeen = false;
-  let legacyReady = false;
 
   const postRaw = (message: unknown, transfer?: Transferable[]) => iframe.contentWindow?.postMessage(message, origin, transfer);
-  const legacySend = (message: unknown) => postRaw({ egen: 1, moduleName: opts.moduleName, message });
 
-  /** Page courante annoncée par l'app → URL du Core (partagé entre le protocole 2 et le pont 1.1). */
+  /** Page courante annoncée par l'app → URL du Core. */
   const reportLocation = (path: unknown, o?: { replace?: boolean; title?: string }) => {
     if (!nav || !allowLocation()) return;
     if (typeof o?.title === 'string') {
@@ -124,41 +125,9 @@ export function createEmbedHost(opts: EmbedHostOptions): EmbedHost {
     onClose: opts.onClose,
   });
 
-  /**
-   * Pont 1.1 : compatibilité des apps qui ne parlent pas encore le protocole 2. La session n'est PLUS transmise (règle d'or,
-   * doc 17 §2) : une app obtient son identité auprès de Keycloak. Seuls restent la langue, la navigation, le titre et la hauteur.
-   */
-  const handleLegacy = async (data: any) => {
-    if (opts.legacy === false || connection.connected) return;
-    if (!data || data.egen !== 1 || data.moduleName !== opts.moduleName || !data.message || typeof data.message.kind !== 'string') return;
-    const msg = data.message;
-    switch (msg.kind) {
-      case 'ready': {
-        legacySeen = true;
-        legacyReady = true;
-        const locale = opts.providers.locale ? await opts.providers.locale.get() : (win as any).i18next?.language;
-        legacySend({ kind: 'init', payload: { moduleName: opts.moduleName, locale, spaBase: spaBase(), navigation: nav ? { mode: nav.mode, route: nav.route } : undefined } });
-        break;
-      }
-      case 'navigate':
-        controls.navigate?.(msg.to);
-        break;
-      case 'resize':
-        controls.resize?.(msg.height);
-        break;
-      case 'title':
-        if (typeof msg.title === 'string') iframe.title = msg.title.slice(0, 200);
-        break;
-      case 'location':
-        legacySeen = true;
-        reportLocation(msg.path, { replace: !!msg.replace, title: msg.title });
-        break;
-    }
-  };
-
   const onMessage = (event: MessageEvent) => {
     if (event.source !== iframe.contentWindow || event.origin !== origin) return;
-    if (!connection.handle(event.data)) void handleLegacy(event.data);
+    connection.handle(event.data);
   };
 
   return {
@@ -180,7 +149,6 @@ export function createEmbedHost(opts: EmbedHostOptions): EmbedHost {
           const appPath = toAppPath(cur, nav);
           if (!appPath) return;
           if (connection.connected) channel.emit('goto', { path: appPath, seq: ++seq });
-          else if (legacySeen) legacySend({ kind: 'goto', path: appPath, seq: ++seq });
           else iframe.src = buildEmbedSrc(opts.src, appPath, nav.mode);
         };
         win.addEventListener('single-spa:routing-event', onCoreLocation);
@@ -202,10 +170,6 @@ export function createEmbedHost(opts: EmbedHostOptions): EmbedHost {
         win.removeEventListener('focus', onFocus);
         win.removeEventListener('blur', onBlur);
       });
-
-      // Pont 1.1 : la langue est poussée après `ready`.
-      const p = opts.providers;
-      if (p.locale?.subscribe) stop.push(p.locale.subscribe((l) => legacyReady && !connection.connected && l && legacySend({ kind: 'locale', locale: l })));
 
       container.appendChild(iframe);
     },

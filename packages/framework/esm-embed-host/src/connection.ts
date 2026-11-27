@@ -47,7 +47,7 @@ export class HostConnection {
     this.reset();
     this.nonce = createNonce();
     this.state = 'hello';
-    this.o.post(wrapHandshake(this.o.moduleName, { kind: 'hello', nonce: this.nonce, protocols: [EGEN_EMBED_PROTOCOL, 1], hostVersion: this.o.hostVersion }));
+    this.o.post(wrapHandshake(this.o.moduleName, { kind: 'hello', nonce: this.nonce, protocols: [EGEN_EMBED_PROTOCOL], hostVersion: this.o.hostVersion }));
   }
 
   /** Traite un message de poignée de main v2 ; `true` si le message est de la famille v2 (consommé). */
@@ -57,7 +57,7 @@ export class HostConnection {
     const m = env.message;
     if (m.kind === 'probe') {
       if (this.state === 'idle') this.hello();
-      else if (this.state === 'hello' && this.nonce) this.o.post(wrapHandshake(this.o.moduleName, { kind: 'hello', nonce: this.nonce, protocols: [EGEN_EMBED_PROTOCOL, 1], hostVersion: this.o.hostVersion }));
+      else if (this.state === 'hello' && this.nonce) this.o.post(wrapHandshake(this.o.moduleName, { kind: 'hello', nonce: this.nonce, protocols: [EGEN_EMBED_PROTOCOL], hostVersion: this.o.hostVersion }));
     } else if (m.kind === 'connect' && this.state === 'hello') {
       const c = parseConnect(m);
       if (!c || c.nonce !== this.nonce || negotiateProtocol(c.protocol, [EGEN_EMBED_PROTOCOL]) === null) return true;

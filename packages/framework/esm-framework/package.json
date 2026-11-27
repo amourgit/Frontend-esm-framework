@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-framework",
-  "version": "6.0.0",
+  "version": "6.1.0",
   "license": "MPL-2.0",
   "type": "module",
   "main": "dist/index.js",
@@ -82,7 +82,7 @@
     "@egen-civitas/esm-react-utils": "^3.0.1",
     "@egen-civitas/esm-routes": "^1.2.0",
     "@egen-civitas/esm-state": "^1.0.3",
-    "@egen-civitas/esm-styleguide": "^7.0.0",
+    "@egen-civitas/esm-styleguide": "^7.1.0",
     "@egen-civitas/esm-tenant": "^1.0.0",
     "@egen-civitas/esm-translations": "^1.0.4",
     "@egen-civitas/esm-utils": "^2.0.0"

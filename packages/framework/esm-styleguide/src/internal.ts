@@ -35,6 +35,7 @@ export * from './master-detail/index.js';
 export * from './workbench/index.js';
 export * from './dialogs/index.js';
 export * from './selections/index.js';
+export * from './ui-sound/index.js';
 export * from './carousel/index.js';
 export * from './content-section/index.js';
 export * from './section/index.js';

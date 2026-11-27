@@ -10,10 +10,10 @@ const opt = (name) => {
 if (args.includes('--help') || !opt('--app')) {
   console.log(`egen-embed-sim — simulateur de Shell EGEN pour développer une app embarquée sans le Core
 
-Usage : egen-embed-sim --app <url> [--manifest egen-app.json] [--port 4100] [--strict] [--session session.json]
+Usage : egen-embed-sim --app <url> [--manifest egen-config.json] [--port 4100] [--strict] [--session session.json]
 
   --app        URL de l'app embarquée (ex. http://localhost:3000)
-  --manifest   manifeste egen-app.json de l'app (les capacités demandées sont approuvées, sauf --strict)
+  --manifest   manifeste egen-config.json de l'app (les capacités demandées sont approuvées, sauf --strict)
   --strict     n'approuver que les capacités « par défaut » (voir doc 17 §5)
   --session    fichier JSON de la session simulée`);
   process.exit(opt('--app') ? 0 : 1);

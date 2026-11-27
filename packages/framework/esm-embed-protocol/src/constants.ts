@@ -1,8 +1,8 @@
 /** Version majeure du protocole d'intégration embarquée (poignée de main `{ egen: 2 }`). */
 export const EGEN_EMBED_PROTOCOL = 2;
 
-/** Protocoles que l'hôte sait parler : 2 (ce paquet) et 1 (pont `esm-nextjs-utils`, y compris 1.1). */
-export const SUPPORTED_PROTOCOLS: readonly number[] = [2, 1];
+/** Protocoles que l'hôte sait parler : le seul protocole 2 (voie unique SDK ; le pont 1.1 est retiré). */
+export const SUPPORTED_PROTOCOLS: readonly number[] = [EGEN_EMBED_PROTOCOL];
 
 /** Limites par défaut (doc 17 §3.1). Surchargeables par l'opérateur. */
 export interface Limits {
@@ -16,7 +16,7 @@ export interface Limits {
   maxSubscriptions: number;
   /** Événements sortants par seconde (au-delà : abandon). */
   eventsPerSecond: number;
-  /** Délai de la poignée de main (ms) avant repli sur le protocole 1.1. */
+  /** Délai de la poignée de main (ms) ; passé ce délai, l'app est considérée non connectée. */
   handshakeTimeoutMs: number;
   /** Intervalle de vivacité (ms) ; 0 désactive. */
   pingIntervalMs: number;

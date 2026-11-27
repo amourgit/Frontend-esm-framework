@@ -4,6 +4,7 @@ export * from './types.js';
 export * from './guards.js';
 export * from './capabilities.js';
 export * from './patterns.js';
+export * from './iframe.js';
 export * from './manifest.js';
 export * from './negotiate.js';
 export * from './rpc.js';

@@ -1,5 +1,6 @@
 import type { ErrorCode } from './constants.js';
 import type { WireError } from './errors.js';
+import type { IframeRights } from './iframe.js';
 
 export type CapabilityId =
   | 'tenant'
@@ -87,7 +88,7 @@ export type RpcMessage =
 
 export type { ErrorCode, WireError };
 
-/* ───────── Manifeste (egen-app.json) ───────── */
+/* ───────── Déclaration de l'app (egen-config.json) ───────── */
 
 export type EmbedTechnology = 'nextjs' | 'react' | 'vue' | 'angular' | 'static' | 'other';
 export type NavigationMode = 'none' | 'history' | 'hash';
@@ -127,4 +128,8 @@ export interface EmbedManifest {
   capabilities: Partial<Record<CapabilityId, GrantConfig>>;
   /** Composants que l'app contribue aux slots du Core. */
   extensions?: EmbedExtensionDecl[];
+  /** Droits d'iframe demandés (`sandbox`, `allow`) ; effectifs uniquement s'ils sont approuvés par l'opérateur (doc 17 §7 bis). */
+  iframe?: IframeRights;
+  /** Configuration publique de l'app servie par la capacité `config` (≤ 8 Ko, rien de secret). */
+  config?: Record<string, unknown>;
 }

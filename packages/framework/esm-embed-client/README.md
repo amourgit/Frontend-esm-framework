@@ -7,7 +7,7 @@ Spécification : `docs/integration-apps/17-sdk-embed-protocole-v2.md` du dépôt
 import { connectToEgen } from '@egen-civitas/esm-embed-client';
 
 const egen = await connectToEgen({
-  moduleName: '@civitas/esm-studio-app',          // = name du egen-app.json
+  moduleName: '@civitas/esm-studio-app',          // = name de egen-config.json
   hostOrigins: ['https://egen.exemple.org'],       // origines explicites du Shell, jamais *
   capabilities: ['locale', 'events', 'notifications', 'extensions'],
 });
@@ -33,7 +33,8 @@ l'app les obtient directement : jeton auprès de **Keycloak** (OIDC), droits via
 
   Core affiche seul (défaut) → envoyé au Core, `local` non appelé. Capacité non accordée ou client autonome → `local`. Politique `exclusive: false` de l'opérateur → les deux. Trop de toasts (`rate`) → abandonnés. React : `useEgenNotify(local)` → `{ notify, coreDisplays }`.
 - **Moindre privilège** : un appel sur une capacité non accordée est rejeté localement. Les refus de négociation sont dans `egen.denied`.
-- **Extensions** : `egen.extensions.list(slot)` / `onChange` (slots à approuver : grant `extensions.discover`). Pour *contribuer* un composant à un slot du Core, déclarer `extensions[]` dans `egen-app.json` (doc 17 §5 bis).
+- **Extensions** : `egen.extensions.list(slot)` / `onChange` (slots à approuver : grant `extensions.discover`). Pour *contribuer* un composant à un slot du Core, déclarer `extensions[]` dans `egen-config.json` (doc 17 §5 bis).
+- **Droits d'iframe** (`sandbox`, `allow`) : rien à appeler dans le SDK. L'app les **demande** dans son `egen-config.json` (`iframe: { sandbox: [...], allow: [...] }`), l'opérateur les approuve, le Core les applique à l'iframe ; ils sont invisibles pour l'app une fois accordés (doc 17 §7 bis).
 
 ## React
 

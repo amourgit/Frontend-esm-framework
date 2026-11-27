@@ -65,6 +65,22 @@ describe('createTestHost', () => {
   });
 });
 
+describe('createTestHost : droits d’iframe', () => {
+  const asked = { sandbox: ['allow-downloads', 'allow-modals'], allow: ['clipboard-write', 'camera'] };
+  it('expose ce que le Core appliquerait : demande ∩ plafond', () => {
+    const sim = createTestHost({ manifestIframe: asked, approved: { iframe: { sandbox: ['allow-downloads'], allow: ['clipboard-write', 'fullscreen'] } } });
+    expect(sim.iframe).toEqual({ sandbox: ['allow-downloads'], allow: ['clipboard-write'] });
+    sim.destroy();
+  });
+  it('sans approbation (ou plafond false) : rien d’accordé', () => {
+    for (const approved of [{}, { iframe: false as const }]) {
+      const sim = createTestHost({ manifestIframe: asked, approved });
+      expect(sim.iframe).toEqual({ sandbox: [], allow: [] });
+      sim.destroy();
+    }
+  });
+});
+
 describe('simulateur de Shell (serveur)', () => {
   let sim: Simulator | undefined;
   afterEach(async () => void (await sim?.close()));
@@ -86,6 +102,20 @@ describe('simulateur de Shell (serveur)', () => {
     for (const bad of ['/vendor/host/../../package.json', '/vendor/host/%2e%2e/%2e%2e/package.json', '/vendor/host/index.json', '/vendor/autre/index.js', '/etc/passwd']) {
       expect((await fetch(sim.url + bad)).status).toBe(404);
     }
+  });
+
+  it('droits d’iframe : approuvés tels que demandés (opérateur indulgent), jamais en mode strict ; invalides refusés', async () => {
+    const m = { manifestVersion: 1, name: '@a/b', version: '1.0.0', title: 'T', url: 'http://localhost:3000', route: 'b', technology: 'react', navigation: { mode: 'none' }, capabilities: {}, iframe: { sandbox: ['allow-downloads'], allow: ['fullscreen'] } };
+    sim = await startSimulator({ app: 'http://localhost:3000', port: 0, manifest: m });
+    const cfg = await (await fetch(sim.url + '/api/config')).json();
+    expect(cfg.manifestIframe).toEqual(m.iframe);
+    expect(cfg.approved.iframe).toEqual(m.iframe);
+    expect(await (await fetch(sim.url + '/')).text()).toContain('effectiveIframe');
+    await sim.close();
+    sim = await startSimulator({ app: 'http://localhost:3000', port: 0, strict: true, manifest: m });
+    expect((await (await fetch(sim.url + '/api/config')).json()).approved).toEqual({});
+    await sim.close();
+    await expect(startSimulator({ app: 'http://localhost:3000', port: 0, manifest: { ...m, iframe: { sandbox: ['allow-top-navigation'] } } })).rejects.toThrow(/hors liste blanche/);
   });
 
   it('refuse un manifeste invalide et un mode strict', async () => {

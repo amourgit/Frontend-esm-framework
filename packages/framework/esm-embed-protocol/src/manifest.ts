@@ -1,5 +1,6 @@
 import { CAPABILITIES, CAPABILITY_IDS, REMOVED_CAPABILITIES, getCapability } from './capabilities.js';
 import { isPlainObject } from './guards.js';
+import { validateIframeRights, type ApprovedIframe } from './iframe.js';
 import { patternCovers, slotCovers } from './patterns.js';
 import { isInternalPath, isSlotName } from './capabilities.js';
 import type { CapabilityId, EmbedExtensionDecl, EmbedManifest, EmbedTechnology, GrantConfig, NavigationMode } from './types.js';
@@ -29,7 +30,7 @@ function validUrl(u: unknown, opts: ManifestOptions): boolean {
   }
 }
 
-/** Valide un manifeste `egen-app.json` (doc 17 §7). */
+/** Valide la déclaration `egen-config.json` publiée par l'app (doc 17 §7). */
 export function validateManifest(input: unknown, opts: ManifestOptions = {}): ManifestResult {
   const errors: string[] = [];
   if (!isPlainObject(input)) return { ok: false, errors: ['le manifeste doit être un objet'] };
@@ -63,6 +64,9 @@ export function validateManifest(input: unknown, opts: ManifestOptions = {}): Ma
       else if (!isPlainObject(cfg)) errors.push(`capabilities.${id} : objet attendu`);
     }
 
+  errors.push(...validateIframeRights(m.iframe));
+  if (m.config !== undefined) errors.push(...validateConfig(m.config));
+
   if (m.extensions !== undefined) errors.push(...validateExtensionDecls(m.extensions, typeof m.url === 'string' ? m.url : undefined));
 
   return errors.length ? { ok: false, errors } : { ok: true, manifest: input as unknown as EmbedManifest };
@@ -70,7 +74,8 @@ export function validateManifest(input: unknown, opts: ManifestOptions = {}): Ma
 
 /* ───────── Grants effectifs : demandé ∩ approuvé ───────── */
 
-export type ApprovedGrants = Partial<Record<CapabilityId, GrantConfig | false>>;
+/** Plafond approuvé par l'opérateur : une entrée par capacité (`false` = interdite) + les droits de l'iframe (`iframe`). */
+export type ApprovedGrants = Partial<Record<CapabilityId, GrantConfig | false>> & { iframe?: ApprovedIframe };
 export type EffectiveGrants = Partial<Record<CapabilityId, GrantConfig>>;
 
 const strings = (v: unknown): string[] | undefined => (Array.isArray(v) && v.every((x) => typeof x === 'string') ? (v as string[]) : undefined);
@@ -88,7 +93,7 @@ function intersect(requested: string[], ceiling: string[], mode: 'exact' | 'patt
  * - Capacité non « par défaut » : exige une approbation ET une demande (si un manifeste existe).
  * - Listes : demande ∩ plafond ; demande absente = plafond ; plafond absent = valeur par défaut du catalogue.
  */
-export function effectiveGrants(requested: Partial<Record<CapabilityId, GrantConfig>> | undefined, approved: ApprovedGrants): EffectiveGrants {
+export function effectiveGrants(requested: Partial<Record<CapabilityId, GrantConfig>> | undefined, approved: Omit<ApprovedGrants, 'iframe'>): EffectiveGrants {
   const out: EffectiveGrants = {};
   for (const id of CAPABILITY_IDS) {
     const d = CAPABILITIES[id];
@@ -112,6 +117,21 @@ export function effectiveGrants(requested: Partial<Record<CapabilityId, GrantCon
     out[id] = cfg;
   }
   return out;
+}
+
+/** Taille maximale de la configuration publique d'une app (octets de JSON). */
+export const MAX_CONFIG_BYTES = 8192;
+
+/** Valide la configuration publique (`config`) : objet JSON ≤ 8 Ko, rien de secret. */
+export function validateConfig(config: unknown): string[] {
+  if (!isPlainObject(config)) return ['config : objet attendu'];
+  let size = 0;
+  try {
+    size = JSON.stringify(config).length;
+  } catch {
+    size = Infinity;
+  }
+  return size > MAX_CONFIG_BYTES ? ['config : 8 Ko au maximum'] : [];
 }
 
 const EXT_NAME_RE = /^[a-z0-9][a-z0-9-]{0,63}$/;
@@ -171,7 +191,7 @@ export function validateExtensionDecls(input: unknown, appUrl?: string): string[
  * Contributions dont le slot est approuvé par l'opérateur (`approved.extensions.contribute`). Les autres sont écartées :
  * l'approbation est le seul moyen d'ajouter un composant à un slot du Core.
  */
-export function allowedContributions(decls: readonly EmbedExtensionDecl[] | undefined, approved: Partial<Record<CapabilityId, GrantConfig | false>>): EmbedExtensionDecl[] {
+export function allowedContributions(decls: readonly EmbedExtensionDecl[] | undefined, approved: Omit<ApprovedGrants, 'iframe'>): EmbedExtensionDecl[] {
   const cfg = approved.extensions;
   if (!cfg) return [];
   const slots = Array.isArray(cfg.contribute) ? (cfg.contribute as string[]) : [];

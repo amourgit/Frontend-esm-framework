@@ -1,12 +1,15 @@
 import { CAPABILITIES, patternCovers, validateManifest, type EmbedManifest } from '@egen-civitas/esm-embed-protocol';
 
+/** Permissions `allow` donnant accès à des capteurs ou à l'écran de l'utilisateur. */
+const SENSITIVE_PERMISSIONS = new Set(['camera', 'microphone', 'geolocation', 'display-capture']);
+
 export interface CheckIssue {
   level: 'error' | 'warn' | 'info';
   message: string;
 }
 
 export interface CheckOptions {
-  /** Manifeste `egen-app.json` déjà lu. */
+  /** Déclaration `egen-config.json` déjà lue. */
   manifest: unknown;
   /** Origine du Shell EGEN (ex. `https://egen.exemple.org`) : active le contrôle d'intégration en iframe. */
   shellOrigin?: string;
@@ -42,6 +45,13 @@ export async function checkEmbedApp(o: CheckOptions): Promise<CheckIssue[]> {
   }
 
   if (caps.notifications) add('info', "Notifications : le Core affiche les toasts (par défaut seul). N'affichez pas les vôtres : appelez egen.notify(toast, local) et ne rendez votre composant de toasts que si !egen.coreDisplaysNotifications");
+  const asked = m.iframe;
+  if (asked && ((asked.sandbox?.length ?? 0) > 0 || (asked.allow?.length ?? 0) > 0)) {
+    const list = [...(asked.sandbox ?? []).map((t) => `sandbox:${t}`), ...(asked.allow ?? []).map((t) => `allow:${t}`)];
+    add('info', `Droits d'iframe demandés : l'opérateur doit les approuver (grants.iframe), sinon ils seront refusés : ${list.join(', ')}`);
+    const sensitive = (asked.allow ?? []).filter((t) => SENSITIVE_PERMISSIONS.has(t));
+    if (sensitive.length) add('warn', `Permissions sensibles demandées (${sensitive.join(', ')}) : à justifier auprès de l'opérateur, elles ne sont jamais accordées par défaut`);
+  }
   const slots = [...new Set((m.extensions ?? []).map((e) => e.slot))];
   if (slots.length) add('info', `Contributions d'extension : l'opérateur doit approuver les slots (extensions.contribute) : ${slots.join(', ')}`);
   for (const e of m.extensions ?? []) if (e.view) add('info', `Extension « ${e.name} » : la vue ${e.view} sera affichée dans une iframe du Core (frame-ancestors à autoriser pour le Shell, hauteur via navigation.resize)`);

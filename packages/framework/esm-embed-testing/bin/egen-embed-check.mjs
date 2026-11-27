@@ -10,7 +10,7 @@ const opt = (n) => {
 if (args.includes('--help') || !opt('--manifest')) {
   console.log(`egen-embed-check — vérifie une app embarquée (manifeste, capacités, intégrabilité en iframe)
 
-Usage : egen-embed-check --manifest egen-app.json [--shell https://egen.exemple.org] [--probe] [--allow-localhost]
+Usage : egen-embed-check --manifest egen-config.json [--shell https://egen.exemple.org] [--probe] [--allow-localhost]
 
   --shell            origine du Shell EGEN (contrôle CSP frame-ancestors)
   --probe            interroge l'URL de l'app (en-têtes X-Frame-Options / CSP)

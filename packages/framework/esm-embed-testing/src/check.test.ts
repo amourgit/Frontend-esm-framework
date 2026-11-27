@@ -41,6 +41,31 @@ describe('checkEmbedApp (manifeste)', () => {
   });
 });
 
+describe('checkEmbedApp (droits d’iframe négociés)', () => {
+  const IFRAME = { sandbox: ['allow-downloads', 'allow-modals', 'allow-popups-to-escape-sandbox'], allow: ['clipboard-read', 'clipboard-write', 'fullscreen'] };
+  it('droits demandés : rappel qu’ils doivent être approuvés (grants.iframe)', async () => {
+    const i = await checkEmbedApp({ manifest: manifest({ iframe: IFRAME }) });
+    expect(hasErrors(i)).toBe(false);
+    expect(msgs(i, 'info').join('|')).toMatch(/grants\.iframe.*sandbox:allow-downloads.*allow:fullscreen/);
+    expect(msgs(i, 'warn')).toEqual([]);
+  });
+  it('aucune demande : aucune remarque sur l’iframe', async () => {
+    expect(msgs(await checkEmbedApp({ manifest: manifest() })).join('|')).not.toMatch(/iframe/i);
+    expect(msgs(await checkEmbedApp({ manifest: manifest({ iframe: {} }) })).join('|')).not.toMatch(/Droits d'iframe/);
+  });
+  it('jeton hors liste blanche : erreur nommant le jeton', async () => {
+    const i = await checkEmbedApp({ manifest: manifest({ iframe: { sandbox: ['allow-top-navigation'] } }) });
+    expect(hasErrors(i)).toBe(true);
+    expect(msgs(i, 'error').join()).toMatch(/allow-top-navigation.*hors liste blanche/);
+  });
+  it('permissions sensibles : réserve', async () => {
+    const i = await checkEmbedApp({ manifest: manifest({ iframe: { allow: ['camera', 'fullscreen'] } }) });
+    expect(hasErrors(i)).toBe(false);
+    expect(msgs(i, 'warn').join()).toMatch(/camera/);
+    expect(msgs(i, 'warn').join()).not.toMatch(/fullscreen/);
+  });
+});
+
 describe('checkEmbedApp (intégrabilité en iframe)', () => {
   let server: ReturnType<typeof createServer> | undefined;
   afterEach(() => new Promise<void>((r) => (server ? server.close(() => r()) : r())));

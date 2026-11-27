@@ -1,5 +1,11 @@
 # @egen-civitas/esm-styleguide
 
+## 7.1.0
+
+### Minor Changes
+
+- d425388: Restitue les sons d'interface (`playXboxSound`, `toggleXboxAudio`, `isXboxAudioMuted`, type `XboxSoundType`). Ce module de synthèse audio générique se trouvait dans l'ancien dossier `assistant/` et a été supprimé par erreur avec lui ; il est maintenant dans `esm-styleguide/src/ui-sound/`, sans aucun lien avec l'ancienne couche d'assistance. Les apps Annuaire, Informations et Sites l'utilisent.
+
 ## 7.0.0
 
 ### Major Changes

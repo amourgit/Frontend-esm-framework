@@ -13,7 +13,7 @@ if (args.includes('--help') || !opt('--manifest')) {
 Usage : egen-embed-check --manifest egen-config.json [--shell https://egen.exemple.org] [--probe] [--allow-localhost]
 
   --shell            origine du Shell EGEN (contrôle CSP frame-ancestors)
-  --probe            interroge l'URL de l'app (en-têtes X-Frame-Options / CSP)
+  --probe            interroge l'URL de l'app : en-têtes X-Frame-Options / CSP, et déclaration publiée à <url>/egen-config.json
   --allow-localhost  tolère http://localhost (développement)
 
 Code de sortie : 1 si au moins une erreur.`);

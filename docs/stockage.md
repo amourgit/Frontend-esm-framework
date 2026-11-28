@@ -19,7 +19,7 @@ Inventaire réalisé le 2026-11-13 (`grep -rn "localStorage\|sessionStorage\|ind
 | mode hors ligne (`offlineModeStorageKey`) | localStorage / sessionStorage | `esm-offline` | Préférence | Inchangé |
 | Bases Dexie (`OfflineDb`, données hors ligne) | IndexedDB | `esm-offline` | **Données métier** potentiellement sensibles | Inchangé — **à valider sur appareil** |
 | Base du service worker (`ServiceWorkerDb`) | IndexedDB | `shell/esm-app-shell` | Cache technique | Inchangé |
-| Clés du workbench, assistant, son, thème (mode) | localStorage | `esm-styleguide`, `esm-theme` | Préférences d'interface | Inchangé |
+| Clés du workbench, son, thème (mode) | localStorage | `esm-styleguide`, `esm-theme` | Préférences d'interface | Inchangé |
 | Langue i18n | localStorage (détection i18next) | `shell/esm-app-shell` | Préférence | Inchangé |
 
 ## Ce qui est fait / pas fait

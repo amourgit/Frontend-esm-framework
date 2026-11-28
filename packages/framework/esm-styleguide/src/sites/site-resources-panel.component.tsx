@@ -27,8 +27,8 @@ export interface SiteResourcesPanelProps {
 }
 
 const TONES = {
-  teal: { card: 'from-teal-900/50 to-slate-900 border-teal-500/30 hover:border-teal-400', text: 'text-teal-300', icon: 'text-teal-400' },
-  cyan: { card: 'from-cyan-900/50 to-slate-900 border-cyan-500/30 hover:border-cyan-400', text: 'text-cyan-300', icon: 'text-cyan-400' },
+  teal: { card: 'from-(--primary)/50 to-(--muted) border-(--primary)/30 hover:border-(--primary)', text: 'text-(--primary)/80', icon: 'text-(--primary)' },
+  cyan: { card: 'from-(--info)/50 to-(--muted) border-(--info)/30 hover:border-(--info)', text: 'text-(--info)', icon: 'text-(--info)' },
 } as const;
 
 /** Raccourcis d'accès rapide + liste des documents officiels d'un site. */
@@ -44,10 +44,10 @@ export function SiteResourcesPanel({
 }: SiteResourcesPanelProps) {
   return (
     <div className={cn('space-y-6', className)}>
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-(--border)">
         <div>
-          <h2 className="text-xl font-bold text-white">{title}</h2>
-          <p className="text-xs text-slate-300 mt-1">{description}</p>
+          <h2 className="text-xl font-bold text-(--foreground)">{title}</h2>
+          <p className="text-xs text-(--muted-foreground) mt-1">{description}</p>
         </div>
         {primaryAction}
       </div>
@@ -66,8 +66,8 @@ export function SiteResourcesPanel({
               >
                 <span className="space-y-1">
                   <span className={cn('block text-[10px] font-bold uppercase tracking-wider', tone.text)}>{s.eyebrow}</span>
-                  <span className="block text-sm font-bold text-white">{s.title}</span>
-                  <span className="block text-xs text-slate-300">{s.description}</span>
+                  <span className="block text-sm font-bold text-(--foreground)">{s.title}</span>
+                  <span className="block text-xs text-(--muted-foreground)">{s.description}</span>
                 </span>
                 <Icon className={cn('w-8 h-8 shrink-0 ml-2', tone.icon)} />
               </button>
@@ -77,21 +77,21 @@ export function SiteResourcesPanel({
       )}
 
       <div className="space-y-3">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Documents récents & procédures officielles</h3>
+        <h3 className="text-xs font-bold uppercase tracking-wider text-(--muted-foreground)">Documents récents & procédures officielles</h3>
         <ul className="space-y-2">
           {resources.map((res) => (
             <li
               key={res.id}
-              className="p-3 rounded-lg bg-slate-900/60 border border-white/10 hover:border-teal-400/40 flex items-center justify-between transition-colors"
+              className="p-3 rounded-lg bg-(--muted)/60 border border-(--border) hover:border-(--primary)/40 flex items-center justify-between transition-colors"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="p-2 rounded-lg bg-white/5 text-teal-300 shrink-0">
+                <div className="p-2 rounded-lg bg-(--foreground)/5 text-(--primary)/80 shrink-0">
                   <FileText className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-xs font-bold text-white truncate">{res.title}</h4>
-                  <p className="flex flex-wrap items-center gap-1.5 sm:gap-3 text-[10px] text-slate-400 mt-0.5">
-                    <span className="text-teal-400 font-semibold">{res.category}</span>
+                  <h4 className="text-xs font-bold text-(--foreground) truncate">{res.title}</h4>
+                  <p className="flex flex-wrap items-center gap-1.5 sm:gap-3 text-[10px] text-(--muted-foreground) mt-0.5">
+                    <span className="text-(--primary) font-semibold">{res.category}</span>
                     <span>•</span>
                     <span>{res.type}</span>
                     <span>•</span>
@@ -107,7 +107,7 @@ export function SiteResourcesPanel({
                   title="Télécharger"
                   aria-label={`Télécharger ${res.title}`}
                   onClick={() => onDownload(res)}
-                  className="p-2 rounded-lg hover:bg-white/10 text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0 ml-2"
+                  className="p-2 rounded-lg hover:bg-(--foreground)/10 text-(--muted-foreground) hover:text-(--foreground) transition-colors cursor-pointer shrink-0 ml-2"
                 >
                   <Download className="w-4 h-4" />
                 </button>

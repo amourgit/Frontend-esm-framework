@@ -30,7 +30,7 @@
 }
 @media (min-width: 768px) {
   .title {
-    font-size: 3rem;
+    font-size: var(--typography-font-size-5xl-size, 3rem);
   }
 }
 

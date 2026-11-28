@@ -143,6 +143,6 @@ describe('Alert', () => {
     );
     const alert = screen.getByRole('alert');
     expect(alert).toHaveTextContent('Attention');
-    expect(alert).toHaveClass('border-l-amber-500');
+    expect(alert).toHaveClass('border-l-(--warning)');
   });
 });

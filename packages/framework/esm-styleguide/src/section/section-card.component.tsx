@@ -14,10 +14,10 @@ import { cn } from '../page-background/page-background.utils.js';
 // =============================================================================
 
 export const SECTION_CARD_CLASS = cn(
-  'group relative flex min-w-0 flex-col rounded-2xl border border-white/10 bg-slate-900/45 p-4',
-  'text-slate-100 shadow-lg backdrop-blur-sm outline-none transition-all duration-300',
-  'hover:-translate-y-1 hover:border-teal-400/50 hover:bg-slate-900/75 hover:shadow-2xl',
-  'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-emerald-400',
+  'group relative flex min-w-0 flex-col rounded-2xl border border-(--border) bg-(--card)/60 p-4',
+  'text-(--foreground) shadow-lg backdrop-blur-sm outline-none transition-all duration-300',
+  'hover:-translate-y-1 hover:border-(--primary)/50 hover:bg-(--card)/75 hover:shadow-2xl',
+  'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-(--primary)',
 );
 
 export interface SectionCardProps extends React.HTMLAttributes<HTMLElement> {

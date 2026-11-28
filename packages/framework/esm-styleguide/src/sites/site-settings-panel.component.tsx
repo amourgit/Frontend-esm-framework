@@ -21,18 +21,18 @@ const VISIBILITY: Array<{ id: SiteVisibility; label: string; hint: string; icon:
   { id: 'PRIVATE', label: 'Privé', hint: 'Strictement réservé aux membres invités manuellement.', icon: Lock },
 ];
 
-const sectionCls = 'p-4 rounded-xl bg-slate-900/60 border border-white/10 space-y-3';
-const sectionTitleCls = 'text-xs font-bold text-teal-300 uppercase tracking-wider flex items-center gap-2';
-const inputCls = 'w-full px-3 py-1.5 rounded-lg bg-black/40 border border-white/15 text-xs text-white focus:outline-none focus:border-teal-400';
+const sectionCls = 'p-4 rounded-xl bg-(--muted)/60 border border-(--border) space-y-3';
+const sectionTitleCls = 'text-xs font-bold text-(--primary)/80 uppercase tracking-wider flex items-center gap-2';
+const inputCls = 'w-full px-3 py-1.5 rounded-lg bg-(--overlay) border border-(--border) text-xs text-(--foreground) focus:outline-none focus:border-(--primary)';
 
 function Toggle({ label, hint, checked, onChange }: { label: string; hint?: string; checked: boolean; onChange: (v: boolean) => void }) {
   return (
     <label className="flex items-center justify-between gap-3 cursor-pointer">
       <span>
-        <span className="block text-xs font-semibold text-white">{label}</span>
-        {hint && <span className="block text-[11px] text-slate-400">{hint}</span>}
+        <span className="block text-xs font-semibold text-(--foreground)">{label}</span>
+        {hint && <span className="block text-[11px] text-(--muted-foreground)">{hint}</span>}
       </span>
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="w-4 h-4 accent-teal-500 cursor-pointer shrink-0" />
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="w-4 h-4 accent-(--primary) cursor-pointer shrink-0" />
     </label>
   );
 }
@@ -51,15 +51,15 @@ export function SiteSettingsPanel({ siteName, siteUuid, initialValue, storage, o
   };
 
   return (
-    <div className={cn('flex-1 min-h-0 flex flex-col gap-4 text-slate-100 overflow-y-auto pr-1', className)}>
+    <div className={cn('flex-1 min-h-0 flex flex-col gap-4 text-(--foreground) overflow-y-auto pr-1', className)}>
       <SitePanelHeader
-        icon={<Settings className="w-4 h-4 text-teal-400" />}
+        icon={<Settings className="w-4 h-4 text-(--primary)" />}
         title={`Paramètres du Site — ${siteName}`}
         description="Administration de l'espace collaboratif, visibilité, quotas et politique de sécurité."
         actions={
           saved && (
-            <span role="status" className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 text-xs font-semibold">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <span role="status" className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-(--success)/20 border border-(--success)/30 text-(--success-subtle-foreground,var(--success)) text-xs font-semibold">
+              <CheckCircle2 className="w-4 h-4 text-(--success)" />
               Paramètres enregistrés
             </span>
           )
@@ -73,16 +73,16 @@ export function SiteSettingsPanel({ siteName, siteUuid, initialValue, storage, o
             Informations générales
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <label className="block text-xs font-semibold text-slate-300">
+            <label className="block text-xs font-semibold text-(--muted-foreground)">
               <span className="block mb-1">Nom public du site</span>
               <input className={inputCls} value={value.title} onChange={(e) => patch({ title: e.target.value })} />
             </label>
-            <label className="block text-xs font-semibold text-slate-300">
+            <label className="block text-xs font-semibold text-(--muted-foreground)">
               <span className="block mb-1">Identifiant unique (UUID)</span>
-              <input readOnly className={cn(inputCls, 'bg-black/60 border-white/10 text-slate-400 font-mono')} value={siteUuid} />
+              <input readOnly className={cn(inputCls, 'bg-(--overlay) border-(--border) text-(--muted-foreground) font-mono')} value={siteUuid} />
             </label>
           </div>
-          <label className="block text-xs font-semibold text-slate-300">
+          <label className="block text-xs font-semibold text-(--muted-foreground)">
             <span className="block mb-1">Description & mission du site</span>
             <textarea rows={2} className={cn(inputCls, 'resize-none')} value={value.description} onChange={(e) => patch({ description: e.target.value })} />
           </label>
@@ -103,14 +103,14 @@ export function SiteSettingsPanel({ siteName, siteUuid, initialValue, storage, o
                 onClick={() => patch({ visibility: id })}
                 className={cn(
                   'p-3 rounded-xl border text-left transition-all cursor-pointer',
-                  value.visibility === id ? 'bg-teal-500/15 border-teal-400 text-white shadow-md' : 'bg-black/30 border-white/10 text-slate-400 hover:text-white',
+                  value.visibility === id ? 'bg-(--primary)/15 border-(--primary) text-(--foreground) shadow-md' : 'bg-(--scrim) border-(--border) text-(--muted-foreground) hover:text-(--foreground)',
                 )}
               >
                 <span className="flex items-center gap-2 mb-1">
-                  <Icon className="w-4 h-4 text-teal-400" />
+                  <Icon className="w-4 h-4 text-(--primary)" />
                   <span className="font-bold text-xs">{label}</span>
                 </span>
-                <span className="block text-[11px] text-slate-400">{hint}</span>
+                <span className="block text-[11px] text-(--muted-foreground)">{hint}</span>
               </button>
             ))}
           </div>
@@ -129,23 +129,23 @@ export function SiteSettingsPanel({ siteName, siteUuid, initialValue, storage, o
           </h3>
           {storage && (
             <div className="space-y-1">
-              <div className="flex justify-between text-xs text-slate-300">
+              <div className="flex justify-between text-xs text-(--muted-foreground)">
                 <span>Espace utilisé : <strong>{storage.usedLabel}</strong></span>
                 <span>Quota alloué : <strong>{storage.quotaLabel}</strong></span>
               </div>
-              <div className="w-full h-2 rounded-full bg-black/40 overflow-hidden border border-white/10">
-                <div className="h-full bg-teal-400 rounded-full" style={{ width: `${Math.min(100, Math.max(0, storage.percent))}%` }} />
+              <div className="w-full h-2 rounded-full bg-(--overlay) overflow-hidden border border-(--border)">
+                <div className="h-full bg-(--primary-hover,var(--primary)) rounded-full" style={{ width: `${Math.min(100, Math.max(0, storage.percent))}%` }} />
               </div>
             </div>
           )}
-          <div className="pt-2 space-y-2 border-t border-white/10">
+          <div className="pt-2 space-y-2 border-t border-(--border)">
             <Toggle label="Notifier lors du téléversement d'un nouveau document" checked={value.notifyOnUpload} onChange={(v) => patch({ notifyOnUpload: v })} />
             <Toggle label="Alerter lors de la validation officielle d'un bordereau" checked={value.notifyOnValidation} onChange={(v) => patch({ notifyOnValidation: v })} />
           </div>
         </section>
 
         <div className="flex justify-end pt-2">
-          <button type="submit" className="px-5 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg transition-all active:scale-95 cursor-pointer">
+          <button type="submit" className="px-5 py-2 rounded-xl bg-(--primary) hover:bg-(--primary-hover,var(--primary)) text-(--primary-foreground) font-bold text-xs flex items-center gap-2 shadow-lg transition-all active:scale-95 cursor-pointer">
             <Save className="w-4 h-4" />
             Enregistrer les paramètres du site
           </button>

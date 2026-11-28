@@ -14,8 +14,8 @@ const alertVariants = cva(
           "bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 [&>svg]:text-current",
         // Ajouts EGEN : les quatre états d'une notification (liseré coloré à gauche).
         info: "border-l-4 border-l-primary bg-card text-card-foreground [&>svg]:text-primary",
-        success: "border-l-4 border-l-emerald-500 bg-card text-card-foreground [&>svg]:text-emerald-500",
-        warning: "border-l-4 border-l-amber-500 bg-card text-card-foreground [&>svg]:text-amber-500",
+        success: "border-l-4 border-l-(--success) bg-card text-card-foreground [&>svg]:text-(--success)",
+        warning: "border-l-4 border-l-(--warning) bg-card text-card-foreground [&>svg]:text-(--warning)",
         error: "border-l-4 border-l-destructive bg-card text-card-foreground [&>svg]:text-destructive",
       },
     },

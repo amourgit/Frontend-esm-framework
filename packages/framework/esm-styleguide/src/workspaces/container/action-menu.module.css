@@ -17,7 +17,7 @@
   right: 0;
   background: var(--muted);
   height: auto;
-  z-index: 1000;
+  z-index: var(--z-index-sticky, 1000);
   width: 3rem;
   border-left: 1px solid var(--muted-foreground);
   display: flex;
@@ -35,7 +35,7 @@
   position: fixed;
   left: 0;
   bottom: var(--egen-footer-height, 0px);
-  z-index: 8003;
+  z-index: var(--z-index-top);
   width: 100%;
   display: flex;
   justify-content: stretch;

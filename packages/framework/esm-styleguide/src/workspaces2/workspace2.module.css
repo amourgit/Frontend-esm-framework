@@ -19,7 +19,7 @@
   top: 0;
   bottom: 0;
   inset-inline-end: var(--actionPanelOffset);
-  z-index: 100;
+  z-index: var(--z-index-sticky, 100);
 }
 .workspaceOuterContainer .workspaceMiddleContainer.maximized {
   position: fixed !important;
@@ -43,7 +43,7 @@
   border-inline-start: 1px solid var(--muted-foreground);
   background-color: var(--card);
   will-change: width;
-  transition: width 0.5s ease-in-out;
+  transition: width var(--motion-duration-slow, 0.5s) var(--motion-easing-in-out, ease-in-out);
 }
 .workspaceOuterContainer .workspaceInnerContainer.maximized {
   width: 100%;
@@ -87,10 +87,10 @@
 }
 :global(.egen-breakpoint-gt-tablet) .headerButtons button {
   background-color: var(--card);
-  border-right: 1px solid #e0e0e0;
+  border-right: 1px solid var(--border, var(--border-subtle));
 }
 :global(.egen-breakpoint-gt-tablet) .headerButtons button > svg {
-  fill: #121619 !important;
+  fill: var(--foreground) !important;
 }
 :global(.egen-breakpoint-gt-tablet) .headerButtons button:hover {
   background-color: var(--muted);

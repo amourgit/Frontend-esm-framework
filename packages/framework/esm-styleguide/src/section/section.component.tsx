@@ -25,14 +25,18 @@ import type { SectionProps } from './section.types.js';
 //  d'utilisation en bas de fichier).
 // =============================================================================
 
+// Tons dérivés du thème : onDark = texte sur média sombre (inverse), onLight = palette du thème.
+const TONE_ON_DARK =
+  '[--section-fg:var(--surface-inverse-foreground,var(--primary-foreground))] [--section-muted:color-mix(in_oklab,var(--surface-inverse-foreground,var(--primary-foreground))_65%,transparent)] [--section-line:color-mix(in_oklab,var(--surface-inverse-foreground,var(--primary-foreground))_12%,transparent)] [--section-sticky-bg:color-mix(in_oklab,var(--shadow-color)_72%,transparent)]';
+
 const TONE_ON_LIGHT =
-  '[--section-fg:#0f172a] [--section-muted:rgba(15,23,42,0.62)] [--section-line:rgba(15,23,42,0.14)] [--section-sticky-bg:rgb(255_255_255/0.82)]';
+  '[--section-fg:var(--foreground)] [--section-muted:var(--muted-foreground)] [--section-line:var(--border-subtle,var(--border))] [--section-sticky-bg:color-mix(in_oklab,var(--background)_82%,transparent)]';
 
 const VARIANT: Record<NonNullable<SectionProps['variant']>, string> = {
   plain: '',
-  glass: 'rounded-2xl p-5 backdrop-blur-xl ring-1 ring-inset ring-(--section-line,rgba(255,255,255,0.12))',
+  glass: 'rounded-2xl p-5 backdrop-blur-xl ring-1 ring-inset ring-(--section-line,var(--border-subtle,var(--border)))',
 };
-const GLASS_FILL = { onDark: 'bg-black/40', onLight: 'bg-white/70' } as const;
+const GLASS_FILL = { onDark: 'bg-(--shadow-color)/40', onLight: 'bg-(--background)/70' } as const;
 
 const PART_TYPES = new Set<unknown>([SectionHeader, SectionBody, SectionFooter]);
 
@@ -150,8 +154,8 @@ function SectionRoot({
         data-section-variant={variant}
         style={stickyStyleVars({ sticky: stickyHeader, offset: stickyOffset, zIndex: stickyZIndex })}
         className={cn(
-          'relative flex w-full min-w-0 flex-col text-(--section-fg,#fff)',
-          tone === 'onLight' && TONE_ON_LIGHT,
+          'relative flex w-full min-w-0 flex-col text-(--section-fg,var(--foreground))',
+          tone === 'onLight' ? TONE_ON_LIGHT : TONE_ON_DARK,
           VARIANT[variant],
           variant === 'glass' && GLASS_FILL[tone],
           className,

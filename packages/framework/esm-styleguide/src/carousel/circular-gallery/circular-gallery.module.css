@@ -10,7 +10,7 @@
   max-height: 600px;
   max-width: 600px;
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: var(--radius-2xl, 20px);
   box-shadow: 0 2.8px 2.2px color-mix(in srgb, var(--foreground) 2%, transparent), 0 6.7px 5.3px color-mix(in srgb, var(--foreground) 2.8%, transparent), 0 12.5px 10px color-mix(in srgb, var(--foreground) 3.5%, transparent), 0 22.3px 17.9px color-mix(in srgb, var(--foreground) 4.2%, transparent), 0 41.8px 33.4px color-mix(in srgb, var(--foreground) 5%, transparent), 0 100px 80px color-mix(in srgb, var(--foreground) 7%, transparent);
 }
 

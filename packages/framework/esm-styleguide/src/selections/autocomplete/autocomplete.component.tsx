@@ -1020,7 +1020,7 @@ export function Autocomplete({
           "m3-auto-container absolute inset-x-0 flex bg-card overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.2,0.8,0.2,1)]",
           placement === "top" ? "bottom-0 flex-col-reverse" : "top-0 flex-col",
           isExpanded
-            ? "z-50 rounded-[1.25rem] border border-border shadow-[0px_16px_32px_rgba(0,0,0,0.14)]"
+            ? "z-50 rounded-[1.25rem] border border-border shadow-[0px_16px_32px_color-mix(in_oklab,var(--shadow-color)_14%,transparent)]"
             : "z-10 rounded-xl border border-input/60 shadow-sm hover:border-input h-full",
           classNames?.container
         )}

@@ -46,11 +46,11 @@ export const TableBatchActions: React.FC<TableBatchActionsProps> = ({
       </span>
       {children}
       {onSelectAll && totalCount !== undefined && totalSelected < totalCount ? (
-        <Button type="button" variant="ghost" size="sm" onClick={onSelectAll} className="text-current hover:bg-white/15">
+        <Button type="button" variant="ghost" size="sm" onClick={onSelectAll} className="text-current hover:bg-(--foreground)/15">
           {getCoreTranslation('selectAll', 'Select all')}
         </Button>
       ) : null}
-      <Button type="button" variant="ghost" size="sm" onClick={onCancel} className="text-current hover:bg-white/15">
+      <Button type="button" variant="ghost" size="sm" onClick={onCancel} className="text-current hover:bg-(--foreground)/15">
         {getCoreTranslation('cancel', 'Cancel')}
       </Button>
     </div>

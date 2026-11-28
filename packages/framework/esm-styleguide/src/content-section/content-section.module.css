@@ -12,11 +12,11 @@
   gap: 0.75rem;
   padding: 1.25rem;
   border-radius: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: color-mix(in oklab, var(--shadow-color) 40%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  border: 1px solid color-mix(in oklab, var(--surface-inverse-foreground,var(--primary-foreground)) 10%, transparent);
+  box-shadow: 0 10px 25px -5px color-mix(in oklab, var(--shadow-color) 30%, transparent);
 }
 
 .panel.bare {
@@ -44,18 +44,18 @@
 
 .title {
   margin: 0;
-  font-weight: 300;
+  font-weight: var(--font-weight-light, 300);
   letter-spacing: -0.01em;
-  color: #fff;
-  font-size: 1.5rem;
+  color: var(--surface-inverse-foreground,var(--primary-foreground));
+  font-size: var(--typography-font-size-2xl-size, 1.5rem);
   line-height: 1.25;
 }
 
 .description {
   margin: 0;
-  font-size: 0.875rem;
+  font-size: var(--typography-font-size-sm-size, 0.875rem);
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.65);
+  color: color-mix(in oklab, var(--surface-inverse-foreground,var(--primary-foreground)) 65%, transparent);
   max-width: 48rem;
 }
 

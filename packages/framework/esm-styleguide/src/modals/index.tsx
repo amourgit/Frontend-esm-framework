@@ -51,7 +51,7 @@ function createModalFrame({ size }: { size: ModalSize }) {
     border: '1px solid var(--border)',
     background: 'var(--card)',
     color: 'var(--card-foreground)',
-    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.25)',
+    boxShadow: '0 20px 40px color-mix(in oklab, var(--shadow-color) 25%, transparent)',
     outline: 'none',
   });
   modalFrame.setAttribute('role', 'dialog');

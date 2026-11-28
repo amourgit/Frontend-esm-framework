@@ -23,7 +23,7 @@ function InlineLoading({ status = 'active', description, className, ...props }: 
       {...props}
     >
       {status === 'active' && <Spinner aria-label={undefined} role="presentation" />}
-      {status === 'finished' && <CheckCircle2Icon className="size-4 text-emerald-500" aria-hidden="true" />}
+      {status === 'finished' && <CheckCircle2Icon className="size-4 text-(--success)" aria-hidden="true" />}
       {status === 'error' && <XCircleIcon className="size-4 text-destructive" aria-hidden="true" />}
       {description ? <span>{description}</span> : null}
     </div>

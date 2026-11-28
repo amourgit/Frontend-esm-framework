@@ -34,7 +34,7 @@ export function AnimatedHomeBackground({ className }: { className?: string }) {
         noiseFrequency={[0.0001, 0.0009]}
         deform={{ incline: 0.5, noiseAmp: 250, noiseFlow: 5 }}
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-(--scrim) via-transparent to-(--overlay) pointer-events-none" />
       <div
         className="absolute bottom-[-10%] left-[10%] w-[80%] h-[350px] rounded-full opacity-30 blur-[120px] pointer-events-none"
         style={{
@@ -161,13 +161,13 @@ export function DefaultPageBackground({
       {showDarkWash && (
         <div
           aria-hidden
-          className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/55 via-black/15 via-25% to-transparent transition-opacity duration-700"
+          className="absolute inset-0 pointer-events-none bg-gradient-to-b from-(--overlay) via-(--scrim) via-25% to-transparent transition-opacity duration-700"
         />
       )}
       {showDarkWash && (
         <div
           className={cn(
-            'absolute inset-0 pointer-events-none bg-gradient-to-b from-black/45 via-black/20 to-black/70 transition-opacity duration-700',
+            'absolute inset-0 pointer-events-none bg-gradient-to-b from-(--overlay) via-(--scrim) to-(--overlay) transition-opacity duration-700',
             overlayClassName,
           )}
         />

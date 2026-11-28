@@ -202,7 +202,7 @@ export const MenuToggleButton: React.FC<MenuToggleButtonProps> = ({
 
       <style>{`
 .sm-toggle { position: relative; display: inline-flex; align-items: center; gap: 0.3rem; background: transparent; border: none; cursor: pointer; font-weight: 500; line-height: 1; overflow: visible; }
-.sm-toggle:focus-visible { outline: 2px solid #ffffffaa; outline-offset: 4px; border-radius: 4px; }
+.sm-toggle:focus-visible { outline: 2px solid color-mix(in oklab, var(--primary-foreground) 67%, transparent); outline-offset: 4px; border-radius: 4px; }
 .sm-toggle-textWrap { position: relative; display: inline-block; height: 1em; overflow: hidden; white-space: nowrap; width: var(--sm-toggle-width, auto); min-width: var(--sm-toggle-width, auto); }
 .sm-toggle-textInner { display: flex; flex-direction: column; line-height: 1; }
 .sm-toggle-line { display: block; height: 1em; line-height: 1; }

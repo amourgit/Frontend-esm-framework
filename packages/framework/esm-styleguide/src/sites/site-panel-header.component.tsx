@@ -16,16 +16,16 @@ export function SitePanelHeader({ icon, title, description, actions, className }
   return (
     <div
       className={cn(
-        'flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-slate-900/60 border border-white/10 backdrop-blur-md shrink-0',
+        'flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-xl bg-(--muted)/60 border border-(--border) backdrop-blur-md shrink-0',
         className,
       )}
     >
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           {icon}
-          <h2 className="text-sm sm:text-base font-bold text-white truncate">{title}</h2>
+          <h2 className="text-sm sm:text-base font-bold text-(--foreground) truncate">{title}</h2>
         </div>
-        {description && <p className="text-xs text-slate-400 mt-0.5">{description}</p>}
+        {description && <p className="text-xs text-(--muted-foreground) mt-0.5">{description}</p>}
       </div>
       {actions && <div className="shrink-0 self-start sm:self-auto">{actions}</div>}
     </div>

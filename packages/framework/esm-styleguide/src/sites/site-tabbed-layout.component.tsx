@@ -60,7 +60,7 @@ export function SiteTabbedLayout<T extends string = string>({
   return (
     <div
       className={cn(
-        'w-full h-full my-0 text-slate-100 overflow-hidden px-3 sm:px-6 lg:px-8 flex flex-col',
+        'w-full h-full my-0 text-(--foreground) overflow-hidden px-3 sm:px-6 lg:px-8 flex flex-col',
         className,
       )}
     >
@@ -89,8 +89,8 @@ export function SiteTabbedLayout<T extends string = string>({
                   className={cn(
                     'shrink-0 flex items-center gap-2 text-left px-3.5 py-2 text-xs sm:text-sm md:text-base font-medium whitespace-nowrap cursor-pointer transition-all border-0 border-l-2',
                     active
-                      ? 'border-teal-400 text-teal-300 bg-white/5'
-                      : 'border-transparent text-slate-400 hover:text-white',
+                      ? 'border-(--primary) text-(--primary)/80 bg-(--foreground)/5'
+                      : 'border-transparent text-(--muted-foreground) hover:text-(--foreground)',
                     tab.disabled && 'opacity-40 cursor-not-allowed',
                   )}
                 >

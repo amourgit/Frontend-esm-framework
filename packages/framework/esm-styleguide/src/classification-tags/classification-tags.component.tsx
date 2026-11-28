@@ -36,16 +36,16 @@ interface ClassificationTagsProps {
  */
 /** Couleurs de tag disponibles (noms stables : ce sont les valeurs de la config `classificationTags`). Classes écrites en entier pour Tailwind. */
 const TAG_COLORS: Record<string, string> = {
-  red: 'border-transparent bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200',
-  magenta: 'border-transparent bg-fuchsia-100 text-fuchsia-800 dark:bg-fuchsia-950 dark:text-fuchsia-200',
-  purple: 'border-transparent bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-200',
-  blue: 'border-transparent bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-200',
-  cyan: 'border-transparent bg-cyan-100 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-200',
-  teal: 'border-transparent bg-teal-100 text-teal-800 dark:bg-teal-950 dark:text-teal-200',
-  green: 'border-transparent bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-200',
-  gray: 'border-transparent bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200',
-  'cool-gray': 'border-transparent bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200',
-  'warm-gray': 'border-transparent bg-stone-100 text-stone-800 dark:bg-stone-800 dark:text-stone-200',
+  red: 'border-transparent bg-(--chart-1)/12 text-(--chart-1)',
+  magenta: 'border-transparent bg-(--chart-2)/12 text-(--chart-2)',
+  purple: 'border-transparent bg-(--chart-3)/12 text-(--chart-3)',
+  blue: 'border-transparent bg-(--chart-4)/12 text-(--chart-4)',
+  cyan: 'border-transparent bg-(--chart-5)/12 text-(--chart-5)',
+  teal: 'border-transparent bg-(--chart-6)/12 text-(--chart-6)',
+  green: 'border-transparent bg-(--chart-7)/12 text-(--chart-7)',
+  gray: 'border-transparent bg-(--chart-8)/12 text-(--chart-8)',
+  'cool-gray': 'border-transparent bg-(--muted) text-(--muted-foreground)',
+  'warm-gray': 'border-transparent bg-(--accent) text-(--accent-foreground,var(--foreground))',
   'high-contrast': 'border-transparent bg-foreground text-background',
   outline: 'bg-transparent text-foreground',
 };

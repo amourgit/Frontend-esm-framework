@@ -54,23 +54,23 @@ export function SectionAction({
   const classes = cn(
     'inline-flex shrink-0 cursor-pointer select-none items-center justify-center gap-1.5 whitespace-nowrap rounded-md',
     'font-medium leading-none no-underline outline-none transition-colors duration-150',
-    'focus-visible:ring-2 focus-visible:ring-(--section-accent,#34d399)/70',
+    'focus-visible:ring-2 focus-visible:ring-(--section-accent,var(--primary))/70',
     'aria-disabled:pointer-events-none aria-disabled:opacity-40 disabled:pointer-events-none disabled:opacity-40',
     iconOnly ? cn(SIZE[size].icon, 'p-0') : SIZE[size].text,
     variant === 'solid'
-      ? 'border-0 bg-(--section-accent,#10b981) text-white hover:brightness-110'
+      ? 'border-0 bg-(--section-accent,var(--primary)) text-(--primary-foreground) hover:brightness-110'
       : variant === 'outline'
         ? cn(
-            'border border-solid border-(--section-line,rgba(255,255,255,0.12))',
+            'border border-solid border-(--section-line,var(--border-subtle,var(--border)))',
             active
-              ? 'bg-(--section-fg,#fff)/12 text-(--section-fg,#fff)'
-              : 'bg-transparent text-(--section-muted,rgba(255,255,255,0.65)) hover:bg-(--section-fg,#fff)/8 hover:text-(--section-fg,#fff)',
+              ? 'bg-(--section-fg,var(--foreground))/12 text-(--section-fg,var(--foreground))'
+              : 'bg-transparent text-(--section-muted,var(--muted-foreground)) hover:bg-(--section-fg,var(--foreground))/8 hover:text-(--section-fg,var(--foreground))',
           )
         : cn(
             'border-0',
             active
-              ? 'bg-(--section-fg,#fff)/12 text-(--section-fg,#fff)'
-              : 'bg-transparent text-(--section-muted,rgba(255,255,255,0.65)) hover:bg-(--section-fg,#fff)/8 hover:text-(--section-fg,#fff)',
+              ? 'bg-(--section-fg,var(--foreground))/12 text-(--section-fg,var(--foreground))'
+              : 'bg-transparent text-(--section-muted,var(--muted-foreground)) hover:bg-(--section-fg,var(--foreground))/8 hover:text-(--section-fg,var(--foreground))',
           ),
     className,
   );

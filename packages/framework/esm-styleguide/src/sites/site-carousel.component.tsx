@@ -67,7 +67,7 @@ export function SiteCarousel({ sites, onSelect, height = 500, className }: SiteC
   };
 
   const arrowClass =
-    'flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center border-2 border-white/20 bg-slate-950/80 text-slate-100 transition-colors hover:bg-teal-500 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400';
+    'flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center border-2 border-(--border-strong,var(--border)) bg-(--popover)/80 text-(--foreground) transition-colors hover:bg-(--primary) hover:text-(--primary-foreground) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--primary)';
 
   return (
     <div
@@ -103,8 +103,8 @@ export function SiteCarousel({ sites, onSelect, height = 500, className }: SiteC
             className={cn(
               'absolute left-1/2 top-1/2 cursor-pointer border-2 p-7 sm:p-8 transition-all duration-500 ease-in-out',
               isCenter
-                ? 'z-10 bg-teal-500 text-slate-950 border-teal-300'
-                : 'z-0 bg-slate-900/70 text-slate-100 border-white/15 hover:border-teal-400/60',
+                ? 'z-10 bg-(--primary) text-(--primary-foreground) border-(--primary)/60'
+                : 'z-0 bg-(--popover)/70 text-(--foreground) border-(--border) hover:border-(--primary)/60',
             )}
             style={{
               width: cardSize,
@@ -114,14 +114,14 @@ export function SiteCarousel({ sites, onSelect, height = 500, className }: SiteC
               transform: `translate(-50%, -50%) translateX(${(cardSize / 1.5) * position}px) translateY(${
                 isCenter ? -30 : position % 2 ? 20 : -10
               }px) rotate(${isCenter ? 0 : position % 2 ? 2.5 : -2.5}deg)`,
-              boxShadow: isCenter ? '0 8px 0 4px rgba(255,255,255,0.14)' : 'none',
+              boxShadow: isCenter ? '0 8px 0 4px color-mix(in oklab, var(--surface-inverse-foreground, var(--primary-foreground)) 14%, transparent)' : 'none',
             }}
           >
             {site.imageUrl && (
               <img
                 src={site.imageUrl}
                 alt=""
-                className="mb-3 sm:mb-4 h-12 w-10 sm:h-14 sm:w-12 bg-slate-800 object-cover object-top rounded-xs shadow-sm"
+                className="mb-3 sm:mb-4 h-12 w-10 sm:h-14 sm:w-12 bg-(--muted) object-cover object-top rounded-xs shadow-sm"
               />
             )}
             <h3 className="text-sm sm:text-base md:text-lg font-medium leading-snug line-clamp-4">
@@ -130,7 +130,7 @@ export function SiteCarousel({ sites, onSelect, height = 500, className }: SiteC
             <p
               className={cn(
                 'absolute bottom-6 sm:bottom-8 left-7 sm:left-8 right-7 sm:right-8 text-xs sm:text-sm italic truncate',
-                isCenter ? 'text-slate-950/80' : 'text-slate-400',
+                isCenter ? 'text-(--primary-foreground)/80' : 'text-(--muted-foreground)',
               )}
             >
               {site.shortName} • {site.head} ({site.memberCount} membres, {site.appCount} apps)

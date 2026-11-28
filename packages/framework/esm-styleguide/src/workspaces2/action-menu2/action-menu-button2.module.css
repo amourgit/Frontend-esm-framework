@@ -48,7 +48,7 @@
 /* Desktop */
 :global(.egen-breakpoint-gt-tablet) .active, :global(.egen-breakpoint-gt-tablet) :global(.egen-breakpoint-lt-desktop) .focused, :global(.egen-breakpoint-lt-desktop) :global(.egen-breakpoint-gt-tablet) .focused {
   border: 0.125rem solid;
-  border-color: #007d79;
+  border-color: var(--primary);
   border-color: var(--brand-03);
   border-radius: 50%;
   background-color: var(--card);

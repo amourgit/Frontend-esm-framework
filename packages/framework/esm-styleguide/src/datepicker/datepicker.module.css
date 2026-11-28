@@ -21,7 +21,7 @@
   display: inline-block;
   margin-bottom: 0.5rem;
   color: var(--muted-foreground);
-  font-size: 0.75rem;
+  font-size: var(--typography-font-size-xs-size, 0.75rem);
   line-height: 1.33333;
   letter-spacing: 0.32px;
   vertical-align: baseline;
@@ -58,7 +58,7 @@
   position: relative;
 }
 .inputGroup:focus-within, .inputGroup.focused {
-  outline: 2px solid var(--ui-focus, #0f62fe);
+  outline: 2px solid var(--ui-focus, var(--ring, var(--primary)));
   outline-offset: -2px;
 }
 @media screen and (prefers-contrast) {
@@ -67,7 +67,7 @@
   }
 }
 .inputGroup[data-invalid] {
-  outline: 2px solid var(--ui-support-error, #da1e28);
+  outline: 2px solid var(--ui-support-error, var(--destructive));
   outline-offset: -2px;
 }
 @media screen and (prefers-contrast) {
@@ -76,11 +76,11 @@
   }
 }
 .inputGroup[data-invalid] {
-  color: var(--ui-support-error, #da1e28);
+  color: var(--ui-support-error, var(--destructive));
 }
 .inputGroup[data-disabled] {
-  border-block-end: 1px solid rgba(0, 0, 0, 0);
-  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  border-block-end: 1px solid transparent;
+  color: var(--ui-text-disabled, var(--disabled-foreground, var(--muted-foreground)));
   cursor: not-allowed;
 }
 
@@ -92,7 +92,7 @@
   background-color: var(--ui-layer-selected-hover);
 }
 .inputWrapper [data-placeholder].inputSegment, .dateInputWrapper [data-placeholder].inputSegment {
-  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  color: var(--ui-text-disabled, var(--disabled-foreground, var(--muted-foreground)));
 }
 .inputWrapper [data-focused=true].inputSegment, .dateInputWrapper [data-focused=true].inputSegment {
   animation: cursor-blink 1s step-end infinite;
@@ -102,10 +102,10 @@
 }
 
 .inputWrapper [data-readonly]:has(+ [data-placeholder]), .dateInputWrapper [data-readonly]:has(+ [data-placeholder]) {
-  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  color: var(--ui-text-disabled, var(--disabled-foreground, var(--muted-foreground)));
 }
 .inputWrapper [data-placeholder] + [data-readonly], .dateInputWrapper [data-placeholder] + [data-readonly] {
-  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  color: var(--ui-text-disabled, var(--disabled-foreground, var(--muted-foreground)));
 }
 
 @keyframes cursor-blink {
@@ -182,13 +182,13 @@
 }
 
 .inputGroup:has([data-placeholder]) > .inputsWrapper > .separator > span {
-  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  color: var(--ui-text-disabled, var(--disabled-foreground, var(--muted-foreground)));
 }
 
 .invalidText {
-  color: var(--ui-text-error, #da1e28) !important;
-  font-size: 0.75rem;
-  font-weight: 400 !important;
+  color: var(--ui-text-error, var(--destructive)) !important;
+  font-size: var(--typography-font-size-xs-size, 0.75rem);
+  font-weight: var(--font-weight-normal, 400) !important;
   margin: 0.25rem 0 0;
   overflow: hidden;
 }
@@ -223,8 +223,8 @@
 }
 
 .dialog {
-  box-shadow: 0 2px 6px var(--ui-shadow, rgba(0, 0, 0, 0.3));
-  background-color: var(--ui-layer-01, #f4f4f4);
+  box-shadow: 0 2px 6px var(--ui-shadow, color-mix(in oklab, var(--foreground) 30%, transparent));
+  background-color: var(--ui-layer-01, var(--popover, var(--card)));
   overflow: hidden;
   padding: 0.25rem 0.25rem 0.5rem 0.25rem;
 }
@@ -260,7 +260,7 @@
   background-color: var(--ui-layer-hover);
 }
 .flatButton:disabled > svg {
-  fill: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  fill: var(--ui-text-disabled, var(--disabled-foreground, var(--muted-foreground)));
 }
 .flatButton > svg {
   display: block;
@@ -269,7 +269,7 @@
 }
 
 [data-invalid] > .flatButton > svg {
-  --egen-icon-fill: var(--ui-support-error, #da1e28);
+  --egen-icon-fill: var(--ui-support-error, var(--destructive));
 }
 
 .flatButtonMd {
@@ -346,7 +346,7 @@
   -webkit-appearance: none;
 }
 .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric]:focus {
-  outline: 1px solid var(--ui-focus, #0f62fe);
+  outline: 1px solid var(--ui-focus, var(--ring, var(--primary)));
 }
 @media screen and (prefers-contrast) {
   .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric]:focus {
@@ -354,7 +354,7 @@
   }
 }
 .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric][data-invalid] {
-  outline: 2px solid var(--ui-support-error, #da1e28);
+  outline: 2px solid var(--ui-support-error, var(--destructive));
   outline-offset: -2px;
 }
 @media screen and (prefers-contrast) {
@@ -363,13 +363,13 @@
   }
 }
 .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric][data-disabled], .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric][data-disabled]:hover {
-  background-color: var(--ui-layer-01, #f4f4f4);
-  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  background-color: var(--ui-layer-01, var(--popover, var(--card)));
+  color: var(--ui-text-disabled, var(--disabled-foreground, var(--muted-foreground)));
   pointer-events: none;
 }
 .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric][data-disabled] + div > button::after {
-  border-block-end-color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
-  border-block-start-color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  border-block-end-color: var(--ui-text-disabled, var(--disabled-foreground, var(--muted-foreground)));
+  border-block-start-color: var(--ui-text-disabled, var(--disabled-foreground, var(--muted-foreground)));
 }
 .monthYear div:has(input[inputmode=numeric]) > input[inputmode=numeric][data-disabled] + div > button:hover {
   opacity: 0;
@@ -430,12 +430,12 @@
   inset-block-start: 33%;
 }
 .monthYear div:has(input[inputmode=numeric]) button:hover::after {
-  border-block-end-color: var(--ui-button-primary, #0f62fe);
-  border-block-start-color: var(--ui-button-primary, #0f62fe);
+  border-block-end-color: var(--ui-button-primary, var(--primary));
+  border-block-start-color: var(--ui-button-primary, var(--primary));
 }
 .monthYear div:has(input[inputmode=numeric]) button:active::after {
-  border-block-end-color: var(--ui-border-interactive, #0f62fe);
-  border-block-start-color: var(--ui-border-interactive, #0f62fe);
+  border-block-end-color: var(--ui-border-interactive, var(--border-focus, var(--primary)));
+  border-block-start-color: var(--ui-border-interactive, var(--border-focus, var(--primary)));
 }
 .monthYear div:has(input[inputmode=numeric]) button[slot=increment] {
   top: 0;
@@ -482,14 +482,14 @@
   color: var(--background);
 }
 .calendarGrid > tbody > tr > td[aria-disabled] {
-  color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  color: var(--ui-text-disabled, var(--disabled-foreground, var(--muted-foreground)));
   cursor: default;
 }
 
 .today:not([data-selected]) {
   position: relative;
   color: var(--primary-600);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold, 600);
   font-size: var(--ui-body-compact-01-font-size, 0.875rem);
   line-height: var(--ui-body-compact-01-line-height, 1.28572);
   letter-spacing: var(--ui-body-compact-01-letter-spacing, 0.16px);
@@ -512,10 +512,10 @@
   transform: translateX(-50%);
 }
 .today:not([data-selected])[data-disabled]::after {
-  background-color: var(--ui-text-disabled, rgba(22, 22, 22, 0.25));
+  background-color: var(--ui-text-disabled, var(--disabled-foreground, var(--muted-foreground)));
 }
 .today:not([data-selected]):not([data-disabled])::after {
-  background-color: var(--ui-link-primary, var(--ui-link-primary, #0f62fe));
+  background-color: var(--ui-link-primary, var(--link, var(--primary)));
 }
 
 :global([dir="rtl"]) .inputWrapper, :global([dir="rtl"]) .dateInputWrapper {

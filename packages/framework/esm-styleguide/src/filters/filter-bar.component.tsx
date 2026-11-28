@@ -265,7 +265,7 @@ function Popover({ anchorKey, label, onClose, children }: PopoverProps) {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.12, ease: [0.2, 0.8, 0.2, 1] }}
         style={{ position: "fixed", top: pos?.top ?? -9999, left: pos?.left ?? -9999, zIndex: 60 }}
-        className="min-w-[13rem] max-w-[18rem] overflow-hidden rounded-lg border border-[var(--fb-border)] bg-[var(--fb-bg-surface)] shadow-[0_10px_30px_-8px_rgba(0,0,0,0.25)]"
+        className="min-w-[13rem] max-w-[18rem] overflow-hidden rounded-lg border border-[var(--fb-border)] bg-[var(--fb-bg-surface)] shadow-[0_10px_30px_-8px_color-mix(in_oklab,var(--shadow-color)_25%,transparent)]"
       >
         {children}
       </motion.div>
@@ -912,35 +912,20 @@ export function FilterBar({
       */}
       <style>{`
 :root {
-  --fb-fg: #18181b;
-  --fb-fg-muted: #71717a;
-  --fb-fg-subtle: #a1a1aa;
-  --fb-fg-on-accent: #ffffff;
-  --fb-bg-surface: #ffffff;
-  --fb-bg-chip: rgba(24, 24, 27, 0.04);
-  --fb-bg-hover: rgba(24, 24, 27, 0.06);
-  --fb-bg-active: rgba(24, 24, 27, 0.08);
-  --fb-border: rgba(24, 24, 27, 0.09);
-  --fb-border-strong: #18181b;
-  --fb-accent: #3b82f6;
-  --fb-accent-rgb: 59 130 246;
-}
-.dark {
-  --fb-fg: #f4f4f5;
-  --fb-fg-muted: #a1a1aa;
-  --fb-fg-subtle: #71717a;
-  --fb-fg-on-accent: #18181b;
-  --fb-bg-surface: #18181b;
-  --fb-bg-chip: rgba(255, 255, 255, 0.05);
-  --fb-bg-hover: rgba(255, 255, 255, 0.08);
-  --fb-bg-active: rgba(255, 255, 255, 0.12);
-  --fb-border: rgba(255, 255, 255, 0.08);
-  --fb-border-strong: #f4f4f5;
-  --fb-accent: #60a5fa;
-  --fb-accent-rgb: 96 165 250;
+  --fb-fg: var(--foreground);
+  --fb-fg-muted: var(--muted-foreground);
+  --fb-fg-subtle: color-mix(in oklab, var(--muted-foreground) 65%, var(--popover, var(--card)));
+  --fb-fg-on-accent: var(--primary-foreground);
+  --fb-bg-surface: var(--popover, var(--card));
+  --fb-bg-chip: color-mix(in oklab, var(--foreground) 4%, transparent);
+  --fb-bg-hover: color-mix(in oklab, var(--foreground) 6%, transparent);
+  --fb-bg-active: color-mix(in oklab, var(--foreground) 8%, transparent);
+  --fb-border: color-mix(in oklab, var(--foreground) 9%, transparent);
+  --fb-border-strong: var(--foreground);
+  --fb-accent: var(--primary);
 }
 @keyframes fb-flash {
-  0% { background-color: rgb(var(--fb-accent-rgb) / 0.18); }
+  0% { background-color: color-mix(in oklab, var(--fb-accent) 18%, transparent); }
   100% { background-color: transparent; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -37,57 +37,99 @@
   --neutral-800: color-mix(in oklab, var(--foreground) 90%, var(--background));
   --neutral-900: color-mix(in oklab, var(--foreground) 95%, var(--background));
   --neutral-950: color-mix(in oklab, var(--foreground) 98%, var(--background));
-  /* success : constantes (hors thème) */
-  --success-50: #f0fdf4;
-  --success-100: #dcfce7;
-  --success-200: #bbf7d0;
-  --success-300: #86efac;
-  --success-400: #4ade80;
-  --success-500: #22c55e;
-  --success-600: #16a34a;
-  --success-700: #15803d;
-  --success-800: #166534;
-  --success-900: #14532d;
-  --success-950: #052e16;
-  /* warning : constantes (hors thème) */
-  --warning-50: #fffbeb;
-  --warning-100: #fef3c7;
-  --warning-200: #fde68a;
-  --warning-300: #fcd34d;
-  --warning-400: #fbbf24;
-  --warning-500: #f59e0b;
-  --warning-600: #d97706;
-  --warning-700: #b45309;
-  --warning-800: #92400e;
-  --warning-900: #78350f;
-  --warning-950: #451a03;
-  /* info : constantes (hors thème) */
-  --info-50: #eff6ff;
-  --info-100: #dbeafe;
-  --info-200: #bfdbfe;
-  --info-300: #93c5fd;
-  --info-400: #60a5fa;
-  --info-500: #3b82f6;
-  --info-600: #2563eb;
-  --info-700: #1d4ed8;
-  --info-800: #1e40af;
-  --info-900: #1e3a8a;
-  --info-950: #172554;
-  /* secondary : constantes d'accent */
-  --secondary-50: #fdf4ff;
-  --secondary-100: #fae8ff;
-  --secondary-200: #f5d0fe;
-  --secondary-300: #f0abfc;
-  --secondary-400: #e879f9;
-  --secondary-500: #d946ef;
-  --secondary-600: #c026d3;
-  --secondary-700: #a21caf;
-  --secondary-800: #86198f;
-  --secondary-900: #701a75;
-  --secondary-950: #4a044e;
-  /* Voile derrière les modales et panneaux */
+  /* Repli des couleurs étendues pour les thèmes sans ces clés (contrat 44 clés) */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  /* success : échelle dérivée de la clé thème --success */
+  --success-50: color-mix(in oklab, var(--success) 8%, white);
+  --success-100: color-mix(in oklab, var(--success) 16%, white);
+  --success-200: color-mix(in oklab, var(--success) 32%, white);
+  --success-300: color-mix(in oklab, var(--success) 52%, white);
+  --success-400: color-mix(in oklab, var(--success) 76%, white);
+  --success-500: var(--success);
+  --success-600: color-mix(in oklab, var(--success) 88%, black);
+  --success-700: color-mix(in oklab, var(--success) 74%, black);
+  --success-800: color-mix(in oklab, var(--success) 60%, black);
+  --success-900: color-mix(in oklab, var(--success) 46%, black);
+  --success-950: color-mix(in oklab, var(--success) 30%, black);
+  /* warning : échelle dérivée de la clé thème --warning */
+  --warning-50: color-mix(in oklab, var(--warning) 8%, white);
+  --warning-100: color-mix(in oklab, var(--warning) 16%, white);
+  --warning-200: color-mix(in oklab, var(--warning) 32%, white);
+  --warning-300: color-mix(in oklab, var(--warning) 52%, white);
+  --warning-400: color-mix(in oklab, var(--warning) 76%, white);
+  --warning-500: var(--warning);
+  --warning-600: color-mix(in oklab, var(--warning) 88%, black);
+  --warning-700: color-mix(in oklab, var(--warning) 74%, black);
+  --warning-800: color-mix(in oklab, var(--warning) 60%, black);
+  --warning-900: color-mix(in oklab, var(--warning) 46%, black);
+  --warning-950: color-mix(in oklab, var(--warning) 30%, black);
+  /* info : échelle dérivée de la clé thème --info */
+  --info-50: color-mix(in oklab, var(--info) 8%, white);
+  --info-100: color-mix(in oklab, var(--info) 16%, white);
+  --info-200: color-mix(in oklab, var(--info) 32%, white);
+  --info-300: color-mix(in oklab, var(--info) 52%, white);
+  --info-400: color-mix(in oklab, var(--info) 76%, white);
+  --info-500: var(--info);
+  --info-600: color-mix(in oklab, var(--info) 88%, black);
+  --info-700: color-mix(in oklab, var(--info) 74%, black);
+  --info-800: color-mix(in oklab, var(--info) 60%, black);
+  --info-900: color-mix(in oklab, var(--info) 46%, black);
+  --info-950: color-mix(in oklab, var(--info) 30%, black);
+  /* secondary : échelle dérivée de la clé thème --secondary */
+  --secondary-50: color-mix(in oklab, var(--secondary) 8%, white);
+  --secondary-100: color-mix(in oklab, var(--secondary) 16%, white);
+  --secondary-200: color-mix(in oklab, var(--secondary) 32%, white);
+  --secondary-300: color-mix(in oklab, var(--secondary) 52%, white);
+  --secondary-400: color-mix(in oklab, var(--secondary) 76%, white);
+  --secondary-500: var(--secondary);
+  --secondary-600: color-mix(in oklab, var(--secondary) 88%, black);
+  --secondary-700: color-mix(in oklab, var(--secondary) 74%, black);
+  --secondary-800: color-mix(in oklab, var(--secondary) 60%, black);
+  --secondary-900: color-mix(in oklab, var(--secondary) 46%, black);
+  --secondary-950: color-mix(in oklab, var(--secondary) 30%, black);
+  /* Voile derrière les modales et panneaux (repli ; la clé --overlay du thème prime) */
   --overlay: rgb(15 23 42 / 0.45);
-  /* Rayons : échelle calculée sur --radius du thème */
+  /* Clés étendues EGEN — replis dérivés du contrat de base ; le thème les écrase par cascade */
+  --primary-hover: color-mix(in oklab, var(--primary) 88%, black);
+  --primary-active: color-mix(in oklab, var(--primary) 76%, black);
+  --accent-hover: color-mix(in oklab, var(--accent) 92%, var(--foreground));
+  --accent-active: color-mix(in oklab, var(--accent) 84%, var(--foreground));
+  --secondary-hover: color-mix(in oklab, var(--secondary) 88%, black);
+  --secondary-active: color-mix(in oklab, var(--secondary) 76%, black);
+  --success-hover: color-mix(in oklab, var(--success) 88%, black);
+  --success-active: color-mix(in oklab, var(--success) 76%, black);
+  --warning-hover: color-mix(in oklab, var(--warning) 88%, black);
+  --warning-active: color-mix(in oklab, var(--warning) 76%, black);
+  --info-hover: color-mix(in oklab, var(--info) 88%, black);
+  --info-active: color-mix(in oklab, var(--info) 76%, black);
+  --destructive-hover: color-mix(in oklab, var(--destructive) 88%, black);
+  --destructive-active: color-mix(in oklab, var(--destructive) 76%, black);
+  --muted-hover: color-mix(in oklab, var(--muted) 94%, var(--foreground));
+  --disabled: var(--muted);
+  --disabled-foreground: var(--muted-foreground);
+  --placeholder: var(--muted-foreground);
+  --skeleton: var(--muted);
+  --scrim: var(--overlay);
+  --surface-inverse-foreground: var(--primary-foreground);
+  --highlight: color-mix(in oklab, var(--primary) 20%, var(--background));
+  --highlight-foreground: var(--foreground);
+  --link: var(--primary);
+  --link-hover: color-mix(in oklab, var(--primary) 80%, black);
+  --link-visited: var(--secondary);
+  --border-subtle: color-mix(in oklab, var(--border) 55%, transparent);
+  --border-strong: color-mix(in oklab, var(--border) 80%, var(--foreground));
+  --border-focus: var(--ring);
+  --primary-subtle-foreground: var(--primary);
+  --success-subtle-foreground: var(--success);
+  --warning-subtle-foreground: var(--warning);
+  --info-subtle-foreground: var(--info);
+  --destructive-subtle-foreground: var(--destructive);
+  --chart-6: color-mix(in oklab, var(--chart-1) 55%, var(--chart-3));
+  --chart-7: color-mix(in oklab, var(--chart-2) 60%, var(--chart-4));
+  --chart-8: color-mix(in oklab, var(--chart-3) 55%, var(--chart-5));
+  /* Rayons : échelle calculée sur --radius du thème (repli ; les tokens --radius-* du thème priment par cascade) */
   --radius-none: 0px;
   --radius-xs: calc(var(--radius) - 6px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -96,45 +138,45 @@
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-full: 9999px;
-  /* Transitions */
-  --transition-default: all 200ms cubic-bezier(0.42, 0, 0.18, 1);
+  /* Transitions (repli ; les tokens --motion-* du thème priment quand ils existent) */
+  --transition-default: var(--motion-transition-default, all 200ms cubic-bezier(0.42, 0, 0.18, 1));
   --transition-colors: color 150ms ease, background-color 200ms ease, border-color 200ms ease;
   --transition-transform: transform 200ms cubic-bezier(0.42, 0, 0.18, 1);
   --transition-opacity: opacity 180ms ease;
   --transition-shadow: box-shadow 200ms ease;
   --transition-surface: background-color 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
   /* Durées et courbes d'animation */
-  --duration-normal: 200ms;
-  --duration-slower: 700ms;
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-normal: var(--motion-duration-normal, 200ms);
+  --duration-slower: var(--motion-duration-slower, 700ms);
+  --ease-in-out: var(--motion-easing-in-out, cubic-bezier(0.4, 0, 0.2, 1));
   /* Empilement */
-  --z-dropdown: 100;
-  --z-sticky: 200;
-  --z-overlay: 300;
-  --z-modal: 400;
-  /* Typographie : tailles, interlignes, graisses */
-  --text-xs: 0.75rem;
-  --text-xs--line-height: 1rem;
-  --text-sm: 0.875rem;
-  --text-sm--line-height: 1.25rem;
-  --text-base: 1rem;
-  --text-base--line-height: 1.5rem;
-  --text-lg: 1.125rem;
-  --text-lg--line-height: 1.75rem;
-  --text-xl: 1.25rem;
-  --text-xl--line-height: 1.75rem;
-  --text-2xl: 1.5rem;
-  --text-2xl--line-height: 2rem;
-  --text-3xl: 1.875rem;
-  --text-3xl--line-height: 2.25rem;
-  --text-4xl: 2.25rem;
-  --text-4xl--line-height: 2.5rem;
-  --font-weight-light: 300;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
+  --z-dropdown: var(--z-index-dropdown, 100);
+  --z-sticky: var(--z-index-sticky, 200);
+  --z-overlay: var(--z-index-overlay, 300);
+  --z-modal: var(--z-index-modal, 400);
+  /* Typographie : tailles, interlignes, graisses (tokens --typography-* du thème, replis constants) */
+  --text-xs: var(--typography-font-size-xs-size, 0.75rem);
+  --text-xs--line-height: var(--typography-font-size-xs-line-height, 1rem);
+  --text-sm: var(--typography-font-size-sm-size, 0.875rem);
+  --text-sm--line-height: var(--typography-font-size-sm-line-height, 1.25rem);
+  --text-base: var(--typography-font-size-base-size, 1rem);
+  --text-base--line-height: var(--typography-font-size-base-line-height, 1.5rem);
+  --text-lg: var(--typography-font-size-lg-size, 1.125rem);
+  --text-lg--line-height: var(--typography-font-size-lg-line-height, 1.75rem);
+  --text-xl: var(--typography-font-size-xl-size, 1.25rem);
+  --text-xl--line-height: var(--typography-font-size-xl-line-height, 1.75rem);
+  --text-2xl: var(--typography-font-size-2xl-size, 1.5rem);
+  --text-2xl--line-height: var(--typography-font-size-2xl-line-height, 2rem);
+  --text-3xl: var(--typography-font-size-3xl-size, 1.875rem);
+  --text-3xl--line-height: var(--typography-font-size-3xl-line-height, 2.25rem);
+  --text-4xl: var(--typography-font-size-4xl-size, 2.25rem);
+  --text-4xl--line-height: var(--typography-font-size-4xl-line-height, 2.5rem);
+  --font-weight-light: var(--typography-font-weight-light, 300);
+  --font-weight-normal: var(--typography-font-weight-normal, 400);
+  --font-weight-medium: var(--typography-font-weight-medium, 500);
+  --font-weight-semibold: var(--typography-font-weight-semibold, 600);
+  --font-weight-bold: var(--typography-font-weight-bold, 700);
+  --font-weight-extrabold: var(--typography-font-weight-extrabold, 800);
 }
 
 /* 60,70 and 80 are already declared as brand-01, 02 and 03 respectively */
@@ -149,6 +191,27 @@
 }
 
 :root {
+  /* Typographie compacte (repli ; les tokens --typography-* du thème priment) */
+  --ui-body-compact-01-font-size: var(--typography-font-size-sm-size, 0.875rem);
+  --ui-body-compact-01-font-weight: var(--typography-font-weight-normal, 400);
+  --ui-body-compact-01-line-height: var(--typography-font-size-sm-line-height, 1.28572);
+  --ui-body-compact-01-letter-spacing: var(--typography-tracking-normal, 0.16px);
+  --ui-body-compact-02-font-size: var(--typography-font-size-xs-size, 0.75rem);
+  --ui-body-compact-02-font-weight: var(--typography-font-weight-normal, 400);
+  --ui-body-compact-02-line-height: var(--typography-font-size-xs-line-height, 1.33333);
+  --ui-body-compact-02-letter-spacing: var(--typography-tracking-normal, 0.32px);
+  --ui-heading-04-font-size: var(--typography-font-size-sm-size, 0.875rem);
+  --ui-heading-04-font-weight: var(--typography-font-weight-semibold, 600);
+  --ui-heading-04-line-height: var(--typography-font-size-sm-line-height, 1.28572);
+  --ui-heading-04-letter-spacing: var(--typography-tracking-normal, 0.16px);
+  --ui-heading-compact-01-font-size: var(--typography-font-size-sm-size, 0.875rem);
+  --ui-heading-compact-01-font-weight: var(--typography-font-weight-semibold, 600);
+  --ui-heading-compact-01-line-height: var(--typography-font-size-sm-line-height, 1.28572);
+  --ui-heading-compact-01-letter-spacing: var(--typography-tracking-normal, 0.16px);
+  --ui-heading-compact-02-font-size: var(--typography-font-size-xs-size, 0.75rem);
+  --ui-heading-compact-02-font-weight: var(--typography-font-weight-semibold, 600);
+  --ui-heading-compact-02-line-height: var(--typography-font-size-xs-line-height, 1.33333);
+  --ui-heading-compact-02-letter-spacing: var(--typography-tracking-normal, 0.32px);
   --ui-layer: var(--card);
   --ui-layer-01: var(--card);
   --ui-layer-02: var(--muted);
@@ -195,73 +258,74 @@
   --ui-field-hover-01: var(--muted);
   --ui-field-hover-02: var(--muted);
   --ui-field-hover-03: var(--muted);
-  --ui-border-subtle: var(--border);
-  --ui-border-subtle-00: var(--border);
-  --ui-border-subtle-01: var(--border);
-  --ui-border-subtle-02: var(--border);
-  --ui-border-subtle-03: var(--border);
-  --ui-border-subtle-selected: var(--border);
-  --ui-border-subtle-selected-01: var(--border);
-  --ui-border-subtle-selected-02: var(--border);
-  --ui-border-subtle-selected-03: var(--border);
-  --ui-border-strong: var(--border);
-  --ui-border-strong-01: var(--border);
-  --ui-border-strong-02: var(--border);
-  --ui-border-strong-03: var(--border);
-  --ui-border-tile: var(--border);
-  --ui-border-tile-01: var(--border);
-  --ui-border-tile-02: var(--border);
-  --ui-border-tile-03: var(--border);
-  --ui-border-interactive: var(--primary);
+  --ui-border-subtle: var(--border-subtle, var(--border));
+  --ui-border-subtle-00: var(--border-subtle, var(--border));
+  --ui-border-subtle-01: var(--border-subtle, var(--border));
+  --ui-border-subtle-02: var(--border-subtle, var(--border));
+  --ui-border-subtle-03: var(--border-subtle, var(--border));
+  --ui-border-subtle-selected: var(--border-subtle, var(--border));
+  --ui-border-subtle-selected-01: var(--border-subtle, var(--border));
+  --ui-border-subtle-selected-02: var(--border-subtle, var(--border));
+  --ui-border-subtle-selected-03: var(--border-subtle, var(--border));
+  --ui-border-strong: var(--border-strong, var(--border));
+  --ui-border-strong-01: var(--border-strong, var(--border));
+  --ui-border-strong-02: var(--border-strong, var(--border));
+  --ui-border-strong-03: var(--border-strong, var(--border));
+  --ui-border-tile: var(--border-subtle, var(--border));
+  --ui-border-tile-01: var(--border-subtle, var(--border));
+  --ui-border-tile-02: var(--border-subtle, var(--border));
+  --ui-border-tile-03: var(--border-subtle, var(--border));
+  --ui-border-interactive: var(--border-focus, var(--primary));
   --ui-border-inverse: var(--foreground);
   --ui-border-disabled: var(--border);
   --ui-background: var(--background);
-  --ui-background-hover: var(--muted);
-  --ui-background-active: var(--accent);
+  --ui-background-hover: var(--muted-hover, var(--muted));
+  --ui-background-active: var(--accent-active, var(--accent));
   --ui-background-selected: var(--accent);
-  --ui-background-selected-hover: var(--accent);
+  --ui-background-selected-hover: var(--accent-hover, var(--accent));
   --ui-background-brand: var(--primary);
   --ui-background-inverse: var(--foreground);
   --ui-background-inverse-hover: var(--foreground);
   --ui-text-primary: var(--foreground);
   --ui-text-secondary: var(--muted-foreground);
-  --ui-text-placeholder: var(--muted-foreground);
+  --ui-text-placeholder: var(--placeholder, var(--muted-foreground));
   --ui-text-helper: var(--muted-foreground);
-  --ui-text-disabled: var(--muted-foreground);
+  --ui-text-disabled: var(--disabled-foreground, var(--muted-foreground));
   --ui-text-inverse: var(--primary-foreground);
   --ui-text-on-color: var(--primary-foreground);
   --ui-text-on-color-disabled: var(--primary-foreground);
   --ui-text-error: var(--destructive);
   --ui-icon-primary: var(--foreground);
   --ui-icon-secondary: var(--muted-foreground);
-  --ui-icon-disabled: var(--muted-foreground);
+  --ui-icon-disabled: var(--disabled-foreground, var(--muted-foreground));
   --ui-icon-inverse: var(--primary-foreground);
   --ui-icon-interactive: var(--primary);
   --ui-icon-on-color: var(--primary-foreground);
   --ui-icon-on-color-disabled: var(--primary-foreground);
   --ui-interactive: var(--primary);
-  --ui-link-primary: var(--primary-400);
-  --ui-link-primary-hover: var(--primary-300);
-  --ui-link-secondary: var(--primary-600);
+  --ui-link-primary: var(--link, var(--primary-400));
+  --ui-link-primary-hover: var(--link-hover, var(--primary-300));
+  --ui-link-secondary: var(--link, var(--primary-600));
   --ui-link-inverse: var(--primary-foreground);
-  --ui-link-visited: var(--secondary-500);
+  --ui-link-visited: var(--link-visited, var(--secondary-500));
   --ui-focus: var(--ring);
   --ui-focus-inset: var(--primary-foreground);
   --ui-focus-inverse: var(--primary-foreground);
-  --ui-highlight: var(--primary-100);
-  --ui-toggle-off: var(--neutral-400);
+  --ui-highlight: var(--highlight, var(--primary-100));
+  --ui-highlight-foreground: var(--highlight-foreground, var(--foreground));
+  --ui-toggle-off: var(--disabled, var(--neutral-400));
   --ui-overlay: var(--overlay);
-  --ui-shadow: rgba(0, 0, 0, 0.3);
+  --ui-shadow: color-mix(in oklab, var(--foreground) 30%, transparent);
   --ui-support-error: var(--destructive);
-  --ui-support-success: var(--success-500);
-  --ui-support-warning: var(--warning-500);
-  --ui-support-info: var(--info-500);
+  --ui-support-success: var(--success, var(--success-500));
+  --ui-support-warning: var(--warning, var(--warning-500));
+  --ui-support-info: var(--info, var(--info-500));
   --ui-support-error-inverse: var(--destructive-600);
   --ui-support-success-inverse: var(--success-600);
   --ui-support-warning-inverse: var(--warning-600);
   --ui-support-info-inverse: var(--info-600);
-  --ui-skeleton-background: var(--muted);
-  --ui-skeleton-element: var(--muted);
+  --ui-skeleton-background: var(--skeleton, var(--muted));
+  --ui-skeleton-element: var(--skeleton, var(--muted));
   --ui-button-primary: var(--primary-600);
   --ui-button-primary-hover: var(--primary-700);
   --ui-button-primary-active: var(--primary-800);
@@ -346,18 +410,32 @@ html[data-public-route=true] #egen-scroll-region {
   overscroll-behavior: contain;
   height: auto;
   margin: calc(var(--egen-workbench-gap, 0.375rem) / 2);
-  border-radius: 0.625rem;
-  background: var(--egen-workbench-card-bg, rgba(0, 0, 0, 0.24));
+  border-radius: var(--radius-lg, 0.625rem);
+  background: var(--egen-workbench-card-bg, var(--overlay));
 }
 
 :root {
   --egen-rail-width: 2.5rem;
   --egen-workbench-gap: 0.375rem;
-  --egen-workbench-card-bg: rgb(0 0 0 / 24%);
+  --egen-workbench-card-bg: color-mix(in oklab, var(--shadow-color) 24%, transparent);
 }
 
 :root:not(.dark) {
-  --egen-workbench-card-bg: rgb(0 0 0 / 8%);
+  --egen-workbench-card-bg: color-mix(in oklab, var(--shadow-color) 8%, transparent);
+}
+
+/* Échelle d'ombres Tailwind-like : référencée par les tokens shadow-component-*
+   (--shadow-component-card = var(--shadow-sm), etc.). absente du contrat, on la
+   dérive de --shadow-color (teinte de ombre du thème). */
+:root {
+  --shadow-2xs: 0 1px var(--shadow-color);
+  --shadow-xs: 0 1px 2px var(--shadow-color);
+  --shadow-sm: 0 1px 3px var(--shadow-color), 0 1px 2px var(--shadow-color);
+  --shadow-md: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+  --shadow-lg: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
+  --shadow-xl: 0 20px 25px -5px var(--shadow-color), 0 8px 10px -6px var(--shadow-color);
+  --shadow-2xl: 0 25px 50px -12px var(--shadow-color);
+  --shadow: 0 1px 3px var(--shadow-color), 0 1px 2px var(--shadow-color);
 }
 
 html[data-workbench-resizing] {
@@ -544,7 +622,7 @@ nav.breadcrumbs-container ol li {
 
 .egen-main-content {
   margin-left: 0;
-  transition: margin-left 0.5s ease;
+  transition: margin-left var(--motion-duration-slow, 0.5s) ease;
 }
 
 .egen-offline {
@@ -559,7 +637,7 @@ nav.breadcrumbs-container ol li {
 .egen-loader {
   --egen-loader-from: var(--primary-600);
   --egen-loader-to: var(--primary-300);
-  --egen-loader-glow: rgb(0 128 128 / 60%);
+  --egen-loader-glow: color-mix(in oklab, var(--primary) 60%, transparent);
   position: relative;
   display: flex;
   align-items: center;
@@ -1268,7 +1346,7 @@ nav.breadcrumbs-container ol li {
 }
 
 .egen-anim-shimmer {
-  background-image: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.14) 50%, transparent 100%);
+  background-image: linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--foreground) 14%, transparent) 50%, transparent 100%);
   background-size: 200% 100%;
   animation-name: egen-shimmer;
   animation-duration: var(--egen-anim-duration, 1.6s);

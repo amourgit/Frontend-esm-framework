@@ -32,18 +32,18 @@ export function SiteSearchBar({
   const inputRef = useRef<HTMLInputElement>(null);
   const showPanel = Boolean(filterPanel) && (filtersOpen || activeFilterCount > 0);
   const iconBtn =
-    'p-1.5 rounded-lg border border-white/10 text-slate-400 transition-colors cursor-pointer';
+    'p-1.5 rounded-lg border border-(--border) text-(--muted-foreground) transition-colors cursor-pointer';
 
   return (
     <div
       className={cn(
-        'relative rounded-2xl border border-white/15 backdrop-blur-sm shadow-lg overflow-hidden transition-all',
-        'focus-within:border-teal-400/80 focus-within:ring-2 focus-within:ring-teal-400/20',
+        'relative rounded-2xl border border-(--border) backdrop-blur-sm shadow-lg overflow-hidden transition-all',
+        'focus-within:border-(--primary)/80 focus-within:ring-2 focus-within:ring-(--primary)/20',
         className,
       )}
     >
       <div className="flex items-center px-4 py-2.5 sm:py-3 gap-3">
-        <div className="w-8 h-8 rounded-xl border border-white/10 flex items-center justify-center text-teal-300 shrink-0">
+        <div className="w-8 h-8 rounded-xl border border-(--border) flex items-center justify-center text-(--primary)/80 shrink-0">
           <Search className="w-4 h-4" />
         </div>
         <input
@@ -53,7 +53,7 @@ export function SiteSearchBar({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           aria-label={placeholder}
-          className="flex-1 min-w-0 bg-transparent border-none text-white placeholder-slate-400 text-xs sm:text-sm font-medium focus:outline-none truncate"
+          className="flex-1 min-w-0 bg-transparent border-none text-(--foreground) placeholder-(--muted-foreground) text-xs sm:text-sm font-medium focus:outline-none truncate"
         />
         <div className="flex items-center gap-2 shrink-0">
           {value && (
@@ -64,7 +64,7 @@ export function SiteSearchBar({
                 onChange('');
                 inputRef.current?.focus();
               }}
-              className={cn(iconBtn, 'hover:bg-white/10 hover:text-white')}
+              className={cn(iconBtn, 'hover:bg-(--foreground)/10 hover:text-(--foreground)')}
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -78,14 +78,14 @@ export function SiteSearchBar({
               className={cn(
                 'flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer',
                 showPanel
-                  ? 'bg-teal-500 text-slate-950 border-teal-400 shadow-sm'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10 border-white/15',
+                  ? 'bg-(--primary) text-(--primary-foreground) border-(--primary) shadow-sm'
+                  : 'text-(--muted-foreground) hover:text-(--foreground) hover:bg-(--foreground)/10 border-(--border)',
               )}
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Filtres</span>
               {activeFilterCount > 0 && (
-                <span className="min-w-[1.1rem] rounded-full bg-slate-950 px-1 text-center text-[10px] font-black leading-[1.1rem] text-teal-300">
+                <span className="min-w-[1.1rem] rounded-full bg-(--muted) px-1 text-center text-[10px] font-black leading-[1.1rem] text-(--primary)/80">
                   {activeFilterCount}
                 </span>
               )}
@@ -96,14 +96,14 @@ export function SiteSearchBar({
               type="button"
               title="Réinitialiser"
               onClick={onReset}
-              className={cn(iconBtn, 'hover:bg-rose-500/20 hover:text-rose-300')}
+              className={cn(iconBtn, 'hover:bg-(--destructive)/20 hover:text-(--destructive-subtle-foreground,var(--destructive))')}
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
           )}
         </div>
       </div>
-      {showPanel && <div className="dark w-full px-4 pb-3 pt-2 border-t border-white/10">{filterPanel}</div>}
+      {showPanel && <div className="dark w-full px-4 pb-3 pt-2 border-t border-(--border)">{filterPanel}</div>}
     </div>
   );
 }

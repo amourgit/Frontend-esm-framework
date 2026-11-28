@@ -17,9 +17,9 @@ const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
 function Avatar({ member, size }: { member: SiteMember; size: string }) {
   return member.avatar ? (
-    <img src={member.avatar} alt="" className={cn('rounded-full object-cover border border-white/20 shrink-0', size)} />
+    <img src={member.avatar} alt="" className={cn('rounded-full object-cover border border-(--border-strong,var(--border)) shrink-0', size)} />
   ) : (
-    <span className={cn('rounded-full bg-teal-600/40 border border-white/20 flex items-center justify-center font-bold text-teal-100 shrink-0', size)}>
+    <span className={cn('rounded-full bg-(--primary)/40 border border-(--border-strong,var(--border)) flex items-center justify-center font-bold text-(--primary-subtle-foreground,var(--primary)) shrink-0', size)}>
       {member.name.slice(0, 1).toUpperCase()}
     </span>
   );
@@ -48,17 +48,17 @@ export function SiteMembersPanel({ siteName, members, teams = [], onSelect, clas
   const pill = (active: boolean) =>
     cn(
       'px-3 py-1 rounded-full border text-xs font-medium whitespace-nowrap transition-colors cursor-pointer',
-      active ? 'bg-teal-500 text-slate-950 border-teal-400 font-bold' : 'border-white/15 text-slate-300 hover:text-white hover:bg-white/10',
+      active ? 'bg-(--primary) text-(--primary-foreground) border-(--primary) font-bold' : 'border-(--border) text-(--muted-foreground) hover:text-(--foreground) hover:bg-(--foreground)/10',
     );
 
   return (
-    <div className={cn('flex-1 min-h-0 flex flex-col gap-3 text-slate-100', className)}>
+    <div className={cn('flex-1 min-h-0 flex flex-col gap-3 text-(--foreground)', className)}>
       <SitePanelHeader
-        icon={<Users className="w-4 h-4 text-teal-400" />}
+        icon={<Users className="w-4 h-4 text-(--primary)" />}
         title={`Membres & Équipes — ${siteName}`}
         description={`${visible.length} membre${visible.length > 1 ? 's' : ''} affiché${visible.length > 1 ? 's' : ''} sur ${members.length}`}
         actions={
-          <div className="flex items-center gap-1 bg-white/5 p-1 rounded-lg border border-white/10">
+          <div className="flex items-center gap-1 bg-(--foreground)/5 p-1 rounded-lg border border-(--border)">
             {(['grid', 'list'] as const).map((mode) => (
               <button
                 key={mode}
@@ -66,7 +66,7 @@ export function SiteMembersPanel({ siteName, members, teams = [], onSelect, clas
                 aria-pressed={view === mode}
                 aria-label={mode === 'grid' ? 'Vue grille' : 'Vue liste'}
                 onClick={() => setView(mode)}
-                className={cn('p-1.5 rounded-md cursor-pointer', view === mode ? 'bg-teal-500 text-slate-950' : 'text-slate-300 hover:text-white')}
+                className={cn('p-1.5 rounded-md cursor-pointer', view === mode ? 'bg-(--primary) text-(--primary-foreground)' : 'text-(--muted-foreground) hover:text-(--foreground)')}
               >
                 {mode === 'grid' ? <LayoutGrid className="w-4 h-4" /> : <List className="w-4 h-4" />}
               </button>
@@ -76,14 +76,14 @@ export function SiteMembersPanel({ siteName, members, teams = [], onSelect, clas
       />
 
       <div className="relative">
-        <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+        <Search className="w-4 h-4 text-(--muted-foreground) absolute left-3 top-2.5" />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher par nom, fonction, e-mail ou téléphone..."
           aria-label="Rechercher un membre"
-          className="w-full bg-slate-900/80 text-white placeholder-slate-400 text-xs pl-9 pr-3 py-2 rounded-lg border border-white/10 focus:outline-hidden focus:border-teal-400/50"
+          className="w-full bg-(--popover)/80 text-(--foreground) placeholder-(--muted-foreground) text-xs pl-9 pr-3 py-2 rounded-lg border border-(--border) focus:outline-hidden focus:border-(--primary)/50"
         />
       </div>
 
@@ -119,7 +119,7 @@ export function SiteMembersPanel({ siteName, members, teams = [], onSelect, clas
 
       <div className="flex-1 min-h-0 overflow-y-auto pr-1">
         {visible.length === 0 ? (
-          <p className="text-center py-12 text-slate-400 text-xs">Aucun membre ne correspond à votre recherche.</p>
+          <p className="text-center py-12 text-(--muted-foreground) text-xs">Aucun membre ne correspond à votre recherche.</p>
         ) : view === 'grid' ? (
           <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
             {visible.map((m) => (
@@ -127,27 +127,27 @@ export function SiteMembersPanel({ siteName, members, teams = [], onSelect, clas
                 <button
                   type="button"
                   onClick={() => onSelect?.(m)}
-                  className="w-full text-left p-4 rounded-xl bg-slate-900/60 border border-white/10 hover:border-teal-400/40 hover:bg-slate-800/80 transition-all cursor-pointer flex items-center gap-3"
+                  className="w-full text-left p-4 rounded-xl bg-(--muted)/60 border border-(--border) hover:border-(--primary)/40 hover:bg-(--muted)/80 transition-all cursor-pointer flex items-center gap-3"
                 >
                   <Avatar member={m} size="w-12 h-12 text-base" />
                   <span className="min-w-0">
-                    <span className="block text-sm font-bold text-white truncate">{m.name}</span>
-                    <span className="block text-[11px] text-teal-400/80 truncate">{m.role}</span>
-                    {m.email && <span className="block text-[11px] text-slate-400 truncate">{m.email}</span>}
+                    <span className="block text-sm font-bold text-(--foreground) truncate">{m.name}</span>
+                    <span className="block text-[11px] text-(--primary)/80 truncate">{m.role}</span>
+                    {m.email && <span className="block text-[11px] text-(--muted-foreground) truncate">{m.email}</span>}
                   </span>
                 </button>
               </li>
             ))}
           </ul>
         ) : (
-          <ul className="divide-y divide-white/10 rounded-xl border border-white/10 bg-slate-900/60">
+          <ul className="divide-y divide-(--border) rounded-xl border border-(--border) bg-(--muted)/60">
             {visible.map((m) => (
               <li key={m.id}>
-                <button type="button" onClick={() => onSelect?.(m)} className="w-full text-left px-3 py-2 hover:bg-white/5 transition-colors cursor-pointer flex items-center gap-3">
+                <button type="button" onClick={() => onSelect?.(m)} className="w-full text-left px-3 py-2 hover:bg-(--foreground)/5 transition-colors cursor-pointer flex items-center gap-3">
                   <Avatar member={m} size="w-8 h-8 text-xs" />
-                  <span className="flex-1 min-w-0 text-xs font-semibold text-white truncate">{m.name}</span>
-                  <span className="hidden sm:block text-[11px] text-teal-400/80 truncate max-w-[40%]">{m.role}</span>
-                  {m.email && <span className="hidden lg:block text-[11px] text-slate-400 truncate max-w-[30%]">{m.email}</span>}
+                  <span className="flex-1 min-w-0 text-xs font-semibold text-(--foreground) truncate">{m.name}</span>
+                  <span className="hidden sm:block text-[11px] text-(--primary)/80 truncate max-w-[40%]">{m.role}</span>
+                  {m.email && <span className="hidden lg:block text-[11px] text-(--muted-foreground) truncate max-w-[30%]">{m.email}</span>}
                 </button>
               </li>
             ))}

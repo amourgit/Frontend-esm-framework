@@ -9,7 +9,7 @@
 /* Desktop */
 :global(.egen-breakpoint-gt-tablet) .sideRail {
   width: 3rem;
-  z-index: 100;
+  z-index: var(--z-index-sticky, 100);
   height: 100%;
 }
 :global(.egen-breakpoint-gt-tablet) .sideRail.overlay {
@@ -38,7 +38,7 @@
   position: fixed;
   left: 0;
   bottom: var(--egen-footer-height, 0px);
-  z-index: 8003;
+  z-index: var(--z-index-top);
   width: 100%;
   display: flex;
   justify-content: stretch;

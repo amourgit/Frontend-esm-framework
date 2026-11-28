@@ -79,7 +79,7 @@ export function SectionDivider({ className }: { className?: string }) {
       role="presentation"
       aria-hidden="true"
       data-section-part="divider"
-      className={cn('h-px w-full shrink-0 bg-(--section-line,rgba(255,255,255,0.12))', classNames.divider, className)}
+      className={cn('h-px w-full shrink-0 bg-(--section-line,var(--border-subtle,var(--border)))', classNames.divider, className)}
     />
   );
 }
@@ -97,9 +97,9 @@ function CollapseToggle() {
       aria-controls={bodyId}
       className={cn(
         'inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md border-0 p-0',
-        'bg-transparent text-(--section-muted,rgba(255,255,255,0.65)) outline-none transition-colors duration-150',
-        'hover:bg-(--section-fg,#fff)/10 hover:text-(--section-fg,#fff)',
-        'focus-visible:ring-2 focus-visible:ring-(--section-accent,#34d399)/70',
+        'bg-transparent text-(--section-muted,var(--muted-foreground)) outline-none transition-colors duration-150',
+        'hover:bg-(--section-fg,var(--foreground))/10 hover:text-(--section-fg,var(--foreground))',
+        'focus-visible:ring-2 focus-visible:ring-(--section-accent,var(--primary))/70',
       )}
     >
       <svg
@@ -163,8 +163,8 @@ export function SectionHeader({
           // Mode collant : piloté par des variables CSS héritées (voir section-sticky.ts).
           '[position:var(--section-header-position,static)] top-(--section-sticky-top,0px) z-(--section-sticky-z,10)',
           'transition-[background-color,box-shadow] duration-200 motion-reduce:transition-none',
-          'data-[stuck=true]:bg-(--section-sticky-bg,rgb(8_12_20/0.72)) data-[stuck=true]:backdrop-blur-xl',
-          'data-[stuck=true]:shadow-[0_8px_24px_-12px_rgb(0_0_0/0.45)]',
+          'data-[stuck=true]:bg-(--section-sticky-bg,color-mix(in_oklab,var(--shadow-color)_72%,transparent)) data-[stuck=true]:backdrop-blur-xl',
+          'data-[stuck=true]:shadow-[0_8px_24px_-12px_color-mix(in_oklab,var(--shadow-color)_45%,transparent)]',
           classNames.header,
           className,
         )}
@@ -186,7 +186,7 @@ export function SectionHeader({
                 {icon ? (
                   <span
                     className={cn(
-                      'inline-flex shrink-0 items-center justify-center text-(--section-accent,#34d399)',
+                      'inline-flex shrink-0 items-center justify-center text-(--section-accent,var(--primary))',
                       classNames.leading,
                     )}
                   >
@@ -197,7 +197,7 @@ export function SectionHeader({
                   <TitleTag
                     id={ctx.headingId}
                     className={cn(
-                      'm-0 min-w-0 text-balance tracking-tight text-(--section-fg,#fff)',
+                      'm-0 min-w-0 text-balance tracking-tight text-(--section-fg,var(--foreground))',
                       TITLE_SIZE[titleSize],
                       classNames.title,
                     )}
@@ -209,7 +209,7 @@ export function SectionHeader({
                   <span
                     className={cn(
                       'inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1.5',
-                      'bg-(--section-fg,#fff)/10 text-[11px] font-medium leading-none text-(--section-muted,rgba(255,255,255,0.65))',
+                      'bg-(--section-fg,var(--foreground))/10 text-[11px] font-medium leading-none text-(--section-muted,var(--muted-foreground))',
                       classNames.count,
                     )}
                   >
@@ -220,7 +220,7 @@ export function SectionHeader({
               {description ? (
                 <p
                   className={cn(
-                    'm-0 max-w-3xl text-sm leading-relaxed text-(--section-muted,rgba(255,255,255,0.65))',
+                    'm-0 max-w-3xl text-sm leading-relaxed text-(--section-muted,var(--muted-foreground))',
                     classNames.description,
                   )}
                 >
@@ -324,7 +324,7 @@ export function SectionFooter({ children, actions, layout, divider, className }:
       {showDivider ? <SectionDivider /> : null}
       <div
         className={cn(
-          'flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-(--section-muted,rgba(255,255,255,0.65))',
+          'flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-(--section-muted,var(--muted-foreground))',
           FOOTER_PAD[density],
           FOOTER_JUSTIFY[resolvedLayout],
         )}

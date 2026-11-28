@@ -50,10 +50,10 @@
 }
 :global(.egen-breakpoint-gt-tablet) .headerButtons button {
   background-color: var(--card);
-  border-right: 1px solid #e0e0e0;
+  border-right: 1px solid var(--border, var(--border-subtle));
 }
 :global(.egen-breakpoint-gt-tablet) .headerButtons button > svg {
-  fill: #121619 !important;
+  fill: var(--foreground) !important;
 }
 :global(.egen-breakpoint-gt-tablet) .headerButtons button:hover {
   background-color: var(--muted);
@@ -63,11 +63,11 @@
 }
 :global(.egen-breakpoint-gt-tablet) .workspaceWindowSpacer {
   height: 100%;
-  transition: margin-right 0.5s ease-in-out;
+  transition: margin-right var(--motion-duration-slow, 0.5s) var(--motion-easing-in-out, ease-in-out);
 }
 :global(.egen-breakpoint-gt-tablet) .workspaceOverlayOuterContainer {
   position: fixed;
-  z-index: 50;
+  z-index: var(--z-index-overlay, 50);
 }
 :global(.egen-breakpoint-gt-tablet) .workspaceFixedContainer {
   position: fixed;
@@ -76,7 +76,7 @@
   border-left: 1px solid var(--muted-foreground);
   z-index: 50;
   background-color: white;
-  transition: width 0.5s ease-in-out, right 0.5s ease-in-out;
+  transition: width var(--motion-duration-slow, 0.5s) var(--motion-easing-in-out, ease-in-out), right var(--motion-duration-slow, 0.5s) var(--motion-easing-in-out, ease-in-out);
 }
 :global(.egen-breakpoint-gt-tablet) .extraWideWorkspace {
   width: 48.25rem;
@@ -129,7 +129,7 @@
   background-color: var(--card);
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  z-index: var(--z-index-overlay, 1000);
 }
 :global(.egen-breakpoint-gt-tablet) .overlayHeaderSpacer {
   flex-grow: 1;
@@ -159,8 +159,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 8002;
-  transition: top 0.5s ease-in-out;
+  z-index: var(--z-index-top);
+  transition: top var(--motion-duration-slow, 0.5s) var(--motion-easing-in-out, ease-in-out);
 }
 :global(.egen-breakpoint-lt-desktop) .workspaceContainerWithActionMenu .workspaceFixedContainer {
   bottom: var(--bottom-nav-height);

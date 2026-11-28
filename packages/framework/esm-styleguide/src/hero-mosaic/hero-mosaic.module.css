@@ -21,7 +21,7 @@
   overflow: hidden;
   cursor: pointer;
   box-shadow: 0 10px 15px -3px color-mix(in oklab, var(--shadow-color) 30%, transparent);
-  border: 1px solid color-mix(in oklab, var(--surface-inverse-foreground,var(--primary-foreground)) 10%, transparent);
+  border: 1px solid var(--border);
   background: var(--muted, var(--secondary));
   display: flex;
   flex-direction: column;
@@ -76,10 +76,10 @@
 .tileGradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, color-mix(in oklab, var(--shadow-color) 90%, transparent), color-mix(in oklab, var(--shadow-color) 35%, transparent), transparent);
+  background: linear-gradient(to top, var(--card), var(--card), transparent);
 }
 .tileMedium .tileGradient {
-  background: linear-gradient(to top, color-mix(in oklab, var(--shadow-color) 90%, transparent), color-mix(in oklab, var(--shadow-color) 40%, transparent), transparent);
+  background: linear-gradient(to top, var(--card), var(--card), transparent);
 }
 
 .tileContent {
@@ -96,7 +96,7 @@
 
 .tileTitleLarge {
   margin: 0;
-  color: var(--surface-inverse-foreground,var(--primary-foreground));
+  color: var(--foreground);
   font-weight: var(--font-weight-bold, 700);
   line-height: 1.2;
   font-size: var(--typography-font-size-xl-size, 1.25rem);
@@ -110,7 +110,7 @@
 
 .tileTitleMedium {
   margin: 0;
-  color: var(--surface-inverse-foreground,var(--primary-foreground));
+  color: var(--foreground);
   font-weight: var(--font-weight-bold, 700);
   line-height: 1.35;
   font-size: 0.8125rem;

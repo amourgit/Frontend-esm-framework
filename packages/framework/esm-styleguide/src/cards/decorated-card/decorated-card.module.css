@@ -256,7 +256,7 @@
   bottom: -0.5rem;
   height: 1rem;
   border-radius: var(--radius-full);
-  background: color-mix(in srgb, var(--foreground) 20%, transparent);
+  background: var(--accent);
   filter: blur(10px);
   pointer-events: none;
 }

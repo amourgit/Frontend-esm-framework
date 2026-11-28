@@ -14,10 +14,10 @@ export interface ToastKindConfig {
 }
 
 export const toastKindConfig: Record<ToastType, ToastKindConfig> = {
-  success: { icon: CheckmarkFilledIcon, defaultEyebrow: 'Succès', colorToken: 'success', colorVar: 'var(--success-500)' },
+  success: { icon: CheckmarkFilledIcon, defaultEyebrow: 'Succès', colorToken: 'success', colorVar: 'var(--success)' },
   error: { icon: ErrorFilledIcon, defaultEyebrow: 'Erreur', colorToken: 'error', colorVar: 'var(--destructive)' },
-  warning: { icon: WarningIcon, defaultEyebrow: 'Avertissement', colorToken: 'warning', colorVar: 'var(--warning-500)' },
-  'warning-alt': { icon: WarningIcon, defaultEyebrow: 'Avertissement', colorToken: 'warning', colorVar: 'var(--warning-500)' },
-  info: { icon: InformationFilledIcon, defaultEyebrow: 'Information', colorToken: 'info', colorVar: 'var(--info-500)' },
-  'info-square': { icon: InformationSquareIcon, defaultEyebrow: 'Information', colorToken: 'info', colorVar: 'var(--info-500)' },
+  warning: { icon: WarningIcon, defaultEyebrow: 'Avertissement', colorToken: 'warning', colorVar: 'var(--warning)' },
+  'warning-alt': { icon: WarningIcon, defaultEyebrow: 'Avertissement', colorToken: 'warning', colorVar: 'var(--warning)' },
+  info: { icon: InformationFilledIcon, defaultEyebrow: 'Information', colorToken: 'info', colorVar: 'var(--info)' },
+  'info-square': { icon: InformationSquareIcon, defaultEyebrow: 'Information', colorToken: 'info', colorVar: 'var(--info)' },
 };

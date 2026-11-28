@@ -113,8 +113,8 @@ export const TopBarIconButton = forwardRef<HTMLButtonElement, TopBarIconButtonPr
       className={cn(
         'relative inline-flex h-9 min-w-9 cursor-pointer items-center justify-center rounded-md border-0 p-0',
         'bg-transparent text-inherit transition-colors duration-150 outline-none',
-        'hover:bg-(--primary-foreground)/10 focus-visible:ring-2 focus-visible:ring-(--primary-300,var(--primary))',
-        active && 'bg-primary-500/25 text-primary-200',
+        'hover:bg-(--primary-foreground)/10 focus-visible:ring-2 focus-visible:ring-(--primary)',
+        active && 'bg-primary/25 text-primary',
         className,
       )}
       {...rest}
@@ -162,9 +162,9 @@ export const TopBarAvatar = forwardRef<HTMLButtonElement, TopBarAvatarProps>(fun
       aria-label={name}
       className={cn(
         'relative inline-flex h-8 w-8 cursor-pointer items-center justify-center overflow-hidden rounded-full p-0',
-        'border border-(--primary-300,var(--primary))/50 bg-(--primary-900,var(--primary))/40 text-xs font-bold text-(--primary-foreground) outline-none',
-        'transition-transform duration-150 hover:scale-105 focus-visible:ring-2 focus-visible:ring-(--primary-300,var(--primary))',
-        active && 'ring-2 ring-(--primary-300,var(--primary))',
+        'border border-(--primary)/50 bg-(--primary)/40 text-xs font-bold text-(--primary-foreground) outline-none',
+        'transition-transform duration-150 hover:scale-105 focus-visible:ring-2 focus-visible:ring-(--primary)',
+        active && 'ring-2 ring-(--primary)',
         className,
       )}
       {...rest}

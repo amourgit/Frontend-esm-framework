@@ -54,7 +54,7 @@
   background-color: var(--card);
 }
 :global(.egen-breakpoint-gt-tablet) .focused {
-  border: 0.125rem solid var(--primary-600);
+  border: 0.125rem solid var(--primary);
   border-radius: 50%;
   background-color: var(--card);
 }
@@ -75,19 +75,19 @@
   width: 100%;
 }
 :global(.egen-breakpoint-lt-desktop) .active, :global(.egen-breakpoint-lt-desktop) .focused {
-  background-color: var(--primary-50);
-  color: var(--primary-600);
+  background-color: var(--primary);
+  color: var(--primary);
 }
 :global(.egen-breakpoint-lt-desktop) .active:hover, :global(.egen-breakpoint-lt-desktop) .focused:hover {
-  color: var(--primary-600);
+  color: var(--primary);
 }
 :global(.egen-breakpoint-lt-desktop) .active > span, :global(.egen-breakpoint-lt-desktop) .focused > span {
-  color: var(--primary-600);
+  color: var(--primary);
   font-size: var(--ui-heading-compact-01-font-size, 0.875rem);
   font-weight: var(--ui-heading-compact-01-font-weight, 600);
   line-height: var(--ui-heading-compact-01-line-height, 1.28572);
   letter-spacing: var(--ui-heading-compact-01-letter-spacing, 0.16px);
 }
 :global(.egen-breakpoint-lt-desktop) .active svg, :global(.egen-breakpoint-lt-desktop) .focused svg {
-  fill: var(--primary-600);
+  fill: var(--primary);
 }

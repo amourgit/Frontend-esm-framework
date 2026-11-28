@@ -478,7 +478,7 @@
   background-color: var(--ui-layer-hover);
 }
 .calendarGrid > tbody > tr > td:has([data-selected]) {
-  background-color: var(--primary-600);
+  background-color: var(--primary);
   color: var(--background);
 }
 .calendarGrid > tbody > tr > td[aria-disabled] {
@@ -488,7 +488,7 @@
 
 .today:not([data-selected]) {
   position: relative;
-  color: var(--primary-600);
+  color: var(--primary);
   font-weight: var(--font-weight-semibold, 600);
   font-size: var(--ui-body-compact-01-font-size, 0.875rem);
   line-height: var(--ui-body-compact-01-line-height, 1.28572);

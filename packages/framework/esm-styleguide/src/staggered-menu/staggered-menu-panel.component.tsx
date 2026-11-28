@@ -82,8 +82,8 @@ export interface StaggeredMenuPanelProps {
  *   socialItems={socialItems}
  *   displaySocials
  *   displayItemNumbering
- *   colors={['var(--secondary-300)', 'var(--primary-600)']}
- *   accentColor="var(--primary-600)"
+ *   colors={['var(--secondary)', 'var(--primary)']}
+ *   accentColor="var(--primary)"
  *   closeOnClickAway
  * />
  * ```

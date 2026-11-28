@@ -1,5 +1,13 @@
 # @egen-civitas/esm-app-shell
 
+## 4.0.2
+
+### Patch Changes
+
+- Reconstruit automatiquement : le shell embarque dans son bundle `@egen-civitas/esm-styleguide`, modifiés dans cette version. Sans cette republication, les apps continueraient d'exécuter l'ancienne copie.
+- Updated dependencies [9adabbe]
+  - @egen-civitas/esm-styleguide@7.2.0
+
 ## 4.0.1
 
 ### Patch Changes

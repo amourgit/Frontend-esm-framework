@@ -1,6 +1,5 @@
 /** @category Page Background */
 import React, { useEffect, useRef } from 'react';
-import { GradientWave } from './gradient-wave.component.js';
 import { usePageBackground } from './page-background.context.js';
 import { claimPageBackground, releasePageBackground } from './page-background.store.js';
 import { cn } from './page-background.utils.js';
@@ -9,39 +8,20 @@ import { hexWithAlpha, useThemePalette } from './theme-palette.js';
 const FALLBACK_GLOW_ACCENT = '#14b8a6';
 
 /**
- * Arrière-plan animé par défaut de l'application (fond WebGL `GradientWave`).
- * Sert de secours quand aucune page n'a déclaré d'image via `<PageBackground>`.
- * Couleurs dérivées des tokens du thème (`--background`, `--primary`, `--accent`,
- * `--chart-*`) : le fond suit le thème clair/sombre et les surcharges à chaud.
+ * Fond de page système : aplat du token `--background` (section « base » du
+ * thème). Sert de secours quand aucune page n'a déclaré de fond via
+ * `<PageBackground>`, et de rendu pour `<DefaultPageBackground>` sans image.
+ * Le nom est historique : l'animation WebGL a été retirée — le fond système
+ * est désormais la couleur de base du thème, comme dans tout projet.
  */
 export function AnimatedHomeBackground({ className }: { className?: string }) {
-  const { colors, accent, key } = useThemePalette();
-  const glow = accent ?? FALLBACK_GLOW_ACCENT;
   return (
     <div
       className={cn(
-        'fixed inset-0 w-full h-full pointer-events-none z-0 overflow-hidden select-none bg-background',
+        'fixed inset-0 w-full h-full pointer-events-none z-0 bg-background',
         className,
       )}
-    >
-      <GradientWave
-        key={key}
-        colors={colors}
-        isPlaying={true}
-        shadowPower={8}
-        darkenTop={false}
-        noiseSpeed={0.00001}
-        noiseFrequency={[0.0001, 0.0009]}
-        deform={{ incline: 0.5, noiseAmp: 250, noiseFlow: 5 }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-(--scrim) via-transparent to-(--overlay) pointer-events-none" />
-      <div
-        className="absolute bottom-[-10%] left-[10%] w-[80%] h-[350px] rounded-full opacity-30 blur-[120px] pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse at center, ${hexWithAlpha(glow, 0.3)} 0%, ${hexWithAlpha(glow, 0.12)} 50%, transparent 80%)`,
-        }}
-      />
-    </div>
+    />
   );
 }
 
@@ -222,8 +202,8 @@ export interface PageBackgroundProps extends DefaultBackgroundProps {
 
 export interface GlobalPageBackgroundProps {
   /**
-   * Rendu quand aucune page n'a déclaré de fond : `'animated'` (défaut) affiche
-   * le dégradé animé d'accueil, `'none'` ne rend rien.
+   * Rendu quand aucune page n'a déclaré de fond : `'animated'` (défaut, nom
+   * historique) affiche l'aplat `--background` du thème, `'none'` ne rend rien.
    */
   fallback?: 'animated' | 'none';
 }
@@ -379,8 +359,9 @@ export function PageBackground({
  *    }
  *
  *  Sans imageSrc déclaré par aucune page, <GlobalPageBackground> retombe sur
- *  <AnimatedHomeBackground> (fond WebGL animé) — sauf avec fallback="none" : c'est
- *  le réglage du shell, pour que les pages sans fond gardent leur apparence.
+ *  <AnimatedHomeBackground> (aplat `--background` du thème) — sauf avec
+ *  fallback="none" : c'est le réglage du shell, pour que les pages sans fond
+ *  gardent leur apparence.
  *
  *  2. USAGE DANS UNE PAGE (déclaratif, cas le plus courant)
  *  ----------------------------------------------------------------------

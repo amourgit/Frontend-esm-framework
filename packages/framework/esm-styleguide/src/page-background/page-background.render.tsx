@@ -8,11 +8,11 @@ import { GlobalPageBackground } from './page-background.component.js';
  * uniquement par le shell (une seule fois) ; les apps déclarent leur fond avec
  * `<PageBackground>`.
  *
- * Par défaut, toute page sans `<PageBackground>` affiche le fond animé
- * d'accueil (`fallback="animated"`) : c'est LE fond système du shell, visible
- * nativement sur toutes les apps. Une page qui souhaite un autre fond le
- * déclare avec `<PageBackground>` ; `fallback="none"` reste possible pour un
- * rendu sans aucun fond.
+ * Par défaut, toute page sans `<PageBackground>` affiche l'aplat
+ * `--background` du thème (`fallback="animated"`, nom historique) : c'est LE
+ * fond système du shell, visible nativement sur toutes les apps. Une page qui
+ * souhaite un autre fond le déclare avec `<PageBackground>` ; `fallback="none"`
+ * reste possible pour un rendu sans aucun fond.
  *
  * @param target Le conteneur qui héberge l'arrière-plan.
  */

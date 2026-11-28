@@ -10,7 +10,7 @@
   padding: 0.875rem 1rem;
   border: 0;
   background: transparent;
-  color: var(--primary-600);
+  color: var(--primary);
   font: inherit;
   cursor: pointer;
 }

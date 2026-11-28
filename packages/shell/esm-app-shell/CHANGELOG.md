@@ -1,5 +1,24 @@
 # @egen-civitas/esm-app-shell
 
+## 4.0.4
+
+### Patch Changes
+
+- 3c5729e: Thème : rendu strictement aligné sur les tokens Tweakcn (background, card, sidebar, muted, accent, border, ring…).
+
+  - Fond de page du shell : `html` et la zone de contenu utilisent `--background` (plus `--muted` ni voile `--shadow-color`) ; le composant de fond animé est inchangé.
+  - Compartiments de zones : `--sidebar` / `--sidebar-foreground` ; boutons de rail : `--sidebar-accent`.
+  - Composants du styleguide : suppression des échelles dérivées (`primary-300`, `success-400`…) et des mélanges `color-mix(...)` avec `--shadow-color` / `--surface-inverse-foreground` au profit des tokens directs (`card`, `border`, `muted`, `accent`, `muted-foreground`).
+
+- Updated dependencies [3c5729e]
+  - @egen-civitas/esm-styleguide@7.3.0
+
+## 4.0.3
+
+### Patch Changes
+
+- 97e90fe: Partage `@egen-civitas/esm-theme` en singleton Module Federation : `setupTheme()` du shell initialisait une copie privée du runtime, donc `getThemeMode()`/`toggleThemeMode()`/`subscribe()` appelés depuis les apps distantes tombaient sur une instance non initialisée (bascule clair/sombre inopérante). Avec le partage, shell et apps utilisent la même instance.
+
 ## 4.0.2
 
 ### Patch Changes

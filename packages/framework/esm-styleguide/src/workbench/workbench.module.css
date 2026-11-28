@@ -70,16 +70,16 @@
   transition: background-color var(--motion-duration-fast, 120ms) ease, color var(--motion-duration-fast, 120ms) ease;
 }
 .railButton:hover {
-  background: var(--muted);
-  color: var(--foreground);
+  background: var(--sidebar-accent);
+  color: var(--sidebar-accent-foreground);
 }
 .railButton:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 1px;
 }
 .railButton[data-active=true] {
-  background: var(--muted);
-  color: var(--foreground);
+  background: var(--sidebar-accent);
+  color: var(--sidebar-accent-foreground);
 }
 
 .zone {
@@ -128,7 +128,8 @@
   min-height: 0;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  background: var(--egen-workbench-card-bg, color-mix(in oklab, var(--shadow-color) 24%, transparent));
+  background: var(--egen-zone-card-bg, var(--sidebar));
+  color: var(--sidebar-foreground);
 }
 
 .compartmentGap {

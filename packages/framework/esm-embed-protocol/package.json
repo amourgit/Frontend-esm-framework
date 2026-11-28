@@ -1,6 +1,6 @@
 {
   "name": "@egen-civitas/esm-embed-protocol",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "license": "MPL-2.0",
   "description": "Protocole v2 d'intégration des applications embarquées (iframe) dans EGEN : enveloppes, catalogue de capacités, négociation, grants, moteur RPC. Aucune dépendance.",
   "type": "module",

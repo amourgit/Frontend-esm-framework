@@ -70,12 +70,57 @@ describe('checkEmbedApp (intégrabilité en iframe)', () => {
   let server: ReturnType<typeof createServer> | undefined;
   afterEach(() => new Promise<void>((r) => (server ? server.close(() => r()) : r())));
 
-  async function probe(headers: Record<string, string>, status = 200, shell = 'https://egen.exemple.org') {
-    server = createServer((_q, s) => (s.writeHead(status, headers), s.end('x')));
+  type Served = { status?: number; headers?: Record<string, string>; body?: string };
+
+  /** Sonde une app locale : la page d'accueil répond avec `headers`/`status` ; `/egen-config.json` avec `declaration` (défaut : la déclaration contrôlée, sans cache). */
+  async function probe(headers: Record<string, string>, status = 200, shell = 'https://egen.exemple.org', declaration?: Served) {
+    let port = 0;
+    server = createServer((q, s) => {
+      if (q.url === '/egen-config.json') {
+        const d = declaration ?? { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }, body: JSON.stringify(manifest({ url: `http://127.0.0.1:${port}` })) };
+        s.writeHead(d.status ?? 200, d.headers ?? {});
+        return s.end(d.body ?? '');
+      }
+      s.writeHead(status, headers);
+      s.end('x');
+    });
     await new Promise<void>((r) => server!.listen(0, '127.0.0.1', r));
-    const port = (server.address() as any).port;
+    port = (server.address() as any).port;
     return checkEmbedApp({ manifest: manifest({ url: `http://127.0.0.1:${port}` }), allowInsecureLocalhost: true, probe: true, shellOrigin: shell });
   }
+
+  describe('déclaration publiée à la racine (voie normale)', () => {
+    const OK = { 'content-type': 'application/json', 'cache-control': 'no-store' };
+    const frame = { 'content-security-policy': 'frame-ancestors https://egen.exemple.org' };
+    it('publiée, valide, identique, sans cache : aucune remarque', async () => {
+      const i = await probe(frame);
+      expect(msgs(i, 'error')).toEqual([]);
+      expect(msgs(i).join('|')).not.toMatch(/egen-config\.json/);
+    });
+    it('absente (404) : information sur le second recours, pas une erreur', async () => {
+      const i = await probe(frame, 200, undefined, { status: 404, body: 'nope' });
+      expect(msgs(i, 'error')).toEqual([]);
+      expect(msgs(i, 'info').join()).toMatch(/second recours/);
+    });
+    it('redirigée ou en erreur serveur : réserve', async () => {
+      expect(msgs(await probe(frame, 200, undefined, { status: 302, headers: { location: '/x' } }), 'warn').join()).toMatch(/egen-config\.json répond HTTP 302/);
+      expect(msgs(await probe(frame, 200, undefined, { status: 503, body: '{}' }), 'warn').join()).toMatch(/HTTP 503/);
+    });
+    it('JSON invalide ou déclaration invalide : erreur', async () => {
+      expect(msgs(await probe(frame, 200, undefined, { headers: OK, body: '<html>' }), 'error').join()).toMatch(/JSON invalide/);
+      expect(msgs(await probe(frame, 200, undefined, { headers: OK, body: JSON.stringify({ manifestVersion: 1 }) }), 'error').join()).toMatch(/publié invalide/);
+    });
+    it('déclaration publiée différente de celle contrôlée : réserve nommant les champs', async () => {
+      const i = await probe(frame, 200, undefined, { headers: OK, body: JSON.stringify(manifest({ version: '9.9.9', title: 'Autre' })) });
+      const w = msgs(i, 'warn').join();
+      expect(w).toMatch(/diffère/);
+      expect(w).toMatch(/version/);
+    });
+    it('sans Cache-Control no-store : rappel (le Core fige le SHA-256)', async () => {
+      const i = await probe(frame, 200, undefined, { headers: { 'content-type': 'application/json' }, body: JSON.stringify(manifest({ url: 'http://127.0.0.1:1' })) });
+      expect(msgs(i, 'info').join()).toMatch(/Cache-Control/);
+    });
+  });
 
   it('X-Frame-Options DENY refuse l’intégration', async () => expect(msgs(await probe({ 'x-frame-options': 'DENY' }), 'error').join()).toMatch(/X-Frame-Options/));
   it('frame-ancestors sans le Shell : erreur', async () => expect(msgs(await probe({ 'content-security-policy': "frame-ancestors 'self'" }), 'error').join()).toMatch(/n'autorise pas le Shell/));

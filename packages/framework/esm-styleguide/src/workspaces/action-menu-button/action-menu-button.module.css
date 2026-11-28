@@ -10,7 +10,7 @@
   color: var(--muted-foreground);
 }
 .container:focus {
-  border-color: var(--primary-600);
+  border-color: var(--primary);
 }
 .container > span {
   margin-top: 0.25rem;
@@ -76,19 +76,19 @@
   width: 100%;
 }
 :global(.egen-breakpoint-lt-desktop) .active {
-  background-color: var(--primary-50);
-  color: var(--primary-600);
+  background-color: var(--primary);
+  color: var(--primary);
 }
 :global(.egen-breakpoint-lt-desktop) .active:hover {
-  color: var(--primary-600);
+  color: var(--primary);
 }
 :global(.egen-breakpoint-lt-desktop) .active > span {
-  color: var(--primary-600);
+  color: var(--primary);
   font-size: var(--ui-heading-compact-01-font-size, 0.875rem);
   font-weight: var(--ui-heading-compact-01-font-weight, 600);
   line-height: var(--ui-heading-compact-01-line-height, 1.28572);
   letter-spacing: var(--ui-heading-compact-01-letter-spacing, 0.16px);
 }
 :global(.egen-breakpoint-lt-desktop) .active svg {
-  fill: var(--primary-600);
+  fill: var(--primary);
 }

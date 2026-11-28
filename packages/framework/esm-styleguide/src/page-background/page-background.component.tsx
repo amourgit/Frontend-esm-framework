@@ -417,7 +417,7 @@ export function PageBackground({
  *  4. SURCHARGER LE FOND (SCSS non-layered) AVEC DES CLASSES TAILWIND
  *  ----------------------------------------------------------------------
  *  Ce dossier est déjà 100% Tailwind : les classes normales suffisent. Le
- *  suffixe `!` (bg-primary-500!) n'est nécessaire QUE pour surcharger un
+ *  suffixe `!` (bg-primary!) n'est nécessaire QUE pour surcharger un
  *  composant SCSS existant du framework (Card, Panel...) partageant le même
  *  sélecteur — voir le commentaire en tête de tailwind.tw.css.
  *

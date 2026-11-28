@@ -145,7 +145,7 @@
 }
 .columnItem:hover, .columnItem[data-active] {
   background: var(--muted);
-  color: var(--primary-600);
+  color: var(--primary);
 }
 
 .columnItemIcon {

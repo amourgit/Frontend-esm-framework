@@ -10,7 +10,7 @@
 }
 
 .card--success {
-  border-color: color-mix(in srgb, var(--success-500) 30%, transparent);
+  border-color: color-mix(in srgb, var(--success) 30%, transparent);
 }
 
 .card--error {
@@ -18,11 +18,11 @@
 }
 
 .card--warning {
-  border-color: color-mix(in srgb, var(--warning-500) 30%, transparent);
+  border-color: color-mix(in srgb, var(--warning) 30%, transparent);
 }
 
 .card--info {
-  border-color: color-mix(in srgb, var(--info-500) 30%, transparent);
+  border-color: color-mix(in srgb, var(--info) 30%, transparent);
 }
 
 .card--error {
@@ -43,7 +43,7 @@
 }
 
 .card--success .icon {
-  color: var(--success-500);
+  color: var(--success);
 }
 
 .card--error .icon {
@@ -51,11 +51,11 @@
 }
 
 .card--warning .icon {
-  color: var(--warning-500);
+  color: var(--warning);
 }
 
 .card--info .icon {
-  color: var(--info-500);
+  color: var(--info);
 }
 
 .textArea {
@@ -105,7 +105,7 @@
 }
 .closeButton:hover {
   opacity: 1;
-  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  background: var(--muted);
 }
 
 .actionsRow {
@@ -135,7 +135,7 @@
   color: var(--primary-foreground);
 }
 .actionButton--primary:hover {
-  background: var(--primary-600);
+  background: var(--primary);
 }
 
 .actionButton--secondary {
@@ -144,7 +144,7 @@
   color: var(--foreground);
 }
 .actionButton--secondary:hover {
-  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  background: var(--muted);
 }
 
 .actionButton--danger {
@@ -152,13 +152,13 @@
   color: var(--primary-foreground);
 }
 .actionButton--danger:hover {
-  background: var(--destructive-600);
+  background: var(--destructive);
 }
 
 .progressTrack {
   height: 3px;
   width: 100%;
-  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+  background: var(--muted);
   overflow: hidden;
 }
 

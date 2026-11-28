@@ -95,17 +95,20 @@ function intersect(requested: string[], ceiling: string[], mode: 'exact' | 'patt
  */
 export function effectiveGrants(requested: Partial<Record<CapabilityId, GrantConfig>> | undefined, approved: Omit<ApprovedGrants, 'iframe'>): EffectiveGrants {
   const out: EffectiveGrants = {};
+  // Garde : un plafond ou une demande qui n'est pas un objet vaut « rien » (jamais d'exception, jamais d'octroi).
+  const ceilings: Omit<ApprovedGrants, 'iframe'> = isPlainObject(approved) ? approved : {};
+  const wanted = isPlainObject(requested) ? requested : undefined;
   for (const id of CAPABILITY_IDS) {
     const d = CAPABILITIES[id];
-    const ceiling = approved[id];
+    const ceiling = ceilings[id];
     if (ceiling === false) continue;
-    const asked = requested ? requested[id] : undefined;
+    const asked = wanted ? wanted[id] : undefined;
     if (!d.defaultGrant) {
       if (ceiling === undefined) continue;
-      if (requested && asked === undefined) continue;
+      if (wanted && asked === undefined) continue;
     }
-    const ceilingCfg: GrantConfig = ceiling ?? {};
-    const askedCfg: GrantConfig = asked ?? {};
+    const ceilingCfg: GrantConfig = isPlainObject(ceiling) ? ceiling : {};
+    const askedCfg: GrantConfig = isPlainObject(asked) ? asked : {};
     const cfg: GrantConfig = {};
     for (const [k, v] of Object.entries(ceilingCfg)) if (!(k in d.listKeys)) cfg[k] = v;
     for (const [key, mode] of Object.entries(d.listKeys)) {
@@ -192,8 +195,8 @@ export function validateExtensionDecls(input: unknown, appUrl?: string): string[
  * l'approbation est le seul moyen d'ajouter un composant à un slot du Core.
  */
 export function allowedContributions(decls: readonly EmbedExtensionDecl[] | undefined, approved: Omit<ApprovedGrants, 'iframe'>): EmbedExtensionDecl[] {
-  const cfg = approved.extensions;
-  if (!cfg) return [];
+  const cfg = isPlainObject(approved) ? approved.extensions : undefined;
+  if (!isPlainObject(cfg)) return [];
   const slots = Array.isArray(cfg.contribute) ? (cfg.contribute as string[]) : [];
-  return (decls ?? []).filter((d) => slots.some((s) => slotCovers(s, d.slot)));
+  return (Array.isArray(decls) ? decls : []).filter((d) => slots.some((s) => slotCovers(s, d.slot)));
 }

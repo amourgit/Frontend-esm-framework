@@ -57,7 +57,7 @@ const isPresetConfig = (animation: CardModalProps['animation']): animation is Ca
  * ```tsx
  * <CardModal
  *   cardVariant="dots"
- *   cardProps={{ title: 'Confirmation', dotsColor: 'var(--warning-500)' }}
+ *   cardProps={{ title: 'Confirmation', dotsColor: 'var(--warning)' }}
  *   animation={{ preset: 'slide-up', duration: 0.4 }}
  *   draggable
  *   open={isOpen}

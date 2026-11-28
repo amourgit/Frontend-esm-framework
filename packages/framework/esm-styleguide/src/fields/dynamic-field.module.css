@@ -268,29 +268,29 @@
 }
 
 .field--success .fieldControl {
-  border-color: var(--success-500) !important;
+  border-color: var(--success) !important;
 }
 
 .field--success .label,
 .field--success .leftIcon {
-  color: var(--success-600);
+  color: var(--success);
 }
 
 .field--success .input {
-  color: var(--success-700);
+  color: var(--success);
 }
 
 .field--warning .fieldControl {
-  border-color: var(--warning-500) !important;
+  border-color: var(--warning) !important;
 }
 
 .field--warning .label,
 .field--warning .leftIcon {
-  color: var(--warning-600);
+  color: var(--warning);
 }
 
 .field--warning .input {
-  color: var(--warning-700);
+  color: var(--warning);
 }
 
 .field--error .fieldControl {
@@ -299,25 +299,25 @@
 
 .field--error .label,
 .field--error .leftIcon {
-  color: var(--destructive-600);
+  color: var(--destructive);
 }
 
 .field--error .input {
-  color: var(--destructive-700);
+  color: var(--destructive);
 }
 
 .field--outlined.field--success .fieldControl:focus-within,
 .field--filled.field--success .fieldControl:focus-within,
 .field--standard.field--success .fieldControl:focus-within,
 .field--kinetic.field--success .fieldControl:focus-within {
-  border-color: var(--success-500);
+  border-color: var(--success);
 }
 
 .field--outlined.field--warning .fieldControl:focus-within,
 .field--filled.field--warning .fieldControl:focus-within,
 .field--standard.field--warning .fieldControl:focus-within,
 .field--kinetic.field--warning .fieldControl:focus-within {
-  border-color: var(--warning-500);
+  border-color: var(--warning);
 }
 
 .field--outlined.field--error .fieldControl:focus-within,
@@ -361,11 +361,11 @@
 }
 
 .validationIcon--success .validationIconGlyph {
-  color: var(--success-500);
+  color: var(--success);
 }
 
 .validationIcon--warning .validationIconGlyph {
-  color: var(--warning-500);
+  color: var(--warning);
 }
 
 .validationIcon--error .validationIconGlyph {
@@ -380,15 +380,15 @@
 }
 
 .field--success .message {
-  color: var(--success-600);
+  color: var(--success);
 }
 
 .field--warning .message {
-  color: var(--warning-600);
+  color: var(--warning);
 }
 
 .field--error .message {
-  color: var(--destructive-600);
+  color: var(--destructive);
 }
 
 .messageLead {

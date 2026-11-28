@@ -1,78 +1,152 @@
-import { afterEach, describe, expect, it } from 'vitest';
-import { RpcEndpoint, effectiveGrants, negotiateCapabilities, parseConnect, parseEnvelope, parseHello, parsePort, parseRpc, validateCall, validateManifest } from './index.js';
+import { describe, expect, it } from 'vitest';
+import {
+  IFRAME_ALLOW_TOKENS,
+  IFRAME_SANDBOX_TOKENS,
+  allowedContributions,
+  effectiveGrants,
+  effectiveIframe,
+  negotiateProtocol,
+  parseConnect,
+  parseEnvelope,
+  parseHello,
+  parsePort,
+  parseRpc,
+  sanitizeIframeRights,
+  validateConfig,
+  validateIframeRights,
+  validateManifest,
+} from './index.js';
 
-/** PRNG déterministe (mulberry32) : le test est reproductible. */
+/** PRNG déterministe (mulberry32) : un échec se rejoue avec la même graine. */
 function rng(seed: number) {
+  let a = seed;
   return () => {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
     t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
-const NASTY_KEYS = ['__proto__', 'constructor', 'prototype', 'toString', 'hasOwnProperty', 't', 'id', 'cap', 'm', 'a', 'kind', 'nonce', 'egen', 'moduleName', 'message', 'protocol', 'requested', 'granted', 'denied', 'e', 'v', 'sid', 'ev'];
-const NASTY_STRINGS = ['', '__proto__', 'constructor', 'tenant', 'get', 'req', 'res', 'hello', 'connect', 'port', '../../x', 'a'.repeat(300), '\u0000', '<script>', 'app.x.*', '*'];
 
-function gen(r: () => number, depth = 0): unknown {
-  const k = Math.floor(r() * 10);
-  if (depth > 4 || k < 3) return [0, 1, -1, 1.5, NaN, Infinity, 2 ** 53, true, false, null, undefined][Math.floor(r() * 11)];
-  if (k < 5) return NASTY_STRINGS[Math.floor(r() * NASTY_STRINGS.length)];
-  if (k < 7) return Array.from({ length: Math.floor(r() * 5) }, () => gen(r, depth + 1));
-  const o: Record<string, unknown> = {};
-  for (let i = 0; i < Math.floor(r() * 7); i++) Object.defineProperty(o, NASTY_KEYS[Math.floor(r() * NASTY_KEYS.length)], { value: gen(r, depth + 1), enumerable: true, configurable: true, writable: true });
-  return o;
+const STRINGS = ['', ' ', '*', '..', '/', '//', '\\', '__proto__', 'constructor', 'prototype', 'allow-top-navigation', 'allow-scripts', 'fullscreen', 'camera', '\u0000', 'é'.repeat(300), 'javascript:alert(1)', 'https://evil.example', '<script>', 'allow-downloads', 'allow-downloads'];
+
+function junk(r: () => number, depth = 0): unknown {
+  const pick = Math.floor(r() * (depth > 2 ? 7 : 10));
+  switch (pick) {
+    case 0: return undefined;
+    case 1: return null;
+    case 2: return Math.floor(r() * 1e6) - 5e5;
+    case 3: return r() < 0.5;
+    case 4: return STRINGS[Math.floor(r() * STRINGS.length)];
+    case 5: return Number.NaN;
+    case 6: return Symbol.iterator.toString();
+    case 7: return Array.from({ length: Math.floor(r() * 25) }, () => junk(r, depth + 1));
+    case 8: {
+      const o: Record<string, unknown> = {};
+      for (let i = 0; i < Math.floor(r() * 6); i++) o[STRINGS[Math.floor(r() * STRINGS.length)] || 'k'] = junk(r, depth + 1);
+      return o;
+    }
+    default: return JSON.parse('{"__proto__":{"polluted":true},"sandbox":["allow-scripts"],"allow":["camera"]}');
+  }
 }
 
-describe('fuzz déterministe : aucune entrée hostile ne lève ni ne pollue', () => {
-  it('gardes, validateurs, manifeste, grants, négociation', () => {
-    const r = rng(1234);
-    for (let i = 0; i < 3000; i++) {
-      const v = gen(r);
-      const m = (v && typeof v === 'object' && !Array.isArray(v) ? v : {}) as Record<string, unknown>;
-      const str = (x: unknown, d: string) => (typeof x === 'string' ? x : d);
+const ROUNDS = 3000;
+
+describe('fuzz : les gardes ne lèvent jamais et ne s’auto-accordent rien', () => {
+  it('parseurs de messages : toute entrée mal formée → null, jamais d’exception', () => {
+    const r = rng(1);
+    for (let i = 0; i < ROUNDS; i++) {
+      const v = junk(r);
+      const o = (v && typeof v === 'object' ? v : {}) as Record<string, unknown>;
       expect(() => {
         parseEnvelope(v);
-        parseHello(m);
-        parseConnect(m);
-        parsePort(m);
+        parseHello(o);
+        parseConnect(o);
+        parsePort(o);
         parseRpc(v);
-        validateCall(str(m.cap, 'tenant'), str(m.m, 'get'), Array.isArray(m.a) ? m.a : [v]);
-        validateManifest(v);
-        effectiveGrants(m as any, m as any);
-        negotiateCapabilities(Array.isArray(m.requested) ? (m.requested as any) : [], effectiveGrants(undefined, {}));
       }).not.toThrow();
     }
-    expect(({} as any).x).toBeUndefined();
-    expect(Object.prototype.hasOwnProperty.call(Object.prototype, 'polluted')).toBe(false);
   });
-});
 
-describe('fuzz du moteur RPC sur un vrai MessagePort', () => {
-  const open: RpcEndpoint[] = [];
-  afterEach(() => void open.splice(0).forEach((e) => e.close('test')));
-
-  it('des milliers de messages hostiles : aucun handler appelé hors contrat, le canal reste sain', async () => {
-    const { port1, port2 } = new MessageChannel();
-    let calls = 0;
-    const host = new RpcEndpoint({ port: port1, handlers: { tenant: { get: () => (calls++, { ok: true }) } }, validate: validateCall, limits: { pingIntervalMs: 0, requestsPerSecond: 1_000_000 } });
-    const app = new RpcEndpoint({ port: port2, limits: { pingIntervalMs: 0, callTimeoutMs: 1000 } });
-    open.push(host, app);
-    const r = rng(99);
-    let sentValid = 0;
-    for (let i = 0; i < 3000; i++) {
-      const v = gen(r);
-      // un message structurellement valide sur `tenant.get` sans argument est légitime ; on le compte
-      if (v && typeof v === 'object' && (v as any).t === 'req' && (v as any).cap === 'tenant' && (v as any).m === 'get' && Array.isArray((v as any).a) && (v as any).a.length === 0 && Number.isInteger((v as any).id) && (v as any).id >= 0) sentValid++;
-      try {
-        port2.postMessage(v);
-      } catch {
-        /* valeur non clonable (ex. undefined/fonction) : ignorée */
-      }
+  it('validateManifest / validateConfig / validateIframeRights : jamais d’exception, résultat cohérent', () => {
+    const r = rng(2);
+    for (let i = 0; i < ROUNDS; i++) {
+      const v = junk(r);
+      const res = validateManifest(v);
+      expect(typeof res.ok).toBe('boolean');
+      if (!res.ok) expect(res.errors.length).toBeGreaterThan(0);
+      expect(Array.isArray(validateConfig(v))).toBe(true);
+      expect(Array.isArray(validateIframeRights(v))).toBe(true);
     }
-    await new Promise((res) => setTimeout(res, 100));
-    expect(calls).toBe(sentValid);
-    expect(host.closed).toBe(false);
-    await expect(app.call('tenant', 'get')).resolves.toEqual({ ok: true });
+  });
+
+  it('effectiveIframe : sortie ⊆ liste blanche ∩ plafond ∩ demande, quelle que soit l’entrée', () => {
+    const r = rng(3);
+    for (let i = 0; i < ROUNDS; i++) {
+      const requested = junk(r) as { sandbox?: string[]; allow?: string[] } | undefined;
+      const approved = junk(r) as { sandbox?: string[]; allow?: string[] } | undefined;
+      const out = effectiveIframe(requested, approved);
+      for (const t of out.sandbox) {
+        expect(IFRAME_SANDBOX_TOKENS).toContain(t);
+        expect(t).not.toMatch(/top-navigation/);
+        expect(approved?.sandbox).toContain(t);
+        expect(requested?.sandbox).toContain(t);
+      }
+      for (const t of out.allow) {
+        expect(IFRAME_ALLOW_TOKENS).toContain(t);
+        expect(approved?.allow).toContain(t);
+        expect(requested?.allow).toContain(t);
+      }
+      expect(new Set(out.sandbox).size).toBe(out.sandbox.length);
+      expect(new Set(out.allow).size).toBe(out.allow.length);
+    }
+  });
+
+  it('sanitizeIframeRights : toujours des jetons valides et uniques', () => {
+    const r = rng(4);
+    for (let i = 0; i < ROUNDS; i++) {
+      const out = sanitizeIframeRights(junk(r) as never);
+      for (const t of out.sandbox) expect(IFRAME_SANDBOX_TOKENS).toContain(t);
+      for (const t of out.allow) expect(IFRAME_ALLOW_TOKENS).toContain(t);
+    }
+  });
+
+  it('pollution de prototype : aucune entrée ne modifie Object.prototype', () => {
+    const r = rng(5);
+    for (let i = 0; i < ROUNDS; i++) {
+      const v = junk(r) as never;
+      effectiveIframe(v, v);
+      sanitizeIframeRights(v);
+      validateManifest(v);
+      effectiveGrants(v, v);
+    }
+    expect(({} as Record<string, unknown>).polluted).toBeUndefined();
+  });
+
+  it('effectiveGrants / allowedContributions : plafond ou demande qui n’est pas un objet → rien (régression : TypeError)', () => {
+    for (const bad of [undefined, null, 0, 'x', true, [], Symbol.iterator.toString()]) {
+      expect(() => effectiveGrants(bad as never, bad as never)).not.toThrow();
+      expect(() => allowedContributions(bad as never, bad as never)).not.toThrow();
+      expect(allowedContributions([{ name: 'n', slot: 'topbar-nav-slot' }], bad as never)).toEqual([]);
+    }
+    expect(Object.keys(effectiveGrants({ events: { publish: ['app.x.*'] } }, null as never)).sort()).toEqual(
+      Object.keys(effectiveGrants(undefined, {})).sort()
+    );
+  });
+
+  it('effectiveGrants : jamais de capacité accordée sans plafond', () => {
+    const r = rng(6);
+    for (let i = 0; i < 1000; i++) {
+      const granted = effectiveGrants(junk(r) as never, {});
+      expect(Object.keys(granted).every((k) => ['tenant', 'locale', 'navigation', 'flags', 'config', 'telemetry', 'lifecycle', 'dialogs', 'extensions', 'events', 'notifications'].includes(k))).toBe(true);
+    }
+  });
+
+  it('négociation de protocole : seul le protocole 2 est accepté', () => {
+    const r = rng(7);
+    for (let i = 0; i < 500; i++) {
+      const n = negotiateProtocol(junk(r) as never);
+      expect(n === null || n === 2).toBe(true);
+    }
   });
 });

@@ -79,8 +79,55 @@ export async function checkEmbedApp(o: CheckOptions): Promise<CheckIssue[]> {
     } catch (e) {
       add('warn', `URL de l'app injoignable (${(e as Error).message})`);
     }
+    await probeDeclaration(f, m, add, { allowInsecureLocalhost: o.allowInsecureLocalhost });
   }
   return issues;
 }
 
 export const hasErrors = (issues: CheckIssue[]) => issues.some((i) => i.level === 'error');
+
+const sameJson = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
+
+/**
+ * Voie normale (doc 17 §7) : l'app sert elle-même `<url>/egen-config.json`. On vérifie qu'il est publié, valide,
+ * identique à la déclaration contrôlée, et jamais mis en cache (le Core en fige le SHA-256).
+ */
+async function probeDeclaration(
+  f: typeof fetch,
+  m: EmbedManifest,
+  add: (level: CheckIssue['level'], message: string) => void,
+  manifestOptions: Parameters<typeof validateManifest>[1]
+): Promise<void> {
+  const declared = `${m.url.replace(/\/+$/, '')}/egen-config.json`;
+  try {
+    const res = await f(declared, { redirect: 'manual', signal: AbortSignal.timeout(10_000) });
+    if (res.status === 404) {
+      add('info', "/egen-config.json n'est pas publié à la racine de l'app : voie normale = l'app sert sa déclaration ; sinon l'opérateur la déclare côté Core (second recours, `declaration` dans external-apps.json)");
+      return;
+    }
+    if (res.status >= 300) {
+      add('warn', `/egen-config.json répond HTTP ${res.status} : le Core doit pouvoir le lire directement (pas de redirection)`);
+      return;
+    }
+    let served: unknown;
+    try {
+      served = await res.json();
+    } catch {
+      add('error', '/egen-config.json publié : JSON invalide');
+      return;
+    }
+    const result = validateManifest(served, manifestOptions);
+    if (!result.ok) {
+      for (const e of result.errors) add('error', `/egen-config.json publié invalide : ${e}`);
+      return;
+    }
+    const drift = Object.keys({ ...(m as object), ...(result.manifest as object) }).filter(
+      (k) => !sameJson((m as unknown as Record<string, unknown>)[k], (result.manifest as unknown as Record<string, unknown>)[k])
+    );
+    if (drift.length) add('warn', `La déclaration publiée diffère de celle contrôlée (champs : ${drift.join(', ')})`);
+    const cache = res.headers.get('cache-control') ?? '';
+    if (!/no-store|no-cache|max-age=0/i.test(cache)) add('info', "/egen-config.json sans « Cache-Control: no-store » : le Core fige son SHA-256, une version en cache provoque un rejet au démarrage");
+  } catch (e) {
+    add('warn', `/egen-config.json injoignable (${(e as Error).message})`);
+  }
+}

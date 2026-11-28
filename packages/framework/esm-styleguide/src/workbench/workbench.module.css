@@ -128,8 +128,8 @@
   min-height: 0;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  background: var(--egen-zone-card-bg, var(--sidebar));
-  color: var(--sidebar-foreground);
+  background: var(--egen-zone-card-bg, transparent);
+  color: var(--foreground);
 }
 
 .compartmentGap {

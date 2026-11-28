@@ -418,7 +418,7 @@ html[data-public-route=true] #egen-scroll-region {
   --egen-rail-width: 2.5rem;
   --egen-workbench-gap: 0.375rem;
   --egen-workbench-card-bg: transparent;
-  --egen-zone-card-bg: var(--sidebar);
+  --egen-zone-card-bg: transparent;
 }
 
 /* Échelle d'ombres Tailwind-like : référencée par les tokens shadow-component-*

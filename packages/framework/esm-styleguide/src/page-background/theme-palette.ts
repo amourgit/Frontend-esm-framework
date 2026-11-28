@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { converter, parse } from 'culori';
+import { converter, formatHex, interpolate, parse } from 'culori';
 
 /**
  * Palette du fond animé dérivée des tokens du thème (contrat Tweakcn, variables
@@ -9,25 +9,30 @@ import { converter, parse } from 'culori';
  * donc les variables calculées (`getComputedStyle`) puis on les convertit en hex
  * via culori — même bibliothèque que esm-theme, donc même gestion des formats
  * (oklch, oklab, hsl, rgb…).
+ *
+ * UNE SEULE TEINTE : la palette est construite en interpolant `--background`
+ * vers la couleur de marque (`--primary`, repli accent/chart) en OKLab. Comme
+ * les tokens basculent avec le mode clair/sombre, tout le dégradé suit
+ * fortement light/dark — les couches de vagues ne sont que des teintes plus ou
+ * moins marquées de cette même couleur, jamais de multicouleur.
  */
 
-/** Tokens lus pour le dégradé, dans l'ordre : fond de base puis couches de vagues. */
-const PALETTE_TOKENS = ['background', 'primary', 'accent', 'chart-1', 'chart-2', 'chart-3'] as const;
+/** Token de surface de base (première couleur du dégradé). */
+const BG_TOKEN = 'background';
 
-/** Tokens essayés, par ordre de préférence, pour la couleur d'accent (halo, teinture). */
-const ACCENT_TOKENS = ['accent', 'chart-2', 'primary'] as const;
+/** Tokens essayés, par ordre de préférence, pour la teinte de marque unique. */
+const BRAND_TOKENS = ['primary', 'accent', 'chart-1'] as const;
 
 /** Repli quand aucune variable de thème n'est résolvable (storybook, tests, thème absent). */
 export const DEFAULT_HOME_GRADIENT_COLORS = [
-  '#008080',
   '#0b192c',
-  '#0ea5e9',
-  '#042f2e',
-  '#0284c7',
-  '#064e3b',
+  '#0f172a',
+  '#134e4a',
+  '#0f766e',
+  '#14b8a6',
+  '#2dd4bf',
 ];
 
-const FALLBACK_ACCENT = '#10b981';
 
 /** Convertit une couleur CSS quelconque (oklch, hsl, rgb, hex…) en `#rrggbb`. `null` si illisible. */
 export function themeColorToHex(value: string | undefined | null): string | null {
@@ -62,6 +67,14 @@ function firstHex(tokens: readonly string[]): string | null {
   return null;
 }
 
+/** `#rrggbb` à `t` (0-1) entre deux hex, interpolation OKLab — teintes d'une même couleur. */
+function mixHex(from: string, to: string, t: number): string {
+  const a = parse(from);
+  const b = parse(to);
+  if (!a || !b) return to;
+  return formatHex(interpolate([a, b], 'oklab')(t));
+}
+
 export interface ThemePalette {
   /** Couleurs hex pour `GradientWave` (base + couches). */
   colors: string[];
@@ -73,11 +86,22 @@ export interface ThemePalette {
 
 /** Résout la palette courante depuis les variables CSS du thème. */
 export function resolveThemePalette(): ThemePalette {
-  const colors = PALETTE_TOKENS.map((token) => themeColorToHex(readThemeVar(token))).filter(
-    (hex): hex is string => hex !== null,
-  );
-  const palette = colors.length > 0 ? colors : [...DEFAULT_HOME_GRADIENT_COLORS];
-  const accent = firstHex(ACCENT_TOKENS);
+  const background = themeColorToHex(readThemeVar(BG_TOKEN));
+  const brand = firstHex(BRAND_TOKENS);
+
+  let palette: string[];
+  if (background && brand) {
+    // Fond de base + couches de vagues = teintes croissantes de la même couleur
+    // de marque, mélangées au fond : un seul hue, intensité variable.
+    palette = [
+      background,
+      ...[0.2, 0.4, 0.6, 0.8, 1].map((t) => mixHex(background, brand, t)),
+    ];
+  } else {
+    palette = [...DEFAULT_HOME_GRADIENT_COLORS];
+  }
+
+  const accent = brand;
   return { colors: palette, accent, key: palette.join(',') };
 }
 

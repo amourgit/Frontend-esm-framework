@@ -19,7 +19,7 @@
     "@egen-civitas/esm-navigation": "^1.1.0",
     "@egen-civitas/esm-react-utils": "^3.0.1",
     "@egen-civitas/esm-state": "^1.0.3",
-    "@egen-civitas/esm-styleguide": "^7.2.0",
+    "@egen-civitas/esm-styleguide": "^7.3.0",
     "@egen-civitas/esm-translations": "^1.0.5",
     "@egen-civitas/esm-utils": "^2.0.0",
     "@internationalized/date": "^3.8.0",

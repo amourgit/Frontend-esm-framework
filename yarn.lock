@@ -1004,7 +1004,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@egen-civitas/esm-embed-protocol@npm:^0.5.0, @egen-civitas/esm-embed-protocol@workspace:packages/framework/esm-embed-protocol":
+"@egen-civitas/esm-embed-protocol@npm:^0.5.0, @egen-civitas/esm-embed-protocol@npm:^0.5.1, @egen-civitas/esm-embed-protocol@workspace:packages/framework/esm-embed-protocol":
   version: 0.0.0-use.local
   resolution: "@egen-civitas/esm-embed-protocol@workspace:packages/framework/esm-embed-protocol"
   dependencies:
@@ -1025,7 +1025,7 @@ __metadata:
   dependencies:
     "@egen-civitas/esm-embed-client": "npm:^0.3.1"
     "@egen-civitas/esm-embed-host": "npm:^0.5.0"
-    "@egen-civitas/esm-embed-protocol": "npm:^0.5.0"
+    "@egen-civitas/esm-embed-protocol": "npm:^0.5.1"
     "@swc/cli": "npm:0.8.1"
     "@swc/core": "npm:1.15.21"
     "@types/node": "npm:^20"

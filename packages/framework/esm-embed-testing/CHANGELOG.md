@@ -1,5 +1,16 @@
 # @egen-civitas/esm-embed-testing
 
+## 0.6.0
+
+### Minor Changes
+
+- 2a240fc: `egen-embed-check --probe` vérifie aussi la déclaration publiée à `<url>/egen-config.json` (voie normale, doc 17 §7) : présence (404 = information sur le second recours), absence de redirection, JSON et forme valides selon le protocole, écart avec la déclaration contrôlée (champs nommés) et rappel `Cache-Control: no-store` (le Core fige son SHA-256).
+
+### Patch Changes
+
+- Updated dependencies [1e9983d]
+  - @egen-civitas/esm-embed-protocol@0.5.1
+
 ## 0.5.0
 
 ### Minor Changes

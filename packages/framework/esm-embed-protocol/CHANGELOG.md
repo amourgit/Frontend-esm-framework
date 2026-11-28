@@ -1,5 +1,11 @@
 # @egen-civitas/esm-embed-protocol
 
+## 0.5.1
+
+### Patch Changes
+
+- 1e9983d: `effectiveGrants` et `allowedContributions` ne lèvent plus d'exception quand le plafond approuvé ou la demande n'est pas un objet (ils valent « rien accordé »). Défaut trouvé par le fuzzing léger des gardes (revue de sécurité P7.4). Ajout de suites de fuzzing déterministes (protocole : parseurs, `validateManifest`, `effectiveIframe`, pollution de prototype ; hôte : `normalizeAppPath`, `stripSensitive`, URL de navigation).
+
 ## 0.5.0
 
 ### Minor Changes

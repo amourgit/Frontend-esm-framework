@@ -12,6 +12,7 @@
   "@egen-civitas/esm-platform",
   "@egen-civitas/esm-state",
   "@egen-civitas/esm-tenant",
+  "@egen-civitas/esm-theme",
   "rxjs",
   "single-spa",
   "swr"

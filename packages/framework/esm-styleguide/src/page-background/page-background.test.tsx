@@ -76,12 +76,12 @@ describe('page-background : store global partagé entre racines React', () => {
     const host = document.createElement('div');
     document.body.appendChild(host);
     await act(async () => renderPageBackground(host));
-    expect(host.innerHTML).toBe(''); // fond par défaut : rien
+    expect(host.innerHTML).not.toBe(''); // fond système animé par défaut
 
     const page = await mount(<PageBackground imageSrc="/shell.jpg" imageAlt="Via le shell" />);
     expect(host.querySelector('img[alt="Via le shell"]')).not.toBeNull();
     await unmount(page);
-    expect(host.innerHTML).toBe('');
+    expect(host.innerHTML).not.toBe(''); // le fond système reprend le relais
     host.remove();
   });
 

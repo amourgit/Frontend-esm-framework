@@ -417,7 +417,7 @@ html[data-public-route=true] #egen-scroll-region {
 :root {
   --egen-rail-width: 2.5rem;
   --egen-workbench-gap: 0.375rem;
-  --egen-workbench-card-bg: var(--background);
+  --egen-workbench-card-bg: transparent;
   --egen-zone-card-bg: var(--sidebar);
 }
 

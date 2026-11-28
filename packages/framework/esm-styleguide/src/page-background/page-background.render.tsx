@@ -8,14 +8,17 @@ import { GlobalPageBackground } from './page-background.component.js';
  * uniquement par le shell (une seule fois) ; les apps déclarent leur fond avec
  * `<PageBackground>`.
  *
- * Tant qu'aucune page n'a déclaré de fond, rien n'est affiché (`fallback="none"`) :
- * monter l'hôte ne change donc l'apparence d'aucune app existante.
+ * Par défaut, toute page sans `<PageBackground>` affiche le fond animé
+ * d'accueil (`fallback="animated"`) : c'est LE fond système du shell, visible
+ * nativement sur toutes les apps. Une page qui souhaite un autre fond le
+ * déclare avec `<PageBackground>` ; `fallback="none"` reste possible pour un
+ * rendu sans aucun fond.
  *
  * @param target Le conteneur qui héberge l'arrière-plan.
  */
 export function renderPageBackground(target: HTMLElement | null) {
   if (target) {
     const root = createRoot(target);
-    root.render(<GlobalPageBackground fallback="none" />);
+    root.render(<GlobalPageBackground fallback="animated" />);
   }
 }

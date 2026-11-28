@@ -716,7 +716,7 @@ export interface GradientWaveProps {
 }
 
 export function GradientWave({
-  colors = ["#008080", "#0b192c", "#0ea5e9", "#042f2e", "#0284c7", "#064e3b"],
+  colors = ["#0b192c", "#0f172a", "#134e4a", "#0f766e", "#14b8a6", "#2dd4bf"],
   isPlaying = true,
   className = "",
   shadowPower = 8,
@@ -803,7 +803,7 @@ export function GradientWave({
  *  définie, sinon le fond n'occupe aucun espace visible.
  *
  *    <div className="relative h-64 w-full overflow-hidden">
- *      <GradientWave colors={['#4f46e5', '#0ea5e9', '#064e3b']} />
+ *      <GradientWave colors={['#0f172a', '#134e4a', '#0f766e', '#14b8a6']} />
  *    </div>
  *
  *  - `colors` : dégradé de base + couches de vagues (1 couleur = fond uni

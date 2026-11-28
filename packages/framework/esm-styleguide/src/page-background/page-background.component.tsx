@@ -6,7 +6,7 @@ import { claimPageBackground, releasePageBackground } from './page-background.st
 import { cn } from './page-background.utils.js';
 import { hexWithAlpha, useThemePalette } from './theme-palette.js';
 
-const FALLBACK_GLOW_ACCENT = '#10b981';
+const FALLBACK_GLOW_ACCENT = '#14b8a6';
 
 /**
  * Arrière-plan animé par défaut de l'application (fond WebGL `GradientWave`).

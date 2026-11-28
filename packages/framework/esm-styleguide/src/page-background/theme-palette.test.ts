@@ -58,39 +58,37 @@ describe('resolveThemePalette', () => {
     expect(palette.accent).toBeNull();
   });
 
-  it('dérive une palette monochrome : fond + teintes de la couleur de marque', () => {
+  it('dérive une rampe monochrome depuis --primary uniquement', () => {
     mockThemeVars({
       background: 'oklch(0.145 0 0)',
-      primary: 'oklch(0.922 0 0)',
+      primary: '#336699',
       accent: 'oklch(0.371 0 0)',
       'chart-1': '#e53935',
       'chart-2': '#689f38',
       'chart-3': '#64b5f6',
     });
     const palette = resolveThemePalette();
-    // 6 couleurs : le fond puis 5 teintes croissantes du même brand (primary prioritaire)
+    // 6 couleurs : 3 nuances foncées, la marque pure, 2 nuances claires
     expect(palette.colors).toHaveLength(6);
-    expect(palette.colors[0]).toBe('#0a0a0a'); // background oklch(0.145)
-    expect(palette.colors[5]).toBe('#e5e5e5'); // primary oklch(0.922), teinte pleine
-    // toutes les couches sont des interpolations bg → brand : une seule teinte
+    expect(palette.colors[3]).toBe('#336699'); // primary, teinte pleine
     for (const hex of palette.colors) {
       expect(hex).toMatch(/^#[0-9a-f]{6}$/);
     }
-    // l'accent (halo) suit la couleur de marque
-    expect(palette.accent).toBe('#e5e5e5');
-  });
-
-  it('sans background résoluble, retombe sur la palette par défaut mais garde l\'accent', () => {
-    mockThemeVars({ primary: '#336699', 'chart-2': 'hsl(0 100% 50%)' });
-    const palette = resolveThemePalette();
-    expect(palette.colors).toEqual(DEFAULT_HOME_GRADIENT_COLORS);
+    // une seule source : accent = primary
     expect(palette.accent).toBe('#336699');
   });
 
+  it('sans primary résoluble, retombe sur la palette par défaut', () => {
+    mockThemeVars({ background: '#000000', accent: '#123456' });
+    const palette = resolveThemePalette();
+    expect(palette.colors).toEqual(DEFAULT_HOME_GRADIENT_COLORS);
+    expect(palette.accent).toBeNull();
+  });
+
   it('la signature change quand le thème change (key pour remonter le canvas)', () => {
-    mockThemeVars({ background: '#000000', primary: '#111111' });
+    mockThemeVars({ primary: '#111111' });
     const a = resolveThemePalette();
-    mockThemeVars({ background: '#000000', primary: '#222222' });
+    mockThemeVars({ primary: '#222222' });
     const b = resolveThemePalette();
     expect(a.key).not.toBe(b.key);
   });

@@ -10,18 +10,13 @@ import { converter, formatHex, interpolate, parse } from 'culori';
  * via culori — même bibliothèque que esm-theme, donc même gestion des formats
  * (oklch, oklab, hsl, rgb…).
  *
- * UNE SEULE TEINTE : la palette est construite en interpolant `--background`
- * vers la couleur de marque (`--primary`, repli accent/chart) en OKLab. Comme
- * les tokens basculent avec le mode clair/sombre, tout le dégradé suit
- * fortement light/dark — les couches de vagues ne sont que des teintes plus ou
- * moins marquées de cette même couleur, jamais de multicouleur.
+ * UNE SEULE SOURCE : `--primary`. Chaque mode clair/sombre charge sa propre
+ * valeur du token ; la rampe de teintes monochrome en découle et l'animation
+ * suit — jamais de multicouleur.
  */
 
-/** Token de surface de base (première couleur du dégradé). */
-const BG_TOKEN = 'background';
-
-/** Tokens essayés, par ordre de préférence, pour la teinte de marque unique. */
-const BRAND_TOKENS = ['primary', 'accent', 'chart-1'] as const;
+/** Token unique lu pour tout le fond : la couleur de marque du thème. */
+const BRAND_TOKEN = 'primary';
 
 /** Repli quand aucune variable de thème n'est résolvable (storybook, tests, thème absent). */
 export const DEFAULT_HOME_GRADIENT_COLORS = [
@@ -59,14 +54,6 @@ function readThemeVar(name: string): string {
   return getComputedStyle(document.documentElement).getPropertyValue(`--${name}`);
 }
 
-function firstHex(tokens: readonly string[]): string | null {
-  for (const token of tokens) {
-    const hex = themeColorToHex(readThemeVar(token));
-    if (hex) return hex;
-  }
-  return null;
-}
-
 /** `#rrggbb` à `t` (0-1) entre deux hex, interpolation OKLab — teintes d'une même couleur. */
 function mixHex(from: string, to: string, t: number): string {
   const a = parse(from);
@@ -86,23 +73,26 @@ export interface ThemePalette {
 
 /** Résout la palette courante depuis les variables CSS du thème. */
 export function resolveThemePalette(): ThemePalette {
-  const background = themeColorToHex(readThemeVar(BG_TOKEN));
-  const brand = firstHex(BRAND_TOKENS);
+  // UNE SEULE SOURCE : `--primary`. Chaque mode (light/dark) charge sa propre
+  // valeur du token ; la rampe de teintes en découle et l'animation suit.
+  const brand = themeColorToHex(readThemeVar(BRAND_TOKEN));
 
   let palette: string[];
-  if (background && brand) {
-    // Fond de base + couches de vagues = teintes croissantes de la même couleur
-    // de marque, mélangées au fond : un seul hue, intensité variable.
+  if (brand) {
+    // Rampe monochrome de la couleur de marque : nuances foncées → marque →
+    // nuances claires, toutes interpolées en OKLab. La surface derrière le
+    // canvas est déjà `bg-background` (qui bascule light/dark) : les vagues
+    // n'apportent que la teinte du thème, jamais de multicouleur.
     palette = [
-      background,
-      ...[0.2, 0.4, 0.6, 0.8, 1].map((t) => mixHex(background, brand, t)),
+      ...[0.7, 0.45, 0.2].map((t) => mixHex(brand, '#000000', t)),
+      brand,
+      ...[0.3, 0.55].map((t) => mixHex(brand, '#ffffff', t)),
     ];
   } else {
     palette = [...DEFAULT_HOME_GRADIENT_COLORS];
   }
 
-  const accent = brand;
-  return { colors: palette, accent, key: palette.join(',') };
+  return { colors: palette, accent: brand, key: palette.join(',') };
 }
 
 /** `#rrggbb` + alpha (0-1) → `#rrggbbaa`. */

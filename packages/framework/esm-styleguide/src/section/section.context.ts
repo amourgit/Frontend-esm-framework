@@ -34,7 +34,7 @@ export const DEFAULT_SECTION_LABELS: SectionLabels = {
 
 /** Valeurs par défaut : permet d'utiliser les parties hors d'un `Section`. */
 export const SectionContext = createContext<SectionContextValue>({
-  tone: 'onDark',
+  tone: 'onLight',
   density: 'comfortable',
   classNames: {},
   labels: DEFAULT_SECTION_LABELS,

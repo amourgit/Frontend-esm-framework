@@ -2,7 +2,7 @@
 import type { AssignedExtension } from '@egen-civitas/esm-extensions';
 import type React from 'react';
 
-/** `onDark` : texte clair (fond de page sombre, cas par défaut). `onLight` : texte foncé. */
+/** `onLight` : palette du thème, sections posées sur le fond de page (défaut). `onDark` : texte clair, sections sur média/fond sombre. */
 export type SectionTone = 'onDark' | 'onLight';
 /** `plain` : aucun habillage (défaut). `glass` : panneau vitré, opt-in. */
 export type SectionVariant = 'plain' | 'glass';

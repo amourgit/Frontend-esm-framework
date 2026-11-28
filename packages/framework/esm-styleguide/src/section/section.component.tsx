@@ -49,7 +49,7 @@ function SectionRoot({
   as: Root = 'section',
   ariaLabel,
   variant = 'plain',
-  tone = 'onDark',
+  tone = 'onLight',
   density = 'comfortable',
   title,
   titleAs,
@@ -250,8 +250,10 @@ export const Section = Object.assign(SectionRoot, {
  *    - `classNames={{ title: '…', divider: '…', body: '…' }}` pour chaque partie ;
  *    - variables CSS `--section-fg`, `--section-muted`, `--section-line`,
  *      `--section-accent` (via `style` ou une classe) ;
- *    - `tone="onLight"` pour un fond clair, `variant="glass"` pour un panneau
- *      vitré, `density="compact" | "spacious"` pour les espacements.
+ *    - `tone="onDark"` pour une section posée sur un média/fond sombre
+ *      (le défaut `onLight` suit le thème : foncé en light, clair en dark),
+ *      `variant="glass"` pour un panneau vitré,
+ *      `density="compact" | "spacious"` pour les espacements.
  *
  *  Sans trait : `divider={false}` (sous l'en-tête) / `footerDivider={false}`.
  *

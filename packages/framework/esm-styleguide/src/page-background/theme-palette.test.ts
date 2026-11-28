@@ -58,9 +58,9 @@ describe('resolveThemePalette', () => {
     expect(palette.accent).toBeNull();
   });
 
-  it('dérive une rampe monochrome depuis --primary uniquement', () => {
+  it('dérive une rampe monochrome depuis --background uniquement', () => {
     mockThemeVars({
-      background: 'oklch(0.145 0 0)',
+      background: '#f8f5f0',
       primary: '#336699',
       accent: 'oklch(0.371 0 0)',
       'chart-1': '#e53935',
@@ -68,27 +68,28 @@ describe('resolveThemePalette', () => {
       'chart-3': '#64b5f6',
     });
     const palette = resolveThemePalette();
-    // 6 couleurs : 3 nuances foncées, la marque pure, 2 nuances claires
-    expect(palette.colors).toHaveLength(6);
-    expect(palette.colors[3]).toBe('#336699'); // primary, teinte pleine
+    // 7 couleurs : 3 nuances foncées, le fond pur, 3 nuances claires
+    expect(palette.colors).toHaveLength(7);
+    expect(palette.colors[3]).toBe('#f8f5f0'); // background, teinte pleine
     for (const hex of palette.colors) {
       expect(hex).toMatch(/^#[0-9a-f]{6}$/);
     }
-    // une seule source : accent = primary
-    expect(palette.accent).toBe('#336699');
+    // l'accent (halo) est une nuance claire du fond, pas une autre couleur
+    expect(palette.accent).toMatch(/^#[0-9a-f]{6}$/);
+    expect(palette.accent).not.toBe('#336699');
   });
 
-  it('sans primary résoluble, retombe sur la palette par défaut', () => {
-    mockThemeVars({ background: '#000000', accent: '#123456' });
+  it('sans background résoluble, retombe sur la palette par défaut', () => {
+    mockThemeVars({ primary: '#336699', accent: '#123456' });
     const palette = resolveThemePalette();
     expect(palette.colors).toEqual(DEFAULT_HOME_GRADIENT_COLORS);
     expect(palette.accent).toBeNull();
   });
 
   it('la signature change quand le thème change (key pour remonter le canvas)', () => {
-    mockThemeVars({ primary: '#111111' });
+    mockThemeVars({ background: '#111111' });
     const a = resolveThemePalette();
-    mockThemeVars({ primary: '#222222' });
+    mockThemeVars({ background: '#222222' });
     const b = resolveThemePalette();
     expect(a.key).not.toBe(b.key);
   });

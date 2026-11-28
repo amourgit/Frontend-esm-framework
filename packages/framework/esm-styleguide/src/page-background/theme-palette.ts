@@ -10,13 +10,13 @@ import { converter, formatHex, interpolate, parse } from 'culori';
  * via culori — même bibliothèque que esm-theme, donc même gestion des formats
  * (oklch, oklab, hsl, rgb…).
  *
- * UNE SEULE SOURCE : `--primary`. Chaque mode clair/sombre charge sa propre
- * valeur du token ; la rampe de teintes monochrome en découle et l'animation
- * suit — jamais de multicouleur.
+ * UNE SEULE SOURCE : `--background` (section « base » du thème). Chaque mode
+ * clair/sombre charge sa propre valeur du token ; la rampe de nuances
+ * monochrome en découle et l'animation suit — jamais de multicouleur.
  */
 
-/** Token unique lu pour tout le fond : la couleur de marque du thème. */
-const BRAND_TOKEN = 'primary';
+/** Token unique lu pour tout le fond : la couleur de fond du thème. */
+const BASE_TOKEN = 'background';
 
 /** Repli quand aucune variable de thème n'est résolvable (storybook, tests, thème absent). */
 export const DEFAULT_HOME_GRADIENT_COLORS = [
@@ -73,26 +73,27 @@ export interface ThemePalette {
 
 /** Résout la palette courante depuis les variables CSS du thème. */
 export function resolveThemePalette(): ThemePalette {
-  // UNE SEULE SOURCE : `--primary`. Chaque mode (light/dark) charge sa propre
-  // valeur du token ; la rampe de teintes en découle et l'animation suit.
-  const brand = themeColorToHex(readThemeVar(BRAND_TOKEN));
+  // UNE SEULE SOURCE : `--background`. Chaque mode (light/dark) charge sa
+  // propre valeur ; la rampe de nuances en découle et l'animation suit.
+  const base = themeColorToHex(readThemeVar(BASE_TOKEN));
 
   let palette: string[];
-  if (brand) {
-    // Rampe monochrome de la couleur de marque : nuances foncées → marque →
-    // nuances claires, toutes interpolées en OKLab. La surface derrière le
-    // canvas est déjà `bg-background` (qui bascule light/dark) : les vagues
-    // n'apportent que la teinte du thème, jamais de multicouleur.
+  if (base) {
+    // Rampe monochrome du fond : nuances foncées → fond → nuances claires, en
+    // OKLab. Les vagues restent dans la famille du fond de page — un rendu
+    // « page normale », pas une bannière colorée.
     palette = [
-      ...[0.7, 0.45, 0.2].map((t) => mixHex(brand, '#000000', t)),
-      brand,
-      ...[0.3, 0.55].map((t) => mixHex(brand, '#ffffff', t)),
+      ...[0.5, 0.28, 0.12].map((t) => mixHex(base, '#000000', t)),
+      base,
+      ...[0.3, 0.55, 0.75].map((t) => mixHex(base, '#ffffff', t)),
     ];
   } else {
     palette = [...DEFAULT_HOME_GRADIENT_COLORS];
   }
 
-  return { colors: palette, accent: brand, key: palette.join(',') };
+  // Halo : une nuance claire du fond (ou null → repli neutre du composant).
+  const accent = base ? mixHex(base, '#ffffff', 0.5) : null;
+  return { colors: palette, accent, key: palette.join(',') };
 }
 
 /** `#rrggbb` + alpha (0-1) → `#rrggbbaa`. */
